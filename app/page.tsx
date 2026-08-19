@@ -1,5 +1,5 @@
-import MedReviewApp from "./MedReviewApp";
+import RevITApp from "./RevITApp";
 
 export default function Home() {
-  return <MedReviewApp />;
+  return <RevITApp />;
 }
