@@ -32,8 +32,11 @@ test("uses RevIT and OpenAI branding while keeping the MedTech AI tab", async ()
   const route = await readFile(new URL("../app/api/chat/route.ts", import.meta.url), "utf8");
 
   assert.match(layout, /RevIT \| Bacteriology and hematology reviewer/i);
+  assert.match(layout, /data-theme="light"/i);
+  assert.match(layout, /revit-theme/i);
   assert.match(app, /Ask RevIT AI/i);
   assert.match(app, /label: "MedTech AI"/i);
+  assert.match(app, /Toggle light and dark mode/i);
   assert.match(route, /api\.openai\.com\/v1\/responses/i);
   assert.doesNotMatch(`${layout}\n${app}\n${route}`, /MedReview|Gemini/i);
 });

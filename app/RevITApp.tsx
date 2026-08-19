@@ -49,24 +49,24 @@ const navItems: Array<{ id: View; label: string; icon: string }> = [
 
 const viewCopy: Record<View, { eyebrow: string; title: string; description: string }> = {
   overview: {
-    eyebrow: "Your study command center",
-    title: "Ready for a focused review?",
-    description: "RevIT turns your official reviewers into topic-aware practice and progress.",
+    eyebrow: "Study dashboard",
+    title: "Master medtech, one focused review at a time.",
+    description: "Practice official bacteriology and hematology questions, track your progress, and get clear explanations when you need them.",
   },
   library: {
     eyebrow: "Official reviewer library",
-    title: "Build your review session",
-    description: "Choose one topic, several topics, or the entire bacteriology and hematology library.",
+    title: "Build a review around your focus.",
+    description: "Choose one topic, mix several, or practice the complete bacteriology and hematology library.",
   },
   progress: {
     eyebrow: "Performance analytics",
-    title: "See what is strong—and what needs work",
-    description: "Every answer stays attributed to its original subject and topic.",
+    title: "See what you know. Focus on what is next.",
+    description: "Every answer is organized by subject and topic, so your next study move stays clear.",
   },
   assistant: {
     eyebrow: "General study support",
-    title: "Ask RevIT AI",
-    description: "Use OpenAI for general explanations while official reviewer answers remain the scoring source of truth.",
+    title: "Ask RevIT AI for a clearer explanation.",
+    description: "Explore medtech concepts with OpenAI while official reviewer answers remain the scoring source of truth.",
   },
 };
 
@@ -232,6 +232,14 @@ export default function RevITApp() {
     setProfileOpen(true);
   }
 
+  function toggleTheme() {
+    const root = document.documentElement;
+    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = nextTheme;
+    root.style.colorScheme = nextTheme;
+    localStorage.setItem("revit-theme", nextTheme);
+  }
+
   function chooseProfilePhoto(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -344,6 +352,11 @@ export default function RevITApp() {
             </button>
           ))}
         </nav>
+        <button className="theme-toggle sidebar-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode">
+          <span className="theme-symbol light-symbol" aria-hidden="true">☼</span>
+          <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
+          <span><strong>Appearance</strong><small>Light / dark</small></span>
+        </button>
         <div className="sidebar-note">
           <p>Official library</p>
           <strong>{questions.length} questions</strong>
@@ -358,7 +371,7 @@ export default function RevITApp() {
       <section className="workspace">
         <header className="mobile-header">
           <button className="brand brand-button" type="button" onClick={() => openView("overview")}><span className="brand-mark">R</span>RevIT</button>
-          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => openView(event.target.value as View)}>{navItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
+          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => openView(event.target.value as View)}>{navItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label><button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
         </header>
 
         <div className="page-heading">
