@@ -1,13 +1,6 @@
-type InputMessage = { role: "user" | "assistant"; content: string };
+import Groq from "groq-sdk";
 
-type OpenAIResponse = {
-  output?: Array<{
-    content?: Array<{
-      type?: string;
-      text?: string;
-    }>;
-  }>;
-};
+type InputMessage = { role: "user" | "assistant"; content: string };
 
 const MEDTECH_INSTRUCTIONS = `You are RevIT AI, an educational medtech tutor for students.
 
@@ -43,17 +36,13 @@ function demoAnswer(question: string) {
     return "In pressure-targeted ventilation, the clinician sets an inspiratory pressure and the delivered tidal volume varies with compliance, resistance, patient effort, and inspiratory time. Pressure-control delivers mandatory breaths to the set pressure. Pressure-support assists patient-triggered spontaneous breaths to a set pressure above positive end-expiratory pressure. The key study contrast is that pressure is controlled while volume is the dependent result, so tidal volume and minute ventilation must be monitored.";
   }
 
-  return "This preview is currently using its small built-in demo knowledge pack. Add a server-side OpenAI API key to enable RevIT AI. The official reviewer answers remain local and control quiz scoring.";
+  return "This preview is currently using its small built-in demo knowledge pack. Add a server-side Groq API key to enable RevIT AI. The official reviewer answers remain local and control quiz scoring.";
 }
 
-function collectOpenAIText(data: OpenAIResponse) {
-  const text: string[] = [];
-  for (const output of data.output ?? []) {
-    for (const part of output.content ?? []) {
-      if (part.type === "output_text" && typeof part.text === "string") text.push(part.text);
-    }
-  }
-  return text.join("\n\n").trim();
+function statusFromError(error: unknown) {
+  if (!error || typeof error !== "object" || !("status" in error)) return null;
+  const status = (error as { status?: unknown }).status;
+  return typeof status === "number" ? status : null;
 }
 
 export async function POST(request: Request) {
@@ -63,7 +52,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "Please send a valid question." }, { status: 400 });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY?.trim();
+    const apiKey = process.env.GROQ_API_KEY?.trim();
     const latestQuestion = body.messages.at(-1)!.content;
     if (!apiKey) {
       return Response.json({
@@ -74,48 +63,49 @@ export async function POST(request: Request) {
       });
     }
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL?.trim() || "gpt-5.6-terra",
-        instructions: MEDTECH_INSTRUCTIONS,
-        input: body.messages.slice(-10),
-        reasoning: { effort: "low" },
-        text: { verbosity: "medium" },
-        max_output_tokens: 1200,
-        store: false,
-      }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 429) {
+    const groq = new Groq({ apiKey });
+    let answer = "";
+    try {
+      const completion = await groq.chat.completions.create({
+        model: process.env.GROQ_MODEL?.trim() || "openai/gpt-oss-120b",
+        messages: [
+          { role: "system", content: MEDTECH_INSTRUCTIONS },
+          ...body.messages.slice(-10),
+        ],
+        temperature: 0.2,
+        max_completion_tokens: 1200,
+      });
+      answer = completion.choices[0]?.message?.content?.trim() ?? "";
+    } catch (error) {
+      const status = statusFromError(error);
+      if (status === 429) {
         return Response.json(
-          { error: "RevIT AI is temporarily unavailable because its OpenAI usage limit has been reached." },
+          { error: "RevIT AI is temporarily unavailable because its Groq rate limit has been reached." },
           { status: 503 },
         );
       }
-      if (response.status === 401 || response.status === 403) {
+      if (status === 401 || status === 403) {
         return Response.json(
-          { error: "RevIT AI is not configured with a valid OpenAI project key." },
+          { error: "RevIT AI is not configured with a valid Groq API key." },
           { status: 503 },
         );
       }
-      throw new Error(`OpenAI request failed with status ${response.status}`);
+      if (status === 404) {
+        return Response.json(
+          { error: "The configured Groq model is unavailable. Check GROQ_MODEL in the deployment settings." },
+          { status: 503 },
+        );
+      }
+      throw error;
     }
-    const data = await response.json() as OpenAIResponse;
-    const answer = collectOpenAIText(data);
-    if (!answer) throw new Error("OpenAI returned an empty answer");
+    if (!answer) throw new Error("Groq returned an empty answer");
 
     return Response.json({
       answer,
       citations: [],
       grounded: false,
       mode: "live",
-      provider: "OpenAI",
+      provider: "Groq",
     });
   } catch (error) {
     console.error("RevIT assistant error", error);

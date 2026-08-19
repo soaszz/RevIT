@@ -30,7 +30,7 @@ type ChatMessage = {
   citations?: string[];
   grounded?: boolean;
   mode?: "live" | "demo";
-  provider?: "OpenAI";
+  provider?: "Groq";
 };
 
 type LearnerProfile = {
@@ -66,7 +66,7 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
   assistant: {
     eyebrow: "General study support",
     title: "Ask RevIT AI for a clearer explanation.",
-    description: "Explore medtech concepts with OpenAI while official reviewer answers remain the scoring source of truth.",
+    description: "Explore medtech concepts with Groq while official reviewer answers remain the scoring source of truth.",
   },
 };
 
@@ -299,7 +299,7 @@ export default function RevITApp() {
         citations?: string[];
         grounded?: boolean;
         mode?: "live" | "demo";
-        provider?: "OpenAI";
+        provider?: "Groq";
         error?: string;
       };
       if (!response.ok || !data.answer) throw new Error(data.error || "The assistant could not answer right now.");
@@ -449,7 +449,7 @@ export default function RevITApp() {
               <div className="ai-peek-card">
                 <span className="ai-mark">AI</span>
                 <h2>Ask for a clearer explanation</h2>
-                <p>OpenAI study support stays separate from the local official reviewer bank and never changes scoring answers.</p>
+                <p>Groq study support stays separate from the local official reviewer bank and never changes scoring answers.</p>
                 <button className="primary-button" type="button" onClick={() => openView("assistant")}>Open RevIT AI</button>
               </div>
             </aside>
@@ -587,13 +587,13 @@ export default function RevITApp() {
             </section>
             <div className="assistant-card assistant-card-wide">
               <div className="assistant-header">
-                <div><span className="ai-mark">AI</span><div><h2>RevIT AI</h2><p><i />OpenAI educational support</p></div></div>
+                <div><span className="ai-mark">AI</span><div><h2>RevIT AI</h2><p><i />Groq educational support</p></div></div>
                 <button type="button" onClick={() => setMessages([])} disabled={pending}>New chat</button>
               </div>
               <div className={`chat-body ${messages.length ? "chat-active" : ""}`} aria-live="polite">
                 {messages.length === 0 ? (
                   <>
-                    <div className="assistant-intro"><span className="ai-mark large">AI</span><h3>Ask RevIT AI a study question</h3><p>OpenAI can explain study concepts, while the supplied reviewer answers stay local and remain the only scoring source of truth.</p></div>
+                    <div className="assistant-intro"><span className="ai-mark large">AI</span><h3>Ask RevIT AI a study question</h3><p>Groq can explain study concepts, while the supplied reviewer answers stay local and remain the only scoring source of truth.</p></div>
                     <div className="prompt-chips">{chatSuggestions.map((suggestion) => <button type="button" key={suggestion} onClick={() => void ask(suggestion)}>{suggestion}</button>)}</div>
                   </>
                 ) : (

@@ -1,6 +1,6 @@
 # RevIT
 
-A source-aware medtech reviewer with official bacteriology and hematology questions, topic-level progress, and an OpenAI-powered educational assistant.
+A source-aware medtech reviewer with official bacteriology and hematology questions, topic-level progress, and a Groq-powered educational assistant.
 
 ## Included study content
 
@@ -12,22 +12,22 @@ A source-aware medtech reviewer with official bacteriology and hematology questi
 ## Run locally
 
 1. Copy `.env.example` to `.env.local`.
-2. Add an OpenAI API key to `OPENAI_API_KEY`.
-3. Optionally choose a model with `OPENAI_MODEL` (the default is `gpt-5.6-terra`).
+2. Add a Groq API key to `GROQ_API_KEY`.
+3. Optionally choose a model with `GROQ_MODEL` (the default is `openai/gpt-oss-120b`).
 4. Run `npm run dev`.
 
 Without an API key, the chat runs in an explicitly labeled demo mode with a small built-in knowledge pack.
 
-## Configure OpenAI on Vercel
+## Configure Groq on Vercel
 
 1. Open the RevIT project in Vercel and go to **Settings > Environment Variables**.
-2. Add `OPENAI_API_KEY` as a sensitive variable. Never prefix it with `NEXT_PUBLIC_`.
-3. Add `OPENAI_MODEL` with the value `gpt-5.6-terra`.
+2. Add `GROQ_API_KEY` as a sensitive variable. Never prefix it with `NEXT_PUBLIC_`.
+3. Add `GROQ_MODEL` with the value `openai/gpt-oss-120b`.
 4. Apply the variables to Production and any Preview/Development environments you use.
 5. Save, then redeploy so the new values are included in a fresh deployment.
 
-The OpenAI project attached to the key must have available API credits. Remove the old `GEMINI_API_KEY`, `GEMINI_MODEL`, and `GEMINI_FALLBACK_MODEL` variables after the OpenAI deployment works.
+Remove the old `OPENAI_API_KEY`, `OPENAI_MODEL`, `GEMINI_API_KEY`, `GEMINI_MODEL`, and `GEMINI_FALLBACK_MODEL` variables after the Groq deployment works.
 
 ## Safety and scope
 
-The assistant is designed for education. It does not diagnose, prescribe, select patient treatment, or replace clinical policy, manufacturer instructions for use, or professional judgment. Its server-side instruction layer focuses OpenAI on medtech education. For stronger domain reliability, add a curated retrieval layer with approved references and evaluate the assistant against representative medtech questions before public use.
+The assistant is designed for education. It does not diagnose, prescribe, select patient treatment, or replace clinical policy, manufacturer instructions for use, or professional judgment. Its server-side instruction layer focuses the Groq-hosted model on medtech education. For stronger domain reliability, add a curated retrieval layer with approved references and evaluate the assistant against representative medtech questions before public use.

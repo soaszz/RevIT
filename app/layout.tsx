@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const socialImage = `${protocol}://${host}/og.png`;
   const title = "RevIT | Bacteriology and hematology reviewer";
-  const description = "A source-aware medtech reviewer with official bacteriology and hematology questions, topic analytics, and OpenAI study support.";
+  const description = "A source-aware medtech reviewer with official bacteriology and hematology questions, topic analytics, and Groq-powered study support.";
 
   return {
     title,

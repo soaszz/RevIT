@@ -26,7 +26,7 @@ test("ships the validated bacteriology and hematology library", async () => {
   }
 });
 
-test("uses RevIT and OpenAI branding while keeping the MedTech AI tab", async () => {
+test("uses RevIT and Groq branding while keeping the MedTech AI tab", async () => {
   const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const route = await readFile(new URL("../app/api/chat/route.ts", import.meta.url), "utf8");
@@ -37,6 +37,8 @@ test("uses RevIT and OpenAI branding while keeping the MedTech AI tab", async ()
   assert.match(app, /Ask RevIT AI/i);
   assert.match(app, /label: "MedTech AI"/i);
   assert.match(app, /Toggle light and dark mode/i);
-  assert.match(route, /api\.openai\.com\/v1\/responses/i);
-  assert.doesNotMatch(`${layout}\n${app}\n${route}`, /MedReview|Gemini/i);
+  assert.match(route, /from "groq-sdk"/i);
+  assert.match(route, /GROQ_API_KEY/i);
+  assert.match(route, /GROQ_MODEL/i);
+  assert.doesNotMatch(`${layout}\n${app}\n${route}`, /MedReview|Gemini|api\.openai\.com/i);
 });
