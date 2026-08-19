@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  
   --ink: #14201e;
   --muted: #64716e;
   --line: #dce4e2;
@@ -44,6 +45,16 @@
   --sidebar-surface: #101614;
   --sidebar-active: #17231f;
   --shadow: 0 16px 42px rgba(0, 0, 0, .22);
+}
+
+:root {
+  --ai-table-border: rgba(20, 50, 45, 0.18);
+  --ai-table-header: rgba(20, 80, 70, 0.06);
+}
+
+:root[data-theme="dark"] {
+  --ai-table-border: rgba(255, 255, 255, 0.22);
+  --ai-table-header: rgba(255, 255, 255, 0.08);
 }
 
 * { box-sizing: border-box; }
@@ -148,9 +159,28 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .markdown-content code { border-radius: 4px; padding: 2px 4px; background: color-mix(in srgb, var(--green) 12%, transparent); font-family: Consolas, "Courier New", monospace; font-size: .92em; }
 .markdown-content pre { overflow-x: auto; margin: 10px 0; padding: 11px; border-radius: 8px; background: var(--sidebar); color: #eef8f4; }
 .markdown-content pre code { padding: 0; background: transparent; color: inherit; }
-.markdown-content table { display: block; overflow-x: auto; width: 100%; margin: 11px 0; border-spacing: 0; border-collapse: collapse; white-space: nowrap; }
-.markdown-content th, .markdown-content td { padding: 7px 9px; border: 1px solid var(--line); text-align: left; vertical-align: top; }
-.markdown-content th { background: var(--green-soft); color: var(--ink); font-weight: 750; }
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid var(--ai-table-border);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.markdown-content th {
+  background: var(--ai-table-header);
+  font-weight: 600;
+}
+
+.markdown-content tr {
+  border-bottom: 1px solid var(--ai-table-border);
+}
 .chat-message.user .markdown-content a { color: #fff; }.chat-message.user .markdown-content code { background: rgba(255,255,255,.16); }
 .answer-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .answer-meta span { padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--input); color: var(--muted); font-size: 8px; }

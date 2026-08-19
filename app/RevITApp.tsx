@@ -115,6 +115,40 @@ export default function RevITApp() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [profileError, setProfileError] = useState("");
 
+useEffect(() => {
+  const validViews: View[] = [
+    "overview",
+    "library",
+    "progress",
+    "assistant",
+  ];
+
+  const path = window.location.pathname
+    .replace(/^\/|\/$/g, "") as View;
+
+  if (validViews.includes(path)) {
+    setActiveView(path);
+  } else {
+    setActiveView("overview");
+    window.history.replaceState(null, "", "/overview");
+  }
+
+  const handlePopState = () => {
+    const currentPath = window.location.pathname
+      .replace(/^\/|\/$/g, "") as View;
+
+    if (validViews.includes(currentPath)) {
+      setActiveView(currentPath);
+    }
+  };
+
+  window.addEventListener("popstate", handlePopState);
+
+  return () => {
+    window.removeEventListener("popstate", handlePopState);
+  };
+}, []);
+
   useEffect(() => {
     try {
       const savedAttempts = JSON.parse(localStorage.getItem("revit-attempts-v1") ?? "[]") as Attempt[];
@@ -221,10 +255,11 @@ export default function RevITApp() {
     setAnswerRevealed(false);
   }
 
-  function openView(view: View) {
-    setActiveView(view);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+ function openView(view: View) {
+  setActiveView(view);
+  window.history.pushState(null, "", `/${view}`);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
   function openProfileEditor() {
     setProfileDraft(profile);
