@@ -23,7 +23,8 @@ test("keeps secrets out of the repository", async () => {
 
   assert.match(gitignore, /^\.env\*$/m);
   assert.match(gitignore, /^!\.env\.example$/m);
-  assert.match(envExample, /^OPENAI_API_KEY=$/m);
+  assert.match(envExample, /^GEMINI_API_KEY=$/m);
+  assert.doesNotMatch(envExample, /^OPENAI_API_KEY=/m);
 });
 
 test("ships the MedReview experience and server-side chat route", async () => {
@@ -36,5 +37,8 @@ test("ships the MedReview experience and server-side chat route", async () => {
   assert.match(page, /<MedReviewApp \/>/);
   assert.match(app, /MedTech AI/);
   assert.match(chatRoute, /export async function POST/);
-  assert.match(chatRoute, /process\.env\.OPENAI_API_KEY/);
+  assert.match(chatRoute, /process\.env\.GEMINI_API_KEY/);
+  assert.match(chatRoute, /generativelanguage\.googleapis\.com/);
+  assert.doesNotMatch(chatRoute, /api\.openai\.com/);
+  assert.doesNotMatch(chatRoute, /OPENAI_API_KEY/);
 });

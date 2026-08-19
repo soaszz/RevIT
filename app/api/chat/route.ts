@@ -34,45 +34,43 @@ function demoAnswer(question: string) {
     return "In pressure-targeted ventilation, the clinician sets an inspiratory pressure and the delivered tidal volume varies with compliance, resistance, patient effort, and inspiratory time. Pressure-control delivers mandatory breaths to the set pressure. Pressure-support assists patient-triggered spontaneous breaths to a set pressure above positive end-expiratory pressure. The key study contrast is that pressure is controlled while volume is the dependent result, so tidal volume and minute ventilation must be monitored.";
   }
 
-  return "This preview is currently using its small built-in demo knowledge pack. Add the server-side OpenAI API key to enable the full medtech tutor, and connect an approved study library to ground answers in your own references. Try one of the suggested questions to test the complete chat flow.";
+  return "This preview is currently using its small built-in demo knowledge pack. Add the server-side Gemini API key to enable the full medtech tutor. Try one of the suggested questions to test the complete chat flow.";
 }
 
-function collectResponse(data: Record<string, unknown>) {
+function collectGeminiResponse(data: Record<string, unknown>) {
   const text: string[] = [];
-  const citations = new Set<string>();
-  const output = Array.isArray(data.output) ? data.output : [];
+  const steps = Array.isArray(data.steps) ? data.steps : [];
 
-  for (const item of output) {
-    if (!item || typeof item !== "object") continue;
-    const content = Array.isArray((item as { content?: unknown }).content)
-      ? (item as { content: unknown[] }).content
+  for (const step of steps) {
+    if (!step || typeof step !== "object") continue;
+    const stepRecord = step as Record<string, unknown>;
+    if (stepRecord.type !== "model_output") continue;
+    const content = Array.isArray(stepRecord.content)
+      ? stepRecord.content
       : [];
     for (const part of content) {
       if (!part || typeof part !== "object") continue;
       const record = part as Record<string, unknown>;
-      if (record.type === "output_text" && typeof record.text === "string") text.push(record.text);
-      const annotations = Array.isArray(record.annotations) ? record.annotations : [];
-      for (const annotation of annotations) {
-        if (!annotation || typeof annotation !== "object") continue;
-        const citation = annotation as Record<string, unknown>;
-        if (citation.type === "file_citation" && typeof citation.filename === "string") {
-          citations.add(citation.filename);
-        }
+      if (record.type === "text" && typeof record.text === "string") {
+        text.push(record.text);
       }
     }
   }
 
-  return { answer: text.join("\n\n").trim(), citations: [...citations] };
+  return text.join("\n\n").trim();
 }
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json() as { messages?: unknown; safetyId?: unknown };
+    const body = await request.json() as {
+      messages?: unknown;
+      previousInteractionId?: unknown;
+    };
     if (!validMessages(body.messages)) {
       return Response.json({ error: "Please send a valid question." }, { status: 400 });
     }
 
-    const apiKey = process.env.OPENAI_API_KEY?.trim();
+    const apiKey = process.env.GEMINI_API_KEY?.trim();
     const latestQuestion = body.messages.at(-1)!.content;
     if (!apiKey) {
       return Response.json({
@@ -83,55 +81,39 @@ export async function POST(request: Request) {
       });
     }
 
-    const moderationResponse = await fetch("https://api.openai.com/v1/moderations", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ model: "omni-moderation-latest", input: latestQuestion }),
-    });
-    if (!moderationResponse.ok) throw new Error("Moderation request failed");
-    const moderation = await moderationResponse.json() as { results?: Array<{ flagged?: boolean }> };
-    if (moderation.results?.[0]?.flagged) {
-      return Response.json({ error: "I can’t help with that request. Try asking for a safe, educational explanation instead." }, { status: 400 });
-    }
-
-    const vectorStoreId = process.env.OPENAI_VECTOR_STORE_ID?.trim();
     const payload: Record<string, unknown> = {
-      model: process.env.OPENAI_MODEL?.trim() || "gpt-5.6-terra",
-      instructions: MEDTECH_INSTRUCTIONS,
-      input: body.messages.slice(-10),
-      reasoning: { effort: "medium" },
-      text: { verbosity: "medium" },
-      store: false,
+      model: process.env.GEMINI_MODEL?.trim() || "gemini-3.6-flash",
+      input: latestQuestion,
+      system_instruction: MEDTECH_INSTRUCTIONS,
     };
 
-    if (typeof body.safetyId === "string" && body.safetyId.length <= 100) {
-      payload.safety_identifier = body.safetyId;
-    }
-    if (vectorStoreId) {
-      payload.tools = [{ type: "file_search", vector_store_ids: [vectorStoreId], max_num_results: 6 }];
-      payload.include = ["file_search_call.results"];
+    if (
+      typeof body.previousInteractionId === "string"
+      && body.previousInteractionId.trim().length > 0
+      && body.previousInteractionId.length <= 1000
+    ) {
+      payload.previous_interaction_id = body.previousInteractionId.trim();
     }
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
+    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/interactions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        "x-goog-api-key": apiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     });
-    if (!response.ok) throw new Error("Model request failed");
+    if (!response.ok) throw new Error("Gemini request failed");
     const data = await response.json() as Record<string, unknown>;
-    const result = collectResponse(data);
-    if (!result.answer) throw new Error("The model returned an empty answer");
+    const answer = collectGeminiResponse(data);
+    if (!answer) throw new Error("Gemini returned an empty answer");
 
     return Response.json({
-      ...result,
-      grounded: Boolean(vectorStoreId && result.citations.length),
+      answer,
+      citations: [],
+      grounded: false,
       mode: "live",
+      interactionId: typeof data.id === "string" ? data.id : undefined,
     });
   } catch {
     return Response.json({ error: "The assistant is temporarily unavailable. Please try again." }, { status: 500 });

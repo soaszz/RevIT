@@ -27,15 +27,11 @@ export default function MedReviewApp() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
-  const safetyId = useRef("");
+  const interactionId = useRef("");
 
   async function ask(question: string) {
     const cleanQuestion = question.trim();
     if (!cleanQuestion || pending) return;
-
-    if (!safetyId.current && typeof crypto !== "undefined") {
-      safetyId.current = crypto.randomUUID();
-    }
 
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
@@ -53,7 +49,7 @@ export default function MedReviewApp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: nextMessages.map(({ role, content }) => ({ role, content })),
-          safetyId: safetyId.current,
+          previousInteractionId: interactionId.current || undefined,
         }),
       });
       const data = await response.json() as {
@@ -61,12 +57,15 @@ export default function MedReviewApp() {
         citations?: string[];
         grounded?: boolean;
         mode?: "live" | "demo";
+        interactionId?: string;
         error?: string;
       };
 
       if (!response.ok || !data.answer) {
         throw new Error(data.error || "The assistant could not answer right now.");
       }
+
+      if (data.interactionId) interactionId.current = data.interactionId;
 
       setMessages((current) => [...current, {
         id: crypto.randomUUID(),
@@ -92,6 +91,12 @@ export default function MedReviewApp() {
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     void ask(draft);
+  }
+
+  function startNewChat() {
+    interactionId.current = "";
+    setMessages([]);
+    setDraft("");
   }
 
   return (
@@ -181,8 +186,8 @@ export default function MedReviewApp() {
 
           <aside className="assistant-card" id="assistant">
             <div className="assistant-header">
-              <div><span className="ai-mark">AI</span><div><h2>MedTech AI</h2><p><i />Educational assistant</p></div></div>
-              <button type="button" onClick={() => setMessages([])} disabled={pending}>New</button>
+              <div><span className="ai-mark">AI</span><div><h2>MedTech AI</h2><p><i />Gemini educational assistant</p></div></div>
+              <button type="button" onClick={startNewChat} disabled={pending}>New</button>
             </div>
             <div className={`chat-body ${messages.length ? "chat-active" : ""}`} aria-live="polite">
               {messages.length === 0 ? (
@@ -207,7 +212,7 @@ export default function MedReviewApp() {
                       {message.role === "assistant" && (
                         <div className="answer-meta">
                           {message.mode === "demo" && <span>Demo knowledge pack</span>}
-                          {message.mode === "live" && <span>{message.grounded ? "Grounded in study library" : "General AI explanation — verify with approved references"}</span>}
+                          {message.mode === "live" && <span>{message.grounded ? "Grounded in study library" : "Gemini explanation — verify with approved references"}</span>}
                           {message.citations?.map((citation) => <span key={citation}>Source: {citation}</span>)}
                         </div>
                       )}
