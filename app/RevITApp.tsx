@@ -73,12 +73,12 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
   overview: {
     eyebrow: "Study dashboard",
     title: "Master medtech, one focused review at a time.",
-    description: "Practice official bacteriology and hematology questions, track your progress, and get clear explanations when you need them.",
+    description: "Practice official Clinical Chemistry, Hematology, Bacteriology, and AUBF questions with answer rationales from your supplied reviewers.",
   },
   library: {
     eyebrow: "Official reviewer library",
     title: "Build a review around your focus.",
-    description: "Choose one topic, mix several, or practice the complete bacteriology and hematology library.",
+    description: "Choose one topic, mix several, or practice the complete four-subject reviewer library.",
   },
   progress: {
     eyebrow: "Performance analytics",
@@ -88,7 +88,7 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
   grades: {
     eyebrow: "Deterministic grade planning",
     title: "Know where you stand—and what comes next.",
-    description: "Save actual grades, explore private what-if scores, and see transparent guidance toward the 65% passing mark.",
+    description: "Record every assessment by subject and see the weighted percentage earned in each category.",
   },
   assistant: {
     eyebrow: "General study support",
@@ -147,6 +147,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [storageReady, setStorageReady] = useState(false);
   const [sessionSize, setSessionSize] = useState("10");
   const [sessionQuestionIds, setSessionQuestionIds] = useState<string[]>([]);
+  const [sessionChoiceOrders, setSessionChoiceOrders] = useState<Record<string, number[]>>({});
   const [sessionIndex, setSessionIndex] = useState(0);
   const [sessionAttempts, setSessionAttempts] = useState<Attempt[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
@@ -354,6 +355,9 @@ useEffect(() => {
   const strongestTopic = [...practicedTopics].sort((a, b) => b.accuracy - a.accuracy || b.attempts - a.attempts)[0];
   const weakestTopic = [...practicedTopics].sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts)[0];
   const currentQuestion = questionById.get(sessionQuestionIds[sessionIndex]);
+  const currentChoiceOrder = currentQuestion
+    ? sessionChoiceOrders[currentQuestion.id] ?? currentQuestion.choices.map((_, index) => index)
+    : [];
   const sessionComplete = sessionQuestionIds.length > 0 && sessionIndex >= sessionQuestionIds.length;
 
   function toggleTopic(topicId: string) {
@@ -370,7 +374,10 @@ useEffect(() => {
   function startSession() {
     if (!selectedQuestions.length) return;
     const limit = sessionSize === "all" ? selectedQuestions.length : Number(sessionSize);
-    setSessionQuestionIds(shuffled(selectedQuestions).slice(0, Math.min(limit, selectedQuestions.length)).map((question) => question.id));
+    const nextQuestions = shuffled(selectedQuestions).slice(0, Math.min(limit, selectedQuestions.length));
+    const nextQuestionIds = nextQuestions.map((question) => question.id);
+    setSessionQuestionIds(nextQuestionIds);
+    setSessionChoiceOrders(Object.fromEntries(nextQuestionIds.map((id) => [id, shuffled([0, 1, 2, 3])])));
     setSessionIndex(0);
     setSessionAttempts([]);
     setSelectedChoice(null);
@@ -379,6 +386,7 @@ useEffect(() => {
 
   function leaveSession() {
     setSessionQuestionIds([]);
+    setSessionChoiceOrders({});
     setSessionIndex(0);
     setSessionAttempts([]);
     setSelectedChoice(null);
@@ -619,7 +627,7 @@ useEffect(() => {
         <div className="sidebar-note">
           <p>Official library</p>
           <strong>{questions.length} questions</strong>
-          <span>Bacteriology + Hematology 1</span>
+          <span>CC + Hema + Bacte + AUBF</span>
         </div>
         <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
           <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
@@ -680,7 +688,7 @@ useEffect(() => {
                 </div>
                 <p>{weakestTopic
                   ? `This is currently your lowest-performing practiced topic across ${weakestTopic.attempts} attempt${weakestTopic.attempts === 1 ? "" : "s"}. A focused session will keep it from being hidden by stronger areas.`
-                  : "Select any combination of bacteriology and hematology topics. RevIT will preserve topic attribution even in a mixed review."}</p>
+                  : "Select any combination of Clinical Chemistry, Hematology, Bacteriology, and AUBF topics. RevIT preserves topic attribution in mixed reviews."}</p>
                 <div className="focus-actions">
                   <button className="primary-button" type="button" onClick={() => openView("library")}>{weakestTopic ? "Build focused review" : "Open review library"}</button>
                   <button className="text-button" type="button" onClick={() => openView("progress")}>View progress</button>
@@ -705,8 +713,8 @@ useEffect(() => {
               <div className="source-summary-card">
                 <span className="ai-mark">PDF</span>
                 <p className="eyebrow">Supplied sources</p>
-                <h2>Three official reviewers mapped</h2>
-                <p>Two bacteriology editions and one Hematology 1 master reviewer now power scoring and source references.</p>
+                <h2>Three official PDF reviewers mapped</h2>
+                <p>Clinical Chemistry, Hematology, Bacteriology, and AUBF now power scoring, rationales, and page-level source references.</p>
                 {subjects.map((subject) => (
                   <div className="source-stat" key={subject.id}>
                     <span>{subject.name}</span>
@@ -787,18 +795,19 @@ useEffect(() => {
                 <p className="question-source">{subjectById.get(currentQuestion.subjectId)?.name} · Official supplied reviewer</p>
                 <h2>{currentQuestion.prompt}</h2>
                 <div className="choice-list">
-                  {currentQuestion.choices.map((choice, index) => {
-                    const isCorrect = answerRevealed && index === currentQuestion.correctAnswer;
-                    const isWrong = answerRevealed && index === selectedChoice && index !== currentQuestion.correctAnswer;
+                  {currentChoiceOrder.map((choiceIndex, displayIndex) => {
+                    const choice = currentQuestion.choices[choiceIndex];
+                    const isCorrect = answerRevealed && choiceIndex === currentQuestion.correctAnswer;
+                    const isWrong = answerRevealed && choiceIndex === selectedChoice && choiceIndex !== currentQuestion.correctAnswer;
                     return (
                       <button
                         type="button"
-                        className={`choice-button ${selectedChoice === index ? "selected" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
-                        key={choice}
-                        onClick={() => !answerRevealed && setSelectedChoice(index)}
-                        aria-pressed={selectedChoice === index}
+                        className={`choice-button ${selectedChoice === choiceIndex ? "selected" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
+                        key={`${currentQuestion.id}-${choiceIndex}`}
+                        onClick={() => !answerRevealed && setSelectedChoice(choiceIndex)}
+                        aria-pressed={selectedChoice === choiceIndex}
                       >
-                        <span>{String.fromCharCode(65 + index)}</span>{choice}
+                        <span>{String.fromCharCode(65 + displayIndex)}</span>{choice}
                       </button>
                     );
                   })}
@@ -806,7 +815,8 @@ useEffect(() => {
                 {answerRevealed && (
                   <div className={`answer-panel ${selectedChoice === currentQuestion.correctAnswer ? "correct" : "wrong"}`}>
                     <strong>{selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
-                    <p>{currentQuestion.explanation}</p>
+                    <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
+                    <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
                     <small>Source: {currentQuestion.source.fileName}, page {currentQuestion.source.page}</small>
                   </div>
                 )}
@@ -881,7 +891,7 @@ useEffect(() => {
               </div>
               <form className="chat-form" onSubmit={submitChat}>
                 <label className="sr-only" htmlFor="medtech-question">Ask a medtech question</label>
-                <textarea id="medtech-question" rows={3} maxLength={4000} value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void ask(draft); } }} placeholder="Ask about bacteriology, hematology, a test principle, or a reviewer concept…" disabled={pending} />
+                <textarea id="medtech-question" rows={3} maxLength={4000} value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void ask(draft); } }} placeholder="Ask about Clinical Chemistry, Hematology, Bacteriology, AUBF, or another MedTech concept…" disabled={pending} />
                 <div><span>{draft.length}/4000</span><button type="submit" disabled={!draft.trim() || pending}>{pending ? "Thinking" : "Ask RevIT"}</button></div>
               </form>
               <p className="medical-note">Educational use only. Official supplied answers control reviewer scoring; AI explanations do not replace laboratory policy or clinical judgment.</p>
