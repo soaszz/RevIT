@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const socialImage = `${protocol}://${host}/og.png`;
-  const title = "RevIT | Bacteriology and hematology reviewer";
+  const title = "RevIT | Medical Technology Review";
   const description = "A source-aware medtech reviewer with official bacteriology and hematology questions, topic analytics, and Groq-powered study support.";
 
   return {
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: socialImage, width: 1536, height: 1024, alt: "RevIT bacteriology and hematology review" }],
+      images: [{ url: socialImage, width: 1536, height: 1024, alt: "RevIT Medical Technology Review" }],
     },
     twitter: {
       card: "summary_large_image",

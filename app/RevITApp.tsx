@@ -893,7 +893,7 @@ useEffect(() => {
           <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setProfileOpen(false); }}>
             <section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
               <div className="profile-modal-heading">
-                <div><p className="eyebrow">Local profile</p><h2 id="profile-title">Customize your profile</h2></div>
+                <div><p className="eyebrow">Profile</p><h2 id="profile-title">Customize your profile</h2></div>
                 <button type="button" onClick={() => setProfileOpen(false)} aria-label="Close profile editor">×</button>
               </div>
               <form onSubmit={saveProfile}>
