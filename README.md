@@ -29,6 +29,7 @@ In **Authentication > Providers > Email**:
 
 - Keep email/password enabled.
 - Turn **Confirm email** on. The application expects verification before first access.
+- In **Authentication > Email Templates > Confirm signup**, include `{{ .Token }}` in the message body so Supabase sends the six-digit code shown in RevIT. For example: `<p>Your RevIT verification code is <strong>{{ .Token }}</strong></p>`.
 - Set a password minimum of at least 8 characters and enable leaked-password protection when your plan supports it.
 - Enable secure password change/current-password verification for the password-change flow.
 - Configure custom SMTP for production; Supabase's trial sender is rate-limited.
@@ -38,7 +39,7 @@ In **Authentication > URL Configuration**:
 - Set Site URL to the production `NEXT_PUBLIC_SITE_URL`.
 - Add `http://localhost:3000/**`, your Vercel preview pattern, and production domain to Redirect URLs.
 
-The app supports both PKCE `code` callbacks and `token_hash` confirmation links at `/auth/callback`. TOTP MFA is optional and is separate from email verification.
+The signup screen calls Supabase `signUp`, verifies the emailed code with `verifyOtp`, and enables **Create account** only after Supabase confirms the email. The app also retains PKCE `code` and `token_hash` confirmation-link support at `/auth/callback`. TOTP MFA is optional and is separate from email verification.
 
 ## Vercel environment variables
 
