@@ -5,7 +5,7 @@ RevIT is a source-aware medtech reviewer with official bacteriology and hematolo
 ## What is included
 
 - 103 official reviewer MCQs across Bacteriology and Hematology 1, with source filename and page retained.
-- Registration, required email verification, password recovery, remember-me/session-only behavior, protected routes, profile onboarding, avatar upload, password changes, other-device sign-out, and optional TOTP two-factor authentication.
+- Registration, separate sign-in after account creation, password recovery, remember-me/session-only behavior, protected routes, profile onboarding, avatar upload, password changes, other-device sign-out, and optional TOTP two-factor authentication.
 - Row-level-secured cloud storage for profiles, grades, daily activity, idempotent activity events, exam schedules, and preferences.
 - Monthly activity intensity, timezone-safe streaks, date details, independent exam markers, and an Up Next assessment.
 - My Grades and a separate, non-persisting simulator using the exact 10/15/30/30/15 weights and a 65% passing mark.
@@ -28,8 +28,7 @@ If Supabase variables are absent, RevIT deliberately keeps the existing reviewer
 In **Authentication > Providers > Email**:
 
 - Keep email/password enabled.
-- Turn **Confirm email** on. The application expects verification before first access.
-- In **Authentication > Email Templates > Confirm signup**, include `{{ .Token }}` in the message body so Supabase sends the six-digit code shown in RevIT. For example: `<p>Your RevIT verification code is <strong>{{ .Token }}</strong></p>`.
+- Turn **Confirm email** off if users should be able to sign in immediately after registering. When it is on, Supabase requires the confirmation link before the first sign-in.
 - Set a password minimum of at least 8 characters and enable leaked-password protection when your plan supports it.
 - Enable secure password change/current-password verification for the password-change flow.
 - Configure custom SMTP for production; Supabase's trial sender is rate-limited.
@@ -39,7 +38,7 @@ In **Authentication > URL Configuration**:
 - Set Site URL to the production `NEXT_PUBLIC_SITE_URL`.
 - Add `http://localhost:3000/**`, your Vercel preview pattern, and production domain to Redirect URLs.
 
-The signup screen calls Supabase `signUp`, verifies the emailed code with `verifyOtp`, and enables **Create account** only after Supabase confirms the email. The app also retains PKCE `code` and `token_hash` confirmation-link support at `/auth/callback`. TOTP MFA is optional and is separate from email verification.
+The signup screen calls Supabase `signUp`, signs out the temporary auto-created session, and returns the user to the Sign in tab. The app retains PKCE `code` and `token_hash` confirmation-link support at `/auth/callback` if email confirmation is enabled again later. TOTP MFA is optional and separate from signup.
 
 ## Vercel environment variables
 
@@ -66,7 +65,7 @@ npm test
 
 Manual release checks:
 
-- Register, verify email, complete onboarding, sign out, sign in with and without Remember me, recover a password, and enroll/challenge/disable TOTP.
+- Register, return to Sign in, log in, complete onboarding, sign out, sign in with and without Remember me, recover a password, and enroll/challenge/disable TOTP.
 - Confirm a second account cannot read or mutate the first account's rows.
 - Answer questions across a timezone/date boundary; confirm idempotent counts, current streak, calendar intensity, date details, and cross-device sync.
 - Create, edit, and delete same-day assessments across multiple subjects; confirm Up Next and past visibility.
