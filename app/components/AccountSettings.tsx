@@ -106,8 +106,19 @@ export default function AccountSettings({ profile, email, onClose, onProfile }: 
   }
 
   async function signOut() {
-    localStorage.removeItem("revit-remember-until"); sessionStorage.removeItem("revit-session-only");
-    await createClient().auth.signOut({ scope: "local" }); router.replace("/auth");
+    setPending(true); setStatus("");
+    try {
+      const { error } = await createClient().auth.signOut({ scope: "local" });
+      if (error) throw error;
+      localStorage.removeItem("revit-remember-until");
+      localStorage.removeItem("revit-session-policy");
+      sessionStorage.removeItem("revit-session-only");
+      router.replace("/auth");
+      router.refresh();
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "You could not be signed out. Please try again.");
+      setPending(false);
+    }
   }
 
   const qrSource = enrollment?.qr.startsWith("data:") ? enrollment.qr : enrollment ? `data:image/svg+xml;utf8,${encodeURIComponent(enrollment.qr)}` : "";
@@ -126,8 +137,10 @@ export default function AccountSettings({ profile, email, onClose, onProfile }: 
           <form onSubmit={changePassword}><p className="eyebrow">Password</p><p className="security-copy">Signed in as {email}. Confirm your current password before changing it.</p><label className="profile-name-field"><span>Current password</span><input type="password" autoComplete="current-password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} required /></label><label className="profile-name-field"><span>New password</span><input type="password" autoComplete="new-password" minLength={8} value={newPassword} onChange={(event) => setNewPassword(event.target.value)} required /></label><label className="check-label"><input type="checkbox" checked={signOutOthers} onChange={(event) => setSignOutOthers(event.target.checked)} /><span>Sign out other devices after changing</span></label><button className="primary-button" type="submit" disabled={pending}>Change password</button></form>
           <section className="mfa-section"><p className="eyebrow">Two-factor authentication</p>{factors.length ? <><p className="security-copy">Authenticator app is enabled.</p>{factors.map((factor) => <button className="secondary-button" type="button" key={factor.id} onClick={() => void disableMfa(factor.id)} disabled={pending}>Disable authenticator</button>)}</> : enrollment ? <form onSubmit={verifyMfa}><img className="mfa-qr" src={qrSource} alt="Authenticator setup QR code" /><p className="mfa-secret">Manual key: <code>{enrollment.secret}</code></p><label className="profile-name-field"><span>Six-digit code</span><input inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={totpCode} onChange={(event) => setTotpCode(event.target.value.replace(/\D/g, ""))} required /></label><button className="primary-button" type="submit" disabled={pending || totpCode.length !== 6}>Enable authenticator</button></form> : <><p className="security-copy">Add an authenticator app as a separate second factor.</p><button className="secondary-button" type="button" onClick={() => void beginMfa()} disabled={pending}>Set up authenticator</button></>}</section>
           {status && <p className="form-status" role="status">{status}</p>}
-          <button className="danger-button" type="button" onClick={() => void signOut()}>Sign out on this device</button>
         </div>}
+        <footer className="account-modal-footer">
+          <button className="danger-button account-signout" type="button" onClick={() => void signOut()} disabled={pending}>Sign out</button>
+        </footer>
       </section>
     </div>
   );
