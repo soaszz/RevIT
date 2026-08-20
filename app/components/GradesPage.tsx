@@ -14,6 +14,35 @@ import { sanitizeGradeScore } from "../lib/gradeCalculator";
 
 type GradeMatrix = Record<GradeSubject, GradeValues>;
 
+const DISPLAY_FIELD_KEYS: GradeField[] = [
+  "pre_test",
+  "post_test",
+  "oral_revalida",
+  "written_revalida",
+  "comprehensive",
+];
+
+const SUBJECT_LABELS: Record<GradeSubject, string> = {
+  Hematology: "Hema 1",
+  "Clinical Chemistry": "CC 1",
+  Bacteriology: "Bacteriology",
+  AUBF: "AUBF",
+};
+
+const CATEGORY_LABELS: Record<GradeField, { title: string; rowPrefix: string; numberSeparator: string }> = {
+  pre_test: { title: "Pre-Tests", rowPrefix: "Pre-Test", numberSeparator: " " },
+  post_test: { title: "Post-Tests", rowPrefix: "Post-Test", numberSeparator: " " },
+  comprehensive: { title: "Comprehensive Exam", rowPrefix: "CE", numberSeparator: "" },
+  written_revalida: { title: "Written Revalida", rowPrefix: "WR", numberSeparator: "" },
+  oral_revalida: { title: "Oral Revalida", rowPrefix: "OR", numberSeparator: "" },
+};
+
+const DISPLAY_FIELDS = DISPLAY_FIELD_KEYS.map((key) => {
+  const field = GRADE_FIELDS.find((item) => item.key === key);
+  if (!field) throw new Error(`Missing grade field: ${key}`);
+  return field;
+});
+
 function valuesFor(record?: GradeRecord): GradeValues {
   return Object.fromEntries(
     GRADE_FIELDS.map((field) => [field.key, record?.[field.key] ?? null]),
@@ -82,7 +111,7 @@ export default function GradesPage({ grades, onSave }: { grades: GradeRecord[]; 
     <div className="grades-shell">
       <section className="grade-overview-card grade-ledger-overview">
         <div className="grade-ledger-heading">
-          <div><p className="eyebrow">Assessment gradebook</p><h2>Your complete grade ledger</h2><p>Enter each subject score under its assessment. Blank scores remain unrecorded but contribute zero to the category percentage shown below.</p></div>
+          <div><p className="eyebrow">Assessment gradebook</p><h2>Grades by category</h2><p>Enter every subject grade under its assessment category. Each card shows how much that category contributes to your final grade.</p></div>
           <span className="state-pill">Pass mark {PASSING_GRADE}%</span>
         </div>
         <div className="grade-summary-grid">
@@ -93,16 +122,16 @@ export default function GradesPage({ grades, onSave }: { grades: GradeRecord[]; 
       </section>
 
       <div className="grade-category-grid">
-        {GRADE_FIELDS.map((field) => (
-          <section className="grade-category-card" key={field.key}>
+        {DISPLAY_FIELDS.map((field) => (
+          <section className={`grade-category-card grade-category-${field.key}`} key={field.key}>
             <div className="grade-category-heading">
-              <div><p className="eyebrow">{Math.round(field.weight * 100)}% of final grade</p><h2>{field.label} <span>({field.max})</span></h2></div>
-              <span className="grade-weight-pill">Max {field.max}</span>
+              <div><p className="eyebrow">{Math.round(field.weight * 100)}% of final grade</p><h2>{CATEGORY_LABELS[field.key].title} <span>({field.max})</span></h2></div>
+              <span className="grade-weight-pill">{field.max} points</span>
             </div>
             <div className="grade-subject-list">
-              {SUBJECTS.map((subject) => (
+              {SUBJECTS.map((subject, subjectIndex) => (
                 <label key={subject}>
-                  <span><strong>{subject}</strong><small>Score out of {field.max}</small></span>
+                  <span className="grade-entry-label"><strong>{CATEGORY_LABELS[field.key].rowPrefix}{CATEGORY_LABELS[field.key].numberSeparator}{subjectIndex + 1} - {SUBJECT_LABELS[subject]}</strong><small>{subject}</small></span>
                   <div className="grade-score-control">
                     <input
                       className="grade-score-input"
@@ -122,7 +151,7 @@ export default function GradesPage({ grades, onSave }: { grades: GradeRecord[]; 
               ))}
             </div>
             <div className="grade-category-total">
-              <span>Percentage</span>
+              <span>Category percentage</span>
               <strong>{categoryPercentages[field.key].toFixed(2)}%</strong>
             </div>
           </section>
@@ -130,7 +159,7 @@ export default function GradesPage({ grades, onSave }: { grades: GradeRecord[]; 
       </div>
 
       <div className="grade-save-bar">
-        <div><strong>Ready to sync?</strong><span>Save all four subjects together.</span></div>
+        <div><strong>Finished entering grades?</strong><span>Save all five categories for the four subjects together.</span></div>
         {status && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{status}</p>}
         <button className="primary-button" type="button" onClick={() => void saveAll()} disabled={pending}>{pending ? "Saving…" : "Save all grades"}</button>
       </div>

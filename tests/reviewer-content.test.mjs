@@ -46,8 +46,15 @@ test("gradebook groups all subjects under assessment categories without number s
 
   assert.match(grades, /GRADE_FIELDS\.map/);
   assert.match(grades, /SUBJECTS\.map/);
+  assert.match(grades, /Pre-Tests/);
+  assert.match(grades, /Post-Tests/);
+  assert.match(grades, /Oral Revalida/);
+  assert.match(grades, /Written Revalida/);
+  assert.match(grades, /Comprehensive Exam/);
+  assert.match(grades, /SUBJECT_LABELS/);
   assert.match(grades, /Percentage/);
   assert.match(grades, /Save all grades/);
+  assert.doesNotMatch(css, /\.grade-save-bar\s*\{[^}]*position:\s*sticky/);
   assert.match(css, /grade-score-input::\-webkit-inner-spin-button/);
   assert.match(css, /appearance:\s*none/);
 });
