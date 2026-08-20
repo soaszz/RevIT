@@ -10,6 +10,24 @@ type StatusType = "error" | "success" | "info";
 
 const safeNextPath = (next: string) => next.startsWith("/") && !next.startsWith("//") ? next : "/overview";
 
+function AuthThemeToggle() {
+  function toggleTheme() {
+    const root = document.documentElement;
+    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+    root.dataset.theme = nextTheme;
+    root.style.colorScheme = nextTheme;
+    localStorage.setItem("revit-theme", nextTheme);
+  }
+
+  return (
+    <button className="theme-toggle auth-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode" title="Toggle light and dark mode">
+      <span className="theme-symbol light-symbol" aria-hidden="true">☼</span>
+      <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
+      <span>Theme</span>
+    </button>
+  );
+}
+
 export default function AuthPanel({ next = "/overview" }: { next?: string }) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("login");
@@ -141,6 +159,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
   if (mfaFactorId) {
     return (
       <form className="auth-card" onSubmit={verifyMfa}>
+        <AuthThemeToggle />
         <div className="auth-heading">
           <p className="eyebrow">Two-factor authentication</p>
           <h1>One more secure step.</h1>
@@ -155,7 +174,9 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
 
   return (
     <form className="auth-card" onSubmit={submit}>
+      <AuthThemeToggle />
       <div className="auth-heading">
+        <p className="eyebrow">RevIT learner account</p>
         <h1>{mode === "login" ? "Welcome to RevIT." : "Create your account."}</h1>
         <p>{mode === "login" ? "Sign in to continue your focused MedTech review and keep your progress in sync." : "Create an account with your email, username, and password. You’ll return here to sign in."}</p>
       </div>
