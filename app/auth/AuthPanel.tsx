@@ -10,6 +10,15 @@ type StatusType = "error" | "success" | "info";
 
 const safeNextPath = (next: string) => next.startsWith("/") && !next.startsWith("//") ? next : "/overview";
 
+function getErrorMessage(error: unknown, fallback: string) {
+  if (error instanceof Error && error.message) return error.message;
+  if (typeof error === "object" && error !== null && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message;
+  }
+  return fallback;
+}
+
 function AuthThemeToggle() {
   function toggleTheme() {
     const root = document.documentElement;
@@ -28,12 +37,65 @@ function AuthThemeToggle() {
   );
 }
 
+function PasswordField({
+  id,
+  label,
+  value,
+  onChange,
+  autoComplete,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  autoComplete: "current-password" | "new-password";
+}) {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div className="auth-field">
+      <label htmlFor={id}>{label}</label>
+      <div className="password-input-wrap">
+        <input
+          id={id}
+          type={visible ? "text" : "password"}
+          autoComplete={autoComplete}
+          placeholder="At least 8 characters"
+          minLength={8}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          required
+        />
+        <button
+          className="password-reveal"
+          type="button"
+          aria-label={`Hold to show ${label.toLowerCase()}`}
+          aria-pressed={visible}
+          onPointerDown={() => setVisible(true)}
+          onPointerUp={() => setVisible(false)}
+          onPointerLeave={() => setVisible(false)}
+          onPointerCancel={() => setVisible(false)}
+          onKeyDown={(event) => {
+            if (event.key === " " || event.key === "Enter") setVisible(true);
+          }}
+          onKeyUp={() => setVisible(false)}
+          onBlur={() => setVisible(false)}
+          onContextMenu={(event) => event.preventDefault()}
+        >
+          {visible ? "Showing" : "Hold to show"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function AuthPanel({ next = "/overview" }: { next?: string }) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [remember, setRemember] = useState(true);
   const [status, setStatus] = useState("");
   const [statusType, setStatusType] = useState<StatusType>("error");
@@ -49,6 +111,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
   function switchMode(nextMode: Mode) {
     if (pending || nextMode === mode) return;
     setMode(nextMode);
+    if (nextMode === "login") setConfirmPassword("");
     showStatus("");
   }
 
@@ -88,6 +151,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
       throw new Error("Username must be 3–24 characters using letters, numbers, or underscores.");
     }
     if (password.length < 8) throw new Error("Use a password with at least 8 characters.");
+    if (password !== confirmPassword) throw new Error("Passwords do not match.");
 
     const { data: availability, error: availabilityError } = await supabase.rpc("is_username_available", { candidate: cleanUsername });
     if (availabilityError) throw availabilityError;
@@ -113,6 +177,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
 
     setEmail(cleanEmail);
     setPassword("");
+    setConfirmPassword("");
     setMode("login");
     showStatus(
       data.session
@@ -135,7 +200,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
       if (error) throw error;
       await completeLogin();
     } catch (error) {
-      showStatus(error instanceof Error ? error.message : "Authentication could not be completed.");
+      showStatus(getErrorMessage(error, "Authentication could not be completed."));
     } finally {
       setPending(false);
     }
@@ -150,7 +215,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
       if (error) throw error;
       await completeLogin();
     } catch (error) {
-      showStatus(error instanceof Error ? error.message : "That code could not be verified.");
+      showStatus(getErrorMessage(error, "That code could not be verified."));
     } finally {
       setPending(false);
     }
@@ -189,7 +254,8 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
       <div className="auth-fields">
         <label className="auth-field"><span>Email</span><input type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
         {mode === "register" && <label className="auth-field"><span>Username</span><input autoComplete="username" placeholder="your_username" minLength={3} maxLength={24} pattern="[A-Za-z0-9_]{3,24}" aria-describedby="username-help" value={username} onChange={(event) => setUsername(event.target.value)} required /><small id="username-help">3–24 letters, numbers, or underscores</small></label>}
-        <label className="auth-field"><span>Password</span><input type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} placeholder="At least 8 characters" minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} required /></label>
+        <PasswordField id="password" label="Password" value={password} onChange={setPassword} autoComplete={mode === "login" ? "current-password" : "new-password"} />
+        {mode === "register" && <PasswordField id="confirm-password" label="Confirm password" value={confirmPassword} onChange={setConfirmPassword} autoComplete="new-password" />}
       </div>
 
       {mode === "login" && <label className="check-label"><input type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} /><span>Remember me for up to 30 days</span></label>}
