@@ -1,8 +1,28 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import AccountSettings from "./components/AccountSettings";
+import GradesPage from "./components/GradesPage";
+import Onboarding from "./components/Onboarding";
+import StudyCalendar from "./components/StudyCalendar";
+import {
+  deleteExam as deleteCloudExam,
+  flushActivityQueue,
+  loadCloudSnapshot,
+  localProfileToCloud,
+  migrateLocalActivity,
+  queueActivity,
+  recordActivity,
+  saveExam as saveCloudExam,
+  saveGrade as saveCloudGrade,
+  savePreferences,
+} from "./lib/cloudService";
+import type { DailyActivity, ExamSchedule, GradeRecord, Profile, UserPreferences } from "./lib/domain";
+import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCalendar";
+import { createClient } from "./lib/supabase/client";
 import {
   questionById,
   questions,
@@ -12,9 +32,10 @@ import {
   topics,
 } from "./content/reviewerContent";
 
-type View = "overview" | "library" | "progress" | "assistant";
+type View = "overview" | "library" | "progress" | "grades" | "assistant";
 
 type Attempt = {
+  id?: string;
   questionId: string;
   topicId: string;
   subjectId: string;
@@ -44,6 +65,7 @@ const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Overview", icon: "O" },
   { id: "library", label: "Review Library", icon: "R" },
   { id: "progress", label: "Progress", icon: "P" },
+  { id: "grades", label: "Grades", icon: "G" },
   { id: "assistant", label: "MedTech AI", icon: "AI" },
 ];
 
@@ -62,6 +84,11 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     eyebrow: "Performance analytics",
     title: "See what you know. Focus on what is next.",
     description: "Every answer is organized by subject and topic, so your next study move stays clear.",
+  },
+  grades: {
+    eyebrow: "Deterministic grade planning",
+    title: "Know where you stand—and what comes next.",
+    description: "Save actual grades, explore private what-if scores, and see transparent guidance toward the 65% passing mark.",
   },
   assistant: {
     eyebrow: "General study support",
@@ -96,7 +123,24 @@ function toneFor(score: number, attempts: number) {
   return "focus";
 }
 
-export default function RevITApp() {
+function mergeLocalAttemptActivity(attempts: Attempt[], existing: DailyActivity[], timeZone: string) {
+  const map = new Map(existing.map((day) => [day.activity_date, { ...day, questions_answered: 0, correct_answers: 0 }]));
+  for (const attempt of attempts) {
+    const key = dateKeyInTimeZone(new Date(attempt.timestamp), timeZone);
+    const current = map.get(key) ?? { activity_date: key, questions_answered: 0, correct_answers: 0, review_count: 0, subjects_studied: [] };
+    current.questions_answered += 1;
+    current.correct_answers += attempt.correct ? 1 : 0;
+    const subject = subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId;
+    current.subjects_studied = [...new Set([...current.subjects_studied, subject])];
+    map.set(key, current);
+  }
+  return [...map.values()].sort((a, b) => a.activity_date.localeCompare(b.activity_date));
+}
+
+export type InitialUser = { id: string; email: string; username?: string };
+
+export default function RevITApp({ initialUser = null, cloudEnabled = false }: { initialUser?: InitialUser | null; cloudEnabled?: boolean }) {
+  const router = useRouter();
   const [activeView, setActiveView] = useState<View>("overview");
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
@@ -114,12 +158,23 @@ export default function RevITApp() {
   const [profileDraft, setProfileDraft] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileOpen, setProfileOpen] = useState(false);
   const [profileError, setProfileError] = useState("");
+  const [cloudProfile, setCloudProfile] = useState<Profile | null>(null);
+  const [grades, setGrades] = useState<GradeRecord[]>([]);
+  const [activity, setActivity] = useState<DailyActivity[]>([]);
+  const [exams, setExams] = useState<ExamSchedule[]>([]);
+  const [preferences, setPreferences] = useState<UserPreferences>(() => ({
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Manila",
+    theme: "system",
+  }));
+  const [cloudLoading, setCloudLoading] = useState(cloudEnabled);
+  const [cloudError, setCloudError] = useState("");
 
 useEffect(() => {
   const validViews: View[] = [
     "overview",
     "library",
     "progress",
+    "grades",
     "assistant",
   ];
 
@@ -170,6 +225,81 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
+    if (!storageReady || cloudEnabled) return;
+    try {
+      const savedGrades = JSON.parse(localStorage.getItem("revit-grades-v1") ?? "[]") as GradeRecord[];
+      const savedExams = JSON.parse(localStorage.getItem("revit-exams-v1") ?? "[]") as ExamSchedule[];
+      const savedActivity = JSON.parse(localStorage.getItem("revit-activity-v1") ?? "[]") as DailyActivity[];
+      if (Array.isArray(savedGrades)) setGrades(savedGrades);
+      if (Array.isArray(savedExams)) setExams(savedExams);
+      if (Array.isArray(savedActivity)) setActivity(mergeLocalAttemptActivity(attempts, savedActivity, preferences.timezone));
+    } catch {
+      setActivity(mergeLocalAttemptActivity(attempts, [], preferences.timezone));
+    }
+  }, [attempts, cloudEnabled, preferences.timezone, storageReady]);
+
+  useEffect(() => {
+    if (!storageReady || cloudEnabled) return;
+    setActivity((current) => mergeLocalAttemptActivity(attempts, current, preferences.timezone));
+  }, [attempts, cloudEnabled, preferences.timezone, storageReady]);
+
+  useEffect(() => {
+    if (!cloudEnabled || !initialUser) return;
+    const policy = localStorage.getItem("revit-session-policy");
+    const rememberedUntil = Number(localStorage.getItem("revit-remember-until") ?? 0);
+    if ((policy === "session-only" && sessionStorage.getItem("revit-session-only") !== "active")
+      || (policy === "remember" && rememberedUntil > 0 && rememberedUntil < Date.now())) {
+      void createClient().auth.signOut({ scope: "local" }).then(() => router.replace("/auth"));
+    }
+  }, [cloudEnabled, initialUser, router]);
+
+  useEffect(() => {
+    if (!cloudEnabled || !initialUser) return;
+    let cancelled = false;
+    async function load() {
+      setCloudLoading(true); setCloudError("");
+      try {
+        const client = createClient();
+        await flushActivityQueue(client);
+        const snapshot = await loadCloudSnapshot(client, initialUser!.id);
+        if (cancelled) return;
+        const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, profile.name, profile.photoDataUrl);
+        const nextPreferences = snapshot.preferences ?? preferences;
+        setCloudProfile(nextProfile); setGrades(snapshot.grades); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences);
+        setProfile({ name: nextProfile.first_name || profile.name, photoDataUrl: nextProfile.avatar_url ?? "" });
+        if (nextPreferences.theme === "light" || nextPreferences.theme === "dark") {
+          document.documentElement.dataset.theme = nextPreferences.theme;
+          document.documentElement.style.colorScheme = nextPreferences.theme;
+          localStorage.setItem("revit-theme", nextPreferences.theme);
+        }
+      } catch (error) {
+        if (!cancelled) setCloudError(error instanceof Error ? error.message : "Cloud data could not be loaded.");
+      } finally { if (!cancelled) setCloudLoading(false); }
+    }
+    void load();
+    return () => { cancelled = true; };
+  // Load once for the authenticated identity; local fallback data is migrated separately.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cloudEnabled, initialUser?.id]);
+
+  useEffect(() => {
+    if (!cloudEnabled || !initialUser || !storageReady || cloudLoading || cloudError) return;
+    let cancelled = false;
+    async function migrate() {
+      try {
+        const client = createClient();
+        await migrateLocalActivity(client, initialUser!.id, preferences.timezone, attempts, (id) => subjectById.get(id)?.name ?? id);
+        const snapshot = await loadCloudSnapshot(client, initialUser!.id);
+        if (!cancelled) setActivity(snapshot.activity);
+      } catch (error) {
+        if (!cancelled) setCloudError(`Local history is preserved, but migration needs retry: ${error instanceof Error ? error.message : "unknown error"}`);
+      }
+    }
+    void migrate();
+    return () => { cancelled = true; };
+  }, [attempts, cloudEnabled, cloudError, cloudLoading, initialUser, preferences.timezone, storageReady]);
+
+  useEffect(() => {
     if (storageReady) localStorage.setItem("revit-attempts-v1", JSON.stringify(attempts));
   }, [attempts, storageReady]);
 
@@ -180,6 +310,27 @@ useEffect(() => {
   useEffect(() => {
     if (storageReady) localStorage.setItem("revit-profile-v1", JSON.stringify(profile));
   }, [profile, storageReady]);
+
+  useEffect(() => {
+    if (cloudEnabled) return;
+    const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (localZone) setPreferences((current) => ({ ...current, timezone: localZone }));
+  }, [cloudEnabled]);
+
+  useEffect(() => {
+    if (!storageReady || cloudEnabled) return;
+    localStorage.setItem("revit-grades-v1", JSON.stringify(grades));
+  }, [cloudEnabled, grades, storageReady]);
+
+  useEffect(() => {
+    if (!storageReady || cloudEnabled) return;
+    localStorage.setItem("revit-exams-v1", JSON.stringify(exams));
+  }, [cloudEnabled, exams, storageReady]);
+
+  useEffect(() => {
+    if (!storageReady || cloudEnabled) return;
+    localStorage.setItem("revit-activity-v1", JSON.stringify(activity));
+  }, [activity, cloudEnabled, storageReady]);
 
   const selectedQuestions = useMemo(
     () => questions.filter((question) => selectedTopicIds.includes(question.topicId)),
@@ -234,9 +385,38 @@ useEffect(() => {
     setAnswerRevealed(false);
   }
 
+  async function recordStudyEvent(input: {
+    eventKey: string;
+    questions?: number;
+    correct?: number;
+    reviews?: number;
+    subject?: string;
+  }) {
+    const activityDate = dateKeyInTimeZone(new Date(), preferences.timezone);
+    setActivity((current) => {
+      const existing = current.find((day) => day.activity_date === activityDate);
+      const updated: DailyActivity = {
+        ...(existing ?? { activity_date: activityDate, questions_answered: 0, correct_answers: 0, review_count: 0, subjects_studied: [] }),
+        questions_answered: (existing?.questions_answered ?? 0) + (input.questions ?? 0),
+        correct_answers: (existing?.correct_answers ?? 0) + (input.correct ?? 0),
+        review_count: (existing?.review_count ?? 0) + (input.reviews ?? 0),
+        subjects_studied: input.subject ? [...new Set([...(existing?.subjects_studied ?? []), input.subject])] : (existing?.subjects_studied ?? []),
+      };
+      return [...current.filter((day) => day.activity_date !== activityDate), updated].sort((a, b) => a.activity_date.localeCompare(b.activity_date));
+    });
+    if (!cloudEnabled || !initialUser) return;
+    const payload = { ...input, activityDate };
+    try { await recordActivity(createClient(), payload); }
+    catch {
+      queueActivity(payload);
+      setCloudError("Study activity is queued and will sync when the connection recovers.");
+    }
+  }
+
   function submitAnswer() {
     if (!currentQuestion || selectedChoice === null || answerRevealed) return;
     const attempt: Attempt = {
+      id: crypto.randomUUID(),
       questionId: currentQuestion.id,
       topicId: currentQuestion.topicId,
       subjectId: currentQuestion.subjectId,
@@ -247,6 +427,12 @@ useEffect(() => {
     setAttempts((current) => [...current, attempt]);
     setSessionAttempts((current) => [...current, attempt]);
     setAnswerRevealed(true);
+    void recordStudyEvent({
+      eventKey: `answer:${attempt.id}`,
+      questions: 1,
+      correct: attempt.correct ? 1 : 0,
+      subject: subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId,
+    });
   }
 
   function nextQuestion() {
@@ -273,6 +459,11 @@ useEffect(() => {
     root.dataset.theme = nextTheme;
     root.style.colorScheme = nextTheme;
     localStorage.setItem("revit-theme", nextTheme);
+    setPreferences((current) => ({ ...current, theme: nextTheme }));
+    if (cloudEnabled && initialUser) {
+      void savePreferences(createClient(), initialUser.id, { ...preferences, theme: nextTheme })
+        .catch(() => setCloudError("Theme changed locally; cloud preference sync needs retry."));
+    }
   }
 
   function chooseProfilePhoto(event: ChangeEvent<HTMLInputElement>) {
@@ -347,6 +538,7 @@ useEffect(() => {
         mode: data.mode,
         provider: data.provider,
       }]);
+      void recordStudyEvent({ eventKey: `ai-review:${userMessage.id}`, reviews: 1, subject: "MedTech AI" });
     } catch (error) {
       setMessages((current) => [...current, {
         id: crypto.randomUUID(),
@@ -363,7 +555,39 @@ useEffect(() => {
     void ask(draft);
   }
 
-  const heading = viewCopy[activeView];
+  async function persistGrade(record: GradeRecord) {
+    if (cloudEnabled && initialUser) {
+      const saved = await saveCloudGrade(createClient(), initialUser.id, record);
+      setGrades((current) => [...current.filter((item) => item.subject !== saved.subject), saved]);
+    } else setGrades((current) => [...current.filter((item) => item.subject !== record.subject), record]);
+  }
+
+  async function persistExam(exam: Omit<ExamSchedule, "id"> & { id?: string }) {
+    if (cloudEnabled && initialUser) {
+      const saved = await saveCloudExam(createClient(), initialUser.id, exam);
+      setExams((current) => [...current.filter((item) => item.id !== saved.id && !(item.subject === saved.subject && item.assessment_type === saved.assessment_type)), saved].sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date)));
+    } else {
+      const saved = { ...exam, id: exam.id ?? crypto.randomUUID() } as ExamSchedule;
+      setExams((current) => [...current.filter((item) => item.id !== saved.id && !(item.subject === saved.subject && item.assessment_type === saved.assessment_type)), saved].sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date)));
+    }
+  }
+
+  async function removeExam(id: string) {
+    if (cloudEnabled && initialUser) await deleteCloudExam(createClient(), initialUser.id, id);
+    setExams((current) => current.filter((exam) => exam.id !== id));
+  }
+
+  const baseHeading = viewCopy[activeView];
+  const todayKey = dateKeyInTimeZone(new Date(), preferences.timezone);
+  const streak = calculateStreak(activity, todayKey);
+  const firstName = cloudProfile?.first_name || profile.name.split(/\s+/)[0] || "Learner";
+  const heading = activeView === "overview" ? {
+    ...baseHeading,
+    title: `${greetingFor(new Date(), preferences.timezone)}, ${firstName}.`,
+    description: streak.current > 0
+      ? `${streak.current}-day study streak. Keep the next focused step small and consistent.`
+      : "Your next meaningful answer starts a new study streak.",
+  } : baseHeading;
   const selectedTopicNames = selectedTopicIds.map((id) => topicById.get(id)?.name).filter(Boolean);
   const profileInitials = profile.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R";
   const avatarStyle = profile.photoDataUrl ? { backgroundImage: `url(${JSON.stringify(profile.photoDataUrl)})` } : undefined;
@@ -399,7 +623,7 @@ useEffect(() => {
         </div>
         <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
           <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
-          <span><strong>{profile.name}</strong><small>Customize name and photo</small></span>
+          <span><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
         </button>
       </aside>
 
@@ -415,8 +639,15 @@ useEffect(() => {
             <h1>{heading.title}</h1>
             <p>{heading.description}</p>
           </div>
-          {activeView === "overview" && <button className="primary-button" type="button" onClick={() => openView("library")}>Choose topics</button>}
+          <div className="heading-actions">
+            {activeView === "overview" && <span className="streak-badge"><strong>{streak.current}</strong><span>day streak<small>{streak.longest} longest · {streak.activeDays} active</small></span></span>}
+            {activeView === "overview" && <button className="primary-button" type="button" onClick={() => openView("library")}>Choose topics</button>}
+          </div>
         </div>
+
+        {cloudLoading && <div className="sync-banner">Loading your cloud workspace…</div>}
+        {cloudError && <div className="sync-banner error" role="status"><span>{cloudError}</span><button type="button" onClick={() => window.location.reload()}>Retry</button></div>}
+        {!cloudEnabled && <div className="sync-banner local"><span>Local mode: reviewer data stays on this device until Supabase is connected.</span><a href="/auth">Connect account</a></div>}
 
         {activeView === "overview" && (
           <div className="content-grid">
@@ -434,11 +665,13 @@ useEffect(() => {
                   <p>{subjects.length} subjects across {topics.length} selectable topics</p>
                 </article>
                 <article className="metric-card">
-                  <div className="metric-label"><span>Topics practiced</span><small>On this device</small></div>
+                  <div className="metric-label"><span>Topics practiced</span><small>{cloudEnabled ? "Cloud synced" : "On this device"}</small></div>
                   <strong>{practicedTopics.length}</strong>
-                  <p>{attempts.length} total attempts saved locally</p>
+                  <p>{attempts.length} total attempts {cloudEnabled ? "recorded" : "saved locally"}</p>
                 </article>
               </section>
+
+              <StudyCalendar activity={activity} exams={exams} grades={grades} timeZone={preferences.timezone} onSaveExam={persistExam} onDeleteExam={removeExam} />
 
               <section className="focus-card">
                 <div className="section-heading">
@@ -543,7 +776,7 @@ useEffect(() => {
                 </aside>
               </div>
             ) : sessionComplete ? (
-              <SessionSummary attempts={sessionAttempts} onDone={leaveSession} />
+              <SessionSummary attempts={sessionAttempts} onDone={leaveSession} cloudEnabled={cloudEnabled} />
             ) : currentQuestion ? (
               <section className="quiz-card">
                 <div className="quiz-topline">
@@ -610,9 +843,11 @@ useEffect(() => {
                 </section>
               ))}
             </div>
-            {!attempts.length && <div className="empty-progress"><h2>Your progress starts with one answer</h2><p>Choose any topic combination. RevIT will autosave every answer locally and update this page immediately.</p><button className="primary-button" type="button" onClick={() => openView("library")}>Start a review</button></div>}
+            {!attempts.length && <div className="empty-progress"><h2>Your progress starts with one answer</h2><p>Choose any topic combination. RevIT autosaves every answer {cloudEnabled ? "to your account" : "on this device"} and updates this page immediately.</p><button className="primary-button" type="button" onClick={() => openView("library")}>Start a review</button></div>}
           </div>
         )}
+
+        {activeView === "grades" && <GradesPage grades={grades} onSave={persistGrade} />}
 
         {activeView === "assistant" && (
           <div className="assistant-page">
@@ -654,7 +889,7 @@ useEffect(() => {
           </div>
         )}
 
-        {profileOpen && (
+        {profileOpen && !cloudEnabled && (
           <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setProfileOpen(false); }}>
             <section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
               <div className="profile-modal-heading">
@@ -680,12 +915,14 @@ useEffect(() => {
             </section>
           </div>
         )}
+        {profileOpen && cloudEnabled && cloudProfile && initialUser && <AccountSettings profile={cloudProfile} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} />}
+        {cloudEnabled && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} />}
       </section>
     </main>
   );
 }
 
-function SessionSummary({ attempts, onDone }: { attempts: Attempt[]; onDone: () => void }) {
+function SessionSummary({ attempts, onDone, cloudEnabled }: { attempts: Attempt[]; onDone: () => void; cloudEnabled: boolean }) {
   const correct = attempts.filter((attempt) => attempt.correct).length;
   const topicIds = [...new Set(attempts.map((attempt) => attempt.topicId))];
   return (
@@ -693,7 +930,7 @@ function SessionSummary({ attempts, onDone }: { attempts: Attempt[]; onDone: () 
       <span className="result-mark">{percent(correct, attempts.length)}%</span>
       <p className="eyebrow">Review complete</p>
       <h2>{correct} of {attempts.length} correct</h2>
-      <p>Your answers are saved locally and have already updated Progress.</p>
+      <p>Your answers are {cloudEnabled ? "synced to your account" : "saved locally"} and have already updated Progress.</p>
       <div className="result-breakdown">
         {topicIds.map((topicId) => {
           const topicAttempts = attempts.filter((attempt) => attempt.topicId === topicId);
