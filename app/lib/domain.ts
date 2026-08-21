@@ -77,6 +77,13 @@ export type ExamSchedule = {
   note: string | null;
 };
 
+export type QuestionReinforcement = {
+  user_id?: string;
+  question_id: string;
+  reinforcement_level: number;
+  updated_at?: string;
+};
+
 export type UserPreferences = {
   user_id?: string;
   timezone: string;
@@ -89,4 +96,5 @@ export type CloudSnapshot = {
   activity: DailyActivity[];
   exams: ExamSchedule[];
   preferences: UserPreferences | null;
+  reinforcement: QuestionReinforcement[];
 };

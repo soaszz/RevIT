@@ -38,6 +38,32 @@ test("randomizes displayed choices per review session and labels the PDF rationa
   assert.match(app, /shuffled\(\[0, 1, 2, 3\]\)/);
   assert.match(app, /Correct answer:/);
   assert.match(app, />Rationale</);
+  assert.match(app, /chooseAdaptiveQuestion/);
+  assert.match(app, /We’ll bring this concept back later/);
+});
+
+test("passes Turnstile tokens to protected Supabase auth operations", async () => {
+  const auth = await readFile(new URL("../app/auth/AuthPanel.tsx", import.meta.url), "utf8");
+  const forgot = await readFile(new URL("../app/auth/forgot/ForgotPanel.tsx", import.meta.url), "utf8");
+  const widget = await readFile(new URL("../app/components/auth/TurnstileChallenge.tsx", import.meta.url), "utf8");
+
+  assert.match(auth, /signUp\([\s\S]*captchaToken:/);
+  assert.match(auth, /signInWithPassword\([\s\S]*captchaToken:/);
+  assert.match(auth, /data:\s*\{ username: cleanUsername \}/);
+  assert.match(forgot, /resetPasswordForEmail\([\s\S]*captchaToken/);
+  assert.match(widget, /onExpire=\{\(\) => onTokenChange\(null\)\}/);
+  assert.match(widget, /documentElement\.dataset\.theme/);
+  assert.doesNotMatch(`${auth}\n${forgot}\n${widget}`, /TURNSTILE_SECRET|VITE_TURNSTILE_SECRET_KEY/);
+});
+
+test("calendar uses bounded cells and tablet-first full-width breakpoints", async () => {
+  const calendar = await readFile(new URL("../app/components/StudyCalendar.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(calendar, /className="calendar-main"/);
+  assert.match(css, /@media \(max-width: 1240px\)[\s\S]*\.content-grid \{ grid-template-columns: 1fr; \}/);
+  assert.match(css, /\.calendar-day \{[^}]*min-width: 0;[^}]*overflow: hidden;/);
+  assert.match(css, /\.calendar-day\.selected \{[^}]*inset/);
 });
 
 test("gradebook groups all subjects under assessment categories without number spinners", async () => {

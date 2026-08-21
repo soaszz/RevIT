@@ -6,6 +6,7 @@ import type {
   GradeRecord,
   GradeSubject,
   Profile,
+  QuestionReinforcement,
   UserPreferences,
 } from "./domain";
 
@@ -14,14 +15,15 @@ function errorMessage(error: unknown) {
 }
 
 export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
-  const [profile, grades, activity, exams, preferences] = await Promise.all([
+  const [profile, grades, activity, exams, preferences, reinforcement] = await Promise.all([
     client.from("profiles").select("id,username,first_name,avatar_url,onboarding_complete").eq("id", userId).maybeSingle(),
     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
     client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId).order("activity_date", { ascending: true }),
     client.from("exam_schedule").select("id,user_id,subject,assessment_type,scheduled_date,note").eq("user_id", userId).order("scheduled_date", { ascending: true }),
     client.from("user_preferences").select("user_id,timezone,theme").eq("user_id", userId).maybeSingle(),
+    client.from("question_reinforcement").select("user_id,question_id,reinforcement_level,updated_at").eq("user_id", userId),
   ]);
-  const failure = [profile, grades, activity, exams, preferences].find((result) => result.error)?.error;
+  const failure = [profile, grades, activity, exams, preferences, reinforcement].find((result) => result.error)?.error;
   if (failure) throw new Error(failure.message);
   return {
     profile: profile.data as Profile | null,
@@ -29,6 +31,7 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     activity: (activity.data ?? []) as DailyActivity[],
     exams: (exams.data ?? []) as ExamSchedule[],
     preferences: preferences.data as UserPreferences | null,
+    reinforcement: (reinforcement.data ?? []) as QuestionReinforcement[],
   };
 }
 
@@ -76,6 +79,27 @@ export async function deleteExam(client: SupabaseClient, userId: string, id: str
 
 export async function savePreferences(client: SupabaseClient, userId: string, preferences: UserPreferences) {
   const { error } = await client.from("user_preferences").upsert({ ...preferences, user_id: userId });
+  if (error) throw new Error(error.message);
+}
+
+export async function saveQuestionReinforcement(
+  client: SupabaseClient,
+  userId: string,
+  questionId: string,
+  reinforcementLevel: number,
+) {
+  if (reinforcementLevel <= 0) {
+    const { error } = await client.from("question_reinforcement")
+      .delete().eq("user_id", userId).eq("question_id", questionId);
+    if (error) throw new Error(error.message);
+    return;
+  }
+
+  const { error } = await client.from("question_reinforcement").upsert({
+    user_id: userId,
+    question_id: questionId,
+    reinforcement_level: reinforcementLevel,
+  }, { onConflict: "user_id,question_id" });
   if (error) throw new Error(error.message);
 }
 

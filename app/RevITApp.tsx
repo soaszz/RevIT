@@ -19,8 +19,15 @@ import {
   saveExam as saveCloudExam,
   saveGrade as saveCloudGrade,
   savePreferences,
+  saveQuestionReinforcement,
 } from "./lib/cloudService";
 import type { DailyActivity, ExamSchedule, GradeRecord, Profile, UserPreferences } from "./lib/domain";
+import {
+  chooseAdaptiveQuestion,
+  reinforcementAfterAnswer,
+  reinforcementLevelAfterAnswer,
+  type ReinforcementLevels,
+} from "./lib/adaptiveQuestions";
 import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCalendar";
 import { createClient } from "./lib/supabase/client";
 import {
@@ -146,12 +153,16 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [storageReady, setStorageReady] = useState(false);
   const [sessionSize, setSessionSize] = useState("10");
+  const [sessionPoolIds, setSessionPoolIds] = useState<string[]>([]);
+  const [sessionTargetCount, setSessionTargetCount] = useState(0);
   const [sessionQuestionIds, setSessionQuestionIds] = useState<string[]>([]);
   const [sessionChoiceOrders, setSessionChoiceOrders] = useState<Record<string, number[]>>({});
   const [sessionIndex, setSessionIndex] = useState(0);
   const [sessionAttempts, setSessionAttempts] = useState<Attempt[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [answerRevealed, setAnswerRevealed] = useState(false);
+  const [reinforcementLevels, setReinforcementLevels] = useState<ReinforcementLevels>({});
+  const [reinforcementReady, setReinforcementReady] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
@@ -210,6 +221,8 @@ useEffect(() => {
       const savedAttempts = JSON.parse(localStorage.getItem("revit-attempts-v1") ?? "[]") as Attempt[];
       const savedTopics = JSON.parse(localStorage.getItem("revit-selected-topics-v1") ?? "[]") as string[];
       const savedProfile = JSON.parse(localStorage.getItem("revit-profile-v1") ?? "null") as LearnerProfile | null;
+      const reinforcementKey = `revit-reinforcement-v1:${initialUser?.id ?? "local"}`;
+      const savedReinforcement = JSON.parse(localStorage.getItem(reinforcementKey) ?? "{}") as ReinforcementLevels;
       if (Array.isArray(savedAttempts)) setAttempts(savedAttempts);
       if (Array.isArray(savedTopics)) {
         setSelectedTopicIds(savedTopics.filter((id) => topicById.has(id)));
@@ -219,11 +232,16 @@ useEffect(() => {
         setProfile(normalizedProfile);
         setProfileDraft(normalizedProfile);
       }
+      if (savedReinforcement && typeof savedReinforcement === "object" && !Array.isArray(savedReinforcement)) {
+        setReinforcementLevels(Object.fromEntries(Object.entries(savedReinforcement)
+          .filter(([id, level]) => questionById.has(id) && Number.isInteger(level) && level > 0 && level <= 3)));
+      }
     } catch {
       // Invalid local data should not block a study session.
     }
+    setReinforcementReady(true);
     setStorageReady(true);
-  }, []);
+  }, [initialUser?.id]);
 
   useEffect(() => {
     if (!storageReady || cloudEnabled) return;
@@ -267,6 +285,10 @@ useEffect(() => {
         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, profile.name, profile.photoDataUrl);
         const nextPreferences = snapshot.preferences ?? preferences;
         setCloudProfile(nextProfile); setGrades(snapshot.grades); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences);
+        setReinforcementLevels((current) => ({
+          ...current,
+          ...Object.fromEntries(snapshot.reinforcement.map((item) => [item.question_id, item.reinforcement_level])),
+        }));
         setProfile({ name: nextProfile.first_name || profile.name, photoDataUrl: nextProfile.avatar_url ?? "" });
         if (nextPreferences.theme === "light" || nextPreferences.theme === "dark") {
           document.documentElement.dataset.theme = nextPreferences.theme;
@@ -303,6 +325,12 @@ useEffect(() => {
   useEffect(() => {
     if (storageReady) localStorage.setItem("revit-attempts-v1", JSON.stringify(attempts));
   }, [attempts, storageReady]);
+
+  useEffect(() => {
+    if (!reinforcementReady) return;
+    const reinforcementKey = `revit-reinforcement-v1:${initialUser?.id ?? "local"}`;
+    localStorage.setItem(reinforcementKey, JSON.stringify(reinforcementLevels));
+  }, [initialUser?.id, reinforcementLevels, reinforcementReady]);
 
   useEffect(() => {
     if (storageReady) localStorage.setItem("revit-selected-topics-v1", JSON.stringify(selectedTopicIds));
@@ -356,9 +384,17 @@ useEffect(() => {
   const weakestTopic = [...practicedTopics].sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts)[0];
   const currentQuestion = questionById.get(sessionQuestionIds[sessionIndex]);
   const currentChoiceOrder = currentQuestion
-    ? sessionChoiceOrders[currentQuestion.id] ?? currentQuestion.choices.map((_, index) => index)
+    ? sessionChoiceOrders[`${sessionIndex}:${currentQuestion.id}`] ?? currentQuestion.choices.map((_, index) => index)
     : [];
   const sessionComplete = sessionQuestionIds.length > 0 && sessionIndex >= sessionQuestionIds.length;
+  const sessionRequiresFullCoverage = sessionTargetCount > 0 && sessionTargetCount === sessionPoolIds.length;
+  const sessionHasUnseenQuestions = sessionRequiresFullCoverage
+    && sessionPoolIds.some((id) => !sessionQuestionIds.includes(id));
+  const sessionCanFinish = sessionAttempts.length >= sessionTargetCount && !sessionHasUnseenQuestions;
+  const sessionUniqueQuestionCount = new Set(sessionQuestionIds).size;
+  const sessionProgressCount = sessionRequiresFullCoverage
+    ? sessionUniqueQuestionCount
+    : Math.min(sessionIndex + 1, sessionTargetCount);
 
   function toggleTopic(topicId: string) {
     setSelectedTopicIds((current) => current.includes(topicId)
@@ -374,10 +410,14 @@ useEffect(() => {
   function startSession() {
     if (!selectedQuestions.length) return;
     const limit = sessionSize === "all" ? selectedQuestions.length : Number(sessionSize);
-    const nextQuestions = shuffled(selectedQuestions).slice(0, Math.min(limit, selectedQuestions.length));
-    const nextQuestionIds = nextQuestions.map((question) => question.id);
-    setSessionQuestionIds(nextQuestionIds);
-    setSessionChoiceOrders(Object.fromEntries(nextQuestionIds.map((id) => [id, shuffled([0, 1, 2, 3])])));
+    const poolIds = selectedQuestions.map((question) => question.id);
+    const targetCount = Math.min(limit, poolIds.length);
+    const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, []);
+    if (!firstQuestionId) return;
+    setSessionPoolIds(poolIds);
+    setSessionTargetCount(targetCount);
+    setSessionQuestionIds([firstQuestionId]);
+    setSessionChoiceOrders({ [`0:${firstQuestionId}`]: shuffled([0, 1, 2, 3]) });
     setSessionIndex(0);
     setSessionAttempts([]);
     setSelectedChoice(null);
@@ -385,6 +425,8 @@ useEffect(() => {
   }
 
   function leaveSession() {
+    setSessionPoolIds([]);
+    setSessionTargetCount(0);
     setSessionQuestionIds([]);
     setSessionChoiceOrders({});
     setSessionIndex(0);
@@ -434,6 +476,16 @@ useEffect(() => {
     };
     setAttempts((current) => [...current, attempt]);
     setSessionAttempts((current) => [...current, attempt]);
+    const currentReinforcementLevel = reinforcementLevels[currentQuestion.id] ?? 0;
+    const nextReinforcementLevel = reinforcementLevelAfterAnswer(
+      currentReinforcementLevel,
+      attempt.correct,
+    );
+    setReinforcementLevels((current) => reinforcementAfterAnswer(current, currentQuestion.id, attempt.correct));
+    if (cloudEnabled && initialUser && (!attempt.correct || currentReinforcementLevel > 0)) {
+      void saveQuestionReinforcement(createClient(), initialUser.id, currentQuestion.id, nextReinforcementLevel)
+        .catch(() => setCloudError("Your answer is saved locally, but reinforcement sync needs another attempt."));
+    }
     setAnswerRevealed(true);
     void recordStudyEvent({
       eventKey: `answer:${attempt.id}`,
@@ -444,7 +496,27 @@ useEffect(() => {
   }
 
   function nextQuestion() {
-    setSessionIndex((current) => current + 1);
+    if (sessionCanFinish) {
+      setSessionIndex((current) => current + 1);
+      setSelectedChoice(null);
+      setAnswerRevealed(false);
+      return;
+    }
+
+    const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds);
+    if (!nextQuestionId) {
+      setSessionIndex((current) => current + 1);
+      setSelectedChoice(null);
+      setAnswerRevealed(false);
+      return;
+    }
+    const nextIndex = sessionQuestionIds.length;
+    setSessionQuestionIds((current) => [...current, nextQuestionId]);
+    setSessionChoiceOrders((current) => ({
+      ...current,
+      [`${nextIndex}:${nextQuestionId}`]: shuffled([0, 1, 2, 3]),
+    }));
+    setSessionIndex(nextIndex);
     setSelectedChoice(null);
     setAnswerRevealed(false);
   }
@@ -788,10 +860,10 @@ useEffect(() => {
             ) : currentQuestion ? (
               <section className="quiz-card">
                 <div className="quiz-topline">
-                  <div><span>Question {sessionIndex + 1} of {sessionQuestionIds.length}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
+                  <div><span>{sessionRequiresFullCoverage ? `Question ${sessionIndex + 1} · ${sessionUniqueQuestionCount} of ${sessionPoolIds.length} concepts` : `Question ${sessionIndex + 1} of ${sessionTargetCount}`}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
                   <button className="text-button quiet" type="button" onClick={leaveSession}>Exit session</button>
                 </div>
-                <div className="quiz-progress"><span style={{ width: `${((sessionIndex + 1) / sessionQuestionIds.length) * 100}%` }} /></div>
+                <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
                 <p className="question-source">{subjectById.get(currentQuestion.subjectId)?.name} · Official supplied reviewer</p>
                 <h2>{currentQuestion.prompt}</h2>
                 <div className="choice-list">
@@ -817,13 +889,14 @@ useEffect(() => {
                     <strong>{selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
                     <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
                     <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
+                    {selectedChoice !== currentQuestion.correctAnswer && <p className="reinforcement-note">We’ll bring this concept back later.</p>}
                     <small>Source: {currentQuestion.source.fileName}, page {currentQuestion.source.page}</small>
                   </div>
                 )}
                 <div className="quiz-actions">
                   {!answerRevealed
                     ? <button className="primary-button" type="button" onClick={submitAnswer} disabled={selectedChoice === null}>Check answer</button>
-                    : <button className="primary-button" type="button" onClick={nextQuestion}>{sessionIndex + 1 === sessionQuestionIds.length ? "See results" : "Next question"}</button>}
+                    : <button className="primary-button" type="button" onClick={nextQuestion}>{sessionCanFinish ? "See results" : "Next question"}</button>}
                 </div>
               </section>
             ) : null}

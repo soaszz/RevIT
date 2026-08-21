@@ -93,7 +93,7 @@ export default function StudyCalendar({ activity, exams, grades, timeZone, onSav
         <div className="calendar-actions"><button type="button" onClick={() => moveMonth(-1)} aria-label="Previous month">←</button><button type="button" onClick={() => setCursor({ year: Number(todayKey.slice(0, 4)), month: Number(todayKey.slice(5, 7)) - 1 })}>Today</button><button type="button" onClick={() => moveMonth(1)} aria-label="Next month">→</button></div>
       </div>
       <div className="calendar-layout">
-        <div>
+        <div className="calendar-main">
           <div className="calendar-weekdays" aria-hidden="true">{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => <span key={day}>{day}</span>)}</div>
           <div className="month-grid" aria-label={`${monthName} calendar`}>
             {days.map((day) => {
@@ -103,7 +103,7 @@ export default function StudyCalendar({ activity, exams, grades, timeZone, onSav
               return (
                 <button type="button" key={day.key} className={`calendar-day intensity-${intensity} ${day.inMonth ? "" : "outside"} ${day.key === todayKey ? "today" : ""} ${selectedDate === day.key ? "selected" : ""}`} onClick={() => setSelectedDate(day.key)} aria-label={`${day.key}, activity level ${intensity}, ${dayExams.length} exams`}>
                   <span>{day.day}</span>
-                  <span className="exam-dots">{dayExams.slice(0, 4).map((exam) => <i className={SUBJECT_TONES[exam.subject]} key={exam.id} title={`${exam.subject} ${exam.assessment_type}`} />)}</span>
+                  <span className="exam-dots" aria-hidden="true">{dayExams.slice(0, 4).map((exam) => <i className={SUBJECT_TONES[exam.subject]} key={exam.id} title={`${exam.subject} ${exam.assessment_type}`} />)}</span>
                 </button>
               );
             })}

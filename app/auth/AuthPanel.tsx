@@ -1,8 +1,9 @@
 "use client";
 
 import type { Factor } from "@supabase/supabase-js";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import TurnstileChallenge, { type TurnstileChallengeHandle } from "../components/auth/TurnstileChallenge";
 import { createClient } from "../lib/supabase/client";
 
 type Mode = "login" | "register";
@@ -89,8 +90,9 @@ function PasswordField({
   );
 }
 
-export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { next?: string; turnstileSiteKey: string }) {
   const router = useRouter();
+  const turnstileRef = useRef<TurnstileChallengeHandle>(null);
   const [mode, setMode] = useState<Mode>("login");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -102,6 +104,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
   const [pending, setPending] = useState(false);
   const [mfaFactorId, setMfaFactorId] = useState("");
   const [mfaCode, setMfaCode] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   function showStatus(message = "", type: StatusType = "error") {
     setStatus(message);
@@ -112,7 +115,19 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
     if (pending || nextMode === mode) return;
     setMode(nextMode);
     if (nextMode === "login") setConfirmPassword("");
+    turnstileRef.current?.reset();
     showStatus("");
+  }
+
+  function requireCaptcha() {
+    if (captchaToken) return captchaToken;
+    showStatus("Please complete the security check.");
+    return null;
+  }
+
+  function resetCaptcha() {
+    turnstileRef.current?.reset();
+    setCaptchaToken(null);
   }
 
   async function completeLogin() {
@@ -142,7 +157,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
     router.refresh();
   }
 
-  async function register() {
+  async function register(token: string) {
     const supabase = createClient();
     const cleanEmail = email.trim().toLowerCase();
     const cleanUsername = username.trim().toLowerCase();
@@ -163,6 +178,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
       options: {
         data: { username: cleanUsername },
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/overview`,
+        captchaToken: token,
       },
     });
     if (error) throw error;
@@ -179,6 +195,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
     setPassword("");
     setConfirmPassword("");
     setMode("login");
+    resetCaptcha();
     showStatus(
       data.session
         ? "Account created. Sign in with your email and password."
@@ -189,18 +206,25 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const token = requireCaptcha();
+    if (!token) return;
     setPending(true);
     showStatus("");
     try {
       if (mode === "register") {
-        await register();
+        await register(token);
         return;
       }
-      const { error } = await createClient().auth.signInWithPassword({ email: email.trim(), password });
+      const { error } = await createClient().auth.signInWithPassword({
+        email: email.trim(),
+        password,
+        options: { captchaToken: token },
+      });
       if (error) throw error;
       await completeLogin();
     } catch (error) {
       showStatus(getErrorMessage(error, "Authentication could not be completed."));
+      resetCaptcha();
     } finally {
       setPending(false);
     }
@@ -259,8 +283,16 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
       </div>
 
       {mode === "login" && <label className="check-label"><input type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} /><span>Remember me for up to 30 days</span></label>}
+      <TurnstileChallenge
+        key={mode}
+        ref={turnstileRef}
+        siteKey={turnstileSiteKey}
+        action={mode}
+        onTokenChange={setCaptchaToken}
+        onUnavailable={() => showStatus("The security check could not load. Please try again.")}
+      />
       {status && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{status}</p>}
-      <button className="primary-button wide auth-submit" type="submit" disabled={pending}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
+      <button className="primary-button wide auth-submit" type="submit" disabled={pending || !turnstileSiteKey}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
       {mode === "login" && <a className="auth-link" href="/auth/forgot">Forgot your password?</a>}
     </form>
   );

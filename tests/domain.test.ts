@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { resolveAuthState } from "../app/lib/authState";
+import { chooseAdaptiveQuestion, reinforcementAfterAnswer } from "../app/lib/adaptiveQuestions";
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
@@ -66,6 +67,27 @@ test("calendar supports multiple exams and chooses nearest future assessment", (
   ];
   assert.equal(exams.filter((exam) => exam.scheduled_date === "2026-08-26").length, 2);
   assert.equal(upcomingExam(exams, "2026-08-20")?.id, "3");
+});
+
+test("adaptive reinforcement spaces retries and removes the boost after a correct answer", () => {
+  const pool = ["a", "b", "c", "d", "e"];
+  const reinforced = reinforcementAfterAnswer({}, "a", false);
+  assert.equal(reinforced.a, 1);
+  assert.equal(chooseAdaptiveQuestion(pool, reinforced, ["a"], () => 0), "b");
+  assert.equal(chooseAdaptiveQuestion(pool, reinforced, ["a", "b"], () => 0), "c");
+  assert.equal(chooseAdaptiveQuestion(pool, reinforced, ["a", "b", "c"], () => 0), "d");
+  assert.equal(chooseAdaptiveQuestion(pool, reinforced, ["a", "b", "c", "d"], () => 0), "a");
+
+  const normalized = reinforcementAfterAnswer(reinforced, "a", true);
+  assert.equal(normalized.a, undefined);
+  assert.equal(chooseAdaptiveQuestion(pool, normalized, ["a", "b", "c", "d"], () => 0), "e");
+  assert.equal(reinforcementAfterAnswer(normalized, "a", false).a, 1);
+});
+
+test("adaptive selection stays inside the active pool and handles small pools", () => {
+  assert.equal(chooseAdaptiveQuestion(["only"], { outside: 3, only: 2 }, ["only"], () => 0), "only");
+  assert.equal(chooseAdaptiveQuestion(["a", "b"], { outside: 3 }, ["a"], () => 0), "b");
+  assert.ok(["hema-1", "hema-2"].includes(chooseAdaptiveQuestion(["hema-1", "hema-2"], { "bacte-1": 3 }, [], () => 0.5) ?? ""));
 });
 
 test("auth routing distinguishes logged-out, unverified, onboarding, and ready", () => {

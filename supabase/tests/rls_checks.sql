@@ -10,11 +10,16 @@ values
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}', true);
 insert into public.grades (user_id, subject, pre_test) values ('11111111-1111-1111-1111-111111111111', 'Hematology', 45);
+insert into public.question_reinforcement (user_id, question_id, reinforcement_level)
+values ('11111111-1111-1111-1111-111111111111', 'clinical-chemistry-instrumentation-001', 1);
 
 select set_config('request.jwt.claims', '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}', true);
 do $$ begin
   if exists (select 1 from public.grades where user_id = '11111111-1111-1111-1111-111111111111') then
     raise exception 'RLS failure: user two can see user one grade';
+  end if;
+  if exists (select 1 from public.question_reinforcement where user_id = '11111111-1111-1111-1111-111111111111') then
+    raise exception 'RLS failure: user two can see user one reinforcement state';
   end if;
 end $$;
 
