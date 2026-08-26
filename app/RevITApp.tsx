@@ -170,6 +170,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [sessionQuestionIds, setSessionQuestionIds] = useState<string[]>([]);
   const [sessionChoiceOrders, setSessionChoiceOrders] = useState<Record<string, number[]>>({});
   const [sessionIndex, setSessionIndex] = useState(0);
+  const [sessionStrictWrongOnly, setSessionStrictWrongOnly] = useState(false);
   const [sessionAttempts, setSessionAttempts] = useState<Attempt[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [answerRevealed, setAnswerRevealed] = useState(false);
@@ -397,10 +398,14 @@ useEffect(() => {
     return performance;
   }, [attempts]);
 
-  const wrongQuestionIds = useMemo(
-    () => new Set(attempts.filter((attempt) => !attempt.correct).map((attempt) => attempt.questionId)),
-    [attempts],
-  );
+  const wrongQuestionIds = useMemo(() => {
+    const latestAttempts = new Map<string, Attempt>();
+    for (const attempt of attempts) {
+      const current = latestAttempts.get(attempt.questionId);
+      if (!current || attempt.timestamp >= current.timestamp) latestAttempts.set(attempt.questionId, attempt);
+    }
+    return new Set([...latestAttempts.values()].filter((attempt) => !attempt.correct).map((attempt) => attempt.questionId));
+  }, [attempts]);
 
   const wrongTopicIds = useMemo(
     () => [...new Set(questions.filter((question) => wrongQuestionIds.has(question.id)).map((question) => question.topicId))],
@@ -435,12 +440,16 @@ useEffect(() => {
     ? sessionChoiceOrders[`${sessionIndex}:${currentQuestion.id}`] ?? currentQuestion.choices.map((_, index) => index)
     : [];
   const sessionComplete = sessionQuestionIds.length > 0 && sessionIndex >= sessionQuestionIds.length;
-  const sessionRequiresFullCoverage = sessionTargetCount > 0 && sessionTargetCount === sessionPoolIds.length;
+  const sessionRequiresFullCoverage = !sessionStrictWrongOnly && sessionTargetCount > 0 && sessionTargetCount === sessionPoolIds.length;
   const sessionHasUnseenQuestions = sessionRequiresFullCoverage
     && sessionPoolIds.some((id) => !sessionQuestionIds.includes(id));
-  const sessionCanFinish = sessionAttempts.length >= sessionTargetCount && !sessionHasUnseenQuestions;
+  const sessionCanFinish = sessionStrictWrongOnly
+    ? sessionQuestionIds.length > 0 && sessionAttempts.length >= sessionQuestionIds.length
+    : sessionAttempts.length >= sessionTargetCount && !sessionHasUnseenQuestions;
   const sessionUniqueQuestionCount = new Set(sessionQuestionIds).size;
-  const sessionProgressCount = sessionRequiresFullCoverage
+  const sessionProgressCount = sessionStrictWrongOnly
+    ? Math.min(sessionIndex + 1, sessionTargetCount)
+    : sessionRequiresFullCoverage
     ? sessionUniqueQuestionCount
     : Math.min(sessionIndex + 1, sessionTargetCount);
 
@@ -467,12 +476,29 @@ useEffect(() => {
     const limit = sessionSize === "all" ? sessionQuestions.length : Number(sessionSize);
     const poolIds = sessionQuestions.map((question) => question.id);
     const targetCount = Math.min(limit, poolIds.length);
+    if (wrongAnswersOnly) {
+      const strictQuestionIds = shuffled(poolIds).slice(0, targetCount);
+      setSessionPoolIds(strictQuestionIds);
+      setSessionTargetCount(strictQuestionIds.length);
+      setSessionQuestionIds(strictQuestionIds);
+      setSessionChoiceOrders(Object.fromEntries(strictQuestionIds.map((questionId, index) => [
+        `${index}:${questionId}`,
+        shuffled([0, 1, 2, 3]),
+      ])));
+      setSessionStrictWrongOnly(true);
+      setSessionIndex(0);
+      setSessionAttempts([]);
+      setSelectedChoice(null);
+      setAnswerRevealed(false);
+      return;
+    }
     const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, [], Math.random, questionPerformance);
     if (!firstQuestionId) return;
     setSessionPoolIds(poolIds);
     setSessionTargetCount(targetCount);
     setSessionQuestionIds([firstQuestionId]);
     setSessionChoiceOrders({ [`0:${firstQuestionId}`]: shuffled([0, 1, 2, 3]) });
+    setSessionStrictWrongOnly(false);
     setSessionIndex(0);
     setSessionAttempts([]);
     setSelectedChoice(null);
@@ -484,6 +510,7 @@ useEffect(() => {
     setSessionTargetCount(0);
     setSessionQuestionIds([]);
     setSessionChoiceOrders({});
+    setSessionStrictWrongOnly(false);
     setSessionIndex(0);
     setSessionAttempts([]);
     setSelectedChoice(null);
@@ -551,6 +578,13 @@ useEffect(() => {
   }
 
   function nextQuestion() {
+    if (sessionStrictWrongOnly) {
+      setSessionIndex((current) => current + 1);
+      setSelectedChoice(null);
+      setAnswerRevealed(false);
+      return;
+    }
+
     if (sessionCanFinish) {
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
@@ -924,7 +958,7 @@ useEffect(() => {
                   <p className="eyebrow">Session setup</p>
                   <h2>{selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"} selected</h2>
                   <p>{wrongAnswersOnly
-                    ? `${sessionQuestions.length} previously missed question${sessionQuestions.length === 1 ? " is" : "s are"} available from your selection.`
+                    ? `${sessionQuestions.length} wrong-answer question${sessionQuestions.length === 1 ? " is" : "s are"} available from your selection.`
                     : `${sessionQuestions.length} official questions are available from your selection.`}</p>
                   <div className="selection-controls">
                     <button className="text-button" type="button" onClick={() => setSelectedTopicIds(topics.map((topic) => topic.id))}>Select all</button>
@@ -933,9 +967,9 @@ useEffect(() => {
                   </div>
                   <div className="wrong-answer-filter">
                     <input id="wrong-answers-only" type="checkbox" aria-describedby="wrong-answers-only-help" checked={wrongAnswersOnly} onChange={(event) => setWrongAnswersOnly(event.target.checked)} />
-                    <label htmlFor="wrong-answers-only">Wrong answers only<small id="wrong-answers-only-help">Practice only questions you have missed in the selected topics.</small></label>
+                    <label htmlFor="wrong-answers-only">Wrong answers only<small id="wrong-answers-only-help">Practice only questions whose latest answer was wrong.</small></label>
                   </div>
-                  {wrongAnswersOnly && selectedTopicIds.length > 0 && sessionQuestions.length === 0 && <p className="wrong-answer-empty">No missed questions yet in these topics.</p>}
+                  {wrongAnswersOnly && selectedTopicIds.length > 0 && sessionQuestions.length === 0 && <p className="wrong-answer-empty">No wrong-answer questions remain in these topics.</p>}
                   <label className="field-label" htmlFor="session-size">Questions this session</label>
                   <select id="session-size" value={sessionSize} onChange={(event) => setSessionSize(event.target.value)}>
                     <option value="10">10 questions</option>
@@ -958,7 +992,7 @@ useEffect(() => {
                   <button className="text-button quiet" type="button" onClick={leaveSession}>Exit session</button>
                 </div>
                 <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
-                <p className="question-source">{subjectById.get(currentQuestion.subjectId)?.name} · Official supplied reviewer</p>
+                <p className="question-source">{subjectById.get(currentQuestion.subjectId)?.name}</p>
                 <h2>{currentQuestion.prompt}</h2>
                 <div className="choice-list">
                   {currentChoiceOrder.map((choiceIndex, displayIndex) => {

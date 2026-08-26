@@ -90,6 +90,10 @@ test("QnA setup stays accessible and the desktop navigation can collapse", async
   assert.match(app, /"Unselect subject"/);
   assert.match(app, /function selectAllWrongAnswers/);
   assert.match(app, />All wrong answers<\/button>/);
+  assert.match(app, /sessionStrictWrongOnly/);
+  assert.match(app, /const strictQuestionIds = shuffled\(poolIds\)\.slice\(0, targetCount\)/);
+  assert.match(app, /latestAttempts\.values\(\)/);
+  assert.doesNotMatch(app, /Official supplied reviewer/);
   assert.match(css, /\.selection-panel \{[^}]*position: sticky;[^}]*max-height: calc\(100vh - 48px\);/);
 });
 
