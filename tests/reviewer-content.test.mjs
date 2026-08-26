@@ -70,9 +70,10 @@ test("QnA setup stays accessible and the desktop navigation can collapse", async
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(app, /label: "Home", icon: "H"/);
-  assert.match(app, /label: "QnA", icon: "Q"/);
-  assert.match(app, /sidebar-current-view/);
+  assert.match(app, /label: "Home", icon: "\/icons\/home\.svg"/);
+  assert.match(app, /label: "QnA", icon: "\/icons\/qna\.svg"/);
+  assert.match(app, /src="\/revit-logo\.png"/);
+  assert.doesNotMatch(app, /sidebar-current-view/);
   assert.match(app, /aria-expanded=\{!sidebarCollapsed\}/);
   assert.match(app, /sidebarCollapsed \? "☰" : "«"/);
   assert.match(app, /function openNavigationView[\s\S]*setSidebarCollapsed\(true\)/);
@@ -85,6 +86,10 @@ test("QnA setup stays accessible and the desktop navigation can collapse", async
   assert.match(css, /\.sidebar-toggle \{[^}]*width: 36px;[^}]*min-height: 34px;/);
   assert.match(app, /Wrong answers only/);
   assert.match(app, /wrongAnswersOnly/);
+  assert.match(app, /function toggleSubject/);
+  assert.match(app, /"Unselect subject"/);
+  assert.match(app, /function selectAllWrongAnswers/);
+  assert.match(app, />All wrong answers<\/button>/);
   assert.match(css, /\.selection-panel \{[^}]*position: sticky;[^}]*max-height: calc\(100vh - 48px\);/);
 });
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -70,12 +71,21 @@ type LearnerProfile = {
 const DEFAULT_PROFILE: LearnerProfile = { name: "Jamie Santos", photoDataUrl: "" };
 
 const navItems: Array<{ id: View; label: string; icon: string }> = [
-  { id: "overview", label: "Home", icon: "H" },
-  { id: "library", label: "QnA", icon: "Q" },
-  { id: "progress", label: "Progress", icon: "P" },
-  { id: "grades", label: "Grades", icon: "G" },
-  { id: "assistant", label: "MedTech AI", icon: "AI" },
+  { id: "overview", label: "Home", icon: "/icons/home.svg" },
+  { id: "library", label: "QnA", icon: "/icons/qna.svg" },
+  { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
+  { id: "grades", label: "Grades", icon: "/icons/grades.svg" },
+  { id: "assistant", label: "MedTech AI", icon: "/icons/medtech-ai.svg" },
 ];
+
+function RevITLogo() {
+  return (
+    <>
+      <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
+      <span className="brand-logo brand-logo-mark" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
+    </>
+  );
+}
 
 const viewCopy: Record<View, { eyebrow: string; title: string; description: string }> = {
   overview: {
@@ -392,6 +402,11 @@ useEffect(() => {
     [attempts],
   );
 
+  const wrongTopicIds = useMemo(
+    () => [...new Set(questions.filter((question) => wrongQuestionIds.has(question.id)).map((question) => question.topicId))],
+    [wrongQuestionIds],
+  );
+
   const sessionQuestions = useMemo(
     () => wrongAnswersOnly
       ? selectedQuestions.filter((question) => wrongQuestionIds.has(question.id))
@@ -435,9 +450,16 @@ useEffect(() => {
       : [...current, topicId]);
   }
 
-  function selectSubject(subjectId: string) {
+  function toggleSubject(subjectId: string) {
     const subjectTopicIds = topics.filter((topic) => topic.subjectId === subjectId).map((topic) => topic.id);
-    setSelectedTopicIds((current) => [...new Set([...current, ...subjectTopicIds])]);
+    setSelectedTopicIds((current) => subjectTopicIds.every((id) => current.includes(id))
+      ? current.filter((id) => !subjectTopicIds.includes(id))
+      : [...new Set([...current, ...subjectTopicIds])]);
+  }
+
+  function selectAllWrongAnswers() {
+    setSelectedTopicIds(wrongTopicIds);
+    setWrongAnswersOnly(true);
   }
 
   function startSession() {
@@ -720,8 +742,7 @@ useEffect(() => {
         <div className="sidebar-heading">
           <div className="sidebar-brand-row">
             <button className="brand brand-button" type="button" onClick={() => openNavigationView("overview")} aria-label="RevIT home">
-              <span className="brand-mark" aria-hidden="true">R</span>
-              <span className="brand-copy">RevIT</span>
+              <RevITLogo />
             </button>
             <button
               className="sidebar-toggle"
@@ -734,10 +755,6 @@ useEffect(() => {
               <span className="sidebar-toggle-icon" aria-hidden="true">{sidebarCollapsed ? "☰" : "«"}</span>
             </button>
           </div>
-          <div className="sidebar-current-view" aria-label={`Current page: ${activeNavItem.label}`}>
-            <span className="current-view-icon" aria-hidden="true">{activeNavItem.icon}</span>
-            <strong>{activeNavItem.label}</strong>
-          </div>
         </div>
         <nav aria-label="Primary navigation">
           {navItems.map((item) => (
@@ -749,7 +766,7 @@ useEffect(() => {
               aria-current={activeView === item.id ? "page" : undefined}
               title={sidebarCollapsed ? item.label : undefined}
             >
-              <span className="nav-icon" aria-hidden="true">{item.icon}</span><span className="nav-label">{item.label}</span>
+              <span className="nav-icon" aria-hidden="true"><Image src={item.icon} alt="" width={24} height={24} /></span><span className="nav-label">{item.label}</span>
             </button>
           ))}
         </nav>
@@ -772,8 +789,8 @@ useEffect(() => {
       <section className="workspace">
         <header className="mobile-header">
           <div className="mobile-brand-stack">
-            <button className="brand brand-button" type="button" onClick={() => openView("overview")}><span className="brand-mark">R</span>RevIT</button>
-            <span className="mobile-current-view"><i aria-hidden="true">{activeNavItem.icon}</i>{activeNavItem.label}</span>
+            <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home"><RevITLogo /></button>
+            <span className="mobile-current-view"><i aria-hidden="true"><Image src={activeNavItem.icon} alt="" width={15} height={15} /></i>{activeNavItem.label}</span>
           </div>
           <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => openView(event.target.value as View)}>{navItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label><button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
         </header>
@@ -877,11 +894,12 @@ useEffect(() => {
                   {subjects.map((subject) => {
                     const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
                     const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
+                    const subjectFullySelected = subjectSelected === subjectTopics.length;
                     return (
                       <section className="subject-card" key={subject.id}>
                         <div className="subject-heading">
                           <div><p className="eyebrow">{questions.filter((question) => question.subjectId === subject.id).length} official MCQs</p><h2>{subject.name}</h2><p>{subject.description}</p></div>
-                          <button className="text-button" type="button" onClick={() => selectSubject(subject.id)}>Select subject</button>
+                          <button className="text-button" type="button" onClick={() => toggleSubject(subject.id)}>{subjectFullySelected ? "Unselect subject" : "Select subject"}</button>
                         </div>
                         <div className="topic-selection-grid">
                           {subjectTopics.map((topic) => {
@@ -910,6 +928,7 @@ useEffect(() => {
                     : `${sessionQuestions.length} official questions are available from your selection.`}</p>
                   <div className="selection-controls">
                     <button className="text-button" type="button" onClick={() => setSelectedTopicIds(topics.map((topic) => topic.id))}>Select all</button>
+                    <button className="text-button" type="button" onClick={selectAllWrongAnswers} disabled={!wrongTopicIds.length}>All wrong answers</button>
                     <button className="text-button quiet" type="button" onClick={() => setSelectedTopicIds([])}>Clear all</button>
                   </div>
                   <div className="wrong-answer-filter">
