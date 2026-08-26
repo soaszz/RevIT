@@ -687,25 +687,28 @@ useEffect(() => {
     <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
       <aside className="sidebar">
         <div className="sidebar-heading">
-          <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home">
-            <span className="brand-mark" aria-hidden="true">R</span>
-            <span className="brand-copy">RevIT</span>
-          </button>
+          <div className="sidebar-brand-row">
+            <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home">
+              <span className="brand-mark" aria-hidden="true">R</span>
+              <span className="brand-copy">RevIT</span>
+            </button>
+            <button
+              className="sidebar-toggle"
+              type="button"
+              onClick={() => setSidebarCollapsed((current) => !current)}
+              aria-expanded={!sidebarCollapsed}
+              aria-label={sidebarCollapsed ? "Expand navigation sidebar" : "Collapse navigation sidebar"}
+              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              <span className="sidebar-toggle-icon" aria-hidden="true">{sidebarCollapsed ? "»" : "«"}</span>
+              <span className="sidebar-toggle-label">{sidebarCollapsed ? "Expand" : "Collapse"}</span>
+            </button>
+          </div>
           <div className="sidebar-current-view" aria-label={`Current page: ${activeNavItem.label}`}>
-            <span aria-hidden="true">{activeNavItem.icon}</span>
+            <span className="current-view-icon" aria-hidden="true">{activeNavItem.icon}</span>
             <strong>{activeNavItem.label}</strong>
           </div>
         </div>
-        <button
-          className="sidebar-toggle"
-          type="button"
-          onClick={() => setSidebarCollapsed((current) => !current)}
-          aria-expanded={!sidebarCollapsed}
-          aria-label={sidebarCollapsed ? "Expand navigation sidebar" : "Collapse navigation sidebar"}
-          title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          <span aria-hidden="true">{sidebarCollapsed ? "›" : "‹"}</span>
-        </button>
         <nav aria-label="Primary navigation">
           {navItems.map((item) => (
             <button

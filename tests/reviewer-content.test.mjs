@@ -77,7 +77,9 @@ test("QnA setup stays accessible and the desktop navigation can collapse", async
   assert.match(app, /<option value="30">30 questions<\/option>/);
   assert.match(app, /<option value="40">40 questions<\/option>/);
   assert.match(app, /<option value="50">50 questions<\/option>/);
-  assert.match(css, /\.app-shell\.sidebar-collapsed \{ grid-template-columns: 76px/);
+  assert.match(css, /\.app-shell\.sidebar-collapsed \{ grid-template-columns: 84px/);
+  assert.match(css, /\.nav-link \.nav-label \{[^}]*width: auto;[^}]*border: 0;/);
+  assert.match(css, /\.sidebar-toggle \{[^}]*min-width: 76px;[^}]*min-height: 34px;/);
   assert.match(css, /\.selection-panel \{[^}]*position: sticky;[^}]*max-height: calc\(100vh - 48px\);/);
 });
 
