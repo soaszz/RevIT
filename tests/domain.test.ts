@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { resolveAuthState } from "../app/lib/authState";
 import { chooseAdaptiveQuestion, reinforcementAfterAnswer } from "../app/lib/adaptiveQuestions";
+import { isMissingQuestionReinforcementTableError } from "../app/lib/cloudService";
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
@@ -88,6 +89,12 @@ test("adaptive selection stays inside the active pool and handles small pools", 
   assert.equal(chooseAdaptiveQuestion(["only"], { outside: 3, only: 2 }, ["only"], () => 0), "only");
   assert.equal(chooseAdaptiveQuestion(["a", "b"], { outside: 3 }, ["a"], () => 0), "b");
   assert.ok(["hema-1", "hema-2"].includes(chooseAdaptiveQuestion(["hema-1", "hema-2"], { "bacte-1": 3 }, [], () => 0.5) ?? ""));
+});
+
+test("a missing optional reinforcement table does not block core cloud data", () => {
+  assert.equal(isMissingQuestionReinforcementTableError({ code: "PGRST205", message: "not in schema cache" }), true);
+  assert.equal(isMissingQuestionReinforcementTableError({ code: "42P01", message: "undefined table" }), true);
+  assert.equal(isMissingQuestionReinforcementTableError({ code: "42501", message: "permission denied" }), false);
 });
 
 test("auth routing distinguishes logged-out, unverified, onboarding, and ready", () => {

@@ -81,7 +81,7 @@ test("gradebook groups all subjects under assessment categories without number s
   assert.match(grades, /Percentage/);
   assert.match(grades, /Save all grades/);
   assert.doesNotMatch(css, /\.grade-save-bar\s*\{[^}]*position:\s*sticky/);
-  assert.match(css, /grade-score-input::\-webkit-inner-spin-button/);
+  assert.match(css, /grade-score-input::-webkit-inner-spin-button/);
   assert.match(css, /appearance:\s*none/);
 });
 

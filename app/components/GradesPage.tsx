@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   GRADE_FIELDS,
   PASSING_GRADE,
@@ -65,10 +65,12 @@ export default function GradesPage({ grades, onSave }: { grades: GradeRecord[]; 
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState("");
   const [statusType, setStatusType] = useState<"success" | "error">("success");
+  const [sourceGrades, setSourceGrades] = useState(grades);
 
-  useEffect(() => {
+  if (grades !== sourceGrades) {
+    setSourceGrades(grades);
     setMatrix(matrixFromRecords(grades));
-  }, [grades]);
+  }
 
   const categoryPercentages = useMemo(
     () => Object.fromEntries(GRADE_FIELDS.map((field) => [field.key, categoryPercentage(matrix, field)])) as Record<GradeField, number>,

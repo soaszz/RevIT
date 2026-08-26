@@ -14,6 +14,14 @@ function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Cloud sync failed.";
 }
 
+export function isMissingQuestionReinforcementTableError(error: { code?: string; message?: string } | null | undefined) {
+  if (!error) return false;
+  return error.code === "PGRST205"
+    || error.code === "42P01"
+    || (error.message?.includes("question_reinforcement") && error.message.includes("schema cache"))
+    || false;
+}
+
 export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
   const [profile, grades, activity, exams, preferences, reinforcement] = await Promise.all([
     client.from("profiles").select("id,username,first_name,avatar_url,onboarding_complete").eq("id", userId).maybeSingle(),
@@ -23,15 +31,18 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     client.from("user_preferences").select("user_id,timezone,theme").eq("user_id", userId).maybeSingle(),
     client.from("question_reinforcement").select("user_id,question_id,reinforcement_level,updated_at").eq("user_id", userId),
   ]);
-  const failure = [profile, grades, activity, exams, preferences, reinforcement].find((result) => result.error)?.error;
+  const failure = [profile, grades, activity, exams, preferences].find((result) => result.error)?.error;
   if (failure) throw new Error(failure.message);
+  if (reinforcement.error && !isMissingQuestionReinforcementTableError(reinforcement.error)) {
+    throw new Error(reinforcement.error.message);
+  }
   return {
     profile: profile.data as Profile | null,
     grades: (grades.data ?? []) as GradeRecord[],
     activity: (activity.data ?? []) as DailyActivity[],
     exams: (exams.data ?? []) as ExamSchedule[],
     preferences: preferences.data as UserPreferences | null,
-    reinforcement: (reinforcement.data ?? []) as QuestionReinforcement[],
+    reinforcement: (reinforcement.error ? [] : reinforcement.data ?? []) as QuestionReinforcement[],
   };
 }
 
@@ -91,7 +102,7 @@ export async function saveQuestionReinforcement(
   if (reinforcementLevel <= 0) {
     const { error } = await client.from("question_reinforcement")
       .delete().eq("user_id", userId).eq("question_id", questionId);
-    if (error) throw new Error(error.message);
+    if (error && !isMissingQuestionReinforcementTableError(error)) throw new Error(error.message);
     return;
   }
 
@@ -100,7 +111,7 @@ export async function saveQuestionReinforcement(
     question_id: questionId,
     reinforcement_level: reinforcementLevel,
   }, { onConflict: "user_id,question_id" });
-  if (error) throw new Error(error.message);
+  if (error && !isMissingQuestionReinforcementTableError(error)) throw new Error(error.message);
 }
 
 export async function recordActivity(client: SupabaseClient, input: {
