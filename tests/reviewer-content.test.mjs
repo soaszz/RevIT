@@ -74,12 +74,17 @@ test("QnA setup stays accessible and the desktop navigation can collapse", async
   assert.match(app, /label: "QnA", icon: "Q"/);
   assert.match(app, /sidebar-current-view/);
   assert.match(app, /aria-expanded=\{!sidebarCollapsed\}/);
+  assert.match(app, /sidebarCollapsed \? "☰" : "«"/);
+  assert.match(app, /function openNavigationView[\s\S]*setSidebarCollapsed\(true\)/);
+  assert.doesNotMatch(app, /sidebar-toggle-label/);
   assert.match(app, /<option value="30">30 questions<\/option>/);
   assert.match(app, /<option value="40">40 questions<\/option>/);
   assert.match(app, /<option value="50">50 questions<\/option>/);
   assert.match(css, /\.app-shell\.sidebar-collapsed \{ grid-template-columns: 84px/);
   assert.match(css, /\.nav-link \.nav-label \{[^}]*width: auto;[^}]*border: 0;/);
-  assert.match(css, /\.sidebar-toggle \{[^}]*min-width: 76px;[^}]*min-height: 34px;/);
+  assert.match(css, /\.sidebar-toggle \{[^}]*width: 36px;[^}]*min-height: 34px;/);
+  assert.match(app, /Wrong answers only/);
+  assert.match(app, /wrongAnswersOnly/);
   assert.match(css, /\.selection-panel \{[^}]*position: sticky;[^}]*max-height: calc\(100vh - 48px\);/);
 });
 

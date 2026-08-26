@@ -26,6 +26,7 @@ import {
   chooseAdaptiveQuestion,
   reinforcementAfterAnswer,
   reinforcementLevelAfterAnswer,
+  type QuestionPerformance,
   type ReinforcementLevels,
 } from "./lib/adaptiveQuestions";
 import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCalendar";
@@ -153,6 +154,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [storageReady, setStorageReady] = useState(false);
   const [sessionSize, setSessionSize] = useState("10");
+  const [wrongAnswersOnly, setWrongAnswersOnly] = useState(false);
   const [sessionPoolIds, setSessionPoolIds] = useState<string[]>([]);
   const [sessionTargetCount, setSessionTargetCount] = useState(0);
   const [sessionQuestionIds, setSessionQuestionIds] = useState<string[]>([]);
@@ -373,6 +375,30 @@ useEffect(() => {
     [selectedTopicIds],
   );
 
+  const questionPerformance = useMemo<QuestionPerformance>(() => {
+    const performance: QuestionPerformance = {};
+    for (const attempt of attempts) {
+      const current = performance[attempt.questionId] ?? { correct: 0, wrong: 0 };
+      performance[attempt.questionId] = {
+        correct: current.correct + (attempt.correct ? 1 : 0),
+        wrong: current.wrong + (attempt.correct ? 0 : 1),
+      };
+    }
+    return performance;
+  }, [attempts]);
+
+  const wrongQuestionIds = useMemo(
+    () => new Set(attempts.filter((attempt) => !attempt.correct).map((attempt) => attempt.questionId)),
+    [attempts],
+  );
+
+  const sessionQuestions = useMemo(
+    () => wrongAnswersOnly
+      ? selectedQuestions.filter((question) => wrongQuestionIds.has(question.id))
+      : selectedQuestions,
+    [selectedQuestions, wrongAnswersOnly, wrongQuestionIds],
+  );
+
   const topicStats = useMemo(() => topics.map((topic) => {
     const topicAttempts = attempts.filter((attempt) => attempt.topicId === topic.id);
     const correct = topicAttempts.filter((attempt) => attempt.correct).length;
@@ -415,11 +441,11 @@ useEffect(() => {
   }
 
   function startSession() {
-    if (!selectedQuestions.length) return;
-    const limit = sessionSize === "all" ? selectedQuestions.length : Number(sessionSize);
-    const poolIds = selectedQuestions.map((question) => question.id);
+    if (!sessionQuestions.length) return;
+    const limit = sessionSize === "all" ? sessionQuestions.length : Number(sessionSize);
+    const poolIds = sessionQuestions.map((question) => question.id);
     const targetCount = Math.min(limit, poolIds.length);
-    const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, []);
+    const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, [], Math.random, questionPerformance);
     if (!firstQuestionId) return;
     setSessionPoolIds(poolIds);
     setSessionTargetCount(targetCount);
@@ -510,7 +536,7 @@ useEffect(() => {
       return;
     }
 
-    const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds);
+    const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds, Math.random, questionPerformance);
     if (!nextQuestionId) {
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
@@ -533,6 +559,11 @@ useEffect(() => {
   window.history.pushState(null, "", `/${view}`);
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+  function openNavigationView(view: View) {
+    openView(view);
+    setSidebarCollapsed(true);
+  }
 
   function openProfileEditor() {
     setProfileDraft(profile);
@@ -688,7 +719,7 @@ useEffect(() => {
       <aside className="sidebar">
         <div className="sidebar-heading">
           <div className="sidebar-brand-row">
-            <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home">
+            <button className="brand brand-button" type="button" onClick={() => openNavigationView("overview")} aria-label="RevIT home">
               <span className="brand-mark" aria-hidden="true">R</span>
               <span className="brand-copy">RevIT</span>
             </button>
@@ -700,8 +731,7 @@ useEffect(() => {
               aria-label={sidebarCollapsed ? "Expand navigation sidebar" : "Collapse navigation sidebar"}
               title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
-              <span className="sidebar-toggle-icon" aria-hidden="true">{sidebarCollapsed ? "»" : "«"}</span>
-              <span className="sidebar-toggle-label">{sidebarCollapsed ? "Expand" : "Collapse"}</span>
+              <span className="sidebar-toggle-icon" aria-hidden="true">{sidebarCollapsed ? "☰" : "«"}</span>
             </button>
           </div>
           <div className="sidebar-current-view" aria-label={`Current page: ${activeNavItem.label}`}>
@@ -715,7 +745,7 @@ useEffect(() => {
               className={`nav-link ${activeView === item.id ? "active" : ""}`}
               type="button"
               key={item.id}
-              onClick={() => openView(item.id)}
+              onClick={() => openNavigationView(item.id)}
               aria-current={activeView === item.id ? "page" : undefined}
               title={sidebarCollapsed ? item.label : undefined}
             >
@@ -875,11 +905,18 @@ useEffect(() => {
                 <aside className="selection-panel">
                   <p className="eyebrow">Session setup</p>
                   <h2>{selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"} selected</h2>
-                  <p>{selectedQuestions.length} official questions are available from your selection.</p>
+                  <p>{wrongAnswersOnly
+                    ? `${sessionQuestions.length} previously missed question${sessionQuestions.length === 1 ? " is" : "s are"} available from your selection.`
+                    : `${sessionQuestions.length} official questions are available from your selection.`}</p>
                   <div className="selection-controls">
                     <button className="text-button" type="button" onClick={() => setSelectedTopicIds(topics.map((topic) => topic.id))}>Select all</button>
                     <button className="text-button quiet" type="button" onClick={() => setSelectedTopicIds([])}>Clear all</button>
                   </div>
+                  <div className="wrong-answer-filter">
+                    <input id="wrong-answers-only" type="checkbox" aria-describedby="wrong-answers-only-help" checked={wrongAnswersOnly} onChange={(event) => setWrongAnswersOnly(event.target.checked)} />
+                    <label htmlFor="wrong-answers-only">Wrong answers only<small id="wrong-answers-only-help">Practice only questions you have missed in the selected topics.</small></label>
+                  </div>
+                  {wrongAnswersOnly && selectedTopicIds.length > 0 && sessionQuestions.length === 0 && <p className="wrong-answer-empty">No missed questions yet in these topics.</p>}
                   <label className="field-label" htmlFor="session-size">Questions this session</label>
                   <select id="session-size" value={sessionSize} onChange={(event) => setSessionSize(event.target.value)}>
                     <option value="10">10 questions</option>
@@ -889,7 +926,7 @@ useEffect(() => {
                     <option value="50">50 questions</option>
                     <option value="all">All selected questions</option>
                   </select>
-                  <button className="primary-button wide" type="button" onClick={startSession} disabled={!selectedQuestions.length}>Start review</button>
+                  <button className="primary-button wide" type="button" onClick={startSession} disabled={!sessionQuestions.length}>Start review</button>
                   {selectedTopicNames.length > 0 && <div className="selected-tags">{selectedTopicNames.map((name) => <span key={name}>{name}</span>)}</div>}
                 </aside>
               </div>

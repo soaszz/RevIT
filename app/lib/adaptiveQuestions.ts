@@ -1,4 +1,5 @@
 export type ReinforcementLevels = Record<string, number>;
+export type QuestionPerformance = Record<string, { correct: number; wrong: number }>;
 
 export const MAX_REINFORCEMENT_LEVEL = 3;
 export const MIN_REINFORCEMENT_GAP = 3;
@@ -30,9 +31,17 @@ export function reinforcementAfterAnswer(
 function weightedPick(
   candidates: string[],
   reinforcement: ReinforcementLevels,
+  performance: QuestionPerformance,
   random: () => number,
 ) {
-  const weights = candidates.map((id) => Math.min(4, 1 + (reinforcement[id] ?? 0)));
+  const weights = candidates.map((id) => {
+    const record = performance[id];
+    const total = (record?.correct ?? 0) + (record?.wrong ?? 0);
+    const accuracy = total ? (record?.correct ?? 0) / total : 0;
+    const confidence = Math.min(1, total / 3);
+    const masteryWeight = Math.max(0.25, 1 - (accuracy * confidence * 0.75));
+    return Math.min(4, 1 + (reinforcement[id] ?? 0)) * masteryWeight;
+  });
   const total = weights.reduce((sum, weight) => sum + weight, 0);
   let target = clampRandom(random()) * total;
   for (let index = 0; index < candidates.length; index += 1) {
@@ -47,6 +56,7 @@ export function chooseAdaptiveQuestion(
   reinforcement: ReinforcementLevels,
   history: string[],
   random: () => number = Math.random,
+  performance: QuestionPerformance = {},
 ) {
   const pool = [...new Set(poolIds)];
   if (!pool.length) return null;
@@ -72,5 +82,5 @@ export function chooseAdaptiveQuestion(
   const unseen = candidates.filter((id) => !history.includes(id));
   if (!reinforced.includes(candidates[0]) && unseen.length) candidates = unseen;
 
-  return weightedPick(candidates, reinforcement, random);
+  return weightedPick(candidates, reinforcement, performance, random);
 }

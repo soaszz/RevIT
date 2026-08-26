@@ -91,6 +91,12 @@ test("adaptive selection stays inside the active pool and handles small pools", 
   assert.ok(["hema-1", "hema-2"].includes(chooseAdaptiveQuestion(["hema-1", "hema-2"], { "bacte-1": 3 }, [], () => 0.5) ?? ""));
 });
 
+test("mastered questions stay available but are selected less often", () => {
+  const performance = { mastered: { correct: 3, wrong: 0 } };
+  assert.equal(chooseAdaptiveQuestion(["mastered", "new"], {}, [], () => 0.3, performance), "new");
+  assert.equal(chooseAdaptiveQuestion(["mastered", "new"], {}, [], () => 0, performance), "mastered");
+});
+
 test("a missing optional reinforcement table does not block core cloud data", () => {
   assert.equal(isMissingQuestionReinforcementTableError({ code: "PGRST205", message: "not in schema cache" }), true);
   assert.equal(isMissingQuestionReinforcementTableError({ code: "42P01", message: "undefined table" }), true);
