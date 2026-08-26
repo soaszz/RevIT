@@ -66,6 +66,21 @@ test("calendar uses bounded cells and tablet-first full-width breakpoints", asyn
   assert.match(css, /\.calendar-day\.selected \{[^}]*inset/);
 });
 
+test("QnA setup stays accessible and the desktop navigation can collapse", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(app, /label: "Home", icon: "H"/);
+  assert.match(app, /label: "QnA", icon: "Q"/);
+  assert.match(app, /sidebar-current-view/);
+  assert.match(app, /aria-expanded=\{!sidebarCollapsed\}/);
+  assert.match(app, /<option value="30">30 questions<\/option>/);
+  assert.match(app, /<option value="40">40 questions<\/option>/);
+  assert.match(app, /<option value="50">50 questions<\/option>/);
+  assert.match(css, /\.app-shell\.sidebar-collapsed \{ grid-template-columns: 76px/);
+  assert.match(css, /\.selection-panel \{[^}]*position: sticky;[^}]*max-height: calc\(100vh - 48px\);/);
+});
+
 test("gradebook groups all subjects under assessment categories without number spinners", async () => {
   const grades = await readFile(new URL("../app/components/GradesPage.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");

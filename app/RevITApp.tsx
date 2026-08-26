@@ -69,8 +69,8 @@ type LearnerProfile = {
 const DEFAULT_PROFILE: LearnerProfile = { name: "Jamie Santos", photoDataUrl: "" };
 
 const navItems: Array<{ id: View; label: string; icon: string }> = [
-  { id: "overview", label: "Overview", icon: "O" },
-  { id: "library", label: "Review Library", icon: "R" },
+  { id: "overview", label: "Home", icon: "H" },
+  { id: "library", label: "QnA", icon: "Q" },
   { id: "progress", label: "Progress", icon: "P" },
   { id: "grades", label: "Grades", icon: "G" },
   { id: "assistant", label: "MedTech AI", icon: "AI" },
@@ -180,6 +180,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   }));
   const [cloudLoading, setCloudLoading] = useState(cloudEnabled);
   const [cloudError, setCloudError] = useState("");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
 useEffect(() => {
   const validViews: View[] = [
@@ -221,6 +222,7 @@ useEffect(() => {
       const savedAttempts = JSON.parse(localStorage.getItem("revit-attempts-v1") ?? "[]") as Attempt[];
       const savedTopics = JSON.parse(localStorage.getItem("revit-selected-topics-v1") ?? "[]") as string[];
       const savedProfile = JSON.parse(localStorage.getItem("revit-profile-v1") ?? "null") as LearnerProfile | null;
+      const savedSidebarCollapsed = localStorage.getItem("revit-sidebar-collapsed") === "true";
       const reinforcementKey = `revit-reinforcement-v1:${initialUser?.id ?? "local"}`;
       const savedReinforcement = JSON.parse(localStorage.getItem(reinforcementKey) ?? "{}") as ReinforcementLevels;
       if (Array.isArray(savedAttempts)) setAttempts(savedAttempts);
@@ -232,6 +234,7 @@ useEffect(() => {
         setProfile(normalizedProfile);
         setProfileDraft(normalizedProfile);
       }
+      setSidebarCollapsed(savedSidebarCollapsed);
       if (savedReinforcement && typeof savedReinforcement === "object" && !Array.isArray(savedReinforcement)) {
         setReinforcementLevels(Object.fromEntries(Object.entries(savedReinforcement)
           .filter(([id, level]) => questionById.has(id) && Number.isInteger(level) && level > 0 && level <= 3)));
@@ -339,6 +342,10 @@ useEffect(() => {
   useEffect(() => {
     if (storageReady) localStorage.setItem("revit-profile-v1", JSON.stringify(profile));
   }, [profile, storageReady]);
+
+  useEffect(() => {
+    if (storageReady) localStorage.setItem("revit-sidebar-collapsed", String(sidebarCollapsed));
+  }, [sidebarCollapsed, storageReady]);
 
   useEffect(() => {
     if (cloudEnabled) return;
@@ -674,13 +681,30 @@ useEffect(() => {
   const accountProfile = cloudProfile ?? (initialUser
     ? localProfileToCloud(initialUser.id, initialUser.username ?? `learner_${initialUser.id.slice(0, 8)}`, profile.name, profile.photoDataUrl)
     : null);
+  const activeNavItem = navItems.find((item) => item.id === activeView) ?? navItems[0];
 
   return (
-    <main className="app-shell">
+    <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
       <aside className="sidebar">
-        <button className="brand brand-button" type="button" onClick={() => openView("overview")}>
-          <span className="brand-mark" aria-hidden="true">R</span>
-          <span>RevIT</span>
+        <div className="sidebar-heading">
+          <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home">
+            <span className="brand-mark" aria-hidden="true">R</span>
+            <span className="brand-copy">RevIT</span>
+          </button>
+          <div className="sidebar-current-view" aria-label={`Current page: ${activeNavItem.label}`}>
+            <span aria-hidden="true">{activeNavItem.icon}</span>
+            <strong>{activeNavItem.label}</strong>
+          </div>
+        </div>
+        <button
+          className="sidebar-toggle"
+          type="button"
+          onClick={() => setSidebarCollapsed((current) => !current)}
+          aria-expanded={!sidebarCollapsed}
+          aria-label={sidebarCollapsed ? "Expand navigation sidebar" : "Collapse navigation sidebar"}
+          title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          <span aria-hidden="true">{sidebarCollapsed ? "›" : "‹"}</span>
         </button>
         <nav aria-label="Primary navigation">
           {navItems.map((item) => (
@@ -689,15 +713,17 @@ useEffect(() => {
               type="button"
               key={item.id}
               onClick={() => openView(item.id)}
+              aria-current={activeView === item.id ? "page" : undefined}
+              title={sidebarCollapsed ? item.label : undefined}
             >
-              <span>{item.icon}</span>{item.label}
+              <span className="nav-icon" aria-hidden="true">{item.icon}</span><span className="nav-label">{item.label}</span>
             </button>
           ))}
         </nav>
         <button className="theme-toggle sidebar-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode">
           <span className="theme-symbol light-symbol" aria-hidden="true">☼</span>
           <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
-          <span><strong>Appearance</strong><small>Light / dark</small></span>
+          <span className="sidebar-control-copy"><strong>Appearance</strong><small>Light / dark</small></span>
         </button>
         <div className="sidebar-note">
           <p>Official library</p>
@@ -706,13 +732,16 @@ useEffect(() => {
         </div>
         <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
           <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
-          <span><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
+          <span className="profile-copy"><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
         </button>
       </aside>
 
       <section className="workspace">
         <header className="mobile-header">
-          <button className="brand brand-button" type="button" onClick={() => openView("overview")}><span className="brand-mark">R</span>RevIT</button>
+          <div className="mobile-brand-stack">
+            <button className="brand brand-button" type="button" onClick={() => openView("overview")}><span className="brand-mark">R</span>RevIT</button>
+            <span className="mobile-current-view"><i aria-hidden="true">{activeNavItem.icon}</i>{activeNavItem.label}</span>
+          </div>
           <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => openView(event.target.value as View)}>{navItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label><button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
         </header>
 
@@ -852,6 +881,9 @@ useEffect(() => {
                   <select id="session-size" value={sessionSize} onChange={(event) => setSessionSize(event.target.value)}>
                     <option value="10">10 questions</option>
                     <option value="20">20 questions</option>
+                    <option value="30">30 questions</option>
+                    <option value="40">40 questions</option>
+                    <option value="50">50 questions</option>
                     <option value="all">All selected questions</option>
                   </select>
                   <button className="primary-button wide" type="button" onClick={startSession} disabled={!selectedQuestions.length}>Start review</button>
