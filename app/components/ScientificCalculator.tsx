@@ -66,13 +66,20 @@ export default function ScientificCalculator() {
       return {
         value,
         display,
-        expressionHtml: katexMarkup(calculatorExpressionToLatex(timeline.present), true),
         resultHtml: katexMarkup(resultLatex(display)),
       };
     } catch {
       return null;
     }
   }, [angleMode, lastAnswer, resultMode, timeline.present]);
+
+  const naturalExpressionHtml = useMemo(() => {
+    try {
+      return katexMarkup(calculatorExpressionToLatex(timeline.present), true);
+    } catch {
+      return null;
+    }
+  }, [timeline.present]);
 
   useEffect(() => {
     if (!open) return;
@@ -246,12 +253,13 @@ export default function ScientificCalculator() {
 
           <div className="calculator-display">
             <div className="calculator-natural-display" aria-hidden="true">
-              {preview
-                ? <span dangerouslySetInnerHTML={{ __html: preview.expressionHtml }} />
+              {naturalExpressionHtml
+                ? <span dangerouslySetInnerHTML={{ __html: naturalExpressionHtml }} />
                 : <span className="calculator-placeholder">{timeline.present || "0"}</span>}
             </div>
             <label className="sr-only" htmlFor="calculator-expression">Calculator expression</label>
             <input
+              className="calculator-expression-source"
               ref={inputRef}
               id="calculator-expression"
               value={timeline.present}
@@ -260,18 +268,17 @@ export default function ScientificCalculator() {
               autoComplete="off"
               spellCheck={false}
               inputMode="text"
-              placeholder="Type or use the keys"
             />
             <output className={calculationError ? "error" : ""} aria-live="polite">
               {calculationError
                 ? calculationError
-                : preview && <><span aria-hidden="true">=</span><span dangerouslySetInnerHTML={{ __html: preview.resultHtml }} /></>}
+                : preview && <span dangerouslySetInnerHTML={{ __html: preview.resultHtml }} />}
             </output>
           </div>
 
           <div className="calculator-keypad" aria-label="Calculator keypad">
             <button type="button" className={`shift-key ${secondMode ? "active" : ""}`} onClick={() => setSecondMode((current) => !current)}>2nd</button>
-            <button type="button" className="function-key fraction-key" onClick={insertFraction} aria-label="Insert fraction">a⁄b</button>
+            <button type="button" className="function-key fraction-key" onClick={insertFraction} aria-label="Insert fraction"><span aria-hidden="true"><i>□</i><i>□</i></span></button>
             <button type="button" className="function-key" onClick={() => append(secondMode ? "cbrt(" : "sqrt(")}>{secondMode ? "∛" : "√"}</button>
             <button type="button" className="function-key" onClick={() => append(secondMode ? "^3" : "^2")}>{secondMode ? "x³" : "x²"}</button>
             <button type="button" className="function-key" onClick={() => append(secondMode ? "root(" : "^")}>{secondMode ? "ⁿ√x" : "xʸ"}</button>

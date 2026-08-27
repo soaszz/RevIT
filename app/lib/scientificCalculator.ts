@@ -8,7 +8,7 @@ type Token =
 
 type ExpressionNode =
   | { type: "number"; value: number; raw: string }
-  | { type: "constant"; name: "pi" | "e" | "ans" }
+  | { type: "constant"; name: "pi" | "e" | "ans" | "slot" }
   | { type: "group"; value: ExpressionNode }
   | { type: "unary"; operator: "+" | "-"; value: ExpressionNode }
   | { type: "binary"; operator: "+" | "-" | "*" | "/" | "^"; left: ExpressionNode; right: ExpressionNode }
@@ -98,7 +98,7 @@ function parseExpression(expression: string): ExpressionNode {
       return { type: "group", value };
     }
     if (token.type === "identifier") {
-      if (["pi", "e", "ans"].includes(token.value)) return { type: "constant", name: token.value as "pi" | "e" | "ans" };
+      if (["pi", "e", "ans", "slot"].includes(token.value)) return { type: "constant", name: token.value as "pi" | "e" | "ans" | "slot" };
       if (!FUNCTIONS.has(token.value)) throw new Error(`Unknown function: ${token.value}`);
       if (consume()?.type !== "leftParen") throw new Error(`${token.value} needs parentheses`);
       const argumentsList: ExpressionNode[] = [];
@@ -205,7 +205,10 @@ function evaluateFunction(name: string, values: number[], angleMode: AngleMode) 
 
 function evaluateNode(node: ExpressionNode, angleMode: AngleMode, answer: number): number {
   if (node.type === "number") return node.value;
-  if (node.type === "constant") return node.name === "pi" ? Math.PI : node.name === "e" ? Math.E : answer;
+  if (node.type === "constant") {
+    if (node.name === "slot") throw new Error("Incomplete expression");
+    return node.name === "pi" ? Math.PI : node.name === "e" ? Math.E : answer;
+  }
   if (node.type === "group") return evaluateNode(node.value, angleMode, answer);
   if (node.type === "unary") {
     const value = evaluateNode(node.value, angleMode, answer);
@@ -234,7 +237,10 @@ function nodePrecedence(node: ExpressionNode): number {
 
 function renderLatex(node: ExpressionNode, parentPrecedence = 0): string {
   if (node.type === "number") return node.raw.replace(/e([+-]?\d+)/i, String.raw`\times 10^{$1}`);
-  if (node.type === "constant") return node.name === "pi" ? String.raw`\pi` : node.name === "ans" ? String.raw`\operatorname{Ans}` : "e";
+  if (node.type === "constant") {
+    if (node.name === "slot") return String.raw`\square`;
+    return node.name === "pi" ? String.raw`\pi` : node.name === "ans" ? String.raw`\operatorname{Ans}` : "e";
+  }
   if (node.type === "group") return String.raw`\left(${renderLatex(node.value)}\right)`;
   if (node.type === "unary") return `${node.operator}${renderLatex(node.value, 4)}`;
   if (node.type === "postfix") return `${renderLatex(node.value, 4)}${node.operator === "%" ? String.raw`\%` : "!"}`;
@@ -271,8 +277,19 @@ export function calculateExpression(expression: string, angleMode: AngleMode = "
   return Math.abs(value) < 1e-13 ? 0 : value;
 }
 
+function prepareCalculatorExpressionForDisplay(expression: string) {
+  let displayExpression = expression.trim();
+  if (!displayExpression) return "slot";
+
+  // Keep natural templates visible while the learner is still filling them in.
+  // The placeholder is only used for rendering and can never be evaluated.
+  displayExpression = displayExpression.replace(/,\s*(?=\))/g, ",slot");
+  if (/[,+(\-−×*÷/^]$/.test(displayExpression)) displayExpression += "slot";
+  return displayExpression;
+}
+
 export function calculatorExpressionToLatex(expression: string) {
-  return renderLatex(parseExpression(closeCalculatorParentheses(expression)));
+  return renderLatex(parseExpression(closeCalculatorParentheses(prepareCalculatorExpressionForDisplay(expression))));
 }
 
 export function formatCalculatorResult(value: number) {

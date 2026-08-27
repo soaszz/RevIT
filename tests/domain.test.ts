@@ -48,6 +48,9 @@ test("scientific calculator evaluates safely across core scientific operations",
   assert.equal(calculateExpression("root(27,3)"), 3);
   assert.equal(calculateExpression("2^3^2"), 512);
   assert.equal(calculatorExpressionToLatex("frac(1,2)+sqrt(9)"), String.raw`\frac{1}{2} + \sqrt{9}`);
+  assert.equal(calculatorExpressionToLatex("frac(1,"), String.raw`\frac{1}{\square}`);
+  assert.equal(calculatorExpressionToLatex("sqrt(frac(1,2)+4^2"), String.raw`\sqrt{\frac{1}{2} + {4}^{2}}`);
+  assert.equal(calculatorExpressionToLatex("5^"), String.raw`{5}^{\square}`);
   assert.equal(formatCalculatorFraction(0.75), "3/4");
   assert.equal(formatCalculatorResult(1 / 3), "0.333333333333");
   assert.throws(() => calculateExpression("1÷0"), /real-number range/);
