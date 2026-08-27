@@ -5,6 +5,7 @@ import { chooseAdaptiveQuestion, reinforcementAfterAnswer } from "../app/lib/ada
 import { isMissingQuestionReinforcementTableError } from "../app/lib/cloudService";
 import { chatTitleFromFirstMessage } from "../app/lib/aiChatService";
 import { normalizeAiMarkdown } from "../app/lib/aiMarkdown";
+import { calculateExpression, formatCalculatorResult } from "../app/lib/scientificCalculator";
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
@@ -31,6 +32,21 @@ test("AI Markdown normalizes common LaTeX delimiters while preserving code", () 
   );
   const fencedCode = "```text\n\\[raw\\]\n```";
   assert.equal(normalizeAiMarkdown(fencedCode), fencedCode);
+});
+
+test("scientific calculator evaluates safely across core scientific operations", () => {
+  assert.equal(calculateExpression("2+3×4"), 14);
+  assert.equal(calculateExpression("(2+3)^2"), 25);
+  assert.equal(calculateExpression("-2^2"), -4);
+  assert.equal(calculateExpression("2^-2"), 0.25);
+  assert.equal(calculateExpression("sqrt(81)+log(100)+ln(e)"), 12);
+  assert.ok(Math.abs(calculateExpression("sin(30)", "deg") - 0.5) < 1e-12);
+  assert.ok(Math.abs(calculateExpression("sin(π÷2)", "rad") - 1) < 1e-12);
+  assert.equal(calculateExpression("5!+25%"), 120.25);
+  assert.equal(calculateExpression("2×Ans", "deg", 7), 14);
+  assert.equal(formatCalculatorResult(1 / 3), "0.333333333333");
+  assert.throws(() => calculateExpression("1÷0"), /real-number range/);
+  assert.throws(() => calculateExpression("sqrt(-1)"), /real-number range/);
 });
 
 test("grade boundaries: zero, exact 65, below 65, and 100", () => {

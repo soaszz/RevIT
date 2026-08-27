@@ -188,3 +188,22 @@ test("MedTech AI renders Markdown emphasis, tables, and LaTeX formulas", async (
   assert.match(css, /\.markdown-content em/);
   assert.match(css, /\.markdown-content table \{[\s\S]*min-width: 480px/);
 });
+
+test("provides a responsive floating scientific calculator with undo and redo", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const calculator = await readFile(new URL("../app/components/ScientificCalculator.tsx", import.meta.url), "utf8");
+  const engine = await readFile(new URL("../app/lib/scientificCalculator.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(app, /<ScientificCalculator \/>/);
+  assert.match(calculator, /Undo calculator input/);
+  assert.match(calculator, /Redo calculator input/);
+  assert.match(calculator, /Angle mode/);
+  assert.match(calculator, /sin\(/);
+  assert.match(calculator, /sqrt\(/);
+  assert.match(engine, /calculateExpression/);
+  assert.doesNotMatch(engine, /\beval\s*\(|new Function/);
+  assert.match(css, /\.calculator-fab \{ position: fixed;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-panel/);
+  assert.match(css, /\[data-theme="dark"\] \.calculator-panel/);
+});

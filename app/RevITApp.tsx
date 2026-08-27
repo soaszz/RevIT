@@ -7,6 +7,7 @@ import AccountSettings from "./components/AccountSettings";
 import AiMarkdown from "./components/AiMarkdown";
 import GradesPage from "./components/GradesPage";
 import Onboarding from "./components/Onboarding";
+import ScientificCalculator from "./components/ScientificCalculator";
 import StudyCalendar from "./components/StudyCalendar";
 import {
   deleteExam as deleteCloudExam,
@@ -1362,6 +1363,7 @@ useEffect(() => {
         {profileOpen && cloudEnabled && accountProfile && initialUser && <AccountSettings profile={accountProfile} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} />}
         {cloudEnabled && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} />}
       </section>
+      <ScientificCalculator />
     </main>
   );
 }
