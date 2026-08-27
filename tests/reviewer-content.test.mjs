@@ -199,9 +199,15 @@ test("provides a responsive floating scientific calculator with undo and redo", 
   assert.match(calculator, /Undo calculator input/);
   assert.match(calculator, /Redo calculator input/);
   assert.match(calculator, /Angle mode/);
-  assert.match(calculator, /sin\(/);
+  assert.match(calculator, /Insert fraction/);
+  assert.match(calculator, /window\.addEventListener\("pointermove", move\)/);
+  assert.match(calculator, /Reset calculator position/);
+  assert.match(calculator, /S⇔D/);
+  assert.match(calculator, /currentFunction\("sin", "asin"\)/);
   assert.match(calculator, /sqrt\(/);
+  assert.doesNotMatch(calculator, /Enter a valid expression/);
   assert.match(engine, /calculateExpression/);
+  assert.match(engine, /calculatorExpressionToLatex/);
   assert.doesNotMatch(engine, /\beval\s*\(|new Function/);
   assert.match(css, /\.calculator-fab \{ position: fixed;/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-panel/);

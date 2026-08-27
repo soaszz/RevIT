@@ -5,7 +5,7 @@ import { chooseAdaptiveQuestion, reinforcementAfterAnswer } from "../app/lib/ada
 import { isMissingQuestionReinforcementTableError } from "../app/lib/cloudService";
 import { chatTitleFromFirstMessage } from "../app/lib/aiChatService";
 import { normalizeAiMarkdown } from "../app/lib/aiMarkdown";
-import { calculateExpression, formatCalculatorResult } from "../app/lib/scientificCalculator";
+import { calculateExpression, calculatorExpressionToLatex, formatCalculatorFraction, formatCalculatorResult } from "../app/lib/scientificCalculator";
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
@@ -44,6 +44,11 @@ test("scientific calculator evaluates safely across core scientific operations",
   assert.ok(Math.abs(calculateExpression("sin(π÷2)", "rad") - 1) < 1e-12);
   assert.equal(calculateExpression("5!+25%"), 120.25);
   assert.equal(calculateExpression("2×Ans", "deg", 7), 14);
+  assert.equal(calculateExpression("frac(1,2)+frac(1,4)"), 0.75);
+  assert.equal(calculateExpression("root(27,3)"), 3);
+  assert.equal(calculateExpression("2^3^2"), 512);
+  assert.equal(calculatorExpressionToLatex("frac(1,2)+sqrt(9)"), String.raw`\frac{1}{2} + \sqrt{9}`);
+  assert.equal(formatCalculatorFraction(0.75), "3/4");
   assert.equal(formatCalculatorResult(1 / 3), "0.333333333333");
   assert.throws(() => calculateExpression("1÷0"), /real-number range/);
   assert.throws(() => calculateExpression("sqrt(-1)"), /real-number range/);
