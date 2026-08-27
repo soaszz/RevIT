@@ -181,6 +181,8 @@ test("MedTech AI renders Markdown emphasis, tables, and LaTeX formulas", async (
   assert.match(layout, /katex\/dist\/katex\.min\.css/);
   assert.match(route, /double dollar signs/);
   assert.match(route, /Never show raw LaTeX commands outside math delimiters/);
+  assert.match(route, /never \\\\kappaP_\{Cr\}/);
+  assert.match(route, /Every \\\\frac command must have both a numerator and denominator/);
   assert.match(css, /\.markdown-content \.katex-display/);
   assert.match(css, /\.markdown-content strong/);
   assert.match(css, /\.markdown-content em/);

@@ -58,6 +58,8 @@ Write inline mathematical notation between single dollar signs, for example $C_{
 Write standalone equations between double dollar signs, with the opening and closing $$ on separate lines.
 Use LaTeX inside math delimiters for fractions, subscripts, superscripts, roots, Greek letters, units, and chemical or laboratory formulas. For example: $$C_{Cr} = \\frac{U_{Cr} \\times V}{P_{Cr} \\times t}$$
 Never show raw LaTeX commands outside math delimiters and do not use \\[...\\] or \\(...\\) delimiters.
+Always separate a LaTeX command from the variable that follows it with whitespace or braces: write \\kappa P_{Cr}, never \\kappaP_{Cr}.
+Every \\frac command must have both a numerator and denominator: write \\frac{numerator}{denominator}.
 Prefer LaTeX math notation over literal HTML tags such as <sub> or <sup>.
 Never output raw HTML.
 Never invent citations or claim to have consulted a source that you did not receive.

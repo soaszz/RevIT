@@ -25,6 +25,10 @@ test("AI Markdown normalizes common LaTeX delimiters while preserving code", () 
   assert.match(normalized, /\$\$\nC_\{Cr\} = \\frac/);
   assert.match(normalized, /\$U_\\text\{Cr\}\$/);
   assert.equal(normalizeAiMarkdown(String.raw`H\<sub>2\</sub>O`), "H<sub>2</sub>O");
+  assert.equal(
+    normalizeAiMarkdown(String.raw`$$C_{Cr}^{\text{CG}} = \frac{(140 - \text{age}) \times \text{weight (kg)} \times \kappaP_{Cr}}$$`),
+    String.raw`$$C_{Cr}^{\text{CG}} = \frac{(140 - \text{age}) \times \text{weight (kg)} \times \kappa}{P_{Cr}}$$`,
+  );
   const fencedCode = "```text\n\\[raw\\]\n```";
   assert.equal(normalizeAiMarkdown(fencedCode), fencedCode);
 });
