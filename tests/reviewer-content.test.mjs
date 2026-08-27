@@ -142,3 +142,24 @@ test("uses RevIT and Groq branding while keeping the MedTech AI tab", async () =
   assert.match(route, /GROQ_MODEL/i);
   assert.doesNotMatch(`${layout}\n${app}\n${route}`, /MedReview|Gemini|api\.openai\.com/i);
 });
+
+test("AI conversations use the existing Supabase user and preserve the Groq request flow", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const service = await readFile(new URL("../app/lib/aiChatService.ts", import.meta.url), "utf8");
+  const migration = await readFile(new URL("../supabase/migrations/202608270003_ai_chat_history.sql", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(app, /loadAiChats\(createClient\(\), initialUser!/);
+  assert.match(app, /await saveAiMessage\(client, persistedChatId, "user", cleanQuestion\)[\s\S]*fetch\("\/api\/chat"/);
+  assert.match(app, /await saveAiMessage\(client, persistedChatId, "assistant", data\.answer\)/);
+  assert.match(app, /Chat history/);
+  assert.match(app, /window\.confirm/);
+  assert.match(service, /\.from\("ai_chats"\)/);
+  assert.match(service, /\.from\("ai_messages"\)/);
+  assert.match(migration, /alter table public\.ai_chats enable row level security/);
+  assert.match(migration, /alter table public\.ai_messages enable row level security/);
+  assert.match(migration, /ai_chats\.user_id = \(select auth\.uid\(\)\)/);
+  assert.doesNotMatch(migration, /grant (?:select, insert|all)[^;]*ai_messages[^;]*anon/i);
+  assert.match(css, /\.assistant-workspace \{ display: grid;/);
+  assert.match(css, /\[data-theme="dark"\]/);
+});

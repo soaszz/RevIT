@@ -33,6 +33,16 @@ import {
 import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCalendar";
 import { createClient } from "./lib/supabase/client";
 import {
+  chatTitleFromFirstMessage,
+  createAiChat,
+  deleteAiChat,
+  loadAiChats,
+  loadAiMessages,
+  saveAiMessage,
+  updateAiChatTitle,
+  type AiChat,
+} from "./lib/aiChatService";
+import {
   questionById,
   questions,
   subjectById,
@@ -179,6 +189,14 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
+  const [aiChats, setAiChats] = useState<AiChat[]>([]);
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
+  const [loadedChatId, setLoadedChatId] = useState<string | null>(null);
+  const [chatHistoryLoaded, setChatHistoryLoaded] = useState(false);
+  const [chatHistoryLoading, setChatHistoryLoading] = useState(false);
+  const [chatMessagesLoading, setChatMessagesLoading] = useState(false);
+  const [chatActionPending, setChatActionPending] = useState(false);
+  const [chatError, setChatError] = useState("");
   const [profile, setProfile] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileDraft, setProfileDraft] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -320,6 +338,68 @@ useEffect(() => {
   // Load once for the authenticated identity; local fallback data is migrated separately.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cloudEnabled, initialUser?.id]);
+
+  useEffect(() => {
+    if (activeView !== "assistant" || !cloudEnabled || !initialUser || chatHistoryLoaded) return;
+    let cancelled = false;
+
+    async function loadHistory() {
+      setChatHistoryLoading(true);
+      setChatError("");
+      try {
+        const chats = await loadAiChats(createClient(), initialUser!.id);
+        if (cancelled) return;
+        setAiChats(chats);
+        setActiveChatId((current) => (
+          current && chats.some((chat) => chat.id === current) ? current : chats[0]?.id ?? null
+        ));
+        if (!chats.length) {
+          setMessages([]);
+          setLoadedChatId(null);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setAiChats([]);
+          setChatError(error instanceof Error ? error.message : "Chat history could not be loaded.");
+        }
+      } finally {
+        if (!cancelled) {
+          setChatHistoryLoaded(true);
+          setChatHistoryLoading(false);
+        }
+      }
+    }
+
+    void loadHistory();
+    return () => { cancelled = true; };
+  }, [activeView, chatHistoryLoaded, cloudEnabled, initialUser]);
+
+  useEffect(() => {
+    if (activeView !== "assistant" || !cloudEnabled || !initialUser || !activeChatId || loadedChatId === activeChatId) return;
+    let cancelled = false;
+
+    async function loadConversation() {
+      setChatMessagesLoading(true);
+      setChatError("");
+      try {
+        const storedMessages = await loadAiMessages(createClient(), activeChatId!);
+        if (cancelled) return;
+        setMessages(storedMessages.map(({ id, role, content }) => ({ id, role, content })));
+        setLoadedChatId(activeChatId);
+      } catch (error) {
+        if (!cancelled) {
+          setMessages([]);
+          setLoadedChatId(activeChatId);
+          setChatError(error instanceof Error ? error.message : "This conversation could not be loaded.");
+        }
+      } finally {
+        if (!cancelled) setChatMessagesLoading(false);
+      }
+    }
+
+    void loadConversation();
+    return () => { cancelled = true; };
+  }, [activeChatId, activeView, cloudEnabled, initialUser, loadedChatId]);
 
   useEffect(() => {
     if (!cloudEnabled || !initialUser || !storageReady || cloudLoading || cloudError) return;
@@ -673,25 +753,133 @@ useEffect(() => {
     setProfileOpen(false);
   }
 
+  function moveChatToTop(chatId: string, changes: Partial<AiChat> = {}) {
+    setAiChats((current) => {
+      const existing = current.find((chat) => chat.id === chatId);
+      if (!existing) return current;
+      const updated = { ...existing, ...changes, updated_at: changes.updated_at ?? new Date().toISOString() };
+      return [updated, ...current.filter((chat) => chat.id !== chatId)];
+    });
+  }
+
+  async function startNewChat() {
+    if (pending || chatActionPending) return;
+    setChatError("");
+    setDraft("");
+
+    if (!cloudEnabled || !initialUser) {
+      setActiveChatId(null);
+      setLoadedChatId(null);
+      setMessages([]);
+      return;
+    }
+
+    setChatActionPending(true);
+    try {
+      const chat = await createAiChat(createClient(), initialUser.id);
+      setAiChats((current) => [chat, ...current.filter((item) => item.id !== chat.id)]);
+      setActiveChatId(chat.id);
+      setLoadedChatId(chat.id);
+      setMessages([]);
+    } catch (error) {
+      setChatError(error instanceof Error ? error.message : "A new chat could not be created.");
+    } finally {
+      setChatActionPending(false);
+    }
+  }
+
+  function openAiChat(chatId: string) {
+    if (pending || chatActionPending || chatId === activeChatId) return;
+    setChatError("");
+    setMessages([]);
+    setLoadedChatId(null);
+    setActiveChatId(chatId);
+  }
+
+  async function removeAiChat(chat: AiChat) {
+    if (!cloudEnabled || !initialUser || pending || chatActionPending) return;
+    if (!window.confirm(`Delete “${chat.title}”? This conversation cannot be recovered.`)) return;
+
+    setChatActionPending(true);
+    setChatError("");
+    try {
+      await deleteAiChat(createClient(), initialUser.id, chat.id);
+      const remaining = aiChats.filter((item) => item.id !== chat.id);
+      setAiChats(remaining);
+      if (activeChatId === chat.id) {
+        const nextChatId = remaining[0]?.id ?? null;
+        setMessages([]);
+        setLoadedChatId(null);
+        setActiveChatId(nextChatId);
+      }
+    } catch (error) {
+      setChatError(error instanceof Error ? error.message : "The conversation could not be deleted.");
+    } finally {
+      setChatActionPending(false);
+    }
+  }
+
   async function ask(question: string) {
     const cleanQuestion = question.trim();
-    if (!cleanQuestion || pending) return;
-    const userMessage: ChatMessage = {
+    if (!cleanQuestion || pending || chatActionPending || chatMessagesLoading) return;
+    let userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: "user",
       content: cleanQuestion,
     };
-    const nextMessages = [...messages, userMessage];
-    setMessages(nextMessages);
     setDraft("");
     setPending(true);
+    setChatError("");
+
+    const client = cloudEnabled && initialUser ? createClient() : null;
+    let persistedChatId = activeChatId;
+    let canPersistAssistant = false;
+
+    if (client && initialUser) {
+      try {
+        if (!persistedChatId) {
+          const createdChat = await createAiChat(client, initialUser.id, chatTitleFromFirstMessage(cleanQuestion));
+          persistedChatId = createdChat.id;
+          setAiChats((current) => [createdChat, ...current.filter((chat) => chat.id !== createdChat.id)]);
+          setActiveChatId(createdChat.id);
+          setLoadedChatId(createdChat.id);
+        }
+
+        const storedUserMessage = await saveAiMessage(client, persistedChatId, "user", cleanQuestion);
+        userMessage = { id: storedUserMessage.id, role: storedUserMessage.role, content: storedUserMessage.content };
+        canPersistAssistant = true;
+
+        const currentChat = aiChats.find((chat) => chat.id === persistedChatId);
+        if (currentChat?.title === "New chat") {
+          try {
+            const titledChat = await updateAiChatTitle(
+              client,
+              initialUser.id,
+              persistedChatId,
+              chatTitleFromFirstMessage(cleanQuestion),
+            );
+            moveChatToTop(persistedChatId, titledChat);
+          } catch {
+            moveChatToTop(persistedChatId);
+            setChatError("The conversation is saved, but its title could not be updated.");
+          }
+        } else {
+          moveChatToTop(persistedChatId);
+        }
+      } catch (error) {
+        setChatError(`This question could not be saved to chat history. ${error instanceof Error ? error.message : "You can continue in this tab."}`);
+      }
+    }
+
+    const nextMessages = [...messages, userMessage];
+    setMessages(nextMessages);
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: nextMessages.map(({ role, content }) => ({ role, content })),
+          messages: nextMessages.slice(-12).map(({ role, content }) => ({ role, content })),
         }),
       });
       const data = await response.json() as {
@@ -703,7 +891,7 @@ useEffect(() => {
         error?: string;
       };
       if (!response.ok || !data.answer) throw new Error(data.error || "The assistant could not answer right now.");
-      setMessages((current) => [...current, {
+      let assistantMessage: ChatMessage = {
         id: crypto.randomUUID(),
         role: "assistant",
         content: data.answer!,
@@ -711,7 +899,19 @@ useEffect(() => {
         grounded: data.grounded,
         mode: data.mode,
         provider: data.provider,
-      }]);
+      };
+
+      if (client && persistedChatId && canPersistAssistant) {
+        try {
+          const storedAssistantMessage = await saveAiMessage(client, persistedChatId, "assistant", data.answer);
+          assistantMessage = { ...assistantMessage, id: storedAssistantMessage.id };
+          moveChatToTop(persistedChatId);
+        } catch (error) {
+          setChatError(`The answer is visible, but it could not be saved. ${error instanceof Error ? error.message : "Please try again later."}`);
+        }
+      }
+
+      setMessages((current) => [...current, assistantMessage]);
       void recordStudyEvent({ eventKey: `ai-review:${userMessage.id}`, reviews: 1, subject: "MedTech AI" });
     } catch (error) {
       setMessages((current) => [...current, {
@@ -769,6 +969,8 @@ useEffect(() => {
     ? localProfileToCloud(initialUser.id, initialUser.username ?? `learner_${initialUser.id.slice(0, 8)}`, profile.name, profile.photoDataUrl)
     : null);
   const activeNavItem = navItems.find((item) => item.id === activeView) ?? navItems[0];
+  const activeAiChat = aiChats.find((chat) => chat.id === activeChatId) ?? null;
+  const chatBusy = pending || chatActionPending || chatMessagesLoading;
 
   return (
     <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
@@ -1066,36 +1268,68 @@ useEffect(() => {
               <div><p className="eyebrow">Current library selection</p><strong>{selectedTopicIds.length ? `${selectedTopicIds.length} selected topic${selectedTopicIds.length === 1 ? "" : "s"}` : "No topics selected"}</strong></div>
               <button className="text-button" type="button" onClick={() => openView("library")}>{selectedTopicIds.length ? "Change topics" : "Choose topics"}</button>
             </section>
-            <div className="assistant-card assistant-card-wide">
-              <div className="assistant-header">
-                <div><span className="ai-mark">AI</span><div><h2>RevIT AI</h2><p><i />Groq educational support</p></div></div>
-                <button type="button" onClick={() => setMessages([])} disabled={pending}>New chat</button>
+            <div className="assistant-workspace">
+              <aside className="chat-history-card" aria-label="AI chat history">
+                <div className="chat-history-heading">
+                  <div><p className="eyebrow">Saved conversations</p><h2>Chat history</h2></div>
+                  <span>{cloudEnabled ? aiChats.length : "Local"}</span>
+                </div>
+                <button className="new-chat-button" type="button" onClick={() => void startNewChat()} disabled={chatBusy}>
+                  <span aria-hidden="true">＋</span>{chatActionPending ? "Creating…" : "New Chat"}
+                </button>
+                <div className="chat-history-list">
+                  {chatHistoryLoading ? (
+                    <div className="chat-history-state" role="status"><span className="history-loader" />Loading conversations…</div>
+                  ) : !cloudEnabled ? (
+                    <div className="chat-history-state"><strong>History is available with an account.</strong><p>Sign in to keep RevIT AI conversations across pages and devices.</p></div>
+                  ) : aiChats.length === 0 ? (
+                    <div className="chat-history-state"><strong>No saved conversations yet.</strong><p>Start a new chat or ask a question to create one.</p>{chatError && <button type="button" onClick={() => { setChatError(""); setChatHistoryLoaded(false); }}>Try again</button>}</div>
+                  ) : aiChats.map((chat) => (
+                    <div className={`chat-history-item ${chat.id === activeChatId ? "active" : ""}`} key={chat.id}>
+                      <button className="chat-history-open" type="button" onClick={() => openAiChat(chat.id)} disabled={chatBusy} aria-current={chat.id === activeChatId ? "true" : undefined}>
+                        <strong>{chat.title}</strong>
+                        <time dateTime={chat.updated_at}>{new Date(chat.updated_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</time>
+                      </button>
+                      <button className="chat-history-delete" type="button" onClick={() => void removeAiChat(chat)} disabled={chatBusy} aria-label={`Delete ${chat.title}`}>×</button>
+                    </div>
+                  ))}
+                </div>
+              </aside>
+
+              <div className="assistant-card assistant-card-wide">
+                <div className="assistant-header">
+                  <div><span className="ai-mark">AI</span><div><h2>RevIT AI</h2><p><i />{activeAiChat?.title ?? "Groq educational support"}</p></div></div>
+                  {cloudEnabled && <span className="history-status">{activeChatId ? "Saved" : "Ready"}</span>}
+                </div>
+                {chatError && <div className="chat-error" role="alert"><span>{chatError}</span><button type="button" onClick={() => setChatError("")} aria-label="Dismiss chat error">×</button></div>}
+                <div className={`chat-body ${messages.length ? "chat-active" : ""}`} aria-live="polite">
+                  {chatMessagesLoading ? (
+                    <div className="conversation-loading" role="status"><span className="history-loader" /><strong>Opening conversation…</strong><p>Your saved messages are being loaded.</p></div>
+                  ) : messages.length === 0 ? (
+                    <>
+                      <div className="assistant-intro"><span className="ai-mark large">AI</span><h3>Ask RevIT AI a study question</h3><p>Groq can explain study concepts, while the supplied reviewer answers stay local and remain the only scoring source of truth.</p></div>
+                      <div className="prompt-chips">{chatSuggestions.map((suggestion) => <button type="button" key={suggestion} onClick={() => void ask(suggestion)} disabled={chatBusy}>{suggestion}</button>)}</div>
+                    </>
+                  ) : (
+                    <div className="chat-log">
+                      {messages.map((message) => (
+                        <article className={`chat-message ${message.role}`} key={message.id}>
+                          <span className="message-role">{message.role === "user" ? "You" : "RevIT AI"}</span>
+                          <div className="markdown-content"><ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown></div>
+                          {message.role === "assistant" && <div className="answer-meta">{message.mode === "demo" && <span>Demo mode</span>}{message.mode === "live" && <span>{message.grounded ? "Source-backed explanation" : `${message.provider ?? "AI"} explanation — verify with approved references`}</span>}{message.citations?.map((citation) => <span key={citation}>Source: {citation}</span>)}</div>}
+                        </article>
+                      ))}
+                      {pending && <div className="thinking"><i /><i /><i /><span>Reviewing the question</span></div>}
+                    </div>
+                  )}
+                </div>
+                <form className="chat-form" onSubmit={submitChat}>
+                  <label className="sr-only" htmlFor="medtech-question">Ask a medtech question</label>
+                  <textarea id="medtech-question" rows={3} maxLength={4000} value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void ask(draft); } }} placeholder="Ask about Clinical Chemistry, Hematology, Bacteriology, AUBF, or another MedTech concept…" disabled={chatBusy} />
+                  <div><span>{draft.length}/4000</span><button type="submit" disabled={!draft.trim() || chatBusy}>{pending ? "Thinking" : chatMessagesLoading ? "Loading" : "Ask RevIT"}</button></div>
+                </form>
+                <p className="medical-note">Educational use only. Official supplied answers control reviewer scoring; AI explanations do not replace laboratory policy or clinical judgment.</p>
               </div>
-              <div className={`chat-body ${messages.length ? "chat-active" : ""}`} aria-live="polite">
-                {messages.length === 0 ? (
-                  <>
-                    <div className="assistant-intro"><span className="ai-mark large">AI</span><h3>Ask RevIT AI a study question</h3><p>Groq can explain study concepts, while the supplied reviewer answers stay local and remain the only scoring source of truth.</p></div>
-                    <div className="prompt-chips">{chatSuggestions.map((suggestion) => <button type="button" key={suggestion} onClick={() => void ask(suggestion)}>{suggestion}</button>)}</div>
-                  </>
-                ) : (
-                  <div className="chat-log">
-                    {messages.map((message) => (
-                      <article className={`chat-message ${message.role}`} key={message.id}>
-                        <span className="message-role">{message.role === "user" ? "You" : "RevIT AI"}</span>
-                        <div className="markdown-content"><ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown></div>
-                        {message.role === "assistant" && <div className="answer-meta">{message.mode === "demo" && <span>Demo mode</span>}{message.mode === "live" && <span>{message.grounded ? "Source-backed explanation" : `${message.provider ?? "AI"} explanation — verify with approved references`}</span>}{message.citations?.map((citation) => <span key={citation}>Source: {citation}</span>)}</div>}
-                      </article>
-                    ))}
-                    {pending && <div className="thinking"><i /><i /><i /><span>Reviewing the question</span></div>}
-                  </div>
-                )}
-              </div>
-              <form className="chat-form" onSubmit={submitChat}>
-                <label className="sr-only" htmlFor="medtech-question">Ask a medtech question</label>
-                <textarea id="medtech-question" rows={3} maxLength={4000} value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void ask(draft); } }} placeholder="Ask about Clinical Chemistry, Hematology, Bacteriology, AUBF, or another MedTech concept…" disabled={pending} />
-                <div><span>{draft.length}/4000</span><button type="submit" disabled={!draft.trim() || pending}>{pending ? "Thinking" : "Ask RevIT"}</button></div>
-              </form>
-              <p className="medical-note">Educational use only. Official supplied answers control reviewer scoring; AI explanations do not replace laboratory policy or clinical judgment.</p>
             </div>
           </div>
         )}

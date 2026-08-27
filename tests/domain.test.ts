@@ -3,11 +3,19 @@ import assert from "node:assert/strict";
 import { resolveAuthState } from "../app/lib/authState";
 import { chooseAdaptiveQuestion, reinforcementAfterAnswer } from "../app/lib/adaptiveQuestions";
 import { isMissingQuestionReinforcementTableError } from "../app/lib/cloudService";
+import { chatTitleFromFirstMessage } from "../app/lib/aiChatService";
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
 
 function grades(values: Partial<GradeValues>): GradeValues { return { ...EMPTY_GRADES, ...values }; }
+
+test("AI chat titles are concise and useful without another model request", () => {
+  assert.equal(chatTitleFromFirstMessage("Explain Gram staining"), "Gram staining explanation");
+  assert.equal(chatTitleFromFirstMessage("  Compare   iron deficiency anemia and thalassemia?  "), "Compare iron deficiency anemia and thalassemia");
+  assert.ok(chatTitleFromFirstMessage("Explain a very long laboratory medicine concept with many details about analytical specificity sensitivity and calibration curves for clinical chemistry analyzers").length <= 80);
+  assert.equal(chatTitleFromFirstMessage("   "), "New chat");
+});
 
 test("grade boundaries: zero, exact 65, below 65, and 100", () => {
   assert.equal(calculateGrade(grades({ pre_test: 0, post_test: 0, comprehensive: 0, written_revalida: 0, oral_revalida: 0 })).earnedPoints, 0);
