@@ -4,6 +4,7 @@ import { resolveAuthState } from "../app/lib/authState";
 import { chooseAdaptiveQuestion, reinforcementAfterAnswer } from "../app/lib/adaptiveQuestions";
 import { isMissingQuestionReinforcementTableError } from "../app/lib/cloudService";
 import { chatTitleFromFirstMessage } from "../app/lib/aiChatService";
+import { normalizeAiMarkdown } from "../app/lib/aiMarkdown";
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
@@ -15,6 +16,17 @@ test("AI chat titles are concise and useful without another model request", () =
   assert.equal(chatTitleFromFirstMessage("  Compare   iron deficiency anemia and thalassemia?  "), "Compare iron deficiency anemia and thalassemia");
   assert.ok(chatTitleFromFirstMessage("Explain a very long laboratory medicine concept with many details about analytical specificity sensitivity and calibration curves for clinical chemistry analyzers").length <= 80);
   assert.equal(chatTitleFromFirstMessage("   "), "New chat");
+});
+
+test("AI Markdown normalizes common LaTeX delimiters while preserving code", () => {
+  const legacy = String.raw`The formula is \(C_{Cr}\).\n\n\[C_{Cr} = \frac{U_{Cr} \times V}{P_{Cr} \times t}\]\n\nSymbol: (U_\text{Cr})`;
+  const normalized = normalizeAiMarkdown(legacy);
+  assert.match(normalized, /\$C_\{Cr\}\$/);
+  assert.match(normalized, /\$\$\nC_\{Cr\} = \\frac/);
+  assert.match(normalized, /\$U_\\text\{Cr\}\$/);
+  assert.equal(normalizeAiMarkdown(String.raw`H\<sub>2\</sub>O`), "H<sub>2</sub>O");
+  const fencedCode = "```text\n\\[raw\\]\n```";
+  assert.equal(normalizeAiMarkdown(fencedCode), fencedCode);
 });
 
 test("grade boundaries: zero, exact 65, below 65, and 100", () => {

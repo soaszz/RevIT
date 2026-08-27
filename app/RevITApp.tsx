@@ -3,9 +3,8 @@
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import AccountSettings from "./components/AccountSettings";
+import AiMarkdown from "./components/AiMarkdown";
 import GradesPage from "./components/GradesPage";
 import Onboarding from "./components/Onboarding";
 import StudyCalendar from "./components/StudyCalendar";
@@ -1315,7 +1314,7 @@ useEffect(() => {
                       {messages.map((message) => (
                         <article className={`chat-message ${message.role}`} key={message.id}>
                           <span className="message-role">{message.role === "user" ? "You" : "RevIT AI"}</span>
-                          <div className="markdown-content"><ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown></div>
+                          <div className="markdown-content"><AiMarkdown content={message.content} /></div>
                           {message.role === "assistant" && <div className="answer-meta">{message.mode === "demo" && <span>Demo mode</span>}{message.mode === "live" && <span>{message.grounded ? "Source-backed explanation" : `${message.provider ?? "AI"} explanation — verify with approved references`}</span>}{message.citations?.map((citation) => <span key={citation}>Source: {citation}</span>)}</div>}
                         </article>
                       ))}

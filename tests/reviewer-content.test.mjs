@@ -163,3 +163,26 @@ test("AI conversations use the existing Supabase user and preserve the Groq requ
   assert.match(css, /\.assistant-workspace \{ display: grid;/);
   assert.match(css, /\[data-theme="dark"\]/);
 });
+
+test("MedTech AI renders Markdown emphasis, tables, and LaTeX formulas", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const markdown = await readFile(new URL("../app/components/AiMarkdown.tsx", import.meta.url), "utf8");
+  const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
+  const route = await readFile(new URL("../app/api/chat/route.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(app, /<AiMarkdown content=\{message\.content\}/);
+  assert.match(markdown, /remarkPlugins=\{\[remarkGfm, remarkMath\]\}/);
+  assert.match(markdown, /rehypeRaw/);
+  assert.match(markdown, /rehypeSanitize/);
+  assert.match(markdown, /rehypeKatex/);
+  assert.match(markdown, /"sub", "sup"/);
+  assert.match(markdown, /normalizeAiMarkdown\(content\)/);
+  assert.match(layout, /katex\/dist\/katex\.min\.css/);
+  assert.match(route, /double dollar signs/);
+  assert.match(route, /Never show raw LaTeX commands outside math delimiters/);
+  assert.match(css, /\.markdown-content \.katex-display/);
+  assert.match(css, /\.markdown-content strong/);
+  assert.match(css, /\.markdown-content em/);
+  assert.match(css, /\.markdown-content table \{[\s\S]*min-width: 480px/);
+});
