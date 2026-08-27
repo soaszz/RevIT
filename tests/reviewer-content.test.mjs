@@ -56,6 +56,16 @@ test("passes Turnstile tokens to protected Supabase auth operations", async () =
   assert.doesNotMatch(`${auth}\n${forgot}\n${widget}`, /TURNSTILE_SECRET|VITE_TURNSTILE_SECRET_KEY/);
 });
 
+test("hides two-factor setup from account settings without weakening existing sign-in checks", async () => {
+  const auth = await readFile(new URL("../app/auth/AuthPanel.tsx", import.meta.url), "utf8");
+  const account = await readFile(new URL("../app/components/AccountSettings.tsx", import.meta.url), "utf8");
+  const home = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+  assert.doesNotMatch(account, /auth\.mfa|two-factor|authenticator|totp/i);
+  assert.match(auth, /auth\.mfa\.getAuthenticatorAssuranceLevel/);
+  assert.match(home, /\/auth\/mfa/);
+});
+
 test("calendar uses bounded cells and tablet-first full-width breakpoints", async () => {
   const calendar = await readFile(new URL("../app/components/StudyCalendar.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");

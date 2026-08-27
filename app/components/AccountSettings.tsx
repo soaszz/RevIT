@@ -1,9 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Factor } from "@supabase/supabase-js";
 import type { Profile } from "../lib/domain";
 import { saveProfile, uploadAvatar } from "../lib/cloudService";
 import { createClient } from "../lib/supabase/client";
@@ -23,23 +21,8 @@ export default function AccountSettings({ profile, email, onClose, onProfile }: 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [signOutOthers, setSignOutOthers] = useState(true);
-  const [factors, setFactors] = useState<Factor[]>([]);
-  const [enrollment, setEnrollment] = useState<{ id: string; qr: string; secret: string } | null>(null);
-  const [totpCode, setTotpCode] = useState("");
   const [status, setStatus] = useState("");
   const [pending, setPending] = useState(false);
-
-  async function refreshFactors() {
-    const { data } = await createClient().auth.mfa.listFactors();
-    setFactors(data?.totp.filter((factor: Factor) => factor.status === "verified") ?? []);
-  }
-  useEffect(() => {
-    let cancelled = false;
-    void createClient().auth.mfa.listFactors().then((result: { data: { totp: Factor[] } | null }) => {
-      if (!cancelled) setFactors(result.data?.totp.filter((factor: Factor) => factor.status === "verified") ?? []);
-    });
-    return () => { cancelled = true; };
-  }, []);
 
   function chooseAvatar(file?: File) {
     if (!file) return;
@@ -81,30 +64,6 @@ export default function AccountSettings({ profile, email, onClose, onProfile }: 
     finally { setPending(false); }
   }
 
-  async function beginMfa() {
-    setPending(true); setStatus("");
-    const { data, error } = await createClient().auth.mfa.enroll({ factorType: "totp", friendlyName: "RevIT authenticator" });
-    if (error) setStatus(error.message);
-    else setEnrollment({ id: data.id, qr: data.totp.qr_code, secret: data.totp.secret });
-    setPending(false);
-  }
-
-  async function verifyMfa(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); if (!enrollment) return;
-    setPending(true); setStatus("");
-    const { error } = await createClient().auth.mfa.challengeAndVerify({ factorId: enrollment.id, code: totpCode });
-    if (error) setStatus(error.message);
-    else { setEnrollment(null); setTotpCode(""); setStatus("Two-factor authentication is enabled."); await refreshFactors(); }
-    setPending(false);
-  }
-
-  async function disableMfa(id: string) {
-    setPending(true); setStatus("");
-    const { error } = await createClient().auth.mfa.unenroll({ factorId: id });
-    if (error) setStatus(error.message); else { setStatus("Two-factor authentication is disabled."); await refreshFactors(); }
-    setPending(false);
-  }
-
   async function signOut() {
     setPending(true); setStatus("");
     try {
@@ -121,7 +80,6 @@ export default function AccountSettings({ profile, email, onClose, onProfile }: 
     }
   }
 
-  const qrSource = enrollment?.qr.startsWith("data:") ? enrollment.qr : enrollment ? `data:image/svg+xml;utf8,${encodeURIComponent(enrollment.qr)}` : "";
   return (
     <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section className="profile-modal account-modal" role="dialog" aria-modal="true" aria-labelledby="account-title">
@@ -135,7 +93,6 @@ export default function AccountSettings({ profile, email, onClose, onProfile }: 
           <div className="profile-modal-actions"><button className="text-button quiet" type="button" onClick={onClose}>Cancel</button><button className="primary-button" type="submit" disabled={pending}>Save profile</button></div>
         </form> : <div className="security-stack">
           <form onSubmit={changePassword}><p className="eyebrow">Password</p><p className="security-copy">Signed in as {email}. Confirm your current password before changing it.</p><label className="profile-name-field"><span>Current password</span><input type="password" autoComplete="current-password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} required /></label><label className="profile-name-field"><span>New password</span><input type="password" autoComplete="new-password" minLength={8} value={newPassword} onChange={(event) => setNewPassword(event.target.value)} required /></label><label className="check-label"><input type="checkbox" checked={signOutOthers} onChange={(event) => setSignOutOthers(event.target.checked)} /><span>Sign out other devices after changing</span></label><button className="primary-button" type="submit" disabled={pending}>Change password</button></form>
-          <section className="mfa-section"><p className="eyebrow">Two-factor authentication</p>{factors.length ? <><p className="security-copy">Authenticator app is enabled.</p>{factors.map((factor) => <button className="secondary-button" type="button" key={factor.id} onClick={() => void disableMfa(factor.id)} disabled={pending}>Disable authenticator</button>)}</> : enrollment ? <form onSubmit={verifyMfa}><img className="mfa-qr" src={qrSource} alt="Authenticator setup QR code" /><p className="mfa-secret">Manual key: <code>{enrollment.secret}</code></p><label className="profile-name-field"><span>Six-digit code</span><input inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={totpCode} onChange={(event) => setTotpCode(event.target.value.replace(/\D/g, ""))} required /></label><button className="primary-button" type="submit" disabled={pending || totpCode.length !== 6}>Enable authenticator</button></form> : <><p className="security-copy">Add an authenticator app as a separate second factor.</p><button className="secondary-button" type="button" onClick={() => void beginMfa()} disabled={pending}>Set up authenticator</button></>}</section>
           {status && <p className="form-status" role="status">{status}</p>}
         </div>}
         <footer className="account-modal-footer">
