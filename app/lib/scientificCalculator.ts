@@ -8,10 +8,10 @@ type Token =
 
 type ExpressionNode =
   | { type: "number"; value: number; raw: string }
-  | { type: "constant"; name: "pi" | "e" | "ans" | "slot" }
+  | { type: "constant"; name: "pi" | "e" | "ans" | "slot" | "cursor" }
   | { type: "group"; value: ExpressionNode }
   | { type: "unary"; operator: "+" | "-"; value: ExpressionNode }
-  | { type: "binary"; operator: "+" | "-" | "*" | "/" | "^"; left: ExpressionNode; right: ExpressionNode }
+  | { type: "binary"; operator: "+" | "-" | "*" | "/" | "^" | "~"; left: ExpressionNode; right: ExpressionNode }
   | { type: "postfix"; operator: "%" | "!"; value: ExpressionNode }
   | { type: "function"; name: string; arguments: ExpressionNode[] };
 
@@ -67,7 +67,7 @@ function tokenize(expression: string): Token[] {
     if (character === "(") tokens.push({ type: "leftParen" });
     else if (character === ")") tokens.push({ type: "rightParen" });
     else if (character === ",") tokens.push({ type: "comma" });
-    else if ("+-−*×/÷^%!".includes(character)) tokens.push({ type: "operator", value: character });
+    else if ("+-−*×/÷^%!~".includes(character)) tokens.push({ type: "operator", value: character });
     else throw new Error(`Unsupported character: ${character}`);
     index += 1;
   }
@@ -98,7 +98,7 @@ function parseExpression(expression: string): ExpressionNode {
       return { type: "group", value };
     }
     if (token.type === "identifier") {
-      if (["pi", "e", "ans", "slot"].includes(token.value)) return { type: "constant", name: token.value as "pi" | "e" | "ans" | "slot" };
+      if (["pi", "e", "ans", "slot", "cursor"].includes(token.value)) return { type: "constant", name: token.value as "pi" | "e" | "ans" | "slot" | "cursor" };
       if (!FUNCTIONS.has(token.value)) throw new Error(`Unknown function: ${token.value}`);
       if (consume()?.type !== "leftParen") throw new Error(`${token.value} needs parentheses`);
       const argumentsList: ExpressionNode[] = [];
@@ -144,8 +144,8 @@ function parseExpression(expression: string): ExpressionNode {
 
   function parseMultiplicative(): ExpressionNode {
     let value = parseUnary();
-    while (peek()?.type === "operator" && ["*", "×", "/", "÷"].includes((peek() as { value: string }).value)) {
-      const operator = normalizeOperator((consume() as { value: string }).value) as "*" | "/";
+    while (peek()?.type === "operator" && ["*", "×", "/", "÷", "~"].includes((peek() as { value: string }).value)) {
+      const operator = normalizeOperator((consume() as { value: string }).value) as "*" | "/" | "~";
       value = { type: "binary", operator, left: value, right: parseUnary() };
     }
     return value;
@@ -206,7 +206,7 @@ function evaluateFunction(name: string, values: number[], angleMode: AngleMode) 
 function evaluateNode(node: ExpressionNode, angleMode: AngleMode, answer: number): number {
   if (node.type === "number") return node.value;
   if (node.type === "constant") {
-    if (node.name === "slot") throw new Error("Incomplete expression");
+    if (node.name === "slot" || node.name === "cursor") throw new Error("Incomplete expression");
     return node.name === "pi" ? Math.PI : node.name === "e" ? Math.E : answer;
   }
   if (node.type === "group") return evaluateNode(node.value, angleMode, answer);
@@ -225,6 +225,7 @@ function evaluateNode(node: ExpressionNode, angleMode: AngleMode, answer: number
   if (node.operator === "-") return left - right;
   if (node.operator === "*") return left * right;
   if (node.operator === "/") return left / right;
+  if (node.operator === "~") return left * right;
   return Math.pow(left, right);
 }
 
@@ -239,6 +240,7 @@ function renderLatex(node: ExpressionNode, parentPrecedence = 0): string {
   if (node.type === "number") return node.raw.replace(/e([+-]?\d+)/i, String.raw`\times 10^{$1}`);
   if (node.type === "constant") {
     if (node.name === "slot") return String.raw`\square`;
+    if (node.name === "cursor") return String.raw`\htmlClass{calculator-math-caret}{\vert}`;
     return node.name === "pi" ? String.raw`\pi` : node.name === "ans" ? String.raw`\operatorname{Ans}` : "e";
   }
   if (node.type === "group") return String.raw`\left(${renderLatex(node.value)}\right)`;
@@ -257,7 +259,7 @@ function renderLatex(node: ExpressionNode, parentPrecedence = 0): string {
   }
   if (node.operator === "^") return `{${renderLatex(node.left, 3)}}^{${renderLatex(node.right)}}`;
   const precedence = nodePrecedence(node);
-  const operator = node.operator === "*" ? String.raw`\times` : node.operator === "/" ? String.raw`\div` : node.operator;
+  const operator = node.operator === "*" ? String.raw`\times` : node.operator === "/" ? String.raw`\div` : node.operator === "~" ? "" : node.operator;
   const expression = `${renderLatex(node.left, precedence)} ${operator} ${renderLatex(node.right, precedence + (node.operator === "-" || node.operator === "/" ? 1 : 0))}`;
   return precedence < parentPrecedence ? String.raw`\left(${expression}\right)` : expression;
 }
@@ -277,9 +279,25 @@ export function calculateExpression(expression: string, angleMode: AngleMode = "
   return Math.abs(value) < 1e-13 ? 0 : value;
 }
 
-function prepareCalculatorExpressionForDisplay(expression: string) {
+function endsDisplayPrimary(character: string | undefined) {
+  return Boolean(character && /[0-9A-Za-zπe)!%]/.test(character));
+}
+
+function startsDisplayPrimary(character: string | undefined) {
+  return Boolean(character && /[0-9A-Za-zπe(]/.test(character));
+}
+
+function prepareCalculatorExpressionForDisplay(expression: string, cursorIndex?: number) {
   let displayExpression = expression.trim();
-  if (!displayExpression) return "slot";
+  if (!displayExpression) return cursorIndex === undefined ? "slot" : "0~cursor";
+
+  if (cursorIndex !== undefined) {
+    const safeCursor = Math.min(Math.max(0, cursorIndex), displayExpression.length);
+    const before = displayExpression[safeCursor - 1];
+    const after = displayExpression[safeCursor];
+    const cursorToken = `${endsDisplayPrimary(before) ? "~" : ""}cursor${startsDisplayPrimary(after) ? "~" : ""}`;
+    displayExpression = `${displayExpression.slice(0, safeCursor)}${cursorToken}${displayExpression.slice(safeCursor)}`;
+  }
 
   // Keep natural templates visible while the learner is still filling them in.
   // The placeholder is only used for rendering and can never be evaluated.
@@ -290,6 +308,10 @@ function prepareCalculatorExpressionForDisplay(expression: string) {
 
 export function calculatorExpressionToLatex(expression: string) {
   return renderLatex(parseExpression(closeCalculatorParentheses(prepareCalculatorExpressionForDisplay(expression))));
+}
+
+export function calculatorExpressionWithCursorToLatex(expression: string, cursorIndex: number) {
+  return renderLatex(parseExpression(closeCalculatorParentheses(prepareCalculatorExpressionForDisplay(expression, cursorIndex))));
 }
 
 export function formatCalculatorResult(value: number) {

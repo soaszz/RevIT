@@ -12,7 +12,7 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
           <div>
             <p className="eyebrow">Focused MedTech review</p>
             <h2>Learn with purpose. Track every step.</h2>
-            <p>Study Bacteriology and Hematology with source-aware practice, clear AI explanations, grade planning, and progress that follows you across devices.</p>
+            <p>Study MTAPs and Board Exam with source-aware practice, clear AI explanations, grade planning, and progress that follows you across devices.</p>
           </div>
           <ul className="auth-benefits" aria-label="RevIT features">
             <li><span>01</span>Reviewer-grounded practice</li>

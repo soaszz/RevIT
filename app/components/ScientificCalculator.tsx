@@ -5,6 +5,7 @@ import { type CSSProperties, type PointerEvent as ReactPointerEvent, useEffect, 
 import {
   calculateExpression,
   calculatorExpressionToLatex,
+  calculatorExpressionWithCursorToLatex,
   formatCalculatorFraction,
   formatCalculatorResult,
   type AngleMode,
@@ -34,13 +35,41 @@ function HistoryIcon({ direction }: { direction: "undo" | "redo" }) {
 }
 
 function katexMarkup(latex: string, displayMode = false) {
-  return katex.renderToString(latex, { displayMode, throwOnError: false, strict: "ignore", output: "html" });
+  return katex.renderToString(latex, { displayMode, throwOnError: false, strict: "ignore", trust: true, output: "html" });
 }
 
 function resultLatex(result: string) {
   const fraction = result.match(/^(-?\d+)\/(\d+)$/);
   if (fraction) return String.raw`\frac{${fraction[1]}}{${fraction[2]}}`;
   return result.replace(/e([+-]?\d+)/i, String.raw`\times 10^{$1}`);
+}
+
+function findFractionRange(expression: string, cursorIndex: number) {
+  let candidate: { numeratorStart: number; comma: number; denominatorStart: number; end: number } | null = null;
+  let searchFrom = 0;
+  while (searchFrom < expression.length) {
+    const functionStart = expression.indexOf("frac(", searchFrom);
+    if (functionStart < 0 || functionStart > cursorIndex) break;
+    const numeratorStart = functionStart + 5;
+    let depth = 1;
+    let comma = -1;
+    let end = expression.length;
+    for (let index = numeratorStart; index < expression.length; index += 1) {
+      if (expression[index] === "(") depth += 1;
+      else if (expression[index] === ")") {
+        depth -= 1;
+        if (depth === 0) {
+          end = index;
+          break;
+        }
+      } else if (expression[index] === "," && depth === 1 && comma < 0) comma = index;
+    }
+    if (comma >= 0 && cursorIndex >= numeratorStart && cursorIndex <= end) {
+      candidate = { numeratorStart, comma, denominatorStart: comma + 1, end };
+    }
+    searchFrom = functionStart + 5;
+  }
+  return candidate;
 }
 
 export default function ScientificCalculator() {
@@ -52,6 +81,7 @@ export default function ScientificCalculator() {
   const [lastAnswer, setLastAnswer] = useState(0);
   const [memory, setMemory] = useState(0);
   const [calculationError, setCalculationError] = useState("");
+  const [cursorIndex, setCursorIndex] = useState(0);
   const [position, setPosition] = useState<PanelPosition | null>(null);
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -75,11 +105,15 @@ export default function ScientificCalculator() {
 
   const naturalExpressionHtml = useMemo(() => {
     try {
-      return katexMarkup(calculatorExpressionToLatex(timeline.present), true);
+      return katexMarkup(calculatorExpressionWithCursorToLatex(timeline.present, cursorIndex), true);
     } catch {
-      return null;
+      try {
+        return katexMarkup(calculatorExpressionToLatex(timeline.present), true);
+      } catch {
+        return null;
+      }
     }
-  }, [timeline.present]);
+  }, [cursorIndex, timeline.present]);
 
   useEffect(() => {
     if (!open) return;
@@ -90,6 +124,11 @@ export default function ScientificCalculator() {
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [open]);
+
+  useEffect(() => {
+    if (!open || !inputRef.current) return;
+    inputRef.current.setSelectionRange(cursorIndex, cursorIndex);
+  }, [cursorIndex, open, timeline.present]);
 
   useEffect(() => {
     if (!position) return;
@@ -107,8 +146,9 @@ export default function ScientificCalculator() {
 
   useEffect(() => () => dragCleanupRef.current(), []);
 
-  const commit = (next: string) => {
+  const commit = (next: string, nextCursor = next.length) => {
     setCalculationError("");
+    setCursorIndex(Math.min(Math.max(0, nextCursor), next.length));
     setTimeline((current) => next === current.present ? current : {
       past: [...current.past.slice(-99), current.present],
       present: next.slice(0, 220),
@@ -118,6 +158,9 @@ export default function ScientificCalculator() {
 
   const undo = () => {
     setCalculationError("");
+    const previous = timeline.past[timeline.past.length - 1];
+    if (previous === undefined) return;
+    setCursorIndex(previous.length);
     setTimeline((current) => current.past.length ? {
       past: current.past.slice(0, -1),
       present: current.past[current.past.length - 1],
@@ -127,6 +170,9 @@ export default function ScientificCalculator() {
 
   const redo = () => {
     setCalculationError("");
+    const next = timeline.future[0];
+    if (next === undefined) return;
+    setCursorIndex(next.length);
     setTimeline((current) => current.future.length ? {
       past: [...current.past.slice(-99), current.present],
       present: current.future[0],
@@ -136,27 +182,73 @@ export default function ScientificCalculator() {
 
   const append = (value: string) => {
     const current = timeline.present;
-    const previous = current.slice(-1);
+    const safeCursor = Math.min(cursorIndex, current.length);
+    const beforeCursor = current.slice(0, safeCursor);
+    const afterCursor = current.slice(safeCursor);
+    const previous = beforeCursor.slice(-1);
     const startsPrimary = value.startsWith("(") || value === "π" || value === "e" || value === "Ans" || value === "10^(" || value === "e^(" || /^(sin|cos|tan|asin|acos|atan|ln|log|sqrt|cbrt|root|frac)/.test(value);
-    const endsPrimary = /[0-9πe)!%]/.test(previous) || current.endsWith("Ans");
-    const digitAfterPrimary = /^[0-9.]$/.test(value) && (/[πe)!%]/.test(previous) || current.endsWith("Ans"));
+    const endsPrimary = /[0-9πe)!%]/.test(previous) || beforeCursor.endsWith("Ans");
+    const digitAfterPrimary = /^[0-9.]$/.test(value) && (/[πe)!%]/.test(previous) || beforeCursor.endsWith("Ans"));
 
-    if (value === "×10^" && !current) return commit("10^");
-    if (["^2", "^3"].includes(value) && (!current || OPERATORS.has(previous) || previous === "(" || previous === ",")) return;
+    if (value === "×10^" && !current) return commit("10^", 3);
+    if (["^2", "^3"].includes(value) && (!beforeCursor || OPERATORS.has(previous) || previous === "(" || previous === ",")) return;
     if (OPERATORS.has(value)) {
-      if (!current && value !== "−") return;
-      if (OPERATORS.has(previous)) commit(`${current.slice(0, -1)}${value}`);
-      else commit(`${current}${value}`);
+      if (!beforeCursor && value !== "−") return;
+      if (OPERATORS.has(previous)) commit(`${beforeCursor.slice(0, -1)}${value}${afterCursor}`, safeCursor);
+      else commit(`${beforeCursor}${value}${afterCursor}`, safeCursor + value.length);
       return;
     }
-    commit(`${current}${(startsPrimary && endsPrimary) || digitAfterPrimary ? "×" : ""}${value}`);
+    const prefix = (startsPrimary && endsPrimary) || digitAfterPrimary ? "×" : "";
+    commit(`${beforeCursor}${prefix}${value}${afterCursor}`, safeCursor + prefix.length + value.length);
   };
 
   const insertFraction = () => {
     const current = timeline.present.trim();
-    if (!current) commit("frac(");
-    else if (OPERATORS.has(current.slice(-1)) || current.endsWith("(") || current.endsWith(",")) append("frac(");
-    else commit(`frac(${current},`);
+    const safeCursor = Math.min(cursorIndex, current.length);
+    const beforeCursor = current.slice(0, safeCursor);
+    const afterCursor = current.slice(safeCursor);
+    if (!current) commit("frac(", 5);
+    else if (OPERATORS.has(beforeCursor.slice(-1)) || beforeCursor.endsWith("(") || beforeCursor.endsWith(",")) append("frac(");
+    else commit(`frac(${beforeCursor},)${afterCursor}`, beforeCursor.length + 6);
+  };
+
+  const moveCursor = (direction: "left" | "right" | "up" | "down") => {
+    const expression = timeline.present;
+    if (direction === "left" || direction === "right") {
+      const step = direction === "left" ? -1 : 1;
+      let next = Math.min(Math.max(0, cursorIndex + step), expression.length);
+      if (direction === "left") while (next > 0 && /[A-Za-z]/.test(expression[next - 1])) next -= 1;
+      else while (next < expression.length && /[A-Za-z]/.test(expression[next])) next += 1;
+      setCursorIndex(next);
+      inputRef.current?.focus();
+      return;
+    }
+
+    const fraction = findFractionRange(expression, cursorIndex);
+    if (fraction) {
+      const numeratorLength = fraction.comma - fraction.numeratorStart;
+      const denominatorLength = fraction.end - fraction.denominatorStart;
+      if (direction === "down" && cursorIndex <= fraction.comma) {
+        const offset = Math.max(0, cursorIndex - fraction.numeratorStart);
+        setCursorIndex(fraction.denominatorStart + Math.min(offset, denominatorLength));
+        return;
+      }
+      if (direction === "up" && cursorIndex >= fraction.denominatorStart) {
+        const offset = Math.max(0, cursorIndex - fraction.denominatorStart);
+        setCursorIndex(fraction.numeratorStart + Math.min(offset, numeratorLength));
+        return;
+      }
+    }
+    setCursorIndex(direction === "up" ? 0 : expression.length);
+    inputRef.current?.focus();
+  };
+
+  const deleteBeforeCursor = () => {
+    if (!cursorIndex) return;
+    const current = timeline.present;
+    let start = cursorIndex - 1;
+    if (/[A-Za-z]/.test(current[start])) while (start > 0 && /[A-Za-z]/.test(current[start - 1])) start -= 1;
+    commit(`${current.slice(0, start)}${current.slice(cursorIndex)}`, start);
   };
 
   const toggleSign = () => {
@@ -263,8 +355,14 @@ export default function ScientificCalculator() {
               ref={inputRef}
               id="calculator-expression"
               value={timeline.present}
-              onChange={(event) => commit(event.target.value)}
-              onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); calculate(); } }}
+              onChange={(event) => commit(event.target.value, event.target.selectionStart ?? event.target.value.length)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") { event.preventDefault(); calculate(); }
+                else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+                  event.preventDefault();
+                  moveCursor(event.key.replace("Arrow", "").toLowerCase() as "left" | "right" | "up" | "down");
+                }
+              }}
               autoComplete="off"
               spellCheck={false}
               inputMode="text"
@@ -274,6 +372,14 @@ export default function ScientificCalculator() {
                 ? calculationError
                 : preview && <span dangerouslySetInnerHTML={{ __html: preview.resultHtml }} />}
             </output>
+          </div>
+
+          <div className="calculator-navigation" role="group" aria-label="Expression navigation">
+            <button type="button" className="calculator-nav-up" onClick={() => moveCursor("up")} aria-label="Move cursor up">▲</button>
+            <button type="button" className="calculator-nav-left" onClick={() => moveCursor("left")} aria-label="Move cursor left">◀</button>
+            <button type="button" className="calculator-nav-center" onClick={() => { setCursorIndex(timeline.present.length); inputRef.current?.focus(); }} aria-label="Move cursor to end" title="Move to end">●</button>
+            <button type="button" className="calculator-nav-right" onClick={() => moveCursor("right")} aria-label="Move cursor right">▶</button>
+            <button type="button" className="calculator-nav-down" onClick={() => moveCursor("down")} aria-label="Move cursor down">▼</button>
           </div>
 
           <div className="calculator-keypad" aria-label="Calculator keypad">
@@ -306,7 +412,7 @@ export default function ScientificCalculator() {
             <button type="button" className="function-key compact-key" onClick={() => append("Ans")}>Ans</button>
 
             {["7", "8", "9"].map((value) => <button type="button" key={value} onClick={() => append(value)}>{value}</button>)}
-            <button type="button" className="delete-key" onClick={() => commit(timeline.present.slice(0, -1))}>DEL</button>
+            <button type="button" className="delete-key" onClick={deleteBeforeCursor}>DEL</button>
             <button type="button" className="clear-key" onClick={() => commit("")}>AC</button>
             <button type="button" className="operator-key" onClick={() => append("÷")}>÷</button>
 

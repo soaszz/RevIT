@@ -5,7 +5,7 @@ import { chooseAdaptiveQuestion, reinforcementAfterAnswer } from "../app/lib/ada
 import { isMissingQuestionReinforcementTableError } from "../app/lib/cloudService";
 import { chatTitleFromFirstMessage } from "../app/lib/aiChatService";
 import { normalizeAiMarkdown } from "../app/lib/aiMarkdown";
-import { calculateExpression, calculatorExpressionToLatex, formatCalculatorFraction, formatCalculatorResult } from "../app/lib/scientificCalculator";
+import { calculateExpression, calculatorExpressionToLatex, calculatorExpressionWithCursorToLatex, formatCalculatorFraction, formatCalculatorResult } from "../app/lib/scientificCalculator";
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
@@ -51,6 +51,12 @@ test("scientific calculator evaluates safely across core scientific operations",
   assert.equal(calculatorExpressionToLatex("frac(1,"), String.raw`\frac{1}{\square}`);
   assert.equal(calculatorExpressionToLatex("sqrt(frac(1,2)+4^2"), String.raw`\sqrt{\frac{1}{2} + {4}^{2}}`);
   assert.equal(calculatorExpressionToLatex("5^"), String.raw`{5}^{\square}`);
+  const fractionWithCursor = calculatorExpressionWithCursorToLatex("frac(12,3)", 6);
+  assert.match(fractionWithCursor, /\\frac\{1/);
+  assert.match(fractionWithCursor, /\\htmlClass\{calculator-math-caret\}/);
+  const exponentWithCursor = calculatorExpressionWithCursorToLatex("4^2", 2);
+  assert.match(exponentWithCursor, /\^\{/);
+  assert.match(exponentWithCursor, /\\htmlClass\{calculator-math-caret\}/);
   assert.equal(formatCalculatorFraction(0.75), "3/4");
   assert.equal(formatCalculatorResult(1 / 3), "0.333333333333");
   assert.throws(() => calculateExpression("1÷0"), /real-number range/);
