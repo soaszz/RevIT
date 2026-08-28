@@ -81,7 +81,7 @@ const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Home", icon: "/icons/home.svg" },
   { id: "library", label: "QnA", icon: "/icons/qna.svg" },
   { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
-  { id: "weakness", label: "Weakness", icon: "/icons/progress.svg" },
+  { id: "weakness", label: "Weakness", icon: "/icons/weakness.svg" },
   { id: "grades", label: "Grades", icon: "/icons/grades.svg" },
   { id: "assistant", label: "MedTech AI", icon: "/icons/medtech-ai.svg" },
 ];
