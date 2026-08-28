@@ -25,6 +25,8 @@ export type ReviewerQuestion = {
   id: string;
   subjectId: string;
   topicId: string;
+  subtopic?: string;
+  difficulty?: "Easy" | "Medium" | "Hard";
   prompt: string;
   choices: string[];
   correctAnswer: number;

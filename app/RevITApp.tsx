@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import AccountSettings from "./components/AccountSettings";
@@ -9,20 +9,25 @@ import GradesPage from "./components/GradesPage";
 import Onboarding from "./components/Onboarding";
 import ScientificCalculator from "./components/ScientificCalculator";
 import StudyCalendar from "./components/StudyCalendar";
+import WeaknessDashboard from "./components/WeaknessDashboard";
 import {
   deleteExam as deleteCloudExam,
   flushActivityQueue,
+  flushQuestionAttemptQueue,
   loadCloudSnapshot,
   localProfileToCloud,
   migrateLocalActivity,
+  migrateLocalQuestionAttempts,
   queueActivity,
+  queueQuestionAttempt,
   recordActivity,
   saveExam as saveCloudExam,
   saveGrade as saveCloudGrade,
   savePreferences,
   saveQuestionReinforcement,
+  saveQuestionAttempt,
 } from "./lib/cloudService";
-import type { DailyActivity, ExamSchedule, GradeRecord, Profile, UserPreferences } from "./lib/domain";
+import type { DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, UserPreferences } from "./lib/domain";
 import {
   chooseAdaptiveQuestion,
   reinforcementAfterAnswer,
@@ -31,6 +36,7 @@ import {
   type ReinforcementLevels,
 } from "./lib/adaptiveQuestions";
 import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCalendar";
+import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
 import { createClient } from "./lib/supabase/client";
 import {
   chatTitleFromFirstMessage,
@@ -51,17 +57,8 @@ import {
   topics,
 } from "./content/reviewerContent";
 
-type View = "overview" | "library" | "progress" | "grades" | "assistant";
-
-type Attempt = {
-  id?: string;
-  questionId: string;
-  topicId: string;
-  subjectId: string;
-  selectedAnswer: number;
-  correct: boolean;
-  timestamp: string;
-};
+type View = "overview" | "library" | "progress" | "weakness" | "grades" | "assistant";
+type Attempt = QuestionAttempt;
 
 type ChatMessage = {
   id: string;
@@ -84,6 +81,7 @@ const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Home", icon: "/icons/home.svg" },
   { id: "library", label: "QnA", icon: "/icons/qna.svg" },
   { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
+  { id: "weakness", label: "Weakness", icon: "/icons/progress.svg" },
   { id: "grades", label: "Grades", icon: "/icons/grades.svg" },
   { id: "assistant", label: "MedTech AI", icon: "/icons/medtech-ai.svg" },
 ];
@@ -113,6 +111,11 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     title: "See what you know. Focus on what is next.",
     description: "Every answer is organized by subject and topic, so your next study move stays clear.",
   },
+  weakness: {
+    eyebrow: "Evidence-based study priorities",
+    title: "Turn missed concepts into a focused next step.",
+    description: "Mastery is calculated from your real question history, with unique questions, first attempts, difficulty, and delayed retention kept separate from immediate retries.",
+  },
   grades: {
     eyebrow: "Deterministic grade planning",
     title: "Know where you stand—and what comes next.",
@@ -124,6 +127,58 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     description: "Explore medtech concepts with Groq while official reviewer answers remain the scoring source of truth.",
   },
 };
+
+function normalizedDifficulty(value: unknown): QuestionDifficulty {
+  return value === "Easy" || value === "Medium" || value === "Hard" ? value : "Unspecified";
+}
+
+function normalizedReviewMode(value: unknown): ReviewMode {
+  return value === "adaptive" || value === "wrong_answers" || value === "weakness_focus"
+    || value === "pre_test" || value === "post_test" || value === "oral_review"
+    ? value
+    : "reviewer";
+}
+
+function normalizeAttempts(value: unknown): Attempt[] {
+  if (!Array.isArray(value)) return [];
+  const normalized = value.flatMap((raw): Attempt[] => {
+    if (!raw || typeof raw !== "object") return [];
+    const input = raw as Partial<Attempt> & { id?: string; selectedAnswer?: number; correct?: boolean; timestamp?: string };
+    if (typeof input.questionId !== "string" || typeof input.correct !== "boolean" || typeof input.timestamp !== "string") return [];
+    const question = questionById.get(input.questionId);
+    const topicId = typeof input.topicId === "string" ? input.topicId : question?.topicId ?? "uncategorized";
+    const subjectId = typeof input.subjectId === "string" ? input.subjectId : question?.subjectId ?? "uncategorized";
+    return [{
+      id: typeof input.id === "string" ? input.id : crypto.randomUUID(),
+      questionId: input.questionId,
+      topicId,
+      subjectId,
+      topicName: typeof input.topicName === "string" && input.topicName.trim() ? input.topicName : topicById.get(topicId)?.name ?? "Uncategorized",
+      subjectName: typeof input.subjectName === "string" && input.subjectName.trim() ? input.subjectName : subjectById.get(subjectId)?.name ?? "Uncategorized",
+      subtopic: typeof input.subtopic === "string" && input.subtopic.trim() ? input.subtopic : question?.subtopic ?? "Uncategorized",
+      difficulty: normalizedDifficulty(input.difficulty ?? question?.difficulty),
+      selectedAnswer: typeof input.selectedAnswer === "number" ? input.selectedAnswer : null,
+      correct: input.correct,
+      attemptNumber: typeof input.attemptNumber === "number" && input.attemptNumber > 0 ? input.attemptNumber : 1,
+      reviewMode: normalizedReviewMode(input.reviewMode),
+      sessionId: typeof input.sessionId === "string" ? input.sessionId : null,
+      isAdaptiveRepeat: Boolean(input.isAdaptiveRepeat),
+      timestamp: input.timestamp,
+    }];
+  }).sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+  const counts = new Map<string, number>();
+  return normalized.map((attempt) => {
+    const count = (counts.get(attempt.questionId) ?? 0) + 1;
+    counts.set(attempt.questionId, count);
+    return { ...attempt, attemptNumber: Math.max(attempt.attemptNumber, count) };
+  });
+}
+
+function mergeAttempts(...sources: Attempt[][]) {
+  const merged = new Map<string, Attempt>();
+  for (const attempt of sources.flat()) merged.set(attempt.id, attempt);
+  return [...merged.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+}
 
 const chatSuggestions = [
   "Why is decolorization the critical step in Gram staining?",
@@ -181,6 +236,8 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [sessionChoiceOrders, setSessionChoiceOrders] = useState<Record<string, number[]>>({});
   const [sessionIndex, setSessionIndex] = useState(0);
   const [sessionStrictWrongOnly, setSessionStrictWrongOnly] = useState(false);
+  const [sessionMode, setSessionMode] = useState<ReviewMode>("reviewer");
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [sessionAttempts, setSessionAttempts] = useState<Attempt[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [answerRevealed, setAnswerRevealed] = useState(false);
@@ -211,13 +268,16 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   }));
   const [cloudLoading, setCloudLoading] = useState(cloudEnabled);
   const [cloudError, setCloudError] = useState("");
+  const [attemptHistoryAvailable, setAttemptHistoryAvailable] = useState(!cloudEnabled);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const attemptMigrationStarted = useRef(false);
 
 useEffect(() => {
   const validViews: View[] = [
     "overview",
     "library",
     "progress",
+    "weakness",
     "grades",
     "assistant",
   ];
@@ -250,13 +310,25 @@ useEffect(() => {
 
   useEffect(() => {
     try {
-      const savedAttempts = JSON.parse(localStorage.getItem("revit-attempts-v1") ?? "[]") as Attempt[];
+      const attemptStorageKey = `revit-attempts-v2:${initialUser?.id ?? "local"}`;
+      const scopedAttempts = localStorage.getItem(attemptStorageKey);
+      let rawAttempts = scopedAttempts ? JSON.parse(scopedAttempts) : null;
+      if (!scopedAttempts) {
+        const legacyAttempts = JSON.parse(localStorage.getItem("revit-attempts-v1") ?? "[]");
+        const legacyClaim = localStorage.getItem("revit-attempts-v1-claimed-by");
+        if (!initialUser || !legacyClaim || legacyClaim === initialUser.id) {
+          rawAttempts = legacyAttempts;
+          if (initialUser && Array.isArray(legacyAttempts) && legacyAttempts.length) {
+            localStorage.setItem("revit-attempts-v1-claimed-by", initialUser.id);
+          }
+        }
+      }
       const savedTopics = JSON.parse(localStorage.getItem("revit-selected-topics-v1") ?? "[]") as string[];
       const savedProfile = JSON.parse(localStorage.getItem("revit-profile-v1") ?? "null") as LearnerProfile | null;
       const savedSidebarCollapsed = localStorage.getItem("revit-sidebar-collapsed") === "true";
       const reinforcementKey = `revit-reinforcement-v1:${initialUser?.id ?? "local"}`;
       const savedReinforcement = JSON.parse(localStorage.getItem(reinforcementKey) ?? "{}") as ReinforcementLevels;
-      if (Array.isArray(savedAttempts)) setAttempts(savedAttempts);
+      setAttempts(normalizeAttempts(rawAttempts));
       if (Array.isArray(savedTopics)) {
         setSelectedTopicIds(savedTopics.filter((id) => topicById.has(id)));
       }
@@ -275,7 +347,7 @@ useEffect(() => {
     }
     setReinforcementReady(true);
     setStorageReady(true);
-  }, [initialUser?.id]);
+  }, [initialUser]);
 
   useEffect(() => {
     if (!storageReady || cloudEnabled) return;
@@ -319,6 +391,8 @@ useEffect(() => {
         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, profile.name, profile.photoDataUrl);
         const nextPreferences = snapshot.preferences ?? preferences;
         setCloudProfile(nextProfile); setGrades(snapshot.grades); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences);
+        setAttempts((current) => mergeAttempts(snapshot.attempts, current));
+        setAttemptHistoryAvailable(snapshot.attemptHistoryAvailable);
         setReinforcementLevels((current) => ({
           ...current,
           ...Object.fromEntries(snapshot.reinforcement.map((item) => [item.question_id, item.reinforcement_level])),
@@ -402,25 +476,31 @@ useEffect(() => {
   }, [activeChatId, activeView, cloudEnabled, initialUser, loadedChatId]);
 
   useEffect(() => {
-    if (!cloudEnabled || !initialUser || !storageReady || cloudLoading || cloudError) return;
+    if (!cloudEnabled || !initialUser || !storageReady || cloudLoading || cloudError || !attemptHistoryAvailable) return;
+    if (attemptMigrationStarted.current) return;
+    attemptMigrationStarted.current = true;
     let cancelled = false;
     async function migrate() {
       try {
         const client = createClient();
+        await flushQuestionAttemptQueue(client, initialUser!.id);
         await migrateLocalActivity(client, initialUser!.id, preferences.timezone, attempts, (id) => subjectById.get(id)?.name ?? id);
+        await migrateLocalQuestionAttempts(client, initialUser!.id, attempts);
         const snapshot = await loadCloudSnapshot(client, initialUser!.id);
-        if (!cancelled) setActivity(snapshot.activity);
+        if (!cancelled) {
+          setActivity(snapshot.activity);
+        }
       } catch (error) {
         if (!cancelled) setCloudError(`Local history is preserved, but migration needs retry: ${error instanceof Error ? error.message : "unknown error"}`);
       }
     }
     void migrate();
     return () => { cancelled = true; };
-  }, [attempts, cloudEnabled, cloudError, cloudLoading, initialUser, preferences.timezone, storageReady]);
+  }, [attemptHistoryAvailable, attempts, cloudEnabled, cloudError, cloudLoading, initialUser, preferences.timezone, storageReady]);
 
   useEffect(() => {
-    if (storageReady) localStorage.setItem("revit-attempts-v1", JSON.stringify(attempts));
-  }, [attempts, storageReady]);
+    if (storageReady) localStorage.setItem(`revit-attempts-v2:${initialUser?.id ?? "local"}`, JSON.stringify(attempts));
+  }, [attempts, initialUser?.id, storageReady]);
 
   useEffect(() => {
     if (!reinforcementReady) return;
@@ -551,38 +631,51 @@ useEffect(() => {
     setWrongAnswersOnly(true);
   }
 
+  function beginAdaptiveSession(poolIds: string[], targetCount: number, mode: ReviewMode) {
+    const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, [], Math.random, questionPerformance);
+    if (!firstQuestionId) return;
+    setSessionPoolIds(poolIds);
+    setSessionTargetCount(Math.min(targetCount, poolIds.length));
+    setSessionQuestionIds([firstQuestionId]);
+    setSessionChoiceOrders({ [`0:${firstQuestionId}`]: shuffled([0, 1, 2, 3]) });
+    setSessionStrictWrongOnly(false);
+    setSessionMode(mode);
+    setSessionId(crypto.randomUUID());
+    setSessionIndex(0);
+    setSessionAttempts([]);
+    setSelectedChoice(null);
+    setAnswerRevealed(false);
+  }
+
+  function beginStrictSession(poolIds: string[], mode: ReviewMode, limit = poolIds.length) {
+    const strictQuestionIds = shuffled(poolIds).slice(0, Math.min(limit, poolIds.length));
+    if (!strictQuestionIds.length) return;
+    setSessionPoolIds(strictQuestionIds);
+    setSessionTargetCount(strictQuestionIds.length);
+    setSessionQuestionIds(strictQuestionIds);
+    setSessionChoiceOrders(Object.fromEntries(strictQuestionIds.map((questionId, index) => [
+      `${index}:${questionId}`,
+      shuffled([0, 1, 2, 3]),
+    ])));
+    setSessionStrictWrongOnly(true);
+    setSessionMode(mode);
+    setSessionId(crypto.randomUUID());
+    setSessionIndex(0);
+    setSessionAttempts([]);
+    setSelectedChoice(null);
+    setAnswerRevealed(false);
+  }
+
   function startSession() {
     if (!sessionQuestions.length) return;
     const limit = sessionSize === "all" ? sessionQuestions.length : Number(sessionSize);
     const poolIds = sessionQuestions.map((question) => question.id);
     const targetCount = Math.min(limit, poolIds.length);
     if (wrongAnswersOnly) {
-      const strictQuestionIds = shuffled(poolIds).slice(0, targetCount);
-      setSessionPoolIds(strictQuestionIds);
-      setSessionTargetCount(strictQuestionIds.length);
-      setSessionQuestionIds(strictQuestionIds);
-      setSessionChoiceOrders(Object.fromEntries(strictQuestionIds.map((questionId, index) => [
-        `${index}:${questionId}`,
-        shuffled([0, 1, 2, 3]),
-      ])));
-      setSessionStrictWrongOnly(true);
-      setSessionIndex(0);
-      setSessionAttempts([]);
-      setSelectedChoice(null);
-      setAnswerRevealed(false);
+      beginStrictSession(poolIds, "wrong_answers", targetCount);
       return;
     }
-    const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, [], Math.random, questionPerformance);
-    if (!firstQuestionId) return;
-    setSessionPoolIds(poolIds);
-    setSessionTargetCount(targetCount);
-    setSessionQuestionIds([firstQuestionId]);
-    setSessionChoiceOrders({ [`0:${firstQuestionId}`]: shuffled([0, 1, 2, 3]) });
-    setSessionStrictWrongOnly(false);
-    setSessionIndex(0);
-    setSessionAttempts([]);
-    setSelectedChoice(null);
-    setAnswerRevealed(false);
+    beginAdaptiveSession(poolIds, targetCount, "adaptive");
   }
 
   function leaveSession() {
@@ -591,10 +684,42 @@ useEffect(() => {
     setSessionQuestionIds([]);
     setSessionChoiceOrders({});
     setSessionStrictWrongOnly(false);
+    setSessionMode("reviewer");
+    setSessionId(null);
     setSessionIndex(0);
     setSessionAttempts([]);
     setSelectedChoice(null);
     setAnswerRevealed(false);
+  }
+
+  function practiceWeakTopic(topic: TopicMastery) {
+    const poolIds = buildWeakTopicQuestionPool(topic.topicId, questions, attempts);
+    if (!poolIds.length) {
+      setSelectedTopicIds([topic.topicId]);
+      setWrongAnswersOnly(false);
+      openView("library");
+      return;
+    }
+    setSelectedTopicIds([topic.topicId]);
+    setWrongAnswersOnly(false);
+    beginAdaptiveSession(poolIds, Math.min(10, poolIds.length), "weakness_focus");
+    openView("library");
+  }
+
+  function viewTopicMistakes(topic: TopicMastery) {
+    const mistakeIds = questions
+      .filter((question) => question.topicId === topic.topicId && wrongQuestionIds.has(question.id))
+      .map((question) => question.id);
+    setSelectedTopicIds([topic.topicId]);
+    setWrongAnswersOnly(true);
+    if (mistakeIds.length) beginStrictSession(mistakeIds, "wrong_answers");
+    openView("library");
+  }
+
+  function reviewTopicWithAi(topic: TopicMastery) {
+    setSelectedTopicIds([topic.topicId]);
+    setDraft(`Help me review ${topic.topicName} in ${topic.subjectName}. My RevIT mastery is ${topic.mastery ?? "not yet reliable"}% based on ${topic.uniqueQuestions} unique questions. Focus on likely misconceptions and give me a concise study plan without changing or inventing these statistics.`);
+    openView("assistant");
   }
 
   async function recordStudyEvent(input: {
@@ -627,18 +752,29 @@ useEffect(() => {
 
   function submitAnswer() {
     if (!currentQuestion || selectedChoice === null || answerRevealed) return;
+    const existingQuestionAttempts = attempts.filter((item) => item.questionId === currentQuestion.id);
+    const topic = topicById.get(currentQuestion.topicId);
+    const subject = subjectById.get(currentQuestion.subjectId);
+    const currentReinforcementLevel = reinforcementLevels[currentQuestion.id] ?? 0;
     const attempt: Attempt = {
       id: crypto.randomUUID(),
       questionId: currentQuestion.id,
       topicId: currentQuestion.topicId,
       subjectId: currentQuestion.subjectId,
+      topicName: topic?.name ?? "Uncategorized",
+      subjectName: subject?.name ?? "Uncategorized",
+      subtopic: currentQuestion.subtopic ?? "Uncategorized",
+      difficulty: normalizedDifficulty(currentQuestion.difficulty),
       selectedAnswer: selectedChoice,
       correct: selectedChoice === currentQuestion.correctAnswer,
+      attemptNumber: existingQuestionAttempts.length + 1,
+      reviewMode: sessionMode,
+      sessionId,
+      isAdaptiveRepeat: existingQuestionAttempts.length > 0 || currentReinforcementLevel > 0,
       timestamp: new Date().toISOString(),
     };
     setAttempts((current) => [...current, attempt]);
     setSessionAttempts((current) => [...current, attempt]);
-    const currentReinforcementLevel = reinforcementLevels[currentQuestion.id] ?? 0;
     const nextReinforcementLevel = reinforcementLevelAfterAnswer(
       currentReinforcementLevel,
       attempt.correct,
@@ -647,6 +783,17 @@ useEffect(() => {
     if (cloudEnabled && initialUser && (!attempt.correct || currentReinforcementLevel > 0)) {
       void saveQuestionReinforcement(createClient(), initialUser.id, currentQuestion.id, nextReinforcementLevel)
         .catch(() => setCloudError("Your answer is saved locally, but reinforcement sync needs another attempt."));
+    }
+    if (cloudEnabled && initialUser && attemptHistoryAvailable) {
+      void saveQuestionAttempt(createClient(), attempt)
+        .then((saved) => {
+          setAttempts((current) => current.map((item) => item.id === saved.id ? saved : item));
+          setSessionAttempts((current) => current.map((item) => item.id === saved.id ? saved : item));
+        })
+        .catch(() => {
+          queueQuestionAttempt(initialUser.id, attempt);
+          setCloudError("Your answer is safe on this device and queued for question-history sync.");
+        });
     }
     setAnswerRevealed(true);
     void recordStudyEvent({
@@ -664,7 +811,6 @@ useEffect(() => {
       setAnswerRevealed(false);
       return;
     }
-
     if (sessionCanFinish) {
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
@@ -1186,7 +1332,7 @@ useEffect(() => {
                 </aside>
               </div>
             ) : sessionComplete ? (
-              <SessionSummary attempts={sessionAttempts} onDone={leaveSession} cloudEnabled={cloudEnabled} />
+              <SessionSummary attempts={sessionAttempts} onDone={leaveSession} cloudEnabled={cloudEnabled && attemptHistoryAvailable} />
             ) : currentQuestion ? (
               <section className="quiz-card">
                 <div className="quiz-topline">
@@ -1258,6 +1404,19 @@ useEffect(() => {
             </div>
             {!attempts.length && <div className="empty-progress"><h2>Your progress starts with one answer</h2><p>Choose any topic combination. RevIT autosaves every answer {cloudEnabled ? "to your account" : "on this device"} and updates this page immediately.</p><button className="primary-button" type="button" onClick={() => openView("library")}>Start a review</button></div>}
           </div>
+        )}
+
+        {activeView === "weakness" && (
+          <WeaknessDashboard
+            attempts={attempts}
+            loading={cloudLoading}
+            historyAvailable={attemptHistoryAvailable}
+            cloudEnabled={cloudEnabled}
+            onOpenReviewer={() => openView("library")}
+            onReviewWithAi={reviewTopicWithAi}
+            onPractice={practiceWeakTopic}
+            onViewMistakes={viewTopicMistakes}
+          />
         )}
 
         {activeView === "grades" && <GradesPage grades={grades} onSave={persistGrade} />}

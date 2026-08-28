@@ -84,6 +84,44 @@ export type QuestionReinforcement = {
   updated_at?: string;
 };
 
+export const QUESTION_DIFFICULTIES = ["Easy", "Medium", "Hard", "Unspecified"] as const;
+export type QuestionDifficulty = (typeof QUESTION_DIFFICULTIES)[number];
+
+export const REVIEW_MODES = [
+  "reviewer",
+  "adaptive",
+  "wrong_answers",
+  "weakness_focus",
+  "pre_test",
+  "post_test",
+  "oral_review",
+] as const;
+export type ReviewMode = (typeof REVIEW_MODES)[number];
+
+/**
+ * Question metadata is copied onto each attempt because RevIT's official
+ * question bank is bundled with the app rather than stored in Supabase.
+ * This keeps old analytics stable if a question is reorganized later.
+ */
+export type QuestionAttempt = {
+  id: string;
+  userId?: string;
+  questionId: string;
+  subjectId: string;
+  subjectName: string;
+  topicId: string;
+  topicName: string;
+  subtopic: string;
+  difficulty: QuestionDifficulty;
+  selectedAnswer: number | null;
+  correct: boolean;
+  attemptNumber: number;
+  reviewMode: ReviewMode;
+  sessionId: string | null;
+  isAdaptiveRepeat: boolean;
+  timestamp: string;
+};
+
 export type UserPreferences = {
   user_id?: string;
   timezone: string;
@@ -97,4 +135,6 @@ export type CloudSnapshot = {
   exams: ExamSchedule[];
   preferences: UserPreferences | null;
   reinforcement: QuestionReinforcement[];
+  attempts: QuestionAttempt[];
+  attemptHistoryAvailable: boolean;
 };

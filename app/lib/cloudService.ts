@@ -6,6 +6,7 @@ import type {
   GradeRecord,
   GradeSubject,
   Profile,
+  QuestionAttempt,
   QuestionReinforcement,
   UserPreferences,
 } from "./domain";
@@ -22,19 +23,74 @@ export function isMissingQuestionReinforcementTableError(error: { code?: string;
     || false;
 }
 
+export function isMissingQuestionAttemptsTableError(error: { code?: string; message?: string } | null | undefined) {
+  if (!error) return false;
+  return error.code === "PGRST205"
+    || error.code === "42P01"
+    || (error.message?.includes("question_attempts") && error.message.includes("schema cache"))
+    || false;
+}
+
+type QuestionAttemptRow = {
+  id: string;
+  user_id: string;
+  question_id: string;
+  subject_id: string;
+  subject_name: string;
+  topic_id: string;
+  topic_name: string;
+  subtopic: string;
+  difficulty: QuestionAttempt["difficulty"];
+  selected_answer: number | null;
+  is_correct: boolean;
+  attempt_number: number;
+  review_mode: QuestionAttempt["reviewMode"];
+  session_id: string | null;
+  is_adaptive_repeat: boolean;
+  answered_at: string;
+};
+
+function questionAttemptFromRow(row: QuestionAttemptRow): QuestionAttempt {
+  return {
+    id: row.id,
+    userId: row.user_id,
+    questionId: row.question_id,
+    subjectId: row.subject_id,
+    subjectName: row.subject_name,
+    topicId: row.topic_id,
+    topicName: row.topic_name,
+    subtopic: row.subtopic,
+    difficulty: row.difficulty,
+    selectedAnswer: row.selected_answer,
+    correct: row.is_correct,
+    attemptNumber: row.attempt_number,
+    reviewMode: row.review_mode,
+    sessionId: row.session_id,
+    isAdaptiveRepeat: row.is_adaptive_repeat,
+    timestamp: row.answered_at,
+  };
+}
+
+const QUESTION_ATTEMPT_COLUMNS = "id,user_id,question_id,subject_id,subject_name,topic_id,topic_name,subtopic,difficulty,selected_answer,is_correct,attempt_number,review_mode,session_id,is_adaptive_repeat,answered_at";
+
 export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
-  const [profile, grades, activity, exams, preferences, reinforcement] = await Promise.all([
+  const [profile, grades, activity, exams, preferences, reinforcement, attempts] = await Promise.all([
     client.from("profiles").select("id,username,first_name,avatar_url,onboarding_complete").eq("id", userId).maybeSingle(),
     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
     client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId).order("activity_date", { ascending: true }),
     client.from("exam_schedule").select("id,user_id,subject,assessment_type,scheduled_date,note").eq("user_id", userId).order("scheduled_date", { ascending: true }),
     client.from("user_preferences").select("user_id,timezone,theme").eq("user_id", userId).maybeSingle(),
     client.from("question_reinforcement").select("user_id,question_id,reinforcement_level,updated_at").eq("user_id", userId),
+    client.from("question_attempts").select(QUESTION_ATTEMPT_COLUMNS).eq("user_id", userId)
+      .order("answered_at", { ascending: false }).limit(5000),
   ]);
   const failure = [profile, grades, activity, exams, preferences].find((result) => result.error)?.error;
   if (failure) throw new Error(failure.message);
   if (reinforcement.error && !isMissingQuestionReinforcementTableError(reinforcement.error)) {
     throw new Error(reinforcement.error.message);
+  }
+  if (attempts.error && !isMissingQuestionAttemptsTableError(attempts.error)) {
+    throw new Error(attempts.error.message);
   }
   return {
     profile: profile.data as Profile | null,
@@ -43,7 +99,71 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     exams: (exams.data ?? []) as ExamSchedule[],
     preferences: preferences.data as UserPreferences | null,
     reinforcement: (reinforcement.error ? [] : reinforcement.data ?? []) as QuestionReinforcement[],
+    attempts: (attempts.error ? [] : attempts.data ?? []).map((row) => questionAttemptFromRow(row as QuestionAttemptRow)),
+    attemptHistoryAvailable: !attempts.error,
   };
+}
+
+export async function saveQuestionAttempt(client: SupabaseClient, attempt: QuestionAttempt) {
+  const { data, error } = await client.rpc("record_question_attempt", {
+    p_id: attempt.id,
+    p_question_id: attempt.questionId,
+    p_subject_id: attempt.subjectId,
+    p_subject_name: attempt.subjectName,
+    p_topic_id: attempt.topicId,
+    p_topic_name: attempt.topicName,
+    p_subtopic: attempt.subtopic,
+    p_difficulty: attempt.difficulty,
+    p_selected_answer: attempt.selectedAnswer,
+    p_is_correct: attempt.correct,
+    p_review_mode: attempt.reviewMode,
+    p_session_id: attempt.sessionId,
+    p_is_adaptive_repeat: attempt.isAdaptiveRepeat,
+    p_answered_at: attempt.timestamp,
+  });
+  if (error) throw new Error(error.message);
+  const row = Array.isArray(data) ? data[0] : data;
+  if (!row) throw new Error("The question attempt was not returned by Supabase.");
+  return questionAttemptFromRow(row as QuestionAttemptRow);
+}
+
+export async function migrateLocalQuestionAttempts(
+  client: SupabaseClient,
+  userId: string,
+  attempts: QuestionAttempt[],
+) {
+  const marker = `revit-question-attempts-migrated-v1:${userId}`;
+  if (localStorage.getItem(marker) === "complete") return;
+  for (const attempt of [...attempts].sort((a, b) => a.timestamp.localeCompare(b.timestamp))) {
+    await saveQuestionAttempt(client, attempt);
+  }
+  localStorage.setItem(marker, "complete");
+}
+
+function questionAttemptQueueKey(userId: string) {
+  return `revit-question-attempt-queue-v1:${userId}`;
+}
+
+export function queueQuestionAttempt(userId: string, attempt: QuestionAttempt) {
+  try {
+    const key = questionAttemptQueueKey(userId);
+    const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as QuestionAttempt[];
+    if (!queued.some((item) => item.id === attempt.id)) queued.push(attempt);
+    localStorage.setItem(key, JSON.stringify(queued));
+  } catch (error) {
+    console.warn(errorMessage(error));
+  }
+}
+
+export async function flushQuestionAttemptQueue(client: SupabaseClient, userId: string) {
+  const key = questionAttemptQueueKey(userId);
+  const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as QuestionAttempt[];
+  const remaining: QuestionAttempt[] = [];
+  for (const attempt of queued) {
+    try { await saveQuestionAttempt(client, attempt); } catch { remaining.push(attempt); }
+  }
+  localStorage.setItem(key, JSON.stringify(remaining));
+  return remaining.length;
 }
 
 export async function saveProfile(client: SupabaseClient, profile: Profile) {

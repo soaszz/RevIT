@@ -16,6 +16,12 @@ insert into public.ai_chats (id, user_id, title)
 values ('aaaaaaaa-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 'Gram staining explanation');
 insert into public.ai_messages (chat_id, role, content)
 values ('aaaaaaaa-1111-1111-1111-111111111111', 'user', 'Explain Gram staining');
+select public.record_question_attempt(
+  'bbbbbbbb-1111-1111-1111-111111111111',
+  'bacteriology-gram-stain-001', 'bacteriology', 'Bacteriology',
+  'gram-staining', 'Gram staining', 'Staining principle', 'Medium',
+  1, false, 'reviewer', 'cccccccc-1111-1111-1111-111111111111', false, now()
+);
 
 select set_config('request.jwt.claims', '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}', true);
 do $$ begin
@@ -31,6 +37,25 @@ do $$ begin
   if exists (select 1 from public.ai_messages where chat_id = 'aaaaaaaa-1111-1111-1111-111111111111') then
     raise exception 'RLS failure: user two can see messages from user one AI chat';
   end if;
+  if exists (select 1 from public.question_attempts where user_id = '11111111-1111-1111-1111-111111111111') then
+    raise exception 'RLS failure: user two can see user one question attempts';
+  end if;
+end $$;
+
+do $$ begin
+  begin
+    insert into public.question_attempts (
+      user_id, question_id, subject_id, subject_name, topic_id, topic_name,
+      subtopic, difficulty, selected_answer, is_correct, attempt_number
+    ) values (
+      '11111111-1111-1111-1111-111111111111', 'forged-question', 'bacteriology',
+      'Bacteriology', 'gram-staining', 'Gram staining', 'Uncategorized',
+      'Unspecified', 0, true, 1
+    );
+    raise exception 'RLS failure: user two inserted a question attempt for user one';
+  exception
+    when insufficient_privilege then null;
+  end;
 end $$;
 
 do $$ begin

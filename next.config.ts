@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         destination: "/",
       },
       {
+        source: "/weakness",
+        destination: "/",
+      },
+      {
         source: "/grades",
         destination: "/",
       },
