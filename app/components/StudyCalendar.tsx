@@ -9,9 +9,11 @@ import {
   type GradeRecord,
   type GradeSubject,
   type AssessmentType,
+  type StudyPlan,
 } from "../lib/domain";
 import { buildMonthGrid, dateKeyInTimeZone, examStatus, intensityFor, upcomingExam } from "../lib/studyCalendar";
 import { calculateGrade } from "../lib/gradeCalculator";
+import { formatStudyTime } from "../lib/studyPlanner";
 
 const SUBJECT_TONES: Record<GradeSubject, string> = {
   Hematology: "heme",
@@ -20,13 +22,15 @@ const SUBJECT_TONES: Record<GradeSubject, string> = {
   AUBF: "aubf",
 };
 
-export default function StudyCalendar({ activity, exams, grades, timeZone, onSaveExam, onDeleteExam }: {
+export default function StudyCalendar({ activity, exams, grades, studyPlans, timeZone, onSaveExam, onDeleteExam, onOpenStudyPlan }: {
   activity: DailyActivity[];
   exams: ExamSchedule[];
   grades: GradeRecord[];
+  studyPlans: StudyPlan[];
   timeZone: string;
   onSaveExam: (exam: Omit<ExamSchedule, "id"> & { id?: string }) => Promise<void>;
   onDeleteExam: (id: string) => Promise<void>;
+  onOpenStudyPlan: (planId: string) => void;
 }) {
   const now = new Date();
   const todayKey = dateKeyInTimeZone(now, timeZone);
@@ -48,8 +52,17 @@ export default function StudyCalendar({ activity, exams, grades, timeZone, onSav
     exams.forEach((exam) => map.set(exam.scheduled_date, [...(map.get(exam.scheduled_date) ?? []), exam]));
     return map;
   }, [exams]);
+  const planEventsByDate = useMemo(() => {
+    const map = new Map<string, Array<{ plan: StudyPlan; block: StudyPlan["blocks"][number] }>>();
+    studyPlans.forEach((plan) => plan.blocks.filter((block) => block.addedToCalendar).forEach((block) => {
+      map.set(plan.date, [...(map.get(plan.date) ?? []), { plan, block }]);
+    }));
+    map.forEach((events, date) => map.set(date, events.sort((a, b) => a.block.startTime.localeCompare(b.block.startTime))));
+    return map;
+  }, [studyPlans]);
   const selectedActivity = activityByDate.get(selectedDate);
   const selectedExams = examsByDate.get(selectedDate) ?? [];
+  const selectedPlanEvents = planEventsByDate.get(selectedDate) ?? [];
   const nextExam = upcomingExam(exams, todayKey);
   const nextExamGrade = nextExam ? grades.find((record) => record.subject === nextExam.subject) : null;
   const nextExamGradeSummary = nextExamGrade ? calculateGrade(nextExamGrade) : null;
@@ -89,7 +102,7 @@ export default function StudyCalendar({ activity, exams, grades, timeZone, onSav
   return (
     <section className="calendar-card">
       <div className="calendar-heading">
-        <div><p className="eyebrow">Study activity & exams</p><h2>{monthName}</h2><p>Only answered questions and completed AI reviews count as activity.</p></div>
+        <div><p className="eyebrow">Study activity, plans & exams</p><h2>{monthName}</h2><p>Planner blocks appear here only when Add to RevIT Calendar is enabled.</p></div>
         <div className="calendar-actions"><button type="button" onClick={() => moveMonth(-1)} aria-label="Previous month">←</button><button type="button" onClick={() => setCursor({ year: Number(todayKey.slice(0, 4)), month: Number(todayKey.slice(5, 7)) - 1 })}>Today</button><button type="button" onClick={() => moveMonth(1)} aria-label="Next month">→</button></div>
       </div>
       <div className="calendar-layout">
@@ -99,21 +112,25 @@ export default function StudyCalendar({ activity, exams, grades, timeZone, onSav
             {days.map((day) => {
               const daily = activityByDate.get(day.key);
               const dayExams = examsByDate.get(day.key) ?? [];
+              const dayPlans = planEventsByDate.get(day.key) ?? [];
               const intensity = intensityFor(daily);
               return (
-                <button type="button" key={day.key} className={`calendar-day intensity-${intensity} ${day.inMonth ? "" : "outside"} ${day.key === todayKey ? "today" : ""} ${selectedDate === day.key ? "selected" : ""}`} onClick={() => setSelectedDate(day.key)} aria-label={`${day.key}, activity level ${intensity}, ${dayExams.length} exams`}>
+                <button type="button" key={day.key} className={`calendar-day intensity-${intensity} ${day.inMonth ? "" : "outside"} ${day.key === todayKey ? "today" : ""} ${selectedDate === day.key ? "selected" : ""}`} onClick={() => setSelectedDate(day.key)} aria-label={`${day.key}, activity level ${intensity}, ${dayPlans.length} planned events, ${dayExams.length} exams`}>
                   <span>{day.day}</span>
-                  <span className="exam-dots" aria-hidden="true">{dayExams.slice(0, 4).map((exam) => <i className={SUBJECT_TONES[exam.subject]} key={exam.id} title={`${exam.subject} ${exam.assessment_type}`} />)}</span>
+                  <span className="exam-dots" aria-hidden="true">{dayPlans.slice(0, 2).map(({ block }) => <i className="planner" key={block.calendarEventId ?? block.id} />)}{dayExams.slice(0, Math.max(0, 4 - dayPlans.length)).map((exam) => <i className={SUBJECT_TONES[exam.subject]} key={exam.id} title={`${exam.subject} ${exam.assessment_type}`} />)}</span>
                 </button>
               );
             })}
           </div>
-          <div className="calendar-legend"><span>Less</span>{[0, 1, 2, 3, 4].map((level) => <i className={`intensity-${level}`} key={level} />)}<span>More</span><b>Dots mark exams</b></div>
+          <div className="calendar-legend"><span>Less</span>{[0, 1, 2, 3, 4].map((level) => <i className={`intensity-${level}`} key={level} />)}<span>More</span><b>Dots mark plans and exams</b></div>
         </div>
         <aside className="day-details">
           <p className="eyebrow">Selected day</p><h3>{new Intl.DateTimeFormat("en-US", { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${selectedDate}T12:00:00Z`))}</h3>
           <div className="day-stats"><span><strong>{selectedActivity?.questions_answered ?? 0}</strong> questions</span><span><strong>{selectedActivity?.correct_answers ?? 0}</strong> correct</span><span><strong>{selectedActivity?.review_count ?? 0}</strong> AI reviews</span></div>
           {selectedActivity?.subjects_studied.length ? <p className="subjects-studied">Studied: {selectedActivity.subjects_studied.join(", ")}</p> : <p className="empty-note">No meaningful study activity recorded.</p>}
+          <div className="calendar-plan-list">
+            {selectedPlanEvents.map(({ plan, block }) => <button type="button" key={block.calendarEventId ?? block.id} onClick={() => onOpenStudyPlan(plan.id)}><i className={block.completed ? "complete" : ""} /><span><strong>{block.activity}</strong><small>{formatStudyTime(block.startTime)} - {formatStudyTime(block.endTime)} · {block.category}</small></span></button>)}
+          </div>
           <div className="exam-list">
             {selectedExams.map((exam) => <button type="button" key={exam.id} onClick={() => openExam(exam)}><i className={SUBJECT_TONES[exam.subject]} /><span><strong>{exam.subject}</strong><small>{exam.assessment_type} · {examStatus(exam.scheduled_date, todayKey)}</small></span></button>)}
           </div>

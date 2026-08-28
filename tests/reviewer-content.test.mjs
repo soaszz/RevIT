@@ -76,6 +76,31 @@ test("calendar uses bounded cells and tablet-first full-width breakpoints", asyn
   assert.match(css, /\.calendar-day\.selected \{[^}]*inset/);
 });
 
+test("study planner extends the existing calendar and supports local exports", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const planner = await readFile(new URL("../app/components/StudyPlanner.tsx", import.meta.url), "utf8");
+  const calendar = await readFile(new URL("../app/components/StudyCalendar.tsx", import.meta.url), "utf8");
+  const exporter = await readFile(new URL("../app/lib/studyPlanExport.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(app, /label: "Study Planner", icon: "\/icons\/planner\.svg"/);
+  assert.match(app, /studyPlansStorageKey\(initialUser\?\.id\)/);
+  assert.match(app, /<TodayStudyPlan/);
+  assert.match(app, /<StudyCalendar[\s\S]*studyPlans=\{studyPlans\}/);
+  assert.match(planner, /Add to RevIT Calendar/);
+  assert.match(planner, /Duplicate day/);
+  assert.match(planner, /Move up/);
+  assert.match(planner, /Mark session completed/);
+  assert.match(planner, /Export PDF/);
+  assert.match(planner, /Export PNG/);
+  assert.match(planner, /Export JPG/);
+  assert.match(calendar, /planEventsByDate/);
+  assert.match(exporter, /new jsPDF/);
+  assert.match(exporter, /canvas\.toDataURL/);
+  assert.match(css, /\.planner-shell \{[^}]*grid-template-columns:/);
+  assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.plan-block \{ grid-template-columns: 1fr;/);
+});
+
 test("QnA setup stays accessible and the desktop navigation can collapse", async () => {
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");

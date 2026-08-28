@@ -9,6 +9,7 @@ import GradesPage from "./components/GradesPage";
 import Onboarding from "./components/Onboarding";
 import ScientificCalculator from "./components/ScientificCalculator";
 import StudyCalendar from "./components/StudyCalendar";
+import StudyPlanner, { TodayStudyPlan } from "./components/StudyPlanner";
 import WeaknessDashboard from "./components/WeaknessDashboard";
 import {
   deleteExam as deleteCloudExam,
@@ -27,7 +28,7 @@ import {
   saveQuestionReinforcement,
   saveQuestionAttempt,
 } from "./lib/cloudService";
-import type { DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, UserPreferences } from "./lib/domain";
+import type { DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, StudyPlan, UserPreferences } from "./lib/domain";
 import {
   chooseAdaptiveQuestion,
   reinforcementAfterAnswer,
@@ -36,6 +37,7 @@ import {
   type ReinforcementLevels,
 } from "./lib/adaptiveQuestions";
 import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCalendar";
+import { normalizeStudyPlans, studyPlansStorageKey } from "./lib/studyPlanner";
 import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
 import { createClient } from "./lib/supabase/client";
 import {
@@ -57,7 +59,7 @@ import {
   topics,
 } from "./content/reviewerContent";
 
-type View = "overview" | "library" | "progress" | "weakness" | "grades" | "assistant";
+type View = "overview" | "library" | "progress" | "weakness" | "planner" | "grades" | "assistant";
 type Attempt = QuestionAttempt;
 
 type ChatMessage = {
@@ -82,6 +84,7 @@ const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "library", label: "QnA", icon: "/icons/qna.svg" },
   { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
   { id: "weakness", label: "Weakness", icon: "/icons/weakness.svg" },
+  { id: "planner", label: "Study Planner", icon: "/icons/planner.svg" },
   { id: "grades", label: "Grades", icon: "/icons/grades.svg" },
   { id: "assistant", label: "MedTech AI", icon: "/icons/medtech-ai.svg" },
 ];
@@ -115,6 +118,11 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     eyebrow: "Evidence-based study priorities",
     title: "Turn missed concepts into a focused next step.",
     description: "Mastery is calculated from your real question history, with unique questions, first attempts, difficulty, and delayed retention kept separate from immediate retries.",
+  },
+  planner: {
+    eyebrow: "Local-first study scheduling",
+    title: "Give every study hour a clear purpose.",
+    description: "Build flexible daily plans, track completed sessions, and choose which blocks also appear in your RevIT calendar.",
   },
   grades: {
     eyebrow: "Deterministic grade planning",
@@ -262,6 +270,9 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [grades, setGrades] = useState<GradeRecord[]>([]);
   const [activity, setActivity] = useState<DailyActivity[]>([]);
   const [exams, setExams] = useState<ExamSchedule[]>([]);
+  const [studyPlans, setStudyPlans] = useState<StudyPlan[]>([]);
+  const [selectedStudyPlanId, setSelectedStudyPlanId] = useState<string | null>(null);
+  const [studyPlansReady, setStudyPlansReady] = useState(false);
   const [preferences, setPreferences] = useState<UserPreferences>(() => ({
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Manila",
     theme: "system",
@@ -278,6 +289,7 @@ useEffect(() => {
     "library",
     "progress",
     "weakness",
+    "planner",
     "grades",
     "assistant",
   ];
@@ -348,6 +360,24 @@ useEffect(() => {
     setReinforcementReady(true);
     setStorageReady(true);
   }, [initialUser]);
+
+  useEffect(() => {
+    setStudyPlansReady(false);
+    try {
+      const saved = normalizeStudyPlans(JSON.parse(localStorage.getItem(studyPlansStorageKey(initialUser?.id)) ?? "[]"));
+      setStudyPlans(saved);
+      setSelectedStudyPlanId((current) => current && saved.some((plan) => plan.id === current) ? current : saved[0]?.id ?? null);
+    } catch {
+      setStudyPlans([]);
+      setSelectedStudyPlanId(null);
+    }
+    setStudyPlansReady(true);
+  }, [initialUser?.id]);
+
+  useEffect(() => {
+    if (!studyPlansReady) return;
+    localStorage.setItem(studyPlansStorageKey(initialUser?.id), JSON.stringify(studyPlans));
+  }, [initialUser?.id, studyPlans, studyPlansReady]);
 
   useEffect(() => {
     if (!storageReady || cloudEnabled) return;
@@ -842,6 +872,11 @@ useEffect(() => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+  function openStudyPlanner(planId?: string) {
+    if (planId) setSelectedStudyPlanId(planId);
+    openView("planner");
+  }
+
   function openNavigationView(view: View) {
     openView(view);
     setSidebarCollapsed(true);
@@ -1215,7 +1250,9 @@ useEffect(() => {
                 </article>
               </section>
 
-              <StudyCalendar activity={activity} exams={exams} grades={grades} timeZone={preferences.timezone} onSaveExam={persistExam} onDeleteExam={removeExam} />
+              <TodayStudyPlan plans={studyPlans} todayKey={todayKey} timeZone={preferences.timezone} onOpenPlanner={openStudyPlanner} />
+
+              <StudyCalendar activity={activity} exams={exams} grades={grades} studyPlans={studyPlans} timeZone={preferences.timezone} onSaveExam={persistExam} onDeleteExam={removeExam} onOpenStudyPlan={openStudyPlanner} />
 
               <section className="focus-card">
                 <div className="section-heading">
@@ -1416,6 +1453,18 @@ useEffect(() => {
             onReviewWithAi={reviewTopicWithAi}
             onPractice={practiceWeakTopic}
             onViewMistakes={viewTopicMistakes}
+          />
+        )}
+
+        {activeView === "planner" && (
+          <StudyPlanner
+            plans={studyPlans}
+            selectedPlanId={selectedStudyPlanId}
+            defaultDate={todayKey}
+            subjectOptions={subjects.map((subject) => subject.name)}
+            topicOptions={topics.map((topic) => topic.name)}
+            onChange={setStudyPlans}
+            onSelectPlan={setSelectedStudyPlanId}
           />
         )}
 

@@ -77,6 +77,36 @@ export type ExamSchedule = {
   note: string | null;
 };
 
+export const STUDY_PLAN_CATEGORIES = ["Study", "Break", "Exam", "Event", "Other"] as const;
+export type StudyPlanCategory = (typeof STUDY_PLAN_CATEGORIES)[number];
+
+/**
+ * Local-first planner records deliberately use stable UUIDs and timestamps so
+ * they can later be copied to Supabase without changing the UI data model.
+ */
+export type StudyPlanBlock = {
+  id: string;
+  startTime: string;
+  endTime: string;
+  activity: string;
+  subject: string | null;
+  topic: string | null;
+  notes: string | null;
+  category: StudyPlanCategory;
+  addedToCalendar: boolean;
+  calendarEventId: string | null;
+  completed: boolean;
+};
+
+export type StudyPlan = {
+  id: string;
+  date: string;
+  title: string;
+  blocks: StudyPlanBlock[];
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type QuestionReinforcement = {
   user_id?: string;
   question_id: string;
