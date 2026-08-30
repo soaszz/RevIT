@@ -248,3 +248,22 @@ test("provides a responsive floating scientific calculator with undo and redo", 
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-panel/);
   assert.match(css, /\[data-theme="dark"\] \.calculator-panel/);
 });
+
+test("gates startup behind the branded initialization screen", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const loader = await readFile(new URL("../app/components/RevITLoadingScreen.tsx", import.meta.url), "utf8");
+  const routeLoader = await readFile(new URL("../app/loading.tsx", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(app, /const \[isInitializing, setIsInitializing\] = useState\(true\)/);
+  assert.match(app, /if \(isInitializing\) return <RevITLoadingScreen \/>/);
+  assert.match(app, /const DEFAULT_PROFILE: LearnerProfile = \{ name: "Student"/);
+  assert.doesNotMatch(app, /Jamie/);
+  assert.match(loader, /<MorphingInfinity/);
+  assert.match(loader, /src="\/revit-logo\.png"/);
+  assert.match(loader, /src="\/revit-frog\.png"/);
+  assert.match(loader, /Preparing your study space\.\.\./);
+  assert.match(routeLoader, /<RevITLoadingScreen \/>/);
+  assert.match(css, /\.revit-loading-screen \{[^}]*min-height: 100dvh/);
+  assert.match(css, /@media \(max-width: 480px\)[\s\S]*\.revit-loading-animation/);
+});

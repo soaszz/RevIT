@@ -74,6 +74,26 @@ button { cursor: pointer; }
 button:disabled, textarea:disabled { cursor: not-allowed; opacity: .55; }
 button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 
+.revit-loading-screen { position: fixed; z-index: 1000; inset: 0; display: grid; min-height: 100vh; min-height: 100dvh; place-items: center; overflow: hidden; padding: 32px 20px; background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--green-soft) 68%, transparent) 0, transparent 36%), var(--canvas); color: var(--ink); }
+.revit-loading-content { display: grid; width: min(100%, 320px); justify-items: center; text-align: center; }
+.revit-loading-wordmark { position: relative; display: block; width: 172px; height: 43px; overflow: hidden; }
+.revit-loading-wordmark img { position: absolute; top: -28px; left: 0; width: 172px; height: 96px; max-width: none; }
+.revit-loading-animation { width: 86px; height: 86px; margin: 34px 0 19px; color: var(--green); filter: drop-shadow(0 8px 18px color-mix(in srgb, var(--green) 18%, transparent)); }
+.revit-loading-frog { position: relative; display: block; width: 54px; height: 49px; overflow: hidden; opacity: .9; filter: drop-shadow(0 7px 13px rgba(24, 117, 98, .16)); }
+.revit-loading-frog img { position: absolute; top: -37px; left: -35px; width: 124px; height: 124px; max-width: none; }
+.revit-loading-content p { margin: 24px 0 0; color: var(--muted); font-size: 13px; font-weight: 580; letter-spacing: .015em; }
+
+@media (prefers-reduced-motion: reduce) {
+  .revit-loading-animation path { animation-duration: .01ms !important; }
+}
+
+@media (max-width: 480px) {
+  .revit-loading-wordmark { width: 148px; height: 37px; }
+  .revit-loading-wordmark img { top: -24px; width: 148px; height: 83px; }
+  .revit-loading-animation { width: 74px; height: 74px; margin-top: 29px; }
+  .revit-loading-content p { margin-top: 21px; font-size: 12px; }
+}
+
 .app-shell { min-height: 100vh; display: grid; grid-template-columns: 256px minmax(0, 1fr); transition: grid-template-columns .22s ease; }
 .app-shell.sidebar-collapsed { grid-template-columns: 84px minmax(0, 1fr); }
 .sidebar { position: sticky; z-index: 20; top: 0; height: 100vh; padding: 24px 18px 20px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; }

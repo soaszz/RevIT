@@ -8,6 +8,7 @@ import AchievementModal, { XpProgress } from "./components/AchievementModal";
 import AiMarkdown from "./components/AiMarkdown";
 import GradesPage from "./components/GradesPage";
 import Onboarding from "./components/Onboarding";
+import RevITLoadingScreen from "./components/RevITLoadingScreen";
 import ScientificCalculator from "./components/ScientificCalculator";
 import StudyCalendar from "./components/StudyCalendar";
 import StudyPlanner, { TodayStudyPlan } from "./components/StudyPlanner";
@@ -89,7 +90,7 @@ type LearnerProfile = {
   photoDataUrl: string;
 };
 
-const DEFAULT_PROFILE: LearnerProfile = { name: "Jamie Santos", photoDataUrl: "" };
+const DEFAULT_PROFILE: LearnerProfile = { name: "Student", photoDataUrl: "" };
 
 const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Home", icon: "/icons/home.svg" },
@@ -311,6 +312,9 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [cloudLoading, setCloudLoading] = useState(cloudEnabled);
   const [cloudError, setCloudError] = useState("");
   const [attemptHistoryAvailable, setAttemptHistoryAvailable] = useState(!cloudEnabled);
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [sessionPolicyReady, setSessionPolicyReady] = useState(!cloudEnabled);
+  const [themeReady, setThemeReady] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const attemptMigrationStarted = useRef(false);
   const [progression, setProgression] = useState(emptyProgression);
@@ -367,6 +371,24 @@ useEffect(() => {
 }, []);
 
   useEffect(() => {
+    const root = document.documentElement;
+    let savedTheme: string | null = null;
+    try {
+      savedTheme = localStorage.getItem("revit-theme");
+    } catch {
+      // The head bootstrap already applied the system/default theme when storage is unavailable.
+    }
+    const resolvedTheme = savedTheme === "light" || savedTheme === "dark"
+      ? savedTheme
+      : root.dataset.theme === "dark" || root.dataset.theme === "light"
+        ? root.dataset.theme
+        : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    root.dataset.theme = resolvedTheme;
+    root.style.colorScheme = resolvedTheme;
+    setThemeReady(true);
+  }, []);
+
+  useEffect(() => {
     try {
       const attemptStorageKey = `revit-attempts-v2:${initialUser?.id ?? "local"}`;
       const scopedAttempts = localStorage.getItem(attemptStorageKey);
@@ -390,7 +412,7 @@ useEffect(() => {
       if (Array.isArray(savedTopics)) {
         setSelectedTopicIds(savedTopics.filter((id) => topicById.has(id)));
       }
-      if (savedProfile && typeof savedProfile.name === "string" && typeof savedProfile.photoDataUrl === "string") {
+      if (!initialUser && savedProfile && typeof savedProfile.name === "string" && typeof savedProfile.photoDataUrl === "string") {
         const normalizedProfile = { name: savedProfile.name.trim() || DEFAULT_PROFILE.name, photoDataUrl: savedProfile.photoDataUrl };
         setProfile(normalizedProfile);
         setProfileDraft(normalizedProfile);
@@ -445,17 +467,31 @@ useEffect(() => {
   }, [attempts, cloudEnabled, preferences.timezone, storageReady]);
 
   useEffect(() => {
-    if (!cloudEnabled || !initialUser) return;
-    const policy = localStorage.getItem("revit-session-policy");
-    const rememberedUntil = Number(localStorage.getItem("revit-remember-until") ?? 0);
+    if (!cloudEnabled || !initialUser) {
+      setSessionPolicyReady(true);
+      return;
+    }
+    let policy: string | null = null;
+    let rememberedUntil = 0;
+    try {
+      policy = localStorage.getItem("revit-session-policy");
+      rememberedUntil = Number(localStorage.getItem("revit-remember-until") ?? 0);
+    } catch {
+      setSessionPolicyReady(true);
+      return;
+    }
     if ((policy === "session-only" && sessionStorage.getItem("revit-session-only") !== "active")
       || (policy === "remember" && rememberedUntil > 0 && rememberedUntil < Date.now())) {
-      void createClient().auth.signOut({ scope: "local" }).then(() => router.replace("/auth"));
+      void createClient().auth.signOut({ scope: "local" })
+        .catch(() => undefined)
+        .finally(() => router.replace("/auth"));
+      return;
     }
+    setSessionPolicyReady(true);
   }, [cloudEnabled, initialUser, router]);
 
   useEffect(() => {
-    if (!cloudEnabled || !initialUser) return;
+    if (!cloudEnabled || !initialUser || !sessionPolicyReady) return;
     let cancelled = false;
     async function load() {
       setCloudLoading(true); setCloudError("");
@@ -472,7 +508,8 @@ useEffect(() => {
         }
         const snapshot = await loadCloudSnapshot(client, initialUser!.id);
         if (cancelled) return;
-        const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, profile.name, profile.photoDataUrl);
+        const fallbackName = initialUser!.username?.trim() || DEFAULT_PROFILE.name;
+        const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, fallbackName, "");
         const nextPreferences = snapshot.preferences ?? preferences;
         setCloudProfile(nextProfile); setGrades(snapshot.grades); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences);
         setAttempts((current) => mergeAttempts(snapshot.attempts, current));
@@ -481,27 +518,35 @@ useEffect(() => {
           ...current,
           ...Object.fromEntries(snapshot.reinforcement.map((item) => [item.question_id, item.reinforcement_level])),
         }));
-        setProfile({ name: nextProfile.first_name || profile.name, photoDataUrl: nextProfile.avatar_url ?? "" });
+        setProfile({ name: nextProfile.first_name?.trim() || DEFAULT_PROFILE.name, photoDataUrl: nextProfile.avatar_url ?? "" });
         if (progressionUpdate) {
           setProgression(progressionUpdate.snapshot);
           markCurrentLevelSeen(progressionOwnerKey, levelProgress(progressionUpdate.snapshot.totalXp).level);
         }
         setProgressionError(progressionLoadError);
         setProgressionReady(true);
-        if (nextPreferences.theme === "light" || nextPreferences.theme === "dark") {
-          document.documentElement.dataset.theme = nextPreferences.theme;
-          document.documentElement.style.colorScheme = nextPreferences.theme;
-          localStorage.setItem("revit-theme", nextPreferences.theme);
-        }
+        const savedTheme = localStorage.getItem("revit-theme");
+        const cloudTheme = nextPreferences.theme === "light" || nextPreferences.theme === "dark" ? nextPreferences.theme : null;
+        const resolvedTheme = savedTheme === "light" || savedTheme === "dark"
+          ? savedTheme
+          : cloudTheme ?? (document.documentElement.dataset.theme === "dark" ? "dark" : "light");
+        document.documentElement.dataset.theme = resolvedTheme;
+        document.documentElement.style.colorScheme = resolvedTheme;
+        if (savedTheme !== "light" && savedTheme !== "dark" && cloudTheme) localStorage.setItem("revit-theme", cloudTheme);
       } catch (error) {
         if (!cancelled) setCloudError(error instanceof Error ? error.message : "Cloud data could not be loaded.");
-      } finally { if (!cancelled) setCloudLoading(false); }
+      } finally {
+        if (!cancelled) {
+          setProgressionReady(true);
+          setCloudLoading(false);
+        }
+      }
     }
     void load();
     return () => { cancelled = true; };
   // Load once for the authenticated identity; local fallback data is migrated separately.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cloudEnabled, initialUser?.id]);
+  }, [cloudEnabled, initialUser?.id, sessionPolicyReady]);
 
   useEffect(() => {
     if (activeView !== "assistant" || !cloudEnabled || !initialUser || chatHistoryLoaded) return;
@@ -603,8 +648,8 @@ useEffect(() => {
   }, [selectedTopicIds, storageReady]);
 
   useEffect(() => {
-    if (storageReady) localStorage.setItem("revit-profile-v1", JSON.stringify(profile));
-  }, [profile, storageReady]);
+    if (storageReady && !cloudEnabled) localStorage.setItem("revit-profile-v1", JSON.stringify(profile));
+  }, [cloudEnabled, profile, storageReady]);
 
   useEffect(() => {
     if (storageReady) localStorage.setItem("revit-sidebar-collapsed", String(sidebarCollapsed));
@@ -644,6 +689,18 @@ useEffect(() => {
   // Metrics are the existing local sources of truth; progression changes are applied inside this effect.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cloudEnabled, progressMetrics, progressionOwnerKey, storageReady]);
+
+  useEffect(() => {
+    const ready = themeReady
+      && sessionPolicyReady
+      && storageReady
+      && studyPlansReady
+      && progressionReady
+      && (!cloudEnabled || !cloudLoading);
+    if (!ready) return;
+    const frame = window.requestAnimationFrame(() => setIsInitializing(false));
+    return () => window.cancelAnimationFrame(frame);
+  }, [cloudEnabled, cloudLoading, progressionReady, sessionPolicyReady, storageReady, studyPlansReady, themeReady]);
 
   useEffect(() => {
     if (levelUp === null) return;
@@ -1247,6 +1304,8 @@ useEffect(() => {
     setExams((current) => current.filter((exam) => exam.id !== id));
   }
 
+  if (isInitializing) return <RevITLoadingScreen />;
+
   const baseHeading = viewCopy[activeView];
   const todayKey = dateKeyInTimeZone(new Date(), preferences.timezone);
   const streak = calculateStreak(activity, todayKey);
@@ -1262,7 +1321,7 @@ useEffect(() => {
   const profileInitials = profile.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R";
   const avatarStyle = profile.photoDataUrl ? { backgroundImage: `url(${JSON.stringify(profile.photoDataUrl)})` } : undefined;
   const accountProfile = cloudProfile ?? (initialUser
-    ? localProfileToCloud(initialUser.id, initialUser.username ?? `learner_${initialUser.id.slice(0, 8)}`, profile.name, profile.photoDataUrl)
+    ? localProfileToCloud(initialUser.id, initialUser.username ?? `learner_${initialUser.id.slice(0, 8)}`, initialUser.username?.trim() || DEFAULT_PROFILE.name, "")
     : null);
   const activeNavItem = navItems.find((item) => item.id === activeView) ?? navItems[0];
   const activeAiChat = aiChats.find((chat) => chat.id === activeChatId) ?? null;
