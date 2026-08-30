@@ -108,6 +108,7 @@ test("QnA setup stays accessible and the desktop navigation can collapse", async
   assert.match(app, /label: "Home", icon: "\/icons\/home\.svg"/);
   assert.match(app, /label: "QnA", icon: "\/icons\/qna\.svg"/);
   assert.match(app, /src="\/revit-logo\.png"/);
+  assert.match(app, /src="\/revit-frog\.png"/);
   assert.doesNotMatch(app, /sidebar-current-view/);
   assert.match(app, /aria-expanded=\{!sidebarCollapsed\}/);
   assert.match(app, /sidebarCollapsed \? "☰" : "«"/);
@@ -117,6 +118,7 @@ test("QnA setup stays accessible and the desktop navigation can collapse", async
   assert.match(app, /<option value="40">40 questions<\/option>/);
   assert.match(app, /<option value="50">50 questions<\/option>/);
   assert.match(css, /\.app-shell\.sidebar-collapsed \{ grid-template-columns: 84px/);
+  assert.match(css, /\.sidebar-collapsed \.sidebar \.brand-frog/);
   assert.match(css, /\.nav-link \.nav-label \{[^}]*width: auto;[^}]*border: 0;/);
   assert.match(css, /\.sidebar-toggle \{[^}]*width: 36px;[^}]*min-height: 34px;/);
   assert.match(app, /Wrong answers only/);
@@ -231,6 +233,8 @@ test("provides a responsive floating scientific calculator with undo and redo", 
   assert.match(calculator, /findFractionRange/);
   assert.match(calculator, /window\.addEventListener\("pointermove", move\)/);
   assert.match(calculator, /Reset calculator position/);
+  assert.match(calculator, /Resize calculator/);
+  assert.match(calculator, /resizeWithKeyboard/);
   assert.match(calculator, /S⇔D/);
   assert.match(calculator, /currentFunction\("sin", "asin"\)/);
   assert.match(calculator, /sqrt\(/);
@@ -240,6 +244,7 @@ test("provides a responsive floating scientific calculator with undo and redo", 
   assert.doesNotMatch(engine, /\beval\s*\(|new Function/);
   assert.match(css, /\.calculator-fab \{ position: fixed;/);
   assert.match(css, /\.calculator-navigation/);
+  assert.match(css, /\.calculator-resize-handle/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-panel/);
   assert.match(css, /\[data-theme="dark"\] \.calculator-panel/);
 });

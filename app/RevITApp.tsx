@@ -106,6 +106,7 @@ function RevITLogo() {
     <>
       <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
       <span className="brand-logo brand-logo-mark" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
+      <span className="brand-frog" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} sizes="70px" priority /></span>
     </>
   );
 }

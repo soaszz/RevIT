@@ -1,7 +1,7 @@
 "use client";
 
 import katex from "katex";
-import { type CSSProperties, type PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   calculateExpression,
   calculatorExpressionToLatex,
@@ -13,9 +13,17 @@ import {
 
 type Timeline = { past: string[]; present: string; future: string[] };
 type PanelPosition = { x: number; y: number };
+type PanelSize = { width: number; height: number };
 
 const INITIAL_TIMELINE: Timeline = { past: [], present: "", future: [] };
 const OPERATORS = new Set(["+", "−", "×", "÷", "^"]);
+const PANEL_GUTTER = 8;
+const MIN_PANEL_WIDTH = 340;
+const MIN_PANEL_HEIGHT = 360;
+
+function clampPanelDimension(value: number, minimum: number, maximum: number) {
+  return Math.min(Math.max(value, Math.min(minimum, maximum)), maximum);
+}
 
 function CalculatorIcon() {
   return (
@@ -83,10 +91,13 @@ export default function ScientificCalculator() {
   const [calculationError, setCalculationError] = useState("");
   const [cursorIndex, setCursorIndex] = useState(0);
   const [position, setPosition] = useState<PanelPosition | null>(null);
+  const [size, setSize] = useState<PanelSize | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [resizing, setResizing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLElement>(null);
   const dragCleanupRef = useRef<() => void>(() => undefined);
+  const resizeCleanupRef = useRef<() => void>(() => undefined);
 
   const preview = useMemo(() => {
     if (!timeline.present.trim()) return null;
@@ -131,20 +142,29 @@ export default function ScientificCalculator() {
   }, [cursorIndex, open, timeline.present]);
 
   useEffect(() => {
-    if (!position) return;
+    if (!open) return;
     const keepInsideViewport = () => {
       const panel = panelRef.current;
       if (!panel) return;
+      const maxWidth = Math.max(1, window.innerWidth - PANEL_GUTTER * 2);
+      const maxHeight = Math.max(1, window.innerHeight - PANEL_GUTTER * 2);
+      setSize((current) => current ? {
+        width: Math.min(current.width, maxWidth),
+        height: Math.min(current.height, maxHeight),
+      } : current);
       setPosition((current) => current ? {
-        x: Math.min(Math.max(8, current.x), Math.max(8, window.innerWidth - panel.offsetWidth - 8)),
-        y: Math.min(Math.max(8, current.y), Math.max(8, window.innerHeight - panel.offsetHeight - 8)),
+        x: Math.min(Math.max(PANEL_GUTTER, current.x), Math.max(PANEL_GUTTER, window.innerWidth - Math.min(panel.offsetWidth, maxWidth) - PANEL_GUTTER)),
+        y: Math.min(Math.max(PANEL_GUTTER, current.y), Math.max(PANEL_GUTTER, window.innerHeight - Math.min(panel.offsetHeight, maxHeight) - PANEL_GUTTER)),
       } : current);
     };
     window.addEventListener("resize", keepInsideViewport);
     return () => window.removeEventListener("resize", keepInsideViewport);
-  }, [position]);
+  }, [open]);
 
-  useEffect(() => () => dragCleanupRef.current(), []);
+  useEffect(() => () => {
+    dragCleanupRef.current();
+    resizeCleanupRef.current();
+  }, []);
 
   const commit = (next: string, nextCursor = next.length) => {
     setCalculationError("");
@@ -295,8 +315,8 @@ export default function ScientificCalculator() {
     const move = (moveEvent: PointerEvent) => {
       if (moveEvent.pointerId !== pointerId) return;
       setPosition({
-        x: Math.min(Math.max(8, originX + moveEvent.clientX - startX), Math.max(8, window.innerWidth - panelWidth - 8)),
-        y: Math.min(Math.max(8, originY + moveEvent.clientY - startY), Math.max(8, window.innerHeight - panelHeight - 8)),
+        x: Math.min(Math.max(PANEL_GUTTER, originX + moveEvent.clientX - startX), Math.max(PANEL_GUTTER, window.innerWidth - panelWidth - PANEL_GUTTER)),
+        y: Math.min(Math.max(PANEL_GUTTER, originY + moveEvent.clientY - startY), Math.max(PANEL_GUTTER, window.innerHeight - panelHeight - PANEL_GUTTER)),
       });
     };
     const stop = (endEvent: PointerEvent) => {
@@ -318,24 +338,90 @@ export default function ScientificCalculator() {
     event.preventDefault();
   };
 
-  const panelStyle: CSSProperties | undefined = position ? { left: position.x, top: position.y, right: "auto", bottom: "auto" } : undefined;
+  const startResize = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const rect = panel.getBoundingClientRect();
+    const pointerId = event.pointerId;
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const originWidth = rect.width;
+    const originHeight = rect.height;
+    const originX = rect.left;
+    const originY = rect.top;
+    const move = (moveEvent: PointerEvent) => {
+      if (moveEvent.pointerId !== pointerId) return;
+      const maxWidth = Math.max(1, window.innerWidth - originX - PANEL_GUTTER);
+      const maxHeight = Math.max(1, window.innerHeight - originY - PANEL_GUTTER);
+      setSize({
+        width: clampPanelDimension(originWidth + moveEvent.clientX - startX, MIN_PANEL_WIDTH, maxWidth),
+        height: clampPanelDimension(originHeight + moveEvent.clientY - startY, MIN_PANEL_HEIGHT, maxHeight),
+      });
+    };
+    const stop = (endEvent: PointerEvent) => {
+      if (endEvent.pointerId !== pointerId) return;
+      resizeCleanupRef.current();
+      setResizing(false);
+    };
+    resizeCleanupRef.current();
+    resizeCleanupRef.current = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", stop);
+    window.addEventListener("pointercancel", stop);
+    setPosition({ x: originX, y: originY });
+    setSize({ width: originWidth, height: originHeight });
+    setResizing(true);
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const resizeWithKeyboard = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
+    if (!panelRef.current || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+    const rect = panelRef.current.getBoundingClientRect();
+    const maxWidth = Math.max(1, window.innerWidth - rect.left - PANEL_GUTTER);
+    const maxHeight = Math.max(1, window.innerHeight - rect.top - PANEL_GUTTER);
+    const step = event.shiftKey ? 40 : 16;
+    const widthDelta = event.key === "ArrowLeft" ? -step : event.key === "ArrowRight" ? step : 0;
+    const heightDelta = event.key === "ArrowUp" ? -step : event.key === "ArrowDown" ? step : 0;
+    setPosition({ x: rect.left, y: rect.top });
+    setSize({
+      width: clampPanelDimension(rect.width + widthDelta, MIN_PANEL_WIDTH, maxWidth),
+      height: clampPanelDimension(rect.height + heightDelta, MIN_PANEL_HEIGHT, maxHeight),
+    });
+    event.preventDefault();
+  };
+
+  const resetPanel = () => {
+    setPosition(null);
+    setSize(null);
+  };
+
+  const panelStyle: CSSProperties | undefined = position || size ? {
+    ...(position ? { left: position.x, top: position.y, right: "auto", bottom: "auto" } : {}),
+    ...(size ? { width: size.width, height: size.height } : {}),
+  } : undefined;
   const currentFunction = (normal: string, inverse: string) => secondMode ? inverse : normal;
 
   return (
     <div className={`scientific-calculator ${open ? "open" : ""}`}>
       {open && (
-        <section ref={panelRef} style={panelStyle} className={`calculator-panel ${dragging ? "dragging" : ""}`} id="revit-scientific-calculator" role="dialog" aria-labelledby="calculator-title">
+        <section ref={panelRef} style={panelStyle} className={`calculator-panel ${dragging ? "dragging" : ""} ${resizing ? "resizing" : ""}`} id="revit-scientific-calculator" role="dialog" aria-labelledby="calculator-title">
           <header className="calculator-header" onPointerDown={startDrag}>
             <div className="calculator-drag-title"><span className="calculator-grip" aria-hidden="true">⠿</span><div><span className="calculator-kicker">Natural display</span><h2 id="calculator-title">Scientific calculator</h2></div></div>
             <div className="calculator-header-actions">
               <button type="button" onClick={undo} disabled={!timeline.past.length} aria-label="Undo calculator input" title="Undo"><HistoryIcon direction="undo" /></button>
               <button type="button" onClick={redo} disabled={!timeline.future.length} aria-label="Redo calculator input" title="Redo"><HistoryIcon direction="redo" /></button>
-              <button type="button" onClick={() => setPosition(null)} disabled={!position} aria-label="Reset calculator position" title="Reset position">⌖</button>
+              <button type="button" onClick={resetPanel} disabled={!position && !size} aria-label="Reset calculator position and size" title="Reset position and size">⌖</button>
               <button type="button" onClick={() => setOpen(false)} aria-label="Close calculator" title="Close">×</button>
             </div>
           </header>
 
-          <div className="calculator-status-bar">
+          <div className="calculator-body">
+            <div className="calculator-status-bar">
             <span className={secondMode ? "active" : ""}>2ND</span>
             <span className={memory ? "active" : ""}>M</span>
             <button type="button" onClick={() => setAngleMode((current) => current === "deg" ? "rad" : "deg")} aria-label={`Angle mode: ${angleMode === "deg" ? "degrees" : "radians"}. Click to change.`}>{angleMode.toUpperCase()}</button>
@@ -432,7 +518,9 @@ export default function ScientificCalculator() {
             <button type="button" className="function-key compact-key" onClick={() => append("Ans")}>Ans</button>
             <button type="button" className="equals-key" onClick={calculate}>=</button>
           </div>
-          <p className="calculator-drag-note">Drag the title bar to move</p>
+            <p className="calculator-drag-note">Drag the title bar to move<span className="calculator-resize-note"> · drag the corner to resize</span></p>
+            </div>
+          <button className="calculator-resize-handle" type="button" onPointerDown={startResize} onKeyDown={resizeWithKeyboard} aria-label="Resize calculator" title="Drag to resize; use arrow keys for precise control" />
         </section>
       )}
 
