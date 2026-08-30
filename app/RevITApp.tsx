@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "re
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import AccountSettings from "./components/AccountSettings";
+import AchievementModal, { XpProgress } from "./components/AchievementModal";
 import AiMarkdown from "./components/AiMarkdown";
 import GradesPage from "./components/GradesPage";
 import Onboarding from "./components/Onboarding";
@@ -19,9 +20,7 @@ import {
   localProfileToCloud,
   migrateLocalActivity,
   migrateLocalQuestionAttempts,
-  queueActivity,
   queueQuestionAttempt,
-  recordActivity,
   saveExam as saveCloudExam,
   saveGrade as saveCloudGrade,
   savePreferences,
@@ -29,6 +28,7 @@ import {
   saveQuestionAttempt,
 } from "./lib/cloudService";
 import type { DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, StudyPlan, UserPreferences } from "./lib/domain";
+import type { ProgressEvent, ProgressionUpdate } from "./lib/xpService";
 import {
   chooseAdaptiveQuestion,
   reinforcementAfterAnswer,
@@ -40,6 +40,18 @@ import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCale
 import { normalizeStudyPlans, studyPlansStorageKey } from "./lib/studyPlanner";
 import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
 import { createClient } from "./lib/supabase/client";
+import {
+  emptyProgression,
+  flushCloudProgressEventQueue,
+  loadCloudProgression,
+  loadLocalProgression,
+  markCurrentLevelSeen,
+  queueCloudProgressEvents,
+  recordCloudProgressEvents,
+  recordLocalProgressEvents,
+  shouldShowLevelUp,
+} from "./lib/xpService";
+import { levelProgress, XP_REWARDS } from "./lib/xpConfig";
 import {
   chatTitleFromFirstMessage,
   createAiChat,
@@ -228,6 +240,24 @@ function mergeLocalAttemptActivity(attempts: Attempt[], existing: DailyActivity[
   return [...map.values()].sort((a, b) => a.activity_date.localeCompare(b.activity_date));
 }
 
+function activityAfterEvent(current: DailyActivity[], activityDate: string, input: {
+  questions?: number;
+  correct?: number;
+  reviews?: number;
+  subject?: string;
+}) {
+  const existing = current.find((day) => day.activity_date === activityDate);
+  const updated: DailyActivity = {
+    ...(existing ?? { activity_date: activityDate, questions_answered: 0, correct_answers: 0, review_count: 0, subjects_studied: [] }),
+    questions_answered: (existing?.questions_answered ?? 0) + (input.questions ?? 0),
+    correct_answers: (existing?.correct_answers ?? 0) + (input.correct ?? 0),
+    review_count: (existing?.review_count ?? 0) + (input.reviews ?? 0),
+    subjects_studied: input.subject ? [...new Set([...(existing?.subjects_studied ?? []), input.subject])] : (existing?.subjects_studied ?? []),
+  };
+  return [...current.filter((day) => day.activity_date !== activityDate), updated]
+    .sort((a, b) => a.activity_date.localeCompare(b.activity_date));
+}
+
 export type InitialUser = { id: string; email: string; username?: string };
 
 export default function RevITApp({ initialUser = null, cloudEnabled = false }: { initialUser?: InitialUser | null; cloudEnabled?: boolean }) {
@@ -282,6 +312,21 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [attemptHistoryAvailable, setAttemptHistoryAvailable] = useState(!cloudEnabled);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const attemptMigrationStarted = useRef(false);
+  const [progression, setProgression] = useState(emptyProgression);
+  const [progressionReady, setProgressionReady] = useState(false);
+  const [progressionError, setProgressionError] = useState("");
+  const [achievementsOpen, setAchievementsOpen] = useState(false);
+  const [levelUp, setLevelUp] = useState<number | null>(null);
+  const progressionOwnerKey = initialUser?.id ?? "local";
+  const progressMetrics = useMemo(() => {
+    const currentStreak = calculateStreak(activity, dateKeyInTimeZone(new Date(), preferences.timezone));
+    return {
+      questionsAnswered: cloudEnabled ? activity.reduce((sum, day) => sum + day.questions_answered, 0) : attempts.length,
+      aiMessages: activity.reduce((sum, day) => sum + day.review_count, 0),
+      streakDays: currentStreak.longest,
+      examsCreated: exams.length,
+    };
+  }, [activity, attempts.length, cloudEnabled, exams.length, preferences.timezone]);
 
 useEffect(() => {
   const validViews: View[] = [
@@ -416,6 +461,14 @@ useEffect(() => {
       try {
         const client = createClient();
         await flushActivityQueue(client);
+        let progressionUpdate: ProgressionUpdate | null = null;
+        let progressionLoadError = "";
+        try {
+          await flushCloudProgressEventQueue(client, initialUser!.id);
+          progressionUpdate = await loadCloudProgression(client, initialUser!.id);
+        } catch (error) {
+          progressionLoadError = error instanceof Error ? error.message : "Progression could not be loaded.";
+        }
         const snapshot = await loadCloudSnapshot(client, initialUser!.id);
         if (cancelled) return;
         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, profile.name, profile.photoDataUrl);
@@ -428,6 +481,12 @@ useEffect(() => {
           ...Object.fromEntries(snapshot.reinforcement.map((item) => [item.question_id, item.reinforcement_level])),
         }));
         setProfile({ name: nextProfile.first_name || profile.name, photoDataUrl: nextProfile.avatar_url ?? "" });
+        if (progressionUpdate) {
+          setProgression(progressionUpdate.snapshot);
+          markCurrentLevelSeen(progressionOwnerKey, levelProgress(progressionUpdate.snapshot.totalXp).level);
+        }
+        setProgressionError(progressionLoadError);
+        setProgressionReady(true);
         if (nextPreferences.theme === "light" || nextPreferences.theme === "dark") {
           document.documentElement.dataset.theme = nextPreferences.theme;
           document.documentElement.style.colorScheme = nextPreferences.theme;
@@ -570,6 +629,26 @@ useEffect(() => {
     if (!storageReady || cloudEnabled) return;
     localStorage.setItem("revit-activity-v1", JSON.stringify(activity));
   }, [activity, cloudEnabled, storageReady]);
+
+  useEffect(() => {
+    if (!storageReady || cloudEnabled) return;
+    const update = loadLocalProgression(progressionOwnerKey, progressMetrics);
+    if (!progressionReady) {
+      setProgression(update.snapshot);
+      markCurrentLevelSeen(progressionOwnerKey, levelProgress(update.snapshot.totalXp).level);
+      setProgressionReady(true);
+      return;
+    }
+    applyProgressionUpdate(update);
+  // Metrics are the existing local sources of truth; progression changes are applied inside this effect.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cloudEnabled, progressMetrics, progressionOwnerKey, storageReady]);
+
+  useEffect(() => {
+    if (levelUp === null) return;
+    const timeout = window.setTimeout(() => setLevelUp(null), 6000);
+    return () => window.clearTimeout(timeout);
+  }, [levelUp]);
 
   const selectedQuestions = useMemo(
     () => questions.filter((question) => selectedTopicIds.includes(question.topicId)),
@@ -752,32 +831,56 @@ useEffect(() => {
     openView("assistant");
   }
 
+  function applyProgressionUpdate(update: ProgressionUpdate) {
+    const previousLevel = levelProgress(progression.totalXp).level;
+    const nextLevel = levelProgress(update.snapshot.totalXp).level;
+    setProgression(update.snapshot);
+    setProgressionError("");
+    if (progressionReady && nextLevel > previousLevel && shouldShowLevelUp(progressionOwnerKey, nextLevel)) {
+      setLevelUp(nextLevel);
+    }
+  }
+
+  async function persistProgressEvents(events: ProgressEvent[], metrics = progressMetrics) {
+    try {
+      const update = cloudEnabled && initialUser
+        ? await recordCloudProgressEvents(createClient(), initialUser.id, events)
+        : recordLocalProgressEvents(progressionOwnerKey, events, metrics);
+      applyProgressionUpdate(update);
+    } catch (error) {
+      if (cloudEnabled && initialUser) queueCloudProgressEvents(initialUser.id, events);
+      setProgressionError(`Progression is queued and will sync when the connection recovers: ${error instanceof Error ? error.message : "unknown error"}`);
+    }
+  }
+
   async function recordStudyEvent(input: {
     eventKey: string;
     questions?: number;
     correct?: number;
     reviews?: number;
     subject?: string;
-  }) {
+  }, xp = 0, extraEvents: Array<{ eventKey: string; xp: number }> = []) {
     const activityDate = dateKeyInTimeZone(new Date(), preferences.timezone);
-    setActivity((current) => {
-      const existing = current.find((day) => day.activity_date === activityDate);
-      const updated: DailyActivity = {
-        ...(existing ?? { activity_date: activityDate, questions_answered: 0, correct_answers: 0, review_count: 0, subjects_studied: [] }),
-        questions_answered: (existing?.questions_answered ?? 0) + (input.questions ?? 0),
-        correct_answers: (existing?.correct_answers ?? 0) + (input.correct ?? 0),
-        review_count: (existing?.review_count ?? 0) + (input.reviews ?? 0),
-        subjects_studied: input.subject ? [...new Set([...(existing?.subjects_studied ?? []), input.subject])] : (existing?.subjects_studied ?? []),
-      };
-      return [...current.filter((day) => day.activity_date !== activityDate), updated].sort((a, b) => a.activity_date.localeCompare(b.activity_date));
-    });
-    if (!cloudEnabled || !initialUser) return;
-    const payload = { ...input, activityDate };
-    try { await recordActivity(createClient(), payload); }
-    catch {
-      queueActivity(payload);
-      setCloudError("Study activity is queued and will sync when the connection recovers.");
+    const nextActivity = activityAfterEvent(activity, activityDate, input);
+    setActivity(nextActivity);
+    const nextMetrics = {
+      ...progressMetrics,
+      questionsAnswered: progressMetrics.questionsAnswered + (input.questions ?? 0),
+      aiMessages: progressMetrics.aiMessages + (input.reviews ?? 0),
+      streakDays: calculateStreak(nextActivity, activityDate).longest,
+    };
+    const events: ProgressEvent[] = [
+      { ...input, activityDate, xp },
+      ...extraEvents.map((event) => ({ ...event, activityDate })),
+    ];
+    if ((input.questions ?? 0) > 0 || (input.reviews ?? 0) > 0) {
+      events.push({ eventKey: `xp:daily-streak:${activityDate}`, activityDate, xp: XP_REWARDS.DAILY_STREAK });
     }
+    await persistProgressEvents(events, nextMetrics);
+  }
+
+  async function recordProgressOnlyEvent(eventKey: string, xp: number, metrics = progressMetrics) {
+    await persistProgressEvents([{ eventKey, xp, activityDate: dateKeyInTimeZone(new Date(), preferences.timezone) }], metrics);
   }
 
   function submitAnswer() {
@@ -831,17 +934,19 @@ useEffect(() => {
       questions: 1,
       correct: attempt.correct ? 1 : 0,
       subject: subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId,
-    });
+    }, attempt.correct ? XP_REWARDS.CORRECT_QUESTION : 0);
   }
 
   function nextQuestion() {
     if (sessionStrictWrongOnly) {
+      if (sessionCanFinish && sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
       return;
     }
     if (sessionCanFinish) {
+      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
@@ -850,6 +955,7 @@ useEffect(() => {
 
     const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds, Math.random, questionPerformance);
     if (!nextQuestionId) {
+      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
@@ -1093,7 +1199,11 @@ useEffect(() => {
       }
 
       setMessages((current) => [...current, assistantMessage]);
-      void recordStudyEvent({ eventKey: `ai-review:${userMessage.id}`, reviews: 1, subject: "MedTech AI" });
+      void recordStudyEvent(
+        { eventKey: `ai-review:${userMessage.id}`, reviews: 1, subject: "MedTech AI" },
+        0,
+        [{ eventKey: "xp:first-ai-message", xp: XP_REWARDS.FIRST_AI_MESSAGE }],
+      );
     } catch (error) {
       setMessages((current) => [...current, {
         id: crypto.randomUUID(),
@@ -1118,12 +1228,16 @@ useEffect(() => {
   }
 
   async function persistExam(exam: Omit<ExamSchedule, "id"> & { id?: string }) {
+    const isFirstExam = exams.length === 0 && !exam.id;
     if (cloudEnabled && initialUser) {
       const saved = await saveCloudExam(createClient(), initialUser.id, exam);
       setExams((current) => [...current.filter((item) => item.id !== saved.id && !(item.subject === saved.subject && item.assessment_type === saved.assessment_type)), saved].sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date)));
     } else {
       const saved = { ...exam, id: exam.id ?? crypto.randomUUID() } as ExamSchedule;
       setExams((current) => [...current.filter((item) => item.id !== saved.id && !(item.subject === saved.subject && item.assessment_type === saved.assessment_type)), saved].sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date)));
+    }
+    if (isFirstExam) {
+      await recordProgressOnlyEvent("xp:first-exam", XP_REWARDS.FIRST_EXAM, { ...progressMetrics, examsCreated: 1 });
     }
   }
 
@@ -1152,6 +1266,7 @@ useEffect(() => {
   const activeNavItem = navItems.find((item) => item.id === activeView) ?? navItems[0];
   const activeAiChat = aiChats.find((chat) => chat.id === activeChatId) ?? null;
   const chatBusy = pending || chatActionPending || chatMessagesLoading;
+  const currentLevel = levelProgress(progression.totalXp);
 
   return (
     <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
@@ -1197,10 +1312,16 @@ useEffect(() => {
           <strong>{questions.length} questions</strong>
           <span>CC + Hema + Bacte + AUBF</span>
         </div>
-        <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
-          <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
-          <span className="profile-copy"><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
-        </button>
+        <div className="profile-card">
+          <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
+            <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
+            <span className="profile-copy"><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
+          </button>
+          <button className="profile-level" type="button" onClick={() => setAchievementsOpen(true)} aria-label="Open achievements">
+            <span><b>Level {currentLevel.level}</b><strong>{currentLevel.title}</strong></span>
+            <XpProgress totalXp={progression.totalXp} compact />
+          </button>
+        </div>
       </aside>
 
       <section className="workspace">
@@ -1219,6 +1340,9 @@ useEffect(() => {
             <p>{heading.description}</p>
           </div>
           <div className="heading-actions">
+            {activeView === "overview" && <button className="home-level-card" type="button" onClick={() => setAchievementsOpen(true)} aria-label="Open achievements">
+              <span>Level {currentLevel.level}</span><strong>{currentLevel.title}</strong><XpProgress totalXp={progression.totalXp} compact />
+            </button>}
             {activeView === "overview" && <span className="streak-badge"><strong>{streak.current}</strong><span>day streak<small>{streak.longest} longest · {streak.activeDays} active</small></span></span>}
             {activeView === "overview" && <button className="primary-button" type="button" onClick={() => openView("library")}>Choose topics</button>}
           </div>
@@ -1226,6 +1350,7 @@ useEffect(() => {
 
         {cloudLoading && <div className="sync-banner">Loading your cloud workspace…</div>}
         {cloudError && <div className="sync-banner error" role="status"><span>{cloudError}</span><button type="button" onClick={() => window.location.reload()}>Retry</button></div>}
+        {progressionError && <div className="sync-banner error" role="status"><span>{progressionError}</span><button type="button" onClick={() => window.location.reload()}>Retry</button></div>}
         {!cloudEnabled && <div className="sync-banner local"><span>Local mode: reviewer data stays on this device until Supabase is connected.</span><a href="/auth">Connect account</a></div>}
 
         {activeView === "overview" && (
@@ -1541,6 +1666,12 @@ useEffect(() => {
             </div>
           </div>
         )}
+
+        {achievementsOpen && <AchievementModal progression={progression} metrics={progressMetrics} onClose={() => setAchievementsOpen(false)} />}
+        {levelUp !== null && <div className="level-up-toast" role="status" aria-live="polite">
+          <button type="button" onClick={() => setLevelUp(null)} aria-label="Dismiss level up notification">×</button>
+          <span>Level up</span><strong>You reached Level {levelUp}</strong><p>Keep improving.</p>
+        </div>}
 
         {profileOpen && !cloudEnabled && (
           <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setProfileOpen(false); }}>

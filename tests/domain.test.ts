@@ -9,6 +9,7 @@ import { calculateExpression, calculatorExpressionToLatex, calculatorExpressionW
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
+import { ACHIEVEMENT_CATALOG, levelForXp, levelProgress, metricForCondition, xpThresholdForLevel, XP_REWARDS } from "../app/lib/xpConfig";
 
 function grades(values: Partial<GradeValues>): GradeValues { return { ...EMPTY_GRADES, ...values }; }
 
@@ -162,4 +163,22 @@ test("auth routing distinguishes logged-out, unverified, onboarding, and ready",
   assert.equal(resolveAuthState({ hasUser: true, emailConfirmed: false, onboardingComplete: false }), "unverified");
   assert.equal(resolveAuthState({ hasUser: true, emailConfirmed: true, onboardingComplete: false }), "onboarding");
   assert.equal(resolveAuthState({ hasUser: true, emailConfirmed: true, onboardingComplete: true }), "ready");
+});
+
+test("level thresholds match V1 and continue with the same scalable curve", () => {
+  assert.deepEqual([1, 2, 3, 4, 5, 6].map(xpThresholdForLevel), [0, 100, 250, 450, 700, 1000]);
+  assert.equal(levelForXp(0), 1);
+  assert.equal(levelForXp(99), 1);
+  assert.equal(levelForXp(100), 2);
+  assert.equal(levelForXp(450), 4);
+  assert.equal(levelProgress(250).title, "Knowledge Builder");
+  assert.equal(levelProgress(250).nextLevelXp, 450);
+  assert.equal(levelProgress(250).xpNeeded, 200);
+});
+
+test("all V1 action XP is centralized and achievement definitions are unique", () => {
+  assert.deepEqual(XP_REWARDS, { CORRECT_QUESTION: 5, COMPLETE_STUDY_SESSION: 20, FIRST_AI_MESSAGE: 10, DAILY_STREAK: 10, FIRST_EXAM: 10 });
+  assert.equal(ACHIEVEMENT_CATALOG.length, 8);
+  assert.equal(new Set(ACHIEVEMENT_CATALOG.map((achievement) => achievement.id)).size, 8);
+  assert.equal(metricForCondition("study_sessions", { questionsAnswered: 4, aiMessages: 2, streakDays: 3, examsCreated: 1, studySessions: 10 }), 10);
 });

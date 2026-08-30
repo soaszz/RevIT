@@ -168,3 +168,42 @@ export type CloudSnapshot = {
   attempts: QuestionAttempt[];
   attemptHistoryAvailable: boolean;
 };
+
+export type AchievementConditionType =
+  | "questions_answered"
+  | "ai_messages"
+  | "streak_days"
+  | "exam_created"
+  | "study_sessions";
+
+export type Achievement = {
+  id: string;
+  name: string;
+  description: string;
+  icon: string | null;
+  xp_reward: number;
+  condition_type: AchievementConditionType;
+  condition_value: number;
+  created_at?: string;
+};
+
+export type UserAchievement = {
+  id: string;
+  user_id?: string;
+  achievement_id: string;
+  unlocked_at: string;
+};
+
+export type ProgressionSnapshot = {
+  totalXp: number;
+  achievements: Achievement[];
+  unlocked: UserAchievement[];
+  studySessions: number;
+};
+
+export type ProgressMetrics = {
+  questionsAnswered: number;
+  aiMessages: number;
+  streakDays: number;
+  examsCreated: number;
+};

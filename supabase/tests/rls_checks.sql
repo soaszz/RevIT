@@ -22,6 +22,9 @@ select public.record_question_attempt(
   'gram-staining', 'Gram staining', 'Staining principle', 'Medium',
   1, false, 'reviewer', 'cccccccc-1111-1111-1111-111111111111', false, now()
 );
+update public.user_progress set total_xp = 25 where user_id = '11111111-1111-1111-1111-111111111111';
+insert into public.user_achievements (user_id, achievement_id)
+values ('11111111-1111-1111-1111-111111111111', '10000000-0000-4000-8000-000000000001');
 
 select set_config('request.jwt.claims', '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}', true);
 do $$ begin
@@ -39,6 +42,15 @@ do $$ begin
   end if;
   if exists (select 1 from public.question_attempts where user_id = '11111111-1111-1111-1111-111111111111') then
     raise exception 'RLS failure: user two can see user one question attempts';
+  end if;
+  if exists (select 1 from public.user_progress where user_id = '11111111-1111-1111-1111-111111111111') then
+    raise exception 'RLS failure: user two can see user one XP';
+  end if;
+  if exists (select 1 from public.user_achievements where user_id = '11111111-1111-1111-1111-111111111111') then
+    raise exception 'RLS failure: user two can see user one achievements';
+  end if;
+  if (select count(*) from public.achievements) <> 8 then
+    raise exception 'RLS failure: public achievement definitions are not readable';
   end if;
 end $$;
 

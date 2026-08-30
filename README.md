@@ -11,6 +11,13 @@ RevIT is a source-aware medtech reviewer with official bacteriology and hematolo
 - My Grades and a separate, non-persisting simulator using the exact 10/15/30/30/15 weights and a 65% passing mark.
 - Transparent remaining-average, maximum-possible, and next-assessment guidance. AI never decides grades or passing status.
 - Light/dark semantic PDF and AI badges, plus responsive desktop and mobile layouts.
+- V1 XP, scalable levels, eight achievement definitions, one-time level-up notices, and responsive progression UI in the sidebar and Home.
+
+## Supabase migrations
+
+Run every file in `supabase/migrations` in timestamp order using the Supabase SQL Editor or CLI. V1 progression is defined in `202608300005_level_achievements_v1.sql`; it creates and seeds the progression tables, enables RLS, and extends the existing idempotent activity writer without modifying the database until you run it.
+
+Levels follow `25 × (level - 1) × (level + 2)`, producing the requested 0, 100, 250, 450, and 700 XP thresholds for Levels 1–5 and 1,000 XP for Level 6.
 
 ## Safety and scope
 
