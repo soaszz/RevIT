@@ -1,0 +1,237 @@
+.panel {
+  overflow: hidden;
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 7px 22px color-mix(in srgb, var(--green) 5%, transparent);
+}
+
+.preferenceHeader {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 13px;
+}
+
+.icon {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--green) 25%, var(--line));
+  border-radius: 9px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+}
+
+.icon svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+  color: var(--ink);
+}
+
+.copy strong {
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 760;
+  line-height: 1.25;
+}
+
+.copy small {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 450;
+  line-height: 1.4;
+}
+
+.switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 17px;
+  align-items: center;
+  gap: 5px;
+  min-width: 51px;
+  min-height: 28px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 5px 4px 8px;
+  background: var(--surface-soft);
+  color: var(--muted);
+  box-shadow: none;
+  transition: border-color .18s ease, background-color .18s ease, color .18s ease;
+}
+
+.switch:hover {
+  border-color: color-mix(in srgb, var(--green) 45%, var(--line));
+}
+
+.switchEnabled {
+  border-color: color-mix(in srgb, var(--green) 50%, var(--line));
+  background: var(--green-soft);
+  color: var(--green-dark);
+}
+
+.switchLabel {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+
+.switchThumb {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: var(--muted);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
+}
+
+.switchEnabled .switchThumb {
+  background: var(--green);
+}
+
+.durationFieldset {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+  padding: 11px 13px 13px;
+  background: var(--surface-soft);
+  transition: opacity .18s ease;
+}
+
+.durationFieldset legend {
+  float: left;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 0;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.durationOptions {
+  clear: both;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.durationOption {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 9px 9px 8px;
+  background: var(--input);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color .16s ease, background-color .16s ease;
+}
+
+.durationOption:hover {
+  border-color: color-mix(in srgb, var(--green) 50%, var(--line));
+}
+
+.durationOption input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.durationOption > span {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  gap: 3px;
+  color: var(--ink);
+}
+
+.durationOption strong {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 780;
+  line-height: 1;
+}
+
+.durationOption small {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 7px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.durationOption i {
+  display: grid;
+  width: 14px;
+  height: 14px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.durationOption i::after {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+  content: "";
+}
+
+.durationSelected {
+  border-color: color-mix(in srgb, var(--green) 62%, var(--line));
+  background: var(--surface-tint);
+}
+
+.durationSelected i {
+  border-color: var(--green);
+}
+
+.durationSelected i::after {
+  background: var(--green);
+}
+
+.durationDisabled {
+  opacity: .48;
+}
+
+.durationDisabled .durationOption {
+  cursor: not-allowed;
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+}
+
+@media (max-width: 520px) {
+  .durationOptions {
+    grid-template-columns: 1fr;
+  }
+}

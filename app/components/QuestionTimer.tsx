@@ -6,6 +6,7 @@ import {
   reviewTimerVisualState,
   type ReviewTimerDuration,
 } from "../lib/reviewTimer";
+import styles from "./QuestionTimer.module.css";
 
 type QuestionTimerProps = {
   durationSeconds: ReviewTimerDuration;
@@ -59,26 +60,51 @@ export default function QuestionTimer({ durationSeconds, questionKey, paused, on
   const remainingSeconds = Math.ceil(remainingMilliseconds / 1000);
   const progress = reviewTimerProgress(remainingMilliseconds, durationSeconds);
   const visualState = reviewTimerVisualState(remainingSeconds, durationSeconds);
+  const timerColor = visualState === "critical"
+    ? "var(--danger)"
+    : visualState === "approaching"
+      ? "var(--amber)"
+      : "var(--green)";
 
   return (
     <div
-      className={`question-timer ${visualState} ${paused ? "paused" : ""}`}
+      className={`${styles.timer} ${styles[visualState]} ${paused ? styles.paused : ""}`}
       role="timer"
       aria-label={`${remainingSeconds} seconds remaining`}
+      aria-atomic="true"
+      style={{ position: "relative", width: 112, height: 112, flex: "0 0 auto", color: timerColor }}
     >
-      <svg viewBox="0 0 120 120" aria-hidden="true">
-        <circle className="question-timer-track" cx="60" cy="60" r="52" pathLength="100" />
+      <svg
+        width="112"
+        height="112"
+        viewBox="0 0 120 120"
+        fill="none"
+        aria-hidden="true"
+        style={{ display: "block", width: "100%", height: "100%" }}
+      >
+        <circle className={styles.track} cx="60" cy="60" r="52" pathLength="100" fill="none" stroke="var(--surface-soft)" strokeWidth="8" />
         <circle
-          className="question-timer-progress"
+          className={styles.progress}
           cx="60"
           cy="60"
           r="52"
           pathLength="100"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="8"
+          strokeLinecap="round"
           strokeDasharray="100"
           strokeDashoffset={100 - progress * 100}
+          transform="rotate(-90 60 60)"
         />
       </svg>
-      <span className="question-timer-value"><strong>{remainingSeconds}</strong><small>seconds</small></span>
+      <span
+        className={styles.value}
+        style={{ position: "absolute", inset: 0, display: "grid", placeContent: "center", justifyItems: "center", color: "var(--ink)" }}
+      >
+        <strong style={{ color: "var(--ink)", fontSize: 29, fontVariantNumeric: "tabular-nums" }}>{remainingSeconds}</strong>
+        <small style={{ color: "var(--muted)", display: "block", marginTop: 6 }}>seconds</small>
+      </span>
     </div>
   );
 }

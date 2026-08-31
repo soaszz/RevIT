@@ -271,12 +271,18 @@ test("gates startup behind the branded initialization screen", async () => {
 test("adds session timers, feedback preferences, and frog-only collapsed branding", async () => {
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const timer = await readFile(new URL("../app/components/QuestionTimer.tsx", import.meta.url), "utf8");
+  const timerCss = await readFile(new URL("../app/components/QuestionTimer.module.css", import.meta.url), "utf8");
+  const preferences = await readFile(new URL("../app/components/ReviewSessionPreferences.tsx", import.meta.url), "utf8");
+  const preferencesCss = await readFile(new URL("../app/components/ReviewSessionPreferences.module.css", import.meta.url), "utf8");
   const sounds = await readFile(new URL("../app/lib/reviewSounds.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
   assert.match(app, /const \[timerEnabled, setTimerEnabled\] = useState\(false\)/);
   assert.match(app, /useState<ReviewTimerDuration>\(60\)/);
-  assert.match(app, /disabled=\{!timerEnabled\}/);
+  assert.match(app, /<ReviewSessionPreferences/);
+  assert.match(preferences, /disabled=\{!timerEnabled\}/);
+  assert.match(preferences, /role="switch"/);
+  assert.match(preferencesCss, /color: var\(--ink\)/);
   assert.match(app, /<QuestionTimer[\s\S]*onExpire=\{handleQuestionTimeout\}/);
   assert.match(app, /completeQuestion\(null, true\)/);
   assert.match(app, /selectedAnswer,\s+correct:/);
@@ -285,7 +291,11 @@ test("adds session timers, feedback preferences, and frog-only collapsed brandin
   assert.doesNotMatch(app, /brand-logo-mark/);
   assert.match(timer, /window\.requestAnimationFrame/);
   assert.match(timer, /prefers-reduced-motion: reduce/);
+  assert.match(timer, /fill="none"/);
+  assert.match(timer, /stroke="currentColor"/);
+  assert.match(timerCss, /\.timer \{/);
   assert.match(sounds, /new window\.AudioContext\(\)/);
   assert.match(css, /\.sidebar-collapsed \.sidebar \.brand-frog/);
   assert.match(css, /@media \(prefers-reduced-motion: no-preference\)[\s\S]*correct-choice-feedback/);
+  assert.match(css, /\.choice-copy \{[^}]*color: inherit/);
 });

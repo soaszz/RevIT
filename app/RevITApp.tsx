@@ -9,6 +9,7 @@ import AiMarkdown from "./components/AiMarkdown";
 import GradesPage from "./components/GradesPage";
 import Onboarding from "./components/Onboarding";
 import QuestionTimer from "./components/QuestionTimer";
+import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
 import RevITLoadingScreen from "./components/RevITLoadingScreen";
 import ScientificCalculator from "./components/ScientificCalculator";
 import StudyCalendar from "./components/StudyCalendar";
@@ -1610,41 +1611,14 @@ useEffect(() => {
                     <option value="50">50 questions</option>
                     <option value="all">All selected questions</option>
                   </select>
-                  <fieldset className="session-preference-card timer-preference">
-                    <legend>Timer</legend>
-                    <label className="session-toggle" htmlFor="review-timer-enabled">
-                      <input
-                        id="review-timer-enabled"
-                        type="checkbox"
-                        checked={timerEnabled}
-                        onChange={(event) => setTimerEnabled(event.target.checked)}
-                      />
-                      <span>Enable timer<small>Apply one countdown to every question in this session.</small></span>
-                    </label>
-                    <div className={`timer-duration-options ${timerEnabled ? "" : "disabled"}`} aria-disabled={!timerEnabled}>
-                      <span>Time per question</span>
-                      <label>
-                        <input type="radio" name="review-timer-duration" value="30" checked={timerDuration === 30} disabled={!timerEnabled} onChange={() => setTimerDuration(30)} />
-                        30 seconds
-                      </label>
-                      <label>
-                        <input type="radio" name="review-timer-duration" value="60" checked={timerDuration === 60} disabled={!timerEnabled} onChange={() => setTimerDuration(60)} />
-                        1 minute
-                      </label>
-                    </div>
-                  </fieldset>
-                  <div className="session-preference-card sound-preference">
-                    <span>Sound effects<small>Soft answer and timeout tones.</small></span>
-                    <button
-                      className={`preference-switch ${soundEffectsEnabled ? "enabled" : ""}`}
-                      type="button"
-                      role="switch"
-                      aria-checked={soundEffectsEnabled}
-                      onClick={() => setSoundEffectsEnabled((current) => !current)}
-                    >
-                      {soundEffectsEnabled ? "On" : "Off"}
-                    </button>
-                  </div>
+                  <ReviewSessionPreferences
+                    timerEnabled={timerEnabled}
+                    timerDuration={timerDuration}
+                    soundEffectsEnabled={soundEffectsEnabled}
+                    onTimerEnabledChange={setTimerEnabled}
+                    onTimerDurationChange={setTimerDuration}
+                    onSoundEffectsEnabledChange={setSoundEffectsEnabled}
+                  />
                   <button className="primary-button wide" type="button" onClick={startSession} disabled={!sessionQuestions.length}>Start review</button>
                   {selectedTopicNames.length > 0 && <div className="selected-tags">{selectedTopicNames.map((name) => <span key={name}>{name}</span>)}</div>}
                 </aside>
@@ -1687,9 +1661,9 @@ useEffect(() => {
                         aria-pressed={selectedChoice === choiceIndex}
                       >
                         <span className="choice-index">{String.fromCharCode(65 + displayIndex)}</span>
-                        <span className="choice-copy">{choice}</span>
-                        {isCorrect && <span className="choice-result-icon" aria-hidden="true">✓</span>}
-                        {isWrong && <span className="choice-result-icon" aria-hidden="true">!</span>}
+                        <b className="choice-copy">{choice}</b>
+                        {isCorrect && <i className="choice-result-icon" aria-hidden="true">✓</i>}
+                        {isWrong && <i className="choice-result-icon" aria-hidden="true">!</i>}
                       </button>
                     );
                   })}

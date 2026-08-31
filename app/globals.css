@@ -309,22 +309,6 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .text-button.quiet { color: var(--muted); }
 .field-label { display: block; margin-bottom: 7px; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
 .selection-panel select { width: 100%; border: 1px solid var(--line); border-radius: 9px; padding: 10px; background: var(--input); color: var(--ink); font-size: 12px; }
-.session-preference-card { margin-top: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); }
-.timer-preference { min-width: 0; padding: 12px; }
-.timer-preference legend { padding: 0 4px; color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-.session-toggle { display: flex; align-items: flex-start; gap: 9px; cursor: pointer; }
-.session-toggle input { flex: 0 0 auto; width: 16px; height: 16px; margin: 1px 0 0; accent-color: var(--green); }
-.session-toggle > span, .sound-preference > span { color: var(--ink); font-size: 10px; font-weight: 720; line-height: 1.3; }
-.session-toggle small, .sound-preference small { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; font-weight: 400; line-height: 1.4; }
-.timer-duration-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin-top: 11px; padding-top: 10px; border-top: 1px solid var(--line); transition: opacity .18s ease; }
-.timer-duration-options > span { grid-column: 1 / -1; color: var(--muted); font-size: 8px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
-.timer-duration-options label { display: flex; align-items: center; gap: 6px; min-width: 0; border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: var(--input); color: var(--ink); font-size: 9px; font-weight: 650; cursor: pointer; }
-.timer-duration-options input { width: 14px; height: 14px; margin: 0; accent-color: var(--green); }
-.timer-duration-options.disabled { opacity: .42; }
-.timer-duration-options.disabled label { cursor: not-allowed; }
-.sound-preference { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 12px; }
-.preference-switch { flex: 0 0 auto; min-width: 44px; border: 1px solid var(--line); border-radius: 99px; padding: 6px 9px; background: var(--input); color: var(--muted); font-size: 9px; font-weight: 800; }
-.preference-switch.enabled { border-color: color-mix(in srgb, var(--green) 50%, var(--line)); background: var(--green-soft); color: var(--green-dark); }
 .primary-button.wide { width: 100%; margin-top: 12px; }
 .selected-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 16px; }
 .selected-tags span, .source-pill { padding: 5px 7px; border-radius: 7px; background: var(--green-soft); color: var(--green-dark); font-size: 8px; font-weight: 650; }
@@ -339,22 +323,11 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .quiz-question-heading > div { flex: 1 1 auto; min-width: 0; }
 .question-source { margin: 0 0 10px; color: var(--green); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
 .quiz-question-heading h2 { max-width: 760px; margin: 0 0 24px; font-size: clamp(20px, 2.4vw, 28px); line-height: 1.28; letter-spacing: -.03em; }
-.question-timer { --timer-color: var(--green); position: relative; flex: 0 0 auto; width: 118px; height: 118px; color: var(--timer-color); }
-.question-timer svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.question-timer circle { fill: none; stroke-width: 8; }
-.question-timer-track { stroke: var(--surface-soft); }
-.question-timer-progress { stroke: var(--timer-color); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
-.question-timer-value { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; color: var(--ink); line-height: 1; }
-.question-timer-value strong { font-size: 31px; font-weight: 760; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
-.question-timer-value small { margin-top: 6px; color: var(--muted); font-size: 8px; font-weight: 650; letter-spacing: .05em; text-transform: uppercase; }
-.question-timer.approaching { --timer-color: var(--amber); }
-.question-timer.critical { --timer-color: var(--danger); }
-.question-timer.paused { opacity: .72; }
 .choice-list { display: grid; gap: 9px; }
 .choice-button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 11px; background: var(--input); color: var(--ink); text-align: left; font-size: 12px; line-height: 1.5; }
 .choice-button .choice-index { flex: 0 0 auto; display: grid; place-items: center; width: 25px; height: 25px; border-radius: 7px; background: var(--surface-soft); color: var(--muted); font-size: 9px; font-weight: 800; }
-.choice-copy { flex: 1 1 auto; min-width: 0; }
-.choice-result-icon { flex: 0 0 auto; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 850; }
+.choice-copy { flex: 1 1 auto; min-width: 0; color: inherit; font-weight: 500; }
+.choice-result-icon { flex: 0 0 auto; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; color: #fff; font-size: 11px; font-style: normal; font-weight: 850; }
 .choice-button:hover, .choice-button.selected { border-color: var(--green); background: var(--surface-tint); }
 .choice-button.correct { border-color: #55a47f; background: #e8f6ef; }
 .choice-button.wrong { border-color: #d88976; background: #fff1ed; }
@@ -468,15 +441,12 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
   body, .sidebar, .metric-card, .focus-card, .topic-card, .assistant-card, .chat-history-card, .source-summary-card, .ai-peek-card, .subject-card, .selection-panel, .quiz-card, .results-card, .analytics-card, .empty-progress, .context-strip, .profile-modal {
     transition: background-color .2s ease, border-color .2s ease, color .2s ease;
   }
-  .question-timer-progress { transition: stroke .2s ease; }
-  .question-timer.critical:not(.paused) { animation: timer-critical-pulse 1s ease-in-out infinite; }
   .choice-button.correct { animation: correct-choice-feedback .38s ease-out; }
   .choice-button.wrong { animation: incorrect-choice-feedback .34s ease-out; }
   .choice-result-icon { animation: answer-icon-in .32s ease-out; }
   .answer-panel { animation: answer-panel-in .28s ease-out; }
 }
 
-@keyframes timer-critical-pulse { 50% { transform: scale(1.035); filter: drop-shadow(0 0 10px color-mix(in srgb, var(--danger) 28%, transparent)); } }
 @keyframes correct-choice-feedback { 50% { transform: scale(1.008); box-shadow: 0 0 0 3px color-mix(in srgb, #55a47f 16%, transparent); } }
 @keyframes incorrect-choice-feedback { 30% { transform: translateX(-3px); } 60% { transform: translateX(3px); } }
 @keyframes answer-icon-in { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
@@ -524,8 +494,6 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
   .subject-heading { flex-direction: column; gap: 8px; }
   .quiz-card, .results-card { padding: 22px 16px; }
   .quiz-topline > div { display: grid; }
-  .question-timer { width: 98px; height: 98px; }
-  .question-timer-value strong { font-size: 27px; }
   .analytics-row { grid-template-columns: minmax(115px, 1fr) 80px 34px; gap: 9px; }
   .context-strip { align-items: flex-start; }
   .chat-history-list { grid-template-columns: 1fr; max-height: 220px; }
@@ -535,10 +503,7 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 
 @media (max-width: 520px) {
   .quiz-question-heading { flex-direction: column; gap: 18px; }
-  .question-timer { order: -1; align-self: center; width: 92px; height: 92px; }
   .quiz-question-heading h2 { margin-bottom: 20px; }
-  .timer-duration-options { grid-template-columns: 1fr; }
-  .timer-duration-options > span { grid-column: 1; }
 }
 
 /* Cloud sync and account flows */
