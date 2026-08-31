@@ -8,6 +8,7 @@ import AchievementModal, { XpProgress } from "./components/AchievementModal";
 import AiMarkdown from "./components/AiMarkdown";
 import GradesPage from "./components/GradesPage";
 import Onboarding from "./components/Onboarding";
+import QuestionTimer from "./components/QuestionTimer";
 import RevITLoadingScreen from "./components/RevITLoadingScreen";
 import ScientificCalculator from "./components/ScientificCalculator";
 import StudyCalendar from "./components/StudyCalendar";
@@ -39,6 +40,8 @@ import {
 } from "./lib/adaptiveQuestions";
 import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCalendar";
 import { normalizeStudyPlans, studyPlansStorageKey } from "./lib/studyPlanner";
+import { type ReviewTimerDuration } from "./lib/reviewTimer";
+import { playReviewSound, unlockReviewSounds } from "./lib/reviewSounds";
 import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
 import { createClient } from "./lib/supabase/client";
 import {
@@ -74,6 +77,7 @@ import {
 
 type View = "overview" | "library" | "progress" | "weakness" | "planner" | "grades" | "assistant";
 type Attempt = QuestionAttempt;
+type ReviewTimerConfig = { enabled: boolean; duration: ReviewTimerDuration };
 
 type ChatMessage = {
   id: string;
@@ -91,6 +95,8 @@ type LearnerProfile = {
 };
 
 const DEFAULT_PROFILE: LearnerProfile = { name: "Student", photoDataUrl: "" };
+const TIMER_DISABLED: ReviewTimerConfig = { enabled: false, duration: 60 };
+const SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects";
 
 const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Home", icon: "/icons/home.svg" },
@@ -106,7 +112,6 @@ function RevITLogo() {
   return (
     <>
       <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
-      <span className="brand-logo brand-logo-mark" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
       <span className="brand-frog" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} sizes="70px" priority /></span>
     </>
   );
@@ -269,6 +274,10 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [storageReady, setStorageReady] = useState(false);
   const [sessionSize, setSessionSize] = useState("10");
+  const [timerEnabled, setTimerEnabled] = useState(false);
+  const [timerDuration, setTimerDuration] = useState<ReviewTimerDuration>(60);
+  const [activeTimer, setActiveTimer] = useState<ReviewTimerConfig>(TIMER_DISABLED);
+  const [soundEffectsEnabled, setSoundEffectsEnabled] = useState(true);
   const [wrongAnswersOnly, setWrongAnswersOnly] = useState(false);
   const [sessionPoolIds, setSessionPoolIds] = useState<string[]>([]);
   const [sessionTargetCount, setSessionTargetCount] = useState(0);
@@ -281,6 +290,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [sessionAttempts, setSessionAttempts] = useState<Attempt[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
   const [answerRevealed, setAnswerRevealed] = useState(false);
+  const [timedOut, setTimedOut] = useState(false);
   const [reinforcementLevels, setReinforcementLevels] = useState<ReinforcementLevels>({});
   const [reinforcementReady, setReinforcementReady] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -317,6 +327,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [themeReady, setThemeReady] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const attemptMigrationStarted = useRef(false);
+  const answerLockedRef = useRef(false);
   const [progression, setProgression] = useState(emptyProgression);
   const [progressionReady, setProgressionReady] = useState(false);
   const [progressionError, setProgressionError] = useState("");
@@ -406,6 +417,7 @@ useEffect(() => {
       const savedTopics = JSON.parse(localStorage.getItem("revit-selected-topics-v1") ?? "[]") as string[];
       const savedProfile = JSON.parse(localStorage.getItem("revit-profile-v1") ?? "null") as LearnerProfile | null;
       const savedSidebarCollapsed = localStorage.getItem("revit-sidebar-collapsed") === "true";
+      const savedSoundEffects = localStorage.getItem(SOUND_EFFECTS_STORAGE_KEY);
       const reinforcementKey = `revit-reinforcement-v1:${initialUser?.id ?? "local"}`;
       const savedReinforcement = JSON.parse(localStorage.getItem(reinforcementKey) ?? "{}") as ReinforcementLevels;
       setAttempts(normalizeAttempts(rawAttempts));
@@ -418,6 +430,7 @@ useEffect(() => {
         setProfileDraft(normalizedProfile);
       }
       setSidebarCollapsed(savedSidebarCollapsed);
+      setSoundEffectsEnabled(savedSoundEffects !== "false");
       if (savedReinforcement && typeof savedReinforcement === "object" && !Array.isArray(savedReinforcement)) {
         setReinforcementLevels(Object.fromEntries(Object.entries(savedReinforcement)
           .filter(([id, level]) => questionById.has(id) && Number.isInteger(level) && level > 0 && level <= 3)));
@@ -656,6 +669,15 @@ useEffect(() => {
   }, [sidebarCollapsed, storageReady]);
 
   useEffect(() => {
+    if (!storageReady) return;
+    try {
+      localStorage.setItem(SOUND_EFFECTS_STORAGE_KEY, String(soundEffectsEnabled));
+    } catch {
+      // Sound preference persistence is optional; review functionality remains available.
+    }
+  }, [soundEffectsEnabled, storageReady]);
+
+  useEffect(() => {
     if (cloudEnabled) return;
     const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (localZone) setPreferences((current) => ({ ...current, timezone: localZone }));
@@ -798,9 +820,16 @@ useEffect(() => {
     setWrongAnswersOnly(true);
   }
 
-  function beginAdaptiveSession(poolIds: string[], targetCount: number, mode: ReviewMode) {
+  function beginAdaptiveSession(
+    poolIds: string[],
+    targetCount: number,
+    mode: ReviewMode,
+    timerConfig: ReviewTimerConfig = TIMER_DISABLED,
+  ) {
     const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, [], Math.random, questionPerformance);
     if (!firstQuestionId) return;
+    answerLockedRef.current = false;
+    if (soundEffectsEnabled) void unlockReviewSounds();
     setSessionPoolIds(poolIds);
     setSessionTargetCount(Math.min(targetCount, poolIds.length));
     setSessionQuestionIds([firstQuestionId]);
@@ -812,11 +841,20 @@ useEffect(() => {
     setSessionAttempts([]);
     setSelectedChoice(null);
     setAnswerRevealed(false);
+    setTimedOut(false);
+    setActiveTimer(timerConfig);
   }
 
-  function beginStrictSession(poolIds: string[], mode: ReviewMode, limit = poolIds.length) {
+  function beginStrictSession(
+    poolIds: string[],
+    mode: ReviewMode,
+    limit = poolIds.length,
+    timerConfig: ReviewTimerConfig = TIMER_DISABLED,
+  ) {
     const strictQuestionIds = shuffled(poolIds).slice(0, Math.min(limit, poolIds.length));
     if (!strictQuestionIds.length) return;
+    answerLockedRef.current = false;
+    if (soundEffectsEnabled) void unlockReviewSounds();
     setSessionPoolIds(strictQuestionIds);
     setSessionTargetCount(strictQuestionIds.length);
     setSessionQuestionIds(strictQuestionIds);
@@ -831,6 +869,8 @@ useEffect(() => {
     setSessionAttempts([]);
     setSelectedChoice(null);
     setAnswerRevealed(false);
+    setTimedOut(false);
+    setActiveTimer(timerConfig);
   }
 
   function startSession() {
@@ -838,14 +878,16 @@ useEffect(() => {
     const limit = sessionSize === "all" ? sessionQuestions.length : Number(sessionSize);
     const poolIds = sessionQuestions.map((question) => question.id);
     const targetCount = Math.min(limit, poolIds.length);
+    const timerConfig = { enabled: timerEnabled, duration: timerDuration };
     if (wrongAnswersOnly) {
-      beginStrictSession(poolIds, "wrong_answers", targetCount);
+      beginStrictSession(poolIds, "wrong_answers", targetCount, timerConfig);
       return;
     }
-    beginAdaptiveSession(poolIds, targetCount, "adaptive");
+    beginAdaptiveSession(poolIds, targetCount, "adaptive", timerConfig);
   }
 
   function leaveSession() {
+    answerLockedRef.current = true;
     setSessionPoolIds([]);
     setSessionTargetCount(0);
     setSessionQuestionIds([]);
@@ -857,6 +899,8 @@ useEffect(() => {
     setSessionAttempts([]);
     setSelectedChoice(null);
     setAnswerRevealed(false);
+    setTimedOut(false);
+    setActiveTimer(TIMER_DISABLED);
   }
 
   function practiceWeakTopic(topic: TopicMastery) {
@@ -941,8 +985,10 @@ useEffect(() => {
     await persistProgressEvents([{ eventKey, xp, activityDate: dateKeyInTimeZone(new Date(), preferences.timezone) }], metrics);
   }
 
-  function submitAnswer() {
-    if (!currentQuestion || selectedChoice === null || answerRevealed) return;
+  function completeQuestion(selectedAnswer: number | null, didTimeOut = false) {
+    if (!currentQuestion || answerRevealed || answerLockedRef.current) return;
+    if (selectedAnswer === null && !didTimeOut) return;
+    answerLockedRef.current = true;
     const existingQuestionAttempts = attempts.filter((item) => item.questionId === currentQuestion.id);
     const topic = topicById.get(currentQuestion.topicId);
     const subject = subjectById.get(currentQuestion.subjectId);
@@ -956,8 +1002,8 @@ useEffect(() => {
       subjectName: subject?.name ?? "Uncategorized",
       subtopic: currentQuestion.subtopic ?? "Uncategorized",
       difficulty: normalizedDifficulty(currentQuestion.difficulty),
-      selectedAnswer: selectedChoice,
-      correct: selectedChoice === currentQuestion.correctAnswer,
+      selectedAnswer,
+      correct: selectedAnswer !== null && selectedAnswer === currentQuestion.correctAnswer,
       attemptNumber: existingQuestionAttempts.length + 1,
       reviewMode: sessionMode,
       sessionId,
@@ -986,7 +1032,12 @@ useEffect(() => {
           setCloudError("Your answer is safe on this device and queued for question-history sync.");
         });
     }
+    setSelectedChoice(selectedAnswer);
+    setTimedOut(didTimeOut);
     setAnswerRevealed(true);
+    if (soundEffectsEnabled) {
+      void playReviewSound(didTimeOut ? "timeout" : attempt.correct ? "correct" : "incorrect");
+    }
     void recordStudyEvent({
       eventKey: `answer:${attempt.id}`,
       questions: 1,
@@ -995,7 +1046,17 @@ useEffect(() => {
     }, attempt.correct ? XP_REWARDS.CORRECT_QUESTION : 0);
   }
 
+  function submitAnswer() {
+    completeQuestion(selectedChoice);
+  }
+
+  function handleQuestionTimeout() {
+    completeQuestion(null, true);
+  }
+
   function nextQuestion() {
+    answerLockedRef.current = false;
+    setTimedOut(false);
     if (sessionStrictWrongOnly) {
       if (sessionCanFinish && sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
@@ -1549,6 +1610,41 @@ useEffect(() => {
                     <option value="50">50 questions</option>
                     <option value="all">All selected questions</option>
                   </select>
+                  <fieldset className="session-preference-card timer-preference">
+                    <legend>Timer</legend>
+                    <label className="session-toggle" htmlFor="review-timer-enabled">
+                      <input
+                        id="review-timer-enabled"
+                        type="checkbox"
+                        checked={timerEnabled}
+                        onChange={(event) => setTimerEnabled(event.target.checked)}
+                      />
+                      <span>Enable timer<small>Apply one countdown to every question in this session.</small></span>
+                    </label>
+                    <div className={`timer-duration-options ${timerEnabled ? "" : "disabled"}`} aria-disabled={!timerEnabled}>
+                      <span>Time per question</span>
+                      <label>
+                        <input type="radio" name="review-timer-duration" value="30" checked={timerDuration === 30} disabled={!timerEnabled} onChange={() => setTimerDuration(30)} />
+                        30 seconds
+                      </label>
+                      <label>
+                        <input type="radio" name="review-timer-duration" value="60" checked={timerDuration === 60} disabled={!timerEnabled} onChange={() => setTimerDuration(60)} />
+                        1 minute
+                      </label>
+                    </div>
+                  </fieldset>
+                  <div className="session-preference-card sound-preference">
+                    <span>Sound effects<small>Soft answer and timeout tones.</small></span>
+                    <button
+                      className={`preference-switch ${soundEffectsEnabled ? "enabled" : ""}`}
+                      type="button"
+                      role="switch"
+                      aria-checked={soundEffectsEnabled}
+                      onClick={() => setSoundEffectsEnabled((current) => !current)}
+                    >
+                      {soundEffectsEnabled ? "On" : "Off"}
+                    </button>
+                  </div>
                   <button className="primary-button wide" type="button" onClick={startSession} disabled={!sessionQuestions.length}>Start review</button>
                   {selectedTopicNames.length > 0 && <div className="selected-tags">{selectedTopicNames.map((name) => <span key={name}>{name}</span>)}</div>}
                 </aside>
@@ -1562,8 +1658,21 @@ useEffect(() => {
                   <button className="text-button quiet" type="button" onClick={leaveSession}>Exit session</button>
                 </div>
                 <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
-                <p className="question-source">{subjectById.get(currentQuestion.subjectId)?.name}</p>
-                <h2>{currentQuestion.prompt}</h2>
+                <div className="quiz-question-heading">
+                  <div>
+                    <p className="question-source">{subjectById.get(currentQuestion.subjectId)?.name}</p>
+                    <h2>{currentQuestion.prompt}</h2>
+                  </div>
+                  {activeTimer.enabled && (
+                    <QuestionTimer
+                      key={`${sessionIndex}:${currentQuestion.id}`}
+                      durationSeconds={activeTimer.duration}
+                      questionKey={`${sessionIndex}:${currentQuestion.id}`}
+                      paused={answerRevealed}
+                      onExpire={handleQuestionTimeout}
+                    />
+                  )}
+                </div>
                 <div className="choice-list">
                   {currentChoiceOrder.map((choiceIndex, displayIndex) => {
                     const choice = currentQuestion.choices[choiceIndex];
@@ -1577,14 +1686,17 @@ useEffect(() => {
                         onClick={() => !answerRevealed && setSelectedChoice(choiceIndex)}
                         aria-pressed={selectedChoice === choiceIndex}
                       >
-                        <span>{String.fromCharCode(65 + displayIndex)}</span>{choice}
+                        <span className="choice-index">{String.fromCharCode(65 + displayIndex)}</span>
+                        <span className="choice-copy">{choice}</span>
+                        {isCorrect && <span className="choice-result-icon" aria-hidden="true">✓</span>}
+                        {isWrong && <span className="choice-result-icon" aria-hidden="true">!</span>}
                       </button>
                     );
                   })}
                 </div>
                 {answerRevealed && (
-                  <div className={`answer-panel ${selectedChoice === currentQuestion.correctAnswer ? "correct" : "wrong"}`}>
-                    <strong>{selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
+                  <div className={`answer-panel ${selectedChoice === currentQuestion.correctAnswer ? "correct" : "wrong"} ${timedOut ? "timed-out" : ""}`} aria-live="polite">
+                    <strong><span aria-hidden="true">{selectedChoice === currentQuestion.correctAnswer ? "✓" : "!"}</span>{timedOut ? "Time's up" : selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
                     <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
                     <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
                     {selectedChoice !== currentQuestion.correctAnswer && <p className="reinforcement-note">We’ll bring this concept back later.</p>}

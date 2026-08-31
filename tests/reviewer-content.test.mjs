@@ -267,3 +267,25 @@ test("gates startup behind the branded initialization screen", async () => {
   assert.match(css, /\.revit-loading-screen \{[^}]*min-height: 100dvh/);
   assert.match(css, /@media \(max-width: 480px\)[\s\S]*\.revit-loading-animation/);
 });
+
+test("adds session timers, feedback preferences, and frog-only collapsed branding", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const timer = await readFile(new URL("../app/components/QuestionTimer.tsx", import.meta.url), "utf8");
+  const sounds = await readFile(new URL("../app/lib/reviewSounds.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+
+  assert.match(app, /const \[timerEnabled, setTimerEnabled\] = useState\(false\)/);
+  assert.match(app, /useState<ReviewTimerDuration>\(60\)/);
+  assert.match(app, /disabled=\{!timerEnabled\}/);
+  assert.match(app, /<QuestionTimer[\s\S]*onExpire=\{handleQuestionTimeout\}/);
+  assert.match(app, /completeQuestion\(null, true\)/);
+  assert.match(app, /selectedAnswer,\s+correct:/);
+  assert.match(app, /SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects"/);
+  assert.match(app, /playReviewSound\(didTimeOut \? "timeout"/);
+  assert.doesNotMatch(app, /brand-logo-mark/);
+  assert.match(timer, /window\.requestAnimationFrame/);
+  assert.match(timer, /prefers-reduced-motion: reduce/);
+  assert.match(sounds, /new window\.AudioContext\(\)/);
+  assert.match(css, /\.sidebar-collapsed \.sidebar \.brand-frog/);
+  assert.match(css, /@media \(prefers-reduced-motion: no-preference\)[\s\S]*correct-choice-feedback/);
+});
