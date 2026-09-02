@@ -282,7 +282,11 @@ test("adds session timers, feedback preferences, and frog-only collapsed brandin
   assert.match(app, /<ReviewSessionPreferences/);
   assert.match(preferences, /disabled=\{!timerEnabled\}/);
   assert.match(preferences, /role="switch"/);
+  assert.match(preferences, /aria-expanded=\{mobileExpanded\}/);
+  assert.match(preferences, /Question timer &amp; sound effects/);
   assert.match(preferencesCss, /color: var\(--ink\)/);
+  assert.match(preferencesCss, /@media \(max-width: 900px\)[\s\S]*\.preferencesBodyCollapsed \{\s*display: none;/);
+  assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.selection-panel \{ position: static;[^}]*max-height: none;[^}]*overflow-y: visible;/);
   assert.match(app, /<QuestionTimer[\s\S]*onExpire=\{handleQuestionTimeout\}/);
   assert.match(app, /completeQuestion\(null, true\)/);
   assert.match(app, /selectedAnswer,\s+correct:/);

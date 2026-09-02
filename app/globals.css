@@ -470,7 +470,7 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 
 @media (max-width: 900px) {
   .library-layout { grid-template-columns: 1fr; }
-  .selection-panel { z-index: 12; grid-row: 1; top: 12px; max-height: calc(100vh - 24px); box-shadow: 0 16px 45px rgba(8, 36, 30, .14); }
+  .selection-panel { position: static; z-index: auto; grid-row: 1; max-height: none; overflow-y: visible; box-shadow: 0 16px 45px rgba(8, 36, 30, .14); }
   .subject-list { grid-row: 2; }
   .selected-tags { max-height: 82px; overflow-y: auto; }
   .assistant-workspace { grid-template-columns: 1fr; }
