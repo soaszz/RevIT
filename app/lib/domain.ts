@@ -156,6 +156,7 @@ export type UserPreferences = {
   user_id?: string;
   timezone: string;
   theme: "light" | "dark" | "system";
+  leaderboard_opt_in: boolean;
 };
 
 export type CloudSnapshot = {

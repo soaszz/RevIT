@@ -4,12 +4,14 @@ import { ACHIEVEMENT_CATALOG, metricForCondition } from "./xpConfig";
 
 export type ProgressEvent = {
   eventKey: string;
+  eventType: "question_answered" | "study_session_completed" | "ai_review" | "daily_streak" | "first_ai_message" | "first_exam";
   xp: number;
   activityDate: string;
   questions?: number;
   correct?: number;
   reviews?: number;
-  subject?: string;
+  subjectId?: string;
+  subjectName?: string;
 };
 
 export type ProgressionUpdate = { snapshot: ProgressionSnapshot; newlyUnlocked: Achievement[] };
@@ -17,6 +19,17 @@ type LocalProgressStore = { totalXp: number; eventKeys: string[]; unlocked: User
 
 const LOCAL_PROGRESS_VERSION = "v1";
 const CLOUD_QUEUE_VERSION = "v1";
+
+function normalizedEventType(event: ProgressEvent) {
+  if (event.eventType) return event.eventType;
+  if (event.eventKey.startsWith("answer:")) return "question_answered";
+  if (event.eventKey.startsWith("study-session:")) return "study_session_completed";
+  if (event.eventKey.startsWith("ai-review:")) return "ai_review";
+  if (event.eventKey.startsWith("xp:daily-streak:")) return "daily_streak";
+  if (event.eventKey === "xp:first-ai-message") return "first_ai_message";
+  if (event.eventKey === "xp:first-exam") return "first_exam";
+  throw new Error("Unknown queued progression event type.");
+}
 
 function localProgressKey(ownerKey: string) { return `revit-progression-${LOCAL_PROGRESS_VERSION}:${ownerKey}`; }
 function cloudQueueKey(userId: string) { return `revit-progression-queue-${CLOUD_QUEUE_VERSION}:${userId}`; }
@@ -108,8 +121,6 @@ async function loadCloudProgressionRows(client: SupabaseClient, userId: string):
 }
 
 export async function loadCloudProgression(client: SupabaseClient, userId: string): Promise<ProgressionUpdate> {
-  const { error } = await client.from("user_progress").upsert({ user_id: userId, total_xp: 0 }, { onConflict: "user_id", ignoreDuplicates: true });
-  if (error) throw new Error(error.message);
   const newlyUnlocked = await checkCloudAchievements(client);
   return { snapshot: await loadCloudProgressionRows(client, userId), newlyUnlocked };
 }
@@ -118,12 +129,7 @@ export async function recordCloudProgressEvents(client: SupabaseClient, userId: 
   for (const event of events) {
     const { error } = await client.rpc("record_study_activity", {
       p_event_key: event.eventKey,
-      p_activity_date: event.activityDate,
-      p_questions: event.questions ?? 0,
-      p_correct: event.correct ?? 0,
-      p_review_count: event.reviews ?? 0,
-      p_subject: event.subject ?? null,
-      p_xp: Math.max(0, Math.floor(event.xp)),
+      p_event_type: normalizedEventType(event),
     });
     if (error) throw new Error(error.message);
   }

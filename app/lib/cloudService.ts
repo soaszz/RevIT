@@ -31,6 +31,14 @@ export function isMissingQuestionAttemptsTableError(error: { code?: string; mess
     || false;
 }
 
+export function isMissingLeaderboardSchemaError(error: { code?: string; message?: string } | null | undefined) {
+  if (!error) return false;
+  return error.code === "PGRST202"
+    || error.code === "PGRST204"
+    || error.code === "42703"
+    || (error.message?.toLowerCase().includes("leaderboard") ?? false);
+}
+
 type QuestionAttemptRow = {
   id: string;
   user_id: string;
@@ -74,12 +82,28 @@ function questionAttemptFromRow(row: QuestionAttemptRow): QuestionAttempt {
 const QUESTION_ATTEMPT_COLUMNS = "id,user_id,question_id,subject_id,subject_name,topic_id,topic_name,subtopic,difficulty,selected_answer,is_correct,attempt_number,review_mode,session_id,is_adaptive_repeat,answered_at";
 
 export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
+  const preferencesPromise = (async () => {
+    const current = await client.from("user_preferences")
+      .select("user_id,timezone,theme,leaderboard_opt_in")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (!current.error) return current;
+    if (!isMissingLeaderboardSchemaError(current.error)) return current;
+    const legacy = await client.from("user_preferences")
+      .select("user_id,timezone,theme")
+      .eq("user_id", userId)
+      .maybeSingle();
+    return {
+      ...legacy,
+      data: legacy.data ? { ...legacy.data, leaderboard_opt_in: false } : null,
+    };
+  })();
   const [profile, grades, activity, exams, preferences, reinforcement, attempts] = await Promise.all([
     client.from("profiles").select("id,username,first_name,avatar_url,onboarding_complete").eq("id", userId).maybeSingle(),
     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
     client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId).order("activity_date", { ascending: true }),
     client.from("exam_schedule").select("id,user_id,subject,assessment_type,scheduled_date,note").eq("user_id", userId).order("scheduled_date", { ascending: true }),
-    client.from("user_preferences").select("user_id,timezone,theme").eq("user_id", userId).maybeSingle(),
+    preferencesPromise,
     client.from("question_reinforcement").select("user_id,question_id,reinforcement_level,updated_at").eq("user_id", userId),
     client.from("question_attempts").select(QUESTION_ATTEMPT_COLUMNS).eq("user_id", userId)
       .order("answered_at", { ascending: false }).limit(5000),
@@ -209,8 +233,12 @@ export async function deleteExam(client: SupabaseClient, userId: string, id: str
 }
 
 export async function savePreferences(client: SupabaseClient, userId: string, preferences: UserPreferences) {
-  const { error } = await client.from("user_preferences").upsert({ ...preferences, user_id: userId });
+  const { data, error } = await client.from("user_preferences")
+    .upsert({ ...preferences, user_id: userId })
+    .select("user_id,timezone,theme,leaderboard_opt_in")
+    .single();
   if (error) throw new Error(error.message);
+  return data as UserPreferences;
 }
 
 export async function saveQuestionReinforcement(
@@ -242,13 +270,15 @@ export async function recordActivity(client: SupabaseClient, input: {
   reviews?: number;
   subject?: string;
 }) {
+  const eventType = input.eventKey.startsWith("answer:")
+    ? "question_answered"
+    : input.eventKey.startsWith("ai-review:")
+      ? "ai_review"
+      : null;
+  if (!eventType) throw new Error("This legacy activity event cannot be validated for migration.");
   const { error } = await client.rpc("record_study_activity", {
     p_event_key: input.eventKey,
-    p_activity_date: input.activityDate,
-    p_questions: input.questions ?? 0,
-    p_correct: input.correct ?? 0,
-    p_review_count: input.reviews ?? 0,
-    p_subject: input.subject ?? null,
+    p_event_type: eventType,
   });
   if (error) throw new Error(error.message);
 }
@@ -265,8 +295,9 @@ export async function migrateLocalActivity(
   for (const attempt of attempts) {
     const date = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" })
       .format(new Date(attempt.timestamp));
+    if (!attempt.id) continue;
     await recordActivity(client, {
-      eventKey: attempt.id ? `answer:${attempt.id}` : `legacy-answer:${attempt.questionId}:${attempt.timestamp}`,
+      eventKey: `answer:${attempt.id}`,
       activityDate: date,
       questions: 1,
       correct: attempt.correct ? 1 : 0,

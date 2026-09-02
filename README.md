@@ -12,10 +12,13 @@ RevIT is a source-aware medtech reviewer with official bacteriology and hematolo
 - Transparent remaining-average, maximum-possible, and next-assessment guidance. AI never decides grades or passing status.
 - Light/dark semantic PDF and AI badges, plus responsive desktop and mobile layouts.
 - V1 XP, scalable levels, eight achievement definitions, one-time level-up notices, and responsive progression UI in the sidebar and Home.
+- Optional V1 global and subject leaderboards for Questions, Accuracy, and Study XP with Daily/Weekly/All-Time periods, private current-user progress, and database-side anti-farming rules.
 
 ## Supabase migrations
 
 Run every file in `supabase/migrations` in timestamp order using the Supabase SQL Editor or CLI. V1 progression is defined in `202608300005_level_achievements_v1.sql`; it creates and seeds the progression tables, enables RLS, and extends the existing idempotent activity writer without modifying the database until you run it.
+
+Leaderboards are defined in `202609030006_leaderboards_v1.sql`. Apply it only after the five earlier migrations. The complete beginner-friendly setup, verification, security, query-testing, and rollback guide is in `docs/leaderboards-v1-supabase-setup.md`.
 
 Levels follow `25 × (level - 1) × (level + 2)`, producing the requested 0, 100, 250, 450, and 700 XP thresholds for Levels 1–5 and 1,000 XP for Level 6.
 

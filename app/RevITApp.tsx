@@ -7,6 +7,7 @@ import AccountSettings from "./components/AccountSettings";
 import AchievementModal, { XpProgress } from "./components/AchievementModal";
 import AiMarkdown from "./components/AiMarkdown";
 import GradesPage from "./components/GradesPage";
+import LeaderboardPage from "./components/LeaderboardPage";
 import Onboarding from "./components/Onboarding";
 import QuestionTimer from "./components/QuestionTimer";
 import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
@@ -76,7 +77,7 @@ import {
   topics,
 } from "./content/reviewerContent";
 
-type View = "overview" | "library" | "progress" | "weakness" | "planner" | "grades" | "assistant";
+type View = "overview" | "library" | "progress" | "leaderboards" | "weakness" | "planner" | "grades" | "assistant";
 type Attempt = QuestionAttempt;
 type ReviewTimerConfig = { enabled: boolean; duration: ReviewTimerDuration };
 
@@ -103,6 +104,7 @@ const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Home", icon: "/icons/home.svg" },
   { id: "library", label: "QnA", icon: "/icons/qna.svg" },
   { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
+  { id: "leaderboards", label: "Leaderboards", icon: "/icons/leaderboards.svg" },
   { id: "weakness", label: "Weakness", icon: "/icons/weakness.svg" },
   { id: "planner", label: "Study Planner", icon: "/icons/planner.svg" },
   { id: "grades", label: "Grades", icon: "/icons/grades.svg" },
@@ -133,6 +135,11 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     eyebrow: "Performance analytics",
     title: "See what you know. Focus on what is next.",
     description: "Every answer is organized by subject and topic, so your next study move stays clear.",
+  },
+  leaderboards: {
+    eyebrow: "Optional community rankings",
+    title: "See how consistent study adds up.",
+    description: "Compare eligible questions, first-attempt accuracy, and study XP without exposing private attempt history.",
   },
   weakness: {
     eyebrow: "Evidence-based study priorities",
@@ -319,6 +326,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [preferences, setPreferences] = useState<UserPreferences>(() => ({
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Manila",
     theme: "system",
+    leaderboard_opt_in: false,
   }));
   const [cloudLoading, setCloudLoading] = useState(cloudEnabled);
   const [cloudError, setCloudError] = useState("");
@@ -350,6 +358,7 @@ useEffect(() => {
     "overview",
     "library",
     "progress",
+    "leaderboards",
     "weakness",
     "planner",
     "grades",
@@ -511,6 +520,7 @@ useEffect(() => {
       setCloudLoading(true); setCloudError("");
       try {
         const client = createClient();
+        await flushQuestionAttemptQueue(client, initialUser!.id);
         await flushActivityQueue(client);
         let progressionUpdate: ProgressionUpdate | null = null;
         let progressionLoadError = "";
@@ -633,8 +643,8 @@ useEffect(() => {
       try {
         const client = createClient();
         await flushQuestionAttemptQueue(client, initialUser!.id);
-        await migrateLocalActivity(client, initialUser!.id, preferences.timezone, attempts, (id) => subjectById.get(id)?.name ?? id);
         await migrateLocalQuestionAttempts(client, initialUser!.id, attempts);
+        await migrateLocalActivity(client, initialUser!.id, preferences.timezone, attempts, (id) => subjectById.get(id)?.name ?? id);
         const snapshot = await loadCloudSnapshot(client, initialUser!.id);
         if (!cancelled) {
           setActivity(snapshot.activity);
@@ -958,13 +968,18 @@ useEffect(() => {
 
   async function recordStudyEvent(input: {
     eventKey: string;
+    eventType: ProgressEvent["eventType"];
     questions?: number;
     correct?: number;
     reviews?: number;
-    subject?: string;
-  }, xp = 0, extraEvents: Array<{ eventKey: string; xp: number }> = []) {
+    subjectId?: string;
+    subjectName?: string;
+  }, xp = 0, extraEvents: Array<{ eventKey: string; eventType: ProgressEvent["eventType"]; xp: number }> = []) {
     const activityDate = dateKeyInTimeZone(new Date(), preferences.timezone);
-    const nextActivity = activityAfterEvent(activity, activityDate, input);
+    const nextActivity = activityAfterEvent(activity, activityDate, {
+      ...input,
+      subject: input.subjectName,
+    });
     setActivity(nextActivity);
     const nextMetrics = {
       ...progressMetrics,
@@ -977,13 +992,13 @@ useEffect(() => {
       ...extraEvents.map((event) => ({ ...event, activityDate })),
     ];
     if ((input.questions ?? 0) > 0 || (input.reviews ?? 0) > 0) {
-      events.push({ eventKey: `xp:daily-streak:${activityDate}`, activityDate, xp: XP_REWARDS.DAILY_STREAK });
+      events.push({ eventKey: `xp:daily-streak:${activityDate}`, eventType: "daily_streak", activityDate, xp: XP_REWARDS.DAILY_STREAK });
     }
     await persistProgressEvents(events, nextMetrics);
   }
 
-  async function recordProgressOnlyEvent(eventKey: string, xp: number, metrics = progressMetrics) {
-    await persistProgressEvents([{ eventKey, xp, activityDate: dateKeyInTimeZone(new Date(), preferences.timezone) }], metrics);
+  async function recordProgressOnlyEvent(eventKey: string, eventType: ProgressEvent["eventType"], xp: number, metrics = progressMetrics) {
+    await persistProgressEvents([{ eventKey, eventType, xp, activityDate: dateKeyInTimeZone(new Date(), preferences.timezone) }], metrics);
   }
 
   function completeQuestion(selectedAnswer: number | null, didTimeOut = false) {
@@ -1041,9 +1056,11 @@ useEffect(() => {
     }
     void recordStudyEvent({
       eventKey: `answer:${attempt.id}`,
+      eventType: "question_answered",
       questions: 1,
       correct: attempt.correct ? 1 : 0,
-      subject: subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId,
+      subjectId: attempt.subjectId,
+      subjectName: subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId,
     }, attempt.correct ? XP_REWARDS.CORRECT_QUESTION : 0);
   }
 
@@ -1059,14 +1076,14 @@ useEffect(() => {
     answerLockedRef.current = false;
     setTimedOut(false);
     if (sessionStrictWrongOnly) {
-      if (sessionCanFinish && sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
+      if (sessionCanFinish && sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
       return;
     }
     if (sessionCanFinish) {
-      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
+      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
@@ -1075,7 +1092,7 @@ useEffect(() => {
 
     const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds, Math.random, questionPerformance);
     if (!nextQuestionId) {
-      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
+      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
@@ -1320,9 +1337,9 @@ useEffect(() => {
 
       setMessages((current) => [...current, assistantMessage]);
       void recordStudyEvent(
-        { eventKey: `ai-review:${userMessage.id}`, reviews: 1, subject: "MedTech AI" },
+        { eventKey: `ai-review:${userMessage.id}`, eventType: "ai_review", reviews: 1, subjectName: "MedTech AI" },
         0,
-        [{ eventKey: "xp:first-ai-message", xp: XP_REWARDS.FIRST_AI_MESSAGE }],
+        [{ eventKey: "xp:first-ai-message", eventType: "first_ai_message", xp: XP_REWARDS.FIRST_AI_MESSAGE }],
       );
     } catch (error) {
       setMessages((current) => [...current, {
@@ -1357,7 +1374,7 @@ useEffect(() => {
       setExams((current) => [...current.filter((item) => item.id !== saved.id && !(item.subject === saved.subject && item.assessment_type === saved.assessment_type)), saved].sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date)));
     }
     if (isFirstExam) {
-      await recordProgressOnlyEvent("xp:first-exam", XP_REWARDS.FIRST_EXAM, { ...progressMetrics, examsCreated: 1 });
+      await recordProgressOnlyEvent("xp:first-exam", "first_exam", XP_REWARDS.FIRST_EXAM, { ...progressMetrics, examsCreated: 1 });
     }
   }
 
@@ -1714,6 +1731,8 @@ useEffect(() => {
           </div>
         )}
 
+        {activeView === "leaderboards" && <LeaderboardPage cloudEnabled={cloudEnabled} leaderboardOptIn={preferences.leaderboard_opt_in} subjects={subjects} onOpenSettings={openProfileEditor} />}
+
         {activeView === "weakness" && (
           <WeaknessDashboard
             attempts={attempts}
@@ -1845,7 +1864,7 @@ useEffect(() => {
             </section>
           </div>
         )}
-        {profileOpen && cloudEnabled && accountProfile && initialUser && <AccountSettings profile={accountProfile} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} />}
+        {profileOpen && cloudEnabled && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} />}
         {cloudEnabled && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} />}
       </section>
       <ScientificCalculator />
