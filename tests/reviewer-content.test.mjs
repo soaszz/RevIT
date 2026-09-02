@@ -245,6 +245,9 @@ test("provides a responsive floating scientific calculator with undo and redo", 
   assert.match(css, /\.calculator-fab \{ position: fixed;/);
   assert.match(css, /\.calculator-navigation/);
   assert.match(css, /\.calculator-resize-handle/);
+  assert.match(calculator, /aria-describedby="calculator-resize-instructions"/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-resize-handle \{ width: 40px; height: 40px;/);
+  assert.doesNotMatch(css, /\.calculator-resize-note, \.calculator-resize-handle \{ display: none; \}/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-panel/);
   assert.match(css, /\[data-theme="dark"\] \.calculator-panel/);
 });

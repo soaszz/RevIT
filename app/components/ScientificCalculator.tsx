@@ -518,9 +518,9 @@ export default function ScientificCalculator() {
             <button type="button" className="function-key compact-key" onClick={() => append("Ans")}>Ans</button>
             <button type="button" className="equals-key" onClick={calculate}>=</button>
           </div>
-            <p className="calculator-drag-note">Drag the title bar to move<span className="calculator-resize-note"> · drag the corner to resize</span></p>
+            <p className="calculator-drag-note" id="calculator-resize-instructions">Drag the title bar to move<span className="calculator-resize-note"> · drag the lower-right corner to resize</span></p>
             </div>
-          <button className="calculator-resize-handle" type="button" onPointerDown={startResize} onKeyDown={resizeWithKeyboard} aria-label="Resize calculator" title="Drag to resize; use arrow keys for precise control" />
+          <button className="calculator-resize-handle" type="button" onPointerDown={startResize} onKeyDown={resizeWithKeyboard} aria-label="Resize calculator" aria-describedby="calculator-resize-instructions" title="Drag to resize; use arrow keys for precise control"><span aria-hidden="true">↘</span></button>
         </section>
       )}
 

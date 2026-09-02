@@ -680,16 +680,18 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .calculator-keypad .equals-key { border-color: var(--green); background: var(--green); color: var(--accent-ink); font-size: 18px; }
 .calculator-keypad .equals-key:hover { border-color: var(--green-hover); background: var(--green-hover); }
 .calculator-keypad .zero-key { grid-column: span 2; }
-.calculator-drag-note { margin: 0; padding: 0 13px 9px; color: var(--muted); font-size: 7px; text-align: center; }
-.calculator-resize-handle { position: absolute; right: 2px; bottom: 2px; z-index: 2; width: 27px; height: 27px; border: 0; border-radius: 0 0 17px 0; background: linear-gradient(135deg, transparent 0 48%, color-mix(in srgb, var(--green) 28%, var(--line)) 49% 54%, transparent 55% 64%, color-mix(in srgb, var(--green) 48%, var(--line)) 65% 70%, transparent 71%); cursor: nwse-resize; touch-action: none; }
-.calculator-resize-handle:hover { background-color: color-mix(in srgb, var(--green-soft) 42%, transparent); }
+.calculator-drag-note { margin: 0; padding: 0 42px 10px 13px; color: var(--muted); font-size: 7px; text-align: center; }
+.calculator-resize-handle { position: absolute; right: 3px; bottom: 3px; z-index: 2; display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid color-mix(in srgb, var(--green) 30%, var(--line)); border-radius: 10px 4px 17px 4px; background: color-mix(in srgb, var(--green-soft) 70%, var(--paper)); color: var(--green-dark); cursor: nwse-resize; touch-action: none; }
+.calculator-resize-handle span { font-size: 16px; font-weight: 750; line-height: 1; transform: translate(1px, 1px); }
+.calculator-resize-handle:hover { border-color: var(--green); background: var(--green-soft); }
+.calculator-resize-handle:active { background: color-mix(in srgb, var(--green) 18%, var(--paper)); }
 .calculator-resize-handle:focus-visible { outline: 2px solid var(--green); outline-offset: -3px; }
 [data-theme="dark"] .calculator-panel { box-shadow: 0 28px 90px rgba(0, 0, 0, .55); }
 @media (prefers-reduced-motion: reduce) { .calculator-math-caret { animation: none; } }
 
 @media (max-width: 620px) {
   .calculator-fab { right: 14px; bottom: max(14px, env(safe-area-inset-bottom)); width: 52px; height: 52px; border-radius: 16px; }
-  .calculator-panel { right: 10px !important; bottom: max(10px, env(safe-area-inset-bottom)) !important; left: auto !important; top: auto !important; width: calc(100vw - 20px) !important; height: auto !important; min-width: 0; min-height: 0; max-width: none; max-height: calc(100svh - 20px); border-radius: 19px; }
+  .calculator-panel { right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); left: auto; top: auto; width: calc(100vw - 20px) !important; height: auto; min-width: 0; min-height: 0; max-width: none; max-height: calc(100svh - 20px); border-radius: 19px; }
   .calculator-header { padding: 12px; }
   .calculator-grip { display: none; }
   .calculator-kicker { font-size: 7px; }
@@ -703,7 +705,8 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
   .calculator-navigation button { width: 26px; height: 22px; }
   .calculator-keypad { gap: 5px; padding: 9px 10px 7px; }
   .calculator-keypad button { min-height: 35px; border-radius: 8px; }
-  .calculator-resize-note, .calculator-resize-handle { display: none; }
+  .calculator-resize-handle { width: 40px; height: 40px; }
+  .calculator-drag-note { min-height: 29px; padding-right: 50px; padding-bottom: 12px; }
 }
 
 /* Local-first Study Planner */
