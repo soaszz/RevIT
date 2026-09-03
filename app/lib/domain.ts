@@ -50,6 +50,10 @@ export type Profile = {
   first_name: string;
   avatar_url: string | null;
   onboarding_complete: boolean;
+  terms_accepted_at: string | null;
+  terms_version: string | null;
+  privacy_accepted_at: string | null;
+  privacy_version: string | null;
 };
 
 export type GradeRecord = GradeValues & {

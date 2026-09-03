@@ -8,17 +8,20 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const socialImage = `${protocol}://${host}/og.png`;
-  const title = "RevIT | Medical Technology Review";
-  const description = "A source-aware MedTech reviewer for Clinical Chemistry, Hematology, Bacteriology, and AUBF with rationales, analytics, grade tracking, and Groq-powered study support.";
+  const title = "RevIT | Review It Thoroughly";
+  const description = "RevIT is a focused Medical Technology review platform for structured practice, study planning, progress tracking, and educational AI support.";
 
   return {
-    title,
+    title: {
+      default: title,
+      template: "RevIT | %s",
+    },
     description,
     openGraph: {
       title,
       description,
       type: "website",
-      images: [{ url: socialImage, width: 1536, height: 1024, alt: "RevIT Medical Technology Review" }],
+      images: [{ url: socialImage, width: 1536, height: 1024, alt: "RevIT — Review It Thoroughly" }],
     },
     twitter: {
       card: "summary_large_image",

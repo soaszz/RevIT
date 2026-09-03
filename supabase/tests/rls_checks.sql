@@ -9,6 +9,19 @@ values
 
 set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}', true);
+select public.accept_current_legal_terms('2026-09-03', '2026-09-03');
+do $$ begin
+  if not exists (
+    select 1 from public.profiles
+    where id = '11111111-1111-1111-1111-111111111111'
+      and terms_version = '2026-09-03'
+      and terms_accepted_at is not null
+      and privacy_version = '2026-09-03'
+      and privacy_accepted_at is not null
+  ) then
+    raise exception 'Consent persistence failure: current versions or timestamps were not stored';
+  end if;
+end $$;
 insert into public.grades (user_id, subject, pre_test) values ('11111111-1111-1111-1111-111111111111', 'Hematology', 45);
 insert into public.question_reinforcement (user_id, question_id, reinforcement_level)
 values ('11111111-1111-1111-1111-111111111111', 'clinical-chemistry-instrumentation-001', 1);
@@ -114,6 +127,9 @@ do $$ begin
   if exists (select 1 from public.user_achievements where user_id = '11111111-1111-1111-1111-111111111111') then
     raise exception 'RLS failure: user two can see user one achievements';
   end if;
+  if exists (select 1 from public.profiles where id = '11111111-1111-1111-1111-111111111111') then
+    raise exception 'RLS failure: user two can see user one profile or consent';
+  end if;
   if (select count(*) from public.achievements) <> 8 then
     raise exception 'RLS failure: public achievement definitions are not readable';
   end if;
@@ -125,6 +141,15 @@ do $$ begin
   end if;
   if (select opted_in from public.get_current_user_leaderboard_position('daily', 'questions', null)) then
     raise exception 'Leaderboard failure: user two should remain opted out by default';
+  end if;
+end $$;
+
+do $$ begin
+  update public.profiles
+  set terms_version = '2099-01-01'
+  where id = '11111111-1111-1111-1111-111111111111';
+  if found then
+    raise exception 'RLS failure: user two updated user one consent';
   end if;
 end $$;
 

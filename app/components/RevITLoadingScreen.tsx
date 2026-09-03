@@ -15,7 +15,7 @@ export default function RevITLoadingScreen() {
           <Image src="/revit-frog.png" alt="" width={2000} height={2000} sizes="54px" priority />
         </span>
 
-        <p>Preparing your study space...</p>
+        <p><strong>Review It Thoroughly.</strong><span>Preparing your study space…</span></p>
       </div>
     </main>
   );

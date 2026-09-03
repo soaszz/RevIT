@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured, SUPABASE_COOKIE_MAX_AGE, supabaseConfig } from "./config";
 
-const PUBLIC_PATHS = ["/auth", "/api/chat"];
+const PUBLIC_PATHS = ["/auth", "/terms", "/privacy", "/icon", "/api/chat"];
 
 function isPublic(pathname: string) {
   return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));

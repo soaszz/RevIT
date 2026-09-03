@@ -10,6 +10,9 @@ import type {
   QuestionReinforcement,
   UserPreferences,
 } from "./domain";
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "./legal";
+
+const PROFILE_COLUMNS = "id,username,first_name,avatar_url,onboarding_complete,terms_accepted_at,terms_version,privacy_accepted_at,privacy_version";
 
 function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Cloud sync failed.";
@@ -99,7 +102,7 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     };
   })();
   const [profile, grades, activity, exams, preferences, reinforcement, attempts] = await Promise.all([
-    client.from("profiles").select("id,username,first_name,avatar_url,onboarding_complete").eq("id", userId).maybeSingle(),
+    client.from("profiles").select(PROFILE_COLUMNS).eq("id", userId).maybeSingle(),
     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
     client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId).order("activity_date", { ascending: true }),
     client.from("exam_schedule").select("id,user_id,subject,assessment_type,scheduled_date,note").eq("user_id", userId).order("scheduled_date", { ascending: true }),
@@ -197,7 +200,7 @@ export async function saveProfile(client: SupabaseClient, profile: Profile) {
     first_name: profile.first_name.trim(),
     avatar_url: profile.avatar_url,
     onboarding_complete: profile.onboarding_complete,
-  }).select("id,username,first_name,avatar_url,onboarding_complete").single();
+  }).select(PROFILE_COLUMNS).single();
   if (error) throw new Error(error.message);
   return data as Profile;
 }
@@ -239,6 +242,17 @@ export async function savePreferences(client: SupabaseClient, userId: string, pr
     .single();
   if (error) throw new Error(error.message);
   return data as UserPreferences;
+}
+
+export async function acceptLegalConsent(client: SupabaseClient) {
+  const { data, error } = await client.rpc("accept_current_legal_terms", {
+    p_terms_version: CURRENT_TERMS_VERSION,
+    p_privacy_version: CURRENT_PRIVACY_VERSION,
+  });
+  if (error) throw new Error(error.message);
+  const profile = Array.isArray(data) ? data[0] : data;
+  if (!profile) throw new Error("The agreement record was not returned by Supabase.");
+  return profile as Profile;
 }
 
 export async function saveQuestionReinforcement(
@@ -335,6 +349,10 @@ export function localProfileToCloud(userId: string, username: string, name: stri
     first_name: name.trim().split(/\s+/)[0] || "Learner",
     avatar_url: photoDataUrl.startsWith("http") ? photoDataUrl : null,
     onboarding_complete: false,
+    terms_accepted_at: null,
+    terms_version: null,
+    privacy_accepted_at: null,
+    privacy_version: null,
   };
 }
 

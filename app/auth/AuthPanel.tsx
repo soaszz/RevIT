@@ -3,7 +3,9 @@
 import type { Factor } from "@supabase/supabase-js";
 import { type FormEvent, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import PublicThemeToggle from "../components/PublicThemeToggle";
 import TurnstileChallenge, { type TurnstileChallengeHandle } from "../components/auth/TurnstileChallenge";
+import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "../lib/legal";
 import { createClient } from "../lib/supabase/client";
 
 type Mode = "login" | "register";
@@ -20,21 +22,12 @@ function getErrorMessage(error: unknown, fallback: string) {
   return fallback;
 }
 
-function AuthThemeToggle() {
-  function toggleTheme() {
-    const root = document.documentElement;
-    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-    root.dataset.theme = nextTheme;
-    root.style.colorScheme = nextTheme;
-    localStorage.setItem("revit-theme", nextTheme);
-  }
-
+function AuthFooter() {
   return (
-    <button className="theme-toggle auth-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode" title="Toggle light and dark mode">
-      <span className="theme-symbol light-symbol" aria-hidden="true">☼</span>
-      <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
-      <span>Theme</span>
-    </button>
+    <footer className="auth-footer">
+      <div><a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a><a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a></div>
+      <p>© {new Date().getFullYear()} RevIT · Review It Thoroughly.</p>
+    </footer>
   );
 }
 
@@ -98,6 +91,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [legalConsent, setLegalConsent] = useState(false);
   const [remember, setRemember] = useState(true);
   const [status, setStatus] = useState("");
   const [statusType, setStatusType] = useState<StatusType>("error");
@@ -114,7 +108,10 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   function switchMode(nextMode: Mode) {
     if (pending || nextMode === mode) return;
     setMode(nextMode);
-    if (nextMode === "login") setConfirmPassword("");
+    if (nextMode === "login") {
+      setConfirmPassword("");
+      setLegalConsent(false);
+    }
     turnstileRef.current?.reset();
     showStatus("");
   }
@@ -162,6 +159,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
     const cleanEmail = email.trim().toLowerCase();
     const cleanUsername = username.trim().toLowerCase();
     if (!cleanEmail || !username.trim() || !password) throw new Error("Email, username, and password are required.");
+    if (!legalConsent) throw new Error("Please read and agree to the Terms of Service and Privacy Policy.");
     if (!/^[a-z0-9_]{3,24}$/.test(cleanUsername)) {
       throw new Error("Username must be 3–24 characters using letters, numbers, or underscores.");
     }
@@ -176,7 +174,11 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
       email: cleanEmail,
       password,
       options: {
-        data: { username: cleanUsername },
+        data: {
+          username: cleanUsername,
+          terms_version: CURRENT_TERMS_VERSION,
+          privacy_version: CURRENT_PRIVACY_VERSION,
+        },
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/overview`,
         captchaToken: token,
       },
@@ -194,6 +196,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
     setEmail(cleanEmail);
     setPassword("");
     setConfirmPassword("");
+    setLegalConsent(false);
     setMode("login");
     resetCaptcha();
     showStatus(
@@ -248,7 +251,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   if (mfaFactorId) {
     return (
       <form className="auth-card" onSubmit={verifyMfa}>
-        <AuthThemeToggle />
+        <PublicThemeToggle className="auth-theme-toggle" />
         <div className="auth-heading">
           <p className="eyebrow">Two-factor authentication</p>
           <h1>One more secure step.</h1>
@@ -257,17 +260,18 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         <label className="auth-field"><span>Authentication code</span><input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} value={mfaCode} onChange={(event) => setMfaCode(event.target.value.replace(/\D/g, ""))} required /></label>
         {status && <p className={`form-status ${statusType}`} role="alert">{status}</p>}
         <button className="primary-button wide" type="submit" disabled={pending || mfaCode.length !== 6}>{pending ? "Verifying…" : "Verify and continue"}</button>
+        <AuthFooter />
       </form>
     );
   }
 
   return (
     <form className="auth-card" onSubmit={submit}>
-      <AuthThemeToggle />
+      <PublicThemeToggle className="auth-theme-toggle" />
       <div className="auth-heading">
-        <p className="eyebrow">RevIT learner account</p>
-        <h1>{mode === "login" ? "Welcome to RevIT." : "Create your account."}</h1>
-        <p>{mode === "login" ? "Sign in to continue your focused MedTech review and keep your progress in sync." : "Create an account with your email, username, and password. You’ll return here to sign in."}</p>
+        <p className="eyebrow">RevIT</p>
+        <h1>{mode === "login" ? "Welcome back" : "Create your RevIT account"}</h1>
+        <p>{mode === "login" ? "Continue your review and pick up where you left off." : "Build your review history, track your progress, and keep your study activity connected to your account."}</p>
       </div>
 
       <div className="auth-tabs" role="tablist" aria-label="Account access">
@@ -283,6 +287,12 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
       </div>
 
       {mode === "login" && <label className="check-label"><input type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} /><span>Remember me for up to 30 days</span></label>}
+      {mode === "register" && (
+        <div className="signup-consent">
+          <input id="signup-legal-consent" type="checkbox" checked={legalConsent} onChange={(event) => setLegalConsent(event.target.checked)} aria-describedby="signup-consent-copy" />
+          <div id="signup-consent-copy"><label htmlFor="signup-legal-consent">I have read and agree to the</label> <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</div>
+        </div>
+      )}
       <TurnstileChallenge
         key={mode}
         ref={turnstileRef}
@@ -292,8 +302,9 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         onUnavailable={() => showStatus("The security check could not load. Please try again.")}
       />
       {status && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{status}</p>}
-      <button className="primary-button wide auth-submit" type="submit" disabled={pending || !turnstileSiteKey}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
+      <button className="primary-button wide auth-submit" type="submit" disabled={pending || !turnstileSiteKey || (mode === "register" && !legalConsent)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
       {mode === "login" && <a className="auth-link" href="/auth/forgot">Forgot your password?</a>}
+      <AuthFooter />
     </form>
   );
 }

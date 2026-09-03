@@ -49,7 +49,12 @@ test("passes Turnstile tokens to protected Supabase auth operations", async () =
 
   assert.match(auth, /signUp\([\s\S]*captchaToken:/);
   assert.match(auth, /signInWithPassword\([\s\S]*captchaToken:/);
-  assert.match(auth, /data:\s*\{ username: cleanUsername \}/);
+  assert.match(
+    auth,
+    /data:\s*\{[\s\S]*username: cleanUsername,[\s\S]*terms_version: CURRENT_TERMS_VERSION,[\s\S]*privacy_version: CURRENT_PRIVACY_VERSION/,
+  );
+  assert.match(auth, /id="signup-legal-consent"/);
+  assert.match(auth, /mode === "register" && !legalConsent/);
   assert.match(forgot, /resetPasswordForEmail\([\s\S]*captchaToken/);
   assert.match(widget, /onExpire=\{\(\) => onTokenChange\(null\)\}/);
   assert.match(widget, /documentElement\.dataset\.theme/);
@@ -101,12 +106,12 @@ test("study planner extends the existing calendar and supports local exports", a
   assert.match(css, /@media \(max-width: 700px\)[\s\S]*\.plan-block \{ grid-template-columns: 1fr;/);
 });
 
-test("QnA setup stays accessible and the desktop navigation can collapse", async () => {
+test("QnA setup stays accessible and the professional navigation can collapse", async () => {
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(app, /label: "Home", icon: "\/icons\/home\.svg"/);
-  assert.match(app, /label: "QnA", icon: "\/icons\/qna\.svg"/);
+  assert.match(app, /label: "Overview", icon: "\/icons\/home\.svg"/);
+  assert.match(app, /label: "Review Library", icon: "\/icons\/qna\.svg"/);
   assert.match(app, /src="\/revit-logo\.png"/);
   assert.match(app, /src="\/revit-frog\.png"/);
   assert.doesNotMatch(app, /sidebar-current-view/);
@@ -158,7 +163,7 @@ test("uses RevIT and Groq branding while keeping the MedTech AI tab", async () =
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const route = await readFile(new URL("../app/api/chat/route.ts", import.meta.url), "utf8");
 
-  assert.match(layout, /RevIT \| Medical Technology Review/i);
+  assert.match(layout, /RevIT \| Review It Thoroughly/i);
   assert.match(layout, /data-theme="light"/i);
   assert.match(layout, /revit-theme/i);
   assert.match(app, /Ask RevIT AI/i);
@@ -265,7 +270,8 @@ test("gates startup behind the branded initialization screen", async () => {
   assert.match(loader, /<MorphingInfinity/);
   assert.match(loader, /src="\/revit-logo\.png"/);
   assert.match(loader, /src="\/revit-frog\.png"/);
-  assert.match(loader, /Preparing your study space\.\.\./);
+  assert.match(loader, /Preparing your study space…/);
+  assert.match(loader, /Review It Thoroughly\./);
   assert.match(routeLoader, /<RevITLoadingScreen \/>/);
   assert.match(css, /\.revit-loading-screen \{[^}]*min-height: 100dvh/);
   assert.match(css, /@media \(max-width: 480px\)[\s\S]*\.revit-loading-animation/);

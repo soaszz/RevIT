@@ -8,6 +8,7 @@ import AchievementModal, { XpProgress } from "./components/AchievementModal";
 import AiMarkdown from "./components/AiMarkdown";
 import GradesPage from "./components/GradesPage";
 import LeaderboardPage from "./components/LeaderboardPage";
+import LegalConsentGate from "./components/LegalConsentGate";
 import Onboarding from "./components/Onboarding";
 import QuestionTimer from "./components/QuestionTimer";
 import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
@@ -46,6 +47,7 @@ import { type ReviewTimerDuration } from "./lib/reviewTimer";
 import { playReviewSound, unlockReviewSounds } from "./lib/reviewSounds";
 import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
 import { createClient } from "./lib/supabase/client";
+import { hasCurrentLegalConsent } from "./lib/legal";
 import {
   emptyProgression,
   flushCloudProgressEventQueue,
@@ -101,11 +103,11 @@ const TIMER_DISABLED: ReviewTimerConfig = { enabled: false, duration: 60 };
 const SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects";
 
 const navItems: Array<{ id: View; label: string; icon: string }> = [
-  { id: "overview", label: "Home", icon: "/icons/home.svg" },
-  { id: "library", label: "QnA", icon: "/icons/qna.svg" },
+  { id: "overview", label: "Overview", icon: "/icons/home.svg" },
+  { id: "library", label: "Review Library", icon: "/icons/qna.svg" },
   { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
   { id: "leaderboards", label: "Leaderboards", icon: "/icons/leaderboards.svg" },
-  { id: "weakness", label: "Weakness", icon: "/icons/weakness.svg" },
+  { id: "weakness", label: "Weakness Analytics", icon: "/icons/weakness.svg" },
   { id: "planner", label: "Study Planner", icon: "/icons/planner.svg" },
   { id: "grades", label: "Grades", icon: "/icons/grades.svg" },
   { id: "assistant", label: "MedTech AI", icon: "/icons/medtech-ai.svg" },
@@ -122,45 +124,56 @@ function RevITLogo() {
 
 const viewCopy: Record<View, { eyebrow: string; title: string; description: string }> = {
   overview: {
-    eyebrow: "Study dashboard",
-    title: "Master medtech, one focused review at a time.",
-    description: "Practice official Clinical Chemistry, Hematology, Bacteriology, and AUBF questions with answer rationales from your supplied reviewers.",
+    eyebrow: "Study overview",
+    title: "Overview",
+    description: "Review your current study activity, upcoming plans, performance, and progress.",
   },
   library: {
-    eyebrow: "Official reviewer library",
-    title: "Build a review around your focus.",
-    description: "Choose one topic, mix several, or practice the complete four-subject reviewer library.",
+    eyebrow: "Structured practice",
+    title: "Review Library",
+    description: "Choose a subject or topic and build a focused session from the official reviewer library.",
   },
   progress: {
     eyebrow: "Performance analytics",
-    title: "See what you know. Focus on what is next.",
-    description: "Every answer is organized by subject and topic, so your next study move stays clear.",
+    title: "Progress",
+    description: "Review accuracy by subject and topic to identify stronger areas and priorities for further study.",
   },
   leaderboards: {
     eyebrow: "Optional community rankings",
-    title: "See how consistent study adds up.",
-    description: "Compare eligible questions, first-attempt accuracy, and study XP without exposing private attempt history.",
+    title: "Leaderboards",
+    description: "Compare eligible question activity, first-attempt accuracy, and study XP without exposing private attempt history.",
   },
   weakness: {
-    eyebrow: "Evidence-based study priorities",
-    title: "Turn missed concepts into a focused next step.",
-    description: "Mastery is calculated from your real question history, with unique questions, first attempts, difficulty, and delayed retention kept separate from immediate retries.",
+    eyebrow: "Study priorities",
+    title: "Weakness Analytics",
+    description: "Use your question history, first attempts, difficulty, and retention data to plan focused follow-up practice.",
   },
   planner: {
-    eyebrow: "Local-first study scheduling",
-    title: "Give every study hour a clear purpose.",
-    description: "Build flexible daily plans, track completed sessions, and choose which blocks also appear in your RevIT calendar.",
+    eyebrow: "Study scheduling",
+    title: "Study Planner",
+    description: "Build daily plans, track completed sessions, and choose which study blocks appear in your RevIT calendar.",
   },
   grades: {
-    eyebrow: "Deterministic grade planning",
-    title: "Know where you stand—and what comes next.",
-    description: "Record every assessment by subject and see the weighted percentage earned in each category.",
+    eyebrow: "Grade tracking",
+    title: "Grades & Simulator",
+    description: "Record assessments by subject and use deterministic calculations to review weighted results and possible outcomes.",
   },
   assistant: {
-    eyebrow: "General study support",
-    title: "Ask RevIT AI for a clearer explanation.",
-    description: "Explore medtech concepts with Groq while official reviewer answers remain the scoring source of truth.",
+    eyebrow: "Educational AI support",
+    title: "MedTech AI",
+    description: "Explore Medical Technology concepts while official reviewer answers remain separate from AI-generated explanations.",
   },
+};
+
+const viewTitles: Record<View, string> = {
+  overview: "Overview",
+  library: "Review Library",
+  progress: "Progress",
+  leaderboards: "Leaderboards",
+  weakness: "Weakness Analytics",
+  planner: "Study Planner",
+  grades: "Grades",
+  assistant: "MedTech AI",
 };
 
 function normalizedDifficulty(value: unknown): QuestionDifficulty {
@@ -390,6 +403,10 @@ useEffect(() => {
     window.removeEventListener("popstate", handlePopState);
   };
 }, []);
+
+  useEffect(() => {
+    document.title = `RevIT | ${viewTitles[activeView]}`;
+  }, [activeView]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -1385,16 +1402,28 @@ useEffect(() => {
 
   if (isInitializing) return <RevITLoadingScreen />;
 
+  if (cloudEnabled && !hasCurrentLegalConsent(cloudProfile)) {
+    return (
+      <LegalConsentGate
+        profile={cloudProfile}
+        loadError={cloudError}
+        onAccepted={(acceptedProfile) => {
+          setCloudProfile(acceptedProfile);
+          setCloudError("");
+        }}
+      />
+    );
+  }
+
   const baseHeading = viewCopy[activeView];
   const todayKey = dateKeyInTimeZone(new Date(), preferences.timezone);
   const streak = calculateStreak(activity, todayKey);
   const firstName = cloudProfile?.first_name || profile.name.split(/\s+/)[0] || "Learner";
   const heading = activeView === "overview" ? {
     ...baseHeading,
-    title: `${greetingFor(new Date(), preferences.timezone)}, ${firstName}.`,
     description: streak.current > 0
-      ? `${streak.current}-day study streak. Keep the next focused step small and consistent.`
-      : "Your next meaningful answer starts a new study streak.",
+      ? `${greetingFor(new Date(), preferences.timezone)}, ${firstName}. You have a ${streak.current}-day study streak.`
+      : `${greetingFor(new Date(), preferences.timezone)}, ${firstName}. Your next completed review starts a new study streak.`,
   } : baseHeading;
   const selectedTopicNames = selectedTopicIds.map((id) => topicById.get(id)?.name).filter(Boolean);
   const profileInitials = profile.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R";

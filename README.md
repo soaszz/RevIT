@@ -20,6 +20,8 @@ Run every file in `supabase/migrations` in timestamp order using the Supabase SQ
 
 Leaderboards are defined in `202609030006_leaderboards_v1.sql`. Apply it only after the five earlier migrations. The complete beginner-friendly setup, verification, security, query-testing, and rollback guide is in `docs/leaderboards-v1-supabase-setup.md`.
 
+Versioned Terms of Service and Privacy Policy consent is defined in `202609030007_legal_consent_versioning.sql`. Apply it after the leaderboard migration. The exact SQL Editor steps, column and RLS details, verification scenarios, security test, future-version test, and rollback warning are in `docs/legal-consent-supabase-setup.md`.
+
 Levels follow `25 × (level - 1) × (level + 2)`, producing the requested 0, 100, 250, 450, and 700 XP thresholds for Levels 1–5 and 1,000 XP for Level 6.
 
 ## Safety and scope
