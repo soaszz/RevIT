@@ -1,0 +1,592 @@
+.gate {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  padding: 20px;
+  background: var(--canvas);
+  color: var(--ink);
+}
+
+.dialog {
+  width: min(920px, 100%);
+  min-height: min(560px, calc(100svh - 40px));
+  max-height: calc(100svh - 40px);
+  display: grid;
+  grid-template-columns: minmax(270px, 0.72fr) minmax(430px, 1.28fr);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: 0 28px 80px rgba(5, 27, 22, 0.16);
+}
+
+.brandPanel {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: clamp(28px, 4vw, 42px);
+  background: #0d2822;
+  color: #f2faf7;
+}
+
+.brandLockup {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.wordmark {
+  position: relative;
+  display: block;
+  width: 124px;
+  height: 32px;
+  overflow: hidden;
+}
+
+.wordmark img {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 124px;
+  height: 69px;
+  max-width: none;
+}
+
+.frog {
+  position: relative;
+  display: block;
+  width: 30px;
+  height: 29px;
+  margin-left: -8px;
+  overflow: hidden;
+  filter: drop-shadow(0 0 6px rgba(30, 238, 199, 0.24));
+}
+
+.frog img {
+  position: absolute;
+  top: -22px;
+  left: -21px;
+  width: 72px;
+  height: 72px;
+  max-width: none;
+}
+
+.brandCopy {
+  margin-block: auto;
+  padding-block: 32px;
+}
+
+.brandCopy > p,
+.heading > p {
+  margin: 0 0 10px;
+  color: #72d6ba;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.brandCopy h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(35px, 4.4vw, 48px);
+  font-weight: 760;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.brandCopy > span {
+  display: block;
+  max-width: 310px;
+  margin-top: 20px;
+  color: #b8ccc6;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.assurance {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  align-items: start;
+  gap: 11px;
+  padding-top: 20px;
+  border-top: 1px solid #29443e;
+}
+
+.assuranceIcon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #42635c;
+  border-radius: 10px;
+  background: #122f29;
+  color: #83ddc5;
+}
+
+.assuranceIcon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.assurance p {
+  margin: 0;
+}
+
+.assurance strong,
+.assurance span {
+  display: block;
+}
+
+.assurance strong {
+  color: #eef8f5;
+  font-size: 10px;
+  font-weight: 720;
+}
+
+.assurance p > span {
+  margin-top: 4px;
+  color: #9eb9b2;
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.contentPanel {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: clamp(28px, 4.2vw, 46px);
+  background: var(--paper);
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+
+.utilityBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(25px, 5vh, 42px);
+}
+
+.utilityBar > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.themeToggle {
+  flex: 0 0 auto;
+  min-height: 34px;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px 5px 5px;
+  background: var(--input);
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.themeToggle :global(.theme-symbol) {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: var(--surface-tint);
+  color: var(--green-dark);
+  font-size: 12px;
+}
+
+.heading > p {
+  color: var(--green);
+}
+
+.heading h1 {
+  max-width: none;
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(31px, 4vw, 42px);
+  font-weight: 760;
+  line-height: 1.04;
+  letter-spacing: -0.052em;
+}
+
+.heading > span {
+  display: block;
+  max-width: 500px;
+  margin-top: 13px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.documentLinks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.documentLinks a {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+  min-height: 62px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 13px;
+  background: var(--surface-soft);
+  color: var(--green-dark);
+  text-decoration: none;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.documentLinks a:hover {
+  border-color: color-mix(in srgb, var(--green) 48%, var(--line));
+  background: var(--surface-tint);
+  transform: translateY(-1px);
+}
+
+.documentLinks a > span:first-child {
+  min-width: 0;
+}
+
+.documentLinks small,
+.documentLinks strong {
+  display: block;
+}
+
+.documentLinks small {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.documentLinks strong {
+  overflow: hidden;
+  font-size: 10px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documentLinks a > span:last-child {
+  flex: 0 0 auto;
+  font-size: 15px;
+}
+
+.consentCheck {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 11px;
+  margin-top: 12px;
+  border: 1px solid color-mix(in srgb, var(--green) 22%, var(--line));
+  border-radius: 12px;
+  padding: 14px;
+  background: var(--surface-tint);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.consentCheck:has(input:checked) {
+  border-color: color-mix(in srgb, var(--green) 60%, var(--line));
+  box-shadow: inset 3px 0 0 var(--green);
+}
+
+.consentCheck input {
+  width: 17px;
+  height: 17px;
+  margin: 1px 0 0;
+  accent-color: var(--green);
+}
+
+.consentCheck span,
+.consentCheck strong {
+  display: block;
+}
+
+.consentCheck span {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.consentCheck strong {
+  margin-bottom: 2px;
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 720;
+}
+
+.error {
+  margin: 12px 0 0;
+  border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--line));
+  border-radius: 10px;
+  padding: 11px 12px;
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.primaryAction {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 11px;
+  padding: 12px 17px;
+  background: var(--green);
+  color: var(--accent-ink);
+  font-size: 11px;
+  font-weight: 750;
+  box-shadow: 0 8px 20px rgba(23, 107, 91, 0.18);
+  transition: background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.primaryAction:hover:not(:disabled) {
+  background: var(--green-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 11px 24px rgba(23, 107, 91, 0.23);
+}
+
+.primaryAction:disabled {
+  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  color: var(--muted);
+  box-shadow: none;
+  opacity: 1;
+}
+
+.exitRow {
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  margin-top: 17px;
+  padding-top: 15px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.exitRow button {
+  border: 0;
+  padding: 3px 8px;
+  background: transparent;
+  color: var(--green-dark);
+  font-size: 10px;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.exitRow p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .gate {
+    align-items: start;
+    padding: 12px;
+  }
+
+  .dialog {
+    min-height: 0;
+    max-height: none;
+    grid-template-columns: 1fr;
+    border-radius: 18px;
+  }
+
+  .brandPanel {
+    min-height: 235px;
+    padding: 25px;
+  }
+
+  .brandCopy {
+    padding-block: 28px 20px;
+  }
+
+  .brandCopy h2 {
+    font-size: 37px;
+  }
+
+  .brandCopy > span {
+    max-width: 480px;
+    margin-top: 14px;
+  }
+
+  .assurance {
+    display: none;
+  }
+
+  .contentPanel {
+    overflow: visible;
+    padding: 27px 22px 30px;
+  }
+
+  .utilityBar {
+    margin-bottom: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gate {
+    padding: 0;
+  }
+
+  .dialog {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .brandPanel {
+    min-height: 214px;
+    padding: 23px 20px;
+  }
+
+  .wordmark {
+    width: 112px;
+    height: 29px;
+  }
+
+  .wordmark img {
+    top: -18px;
+    width: 112px;
+    height: 63px;
+  }
+
+  .frog {
+    width: 27px;
+    height: 26px;
+  }
+
+  .frog img {
+    top: -20px;
+    left: -20px;
+    width: 66px;
+    height: 66px;
+  }
+
+  .brandCopy {
+    padding: 25px 0 0;
+  }
+
+  .brandCopy h2 {
+    font-size: 34px;
+  }
+
+  .brandCopy > span {
+    font-size: 10px;
+  }
+
+  .contentPanel {
+    padding: 25px 20px 30px;
+  }
+
+  .utilityBar {
+    align-items: flex-start;
+    margin-bottom: 25px;
+  }
+
+  .utilityBar > span {
+    max-width: 140px;
+    line-height: 1.45;
+  }
+
+  .heading h1 {
+    font-size: 32px;
+  }
+
+  .documentLinks {
+    grid-template-columns: 1fr;
+    margin-top: 22px;
+  }
+}
+
+@media (max-height: 620px) and (min-width: 761px) {
+  .brandPanel,
+  .contentPanel {
+    padding: 24px 28px;
+  }
+
+  .brandCopy {
+    padding-block: 22px;
+  }
+
+  .brandCopy h2 {
+    font-size: 36px;
+  }
+
+  .brandCopy > span {
+    margin-top: 13px;
+    line-height: 1.55;
+  }
+
+  .assurance {
+    padding-top: 14px;
+  }
+
+  .utilityBar {
+    margin-bottom: 21px;
+  }
+
+  .heading h1 {
+    font-size: 32px;
+  }
+
+  .heading > span {
+    margin-top: 9px;
+    line-height: 1.55;
+  }
+
+  .documentLinks {
+    margin-top: 17px;
+  }
+
+  .documentLinks a {
+    min-height: 55px;
+  }
+
+  .consentCheck {
+    padding: 11px 13px;
+  }
+
+  .primaryAction {
+    min-height: 43px;
+  }
+
+  .exitRow {
+    margin-top: 11px;
+    padding-top: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .documentLinks a,
+  .primaryAction,
+  .consentCheck {
+    transition: none;
+  }
+}

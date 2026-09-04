@@ -257,6 +257,21 @@ test("provides a responsive floating scientific calculator with undo and redo", 
   assert.match(css, /\[data-theme="dark"\] \.calculator-panel/);
 });
 
+test("keeps the legal consent experience component-scoped and responsive", async () => {
+  const gate = await readFile(new URL("../app/components/LegalConsentGate.tsx", import.meta.url), "utf8");
+  const gateCss = await readFile(new URL("../app/components/LegalConsentGate.module.css", import.meta.url), "utf8");
+
+  assert.match(gate, /import styles from "\.\/LegalConsentGate\.module\.css"/);
+  assert.match(gate, /src="\/revit-logo\.png"/);
+  assert.match(gate, /src="\/revit-frog\.png"/);
+  assert.match(gate, /<PublicThemeToggle className=\{styles\.themeToggle\}/);
+  assert.match(gate, /className=\{styles\.dialog\}[\s\S]*role="dialog"[\s\S]*aria-modal="true"/);
+  assert.match(gateCss, /\.dialog \{[\s\S]*grid-template-columns:/);
+  assert.match(gateCss, /\.contentPanel \{[\s\S]*background: var\(--paper\)/);
+  assert.match(gateCss, /@media \(max-width: 760px\)[\s\S]*\.dialog \{[\s\S]*grid-template-columns: 1fr/);
+  assert.match(gateCss, /@media \(max-height: 620px\) and \(min-width: 761px\)/);
+});
+
 test("gates startup behind the branded initialization screen", async () => {
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const loader = await readFile(new URL("../app/components/RevITLoadingScreen.tsx", import.meta.url), "utf8");

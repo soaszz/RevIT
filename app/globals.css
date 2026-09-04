@@ -823,19 +823,6 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .legal-footer div { display: flex; gap: 16px; }
 .legal-footer p { flex-basis: 100%; margin: 0; color: var(--muted); font-size: 9px; }
 
-.consent-gate { min-height: 100svh; display: grid; place-items: center; overflow-y: auto; padding: 22px; background: var(--canvas); color: var(--ink); }
-.consent-card { width: min(570px, 100%); display: grid; gap: 18px; padding: clamp(25px, 5vw, 42px); border: 1px solid var(--line); border-radius: 20px; background: var(--paper); box-shadow: 0 24px 72px rgba(5, 27, 22, .18); }
-.consent-heading h1 { font-size: clamp(30px, 5vw, 42px); }
-.consent-heading > p:last-child { margin: 13px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
-.consent-document-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.consent-document-links a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; border: 1px solid var(--line); border-radius: 10px; padding: 12px 13px; background: var(--surface-soft); color: var(--green-dark); font-size: 10px; font-weight: 720; text-decoration: none; }
-.consent-document-links a:hover { border-color: color-mix(in srgb, var(--green) 45%, var(--line)); }
-.consent-check { display: grid; grid-template-columns: 17px minmax(0, 1fr); align-items: start; gap: 10px; padding: 14px; border: 1px solid color-mix(in srgb, var(--green) 22%, var(--line)); border-radius: 11px; background: var(--surface-tint); color: var(--ink); font-size: 10px; font-weight: 600; line-height: 1.55; cursor: pointer; }
-.consent-check input { width: 16px; height: 16px; margin: 0; accent-color: var(--green); }
-.consent-accept { min-height: 46px; }
-.consent-signout { justify-self: center; border: 0; padding: 4px 8px; background: transparent; color: var(--green-dark); font-size: 10px; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
-.consent-note { margin: -8px 0 0; color: var(--muted); font-size: 9px; line-height: 1.5; text-align: center; }
-
 @media (max-width: 980px) {
   .auth-layout { grid-template-columns: 1fr; }
   .auth-intro { min-height: 0; }
@@ -868,7 +855,4 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
   .legal-brand-wordmark img { top: -16px; width: 98px; height: 55px; }
   .legal-sections section { grid-template-columns: 28px minmax(0, 1fr); gap: 11px; }
   .legal-footer { align-items: flex-start; flex-direction: column; }
-  .consent-gate { align-items: start; padding: 12px; }
-  .consent-card { margin-block: 8px; border-radius: 16px; padding: 23px 18px; }
-  .consent-document-links { grid-template-columns: 1fr; }
 }
