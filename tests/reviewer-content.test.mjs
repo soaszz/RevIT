@@ -42,6 +42,14 @@ test("randomizes displayed choices per review session and labels the PDF rationa
   assert.match(app, /We’ll bring this concept back later/);
 });
 
+test("waits for cloud question history before recording dependent progression", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+
+  assert.match(app, /if \(cloudPrerequisite && !\(await cloudPrerequisite\)\)[\s\S]*recordCloudProgressEvents/);
+  assert.match(app, /attemptPersistence = saveQuestionAttempt\([\s\S]*return true;[\s\S]*queueQuestionAttempt\([\s\S]*return false;/);
+  assert.match(app, /XP_REWARDS\.CORRECT_QUESTION : 0, \[\], attemptPersistence\)/);
+});
+
 test("passes Turnstile tokens to protected Supabase auth operations", async () => {
   const auth = await readFile(new URL("../app/auth/AuthPanel.tsx", import.meta.url), "utf8");
   const forgot = await readFile(new URL("../app/auth/forgot/ForgotPanel.tsx", import.meta.url), "utf8");

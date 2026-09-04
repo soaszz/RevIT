@@ -971,11 +971,21 @@ useEffect(() => {
     }
   }
 
-  async function persistProgressEvents(events: ProgressEvent[], metrics = progressMetrics) {
+  async function persistProgressEvents(
+    events: ProgressEvent[],
+    metrics = progressMetrics,
+    cloudPrerequisite?: Promise<boolean>,
+  ) {
     try {
-      const update = cloudEnabled && initialUser
-        ? await recordCloudProgressEvents(createClient(), initialUser.id, events)
-        : recordLocalProgressEvents(progressionOwnerKey, events, metrics);
+      let update: ProgressionUpdate;
+      if (cloudEnabled && initialUser) {
+        if (cloudPrerequisite && !(await cloudPrerequisite)) {
+          throw new Error("The related answer is waiting for question-history sync.");
+        }
+        update = await recordCloudProgressEvents(createClient(), initialUser.id, events);
+      } else {
+        update = recordLocalProgressEvents(progressionOwnerKey, events, metrics);
+      }
       applyProgressionUpdate(update);
     } catch (error) {
       if (cloudEnabled && initialUser) queueCloudProgressEvents(initialUser.id, events);
@@ -991,7 +1001,7 @@ useEffect(() => {
     reviews?: number;
     subjectId?: string;
     subjectName?: string;
-  }, xp = 0, extraEvents: Array<{ eventKey: string; eventType: ProgressEvent["eventType"]; xp: number }> = []) {
+  }, xp = 0, extraEvents: Array<{ eventKey: string; eventType: ProgressEvent["eventType"]; xp: number }> = [], cloudPrerequisite?: Promise<boolean>) {
     const activityDate = dateKeyInTimeZone(new Date(), preferences.timezone);
     const nextActivity = activityAfterEvent(activity, activityDate, {
       ...input,
@@ -1011,7 +1021,7 @@ useEffect(() => {
     if ((input.questions ?? 0) > 0 || (input.reviews ?? 0) > 0) {
       events.push({ eventKey: `xp:daily-streak:${activityDate}`, eventType: "daily_streak", activityDate, xp: XP_REWARDS.DAILY_STREAK });
     }
-    await persistProgressEvents(events, nextMetrics);
+    await persistProgressEvents(events, nextMetrics, cloudPrerequisite);
   }
 
   async function recordProgressOnlyEvent(eventKey: string, eventType: ProgressEvent["eventType"], xp: number, metrics = progressMetrics) {
@@ -1054,16 +1064,23 @@ useEffect(() => {
       void saveQuestionReinforcement(createClient(), initialUser.id, currentQuestion.id, nextReinforcementLevel)
         .catch(() => setCloudError("Your answer is saved locally, but reinforcement sync needs another attempt."));
     }
+    let attemptPersistence: Promise<boolean> | undefined;
     if (cloudEnabled && initialUser && attemptHistoryAvailable) {
-      void saveQuestionAttempt(createClient(), attempt)
+      attemptPersistence = saveQuestionAttempt(createClient(), attempt)
         .then((saved) => {
           setAttempts((current) => current.map((item) => item.id === saved.id ? saved : item));
           setSessionAttempts((current) => current.map((item) => item.id === saved.id ? saved : item));
+          return true;
         })
         .catch(() => {
           queueQuestionAttempt(initialUser.id, attempt);
           setCloudError("Your answer is safe on this device and queued for question-history sync.");
+          return false;
         });
+    } else if (cloudEnabled && initialUser) {
+      queueQuestionAttempt(initialUser.id, attempt);
+      setCloudError("Your answer is safe on this device and queued for question-history sync.");
+      attemptPersistence = Promise.resolve(false);
     }
     setSelectedChoice(selectedAnswer);
     setTimedOut(didTimeOut);
@@ -1078,7 +1095,7 @@ useEffect(() => {
       correct: attempt.correct ? 1 : 0,
       subjectId: attempt.subjectId,
       subjectName: subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId,
-    }, attempt.correct ? XP_REWARDS.CORRECT_QUESTION : 0);
+    }, attempt.correct ? XP_REWARDS.CORRECT_QUESTION : 0, [], attemptPersistence);
   }
 
   function submitAnswer() {
