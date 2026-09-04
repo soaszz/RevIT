@@ -111,11 +111,11 @@ export default function LegalConsentGate({
             <>
               <div className={styles.documentLinks} aria-label="Review legal documents">
                 <Link href="/terms" target="_blank" rel="noopener noreferrer" aria-label="Read Terms of Service in a new tab">
-                  <span><small>Document 01</small><strong>Terms of Service</strong></span>
+                  <span><strong>Terms of Service</strong></span>
                   <span aria-hidden="true">↗</span>
                 </Link>
                 <Link href="/privacy" target="_blank" rel="noopener noreferrer" aria-label="Read Privacy Policy in a new tab">
-                  <span><small>Document 02</small><strong>Privacy Policy</strong></span>
+                  <span><strong>Privacy Policy</strong></span>
                   <span aria-hidden="true">↗</span>
                 </Link>
               </div>

@@ -111,7 +111,7 @@
 .assurance {
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr);
-  align-items: start;
+  align-items: center;
   gap: 11px;
   padding-top: 20px;
   border-top: 1px solid #29443e;
@@ -265,18 +265,8 @@
   min-width: 0;
 }
 
-.documentLinks small,
 .documentLinks strong {
   display: block;
-}
-
-.documentLinks small {
-  margin-bottom: 4px;
-  color: var(--muted);
-  font-size: 8px;
-  font-weight: 750;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .documentLinks strong {
