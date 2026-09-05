@@ -12,6 +12,7 @@ import LeaderboardPage from "./components/LeaderboardPage";
 import LegalConsentGate from "./components/LegalConsentGate";
 import Onboarding from "./components/Onboarding";
 import QuestionTimer from "./components/QuestionTimer";
+import ReviewModeSwitch, { type ReviewLibraryMode } from "./components/ReviewModeSwitch";
 import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
 import RevITLoadingScreen from "./components/RevITLoadingScreen";
 import ScientificCalculator from "./components/ScientificCalculator";
@@ -80,7 +81,7 @@ import {
   topics,
 } from "./content/reviewerContent";
 
-type View = "overview" | "library" | "flashcards" | "progress" | "leaderboards" | "weakness" | "planner" | "grades" | "assistant";
+type View = "overview" | "library" | "progress" | "leaderboards" | "weakness" | "planner" | "grades" | "assistant";
 type Attempt = QuestionAttempt;
 type ReviewTimerConfig = { enabled: boolean; duration: ReviewTimerDuration };
 
@@ -106,7 +107,6 @@ const SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects";
 const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Overview", icon: "/icons/home.svg" },
   { id: "library", label: "Review Library", icon: "/icons/qna.svg" },
-  { id: "flashcards", label: "Flashcards", icon: "/icons/qna.svg" },
   { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
   { id: "leaderboards", label: "Leaderboards", icon: "/icons/leaderboards.svg" },
   { id: "weakness", label: "Weakness Analytics", icon: "/icons/weakness.svg" },
@@ -134,11 +134,6 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     eyebrow: "Structured practice",
     title: "Review Library",
     description: "Choose a subject or topic and build a focused session from the official reviewer library.",
-  },
-  flashcards: {
-    eyebrow: "Flashcards",
-    title: "Review at your own pace.",
-    description: "Review questions and reveal their answers by subject and topic.",
   },
   progress: {
     eyebrow: "Performance analytics",
@@ -175,7 +170,6 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
 const viewTitles: Record<View, string> = {
   overview: "Overview",
   library: "Review Library",
-  flashcards: "Flashcards",
   progress: "Progress",
   leaderboards: "Leaderboards",
   weakness: "Weakness Analytics",
@@ -299,6 +293,7 @@ export type InitialUser = { id: string; email: string; username?: string };
 export default function RevITApp({ initialUser = null, cloudEnabled = false }: { initialUser?: InitialUser | null; cloudEnabled?: boolean }) {
   const router = useRouter();
   const [activeView, setActiveView] = useState<View>("overview");
+  const [libraryMode, setLibraryMode] = useState<ReviewLibraryMode>("mcqs");
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [storageReady, setStorageReady] = useState(false);
@@ -378,7 +373,6 @@ useEffect(() => {
   const validViews: View[] = [
     "overview",
     "library",
-    "flashcards",
     "progress",
     "leaderboards",
     "weakness",
@@ -387,22 +381,28 @@ useEffect(() => {
     "assistant",
   ];
 
-  const path = window.location.pathname
-    .replace(/^\/|\/$/g, "") as View;
+  const path = window.location.pathname.replace(/^\/|\/$/g, "");
 
-  if (validViews.includes(path)) {
-    setActiveView(path);
+  if (path === "flashcards") {
+    setLibraryMode("flashcards");
+    setActiveView("library");
+    window.history.replaceState(null, "", "/library");
+  } else if (validViews.includes(path as View)) {
+    setActiveView(path as View);
   } else {
     setActiveView("overview");
     window.history.replaceState(null, "", "/overview");
   }
 
   const handlePopState = () => {
-    const currentPath = window.location.pathname
-      .replace(/^\/|\/$/g, "") as View;
+    const currentPath = window.location.pathname.replace(/^\/|\/$/g, "");
 
-    if (validViews.includes(currentPath)) {
-      setActiveView(currentPath);
+    if (currentPath === "flashcards") {
+      setLibraryMode("flashcards");
+      setActiveView("library");
+      window.history.replaceState(null, "", "/library");
+    } else if (validViews.includes(currentPath as View)) {
+      setActiveView(currentPath as View);
     }
   };
 
@@ -940,7 +940,15 @@ useEffect(() => {
     setActiveTimer(TIMER_DISABLED);
   }
 
+  function changeLibraryMode(mode: ReviewLibraryMode) {
+    if (mode === libraryMode) return;
+    if (sessionQuestionIds.length) leaveSession();
+    setLibraryMode(mode);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   function practiceWeakTopic(topic: TopicMastery) {
+    setLibraryMode("mcqs");
     const poolIds = buildWeakTopicQuestionPool(topic.topicId, questions, attempts);
     if (!poolIds.length) {
       setSelectedTopicIds([topic.topicId]);
@@ -955,6 +963,7 @@ useEffect(() => {
   }
 
   function viewTopicMistakes(topic: TopicMastery) {
+    setLibraryMode("mcqs");
     const mistakeIds = questions
       .filter((question) => question.topicId === topic.topicId && wrongQuestionIds.has(question.id))
       .map((question) => question.id);
@@ -1539,6 +1548,7 @@ useEffect(() => {
             </button>}
             {activeView === "overview" && <span className="streak-badge"><strong>{streak.current}</strong><span>day streak<small>{streak.longest} longest · {streak.activeDays} active</small></span></span>}
             {activeView === "overview" && <button className="primary-button" type="button" onClick={() => openView("library")}>Choose topics</button>}
+            {activeView === "library" && <ReviewModeSwitch mode={libraryMode} onChange={changeLibraryMode} />}
           </div>
         </div>
 
@@ -1624,7 +1634,9 @@ useEffect(() => {
           </div>
         )}
 
-        {activeView === "library" && (
+        {activeView === "library" && (libraryMode === "flashcards" ? (
+          <Flashcards />
+        ) : (
           <div className="library-shell">
             {sessionQuestionIds.length === 0 ? (
               <div className="library-layout">
@@ -1757,9 +1769,7 @@ useEffect(() => {
               </section>
             ) : null}
           </div>
-        )}
-
-        {activeView === "flashcards" && <Flashcards />}
+        ))}
 
         {activeView === "progress" && (
           <div className="progress-shell">

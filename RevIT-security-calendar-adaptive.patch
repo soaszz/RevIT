@@ -1,0 +1,898 @@
+diff --git a/app/auth/AuthPanel.tsx b/app/auth/AuthPanel.tsx
+index 6acaf12..721cbf4 100644
+--- a/app/auth/AuthPanel.tsx
++++ b/app/auth/AuthPanel.tsx
+@@ -1,8 +1,9 @@
+ "use client";
+ 
+ import type { Factor } from "@supabase/supabase-js";
+-import { type FormEvent, useState } from "react";
++import { type FormEvent, useRef, useState } from "react";
+ import { useRouter } from "next/navigation";
++import TurnstileChallenge, { type TurnstileChallengeHandle } from "../components/auth/TurnstileChallenge";
+ import { createClient } from "../lib/supabase/client";
+ 
+ type Mode = "login" | "register";
+@@ -89,8 +90,9 @@ function PasswordField({
+   );
+ }
+ 
+-export default function AuthPanel({ next = "/overview" }: { next?: string }) {
++export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { next?: string; turnstileSiteKey: string }) {
+   const router = useRouter();
++  const turnstileRef = useRef<TurnstileChallengeHandle>(null);
+   const [mode, setMode] = useState<Mode>("login");
+   const [email, setEmail] = useState("");
+   const [username, setUsername] = useState("");
+@@ -102,6 +104,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+   const [pending, setPending] = useState(false);
+   const [mfaFactorId, setMfaFactorId] = useState("");
+   const [mfaCode, setMfaCode] = useState("");
++  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+ 
+   function showStatus(message = "", type: StatusType = "error") {
+     setStatus(message);
+@@ -112,9 +115,21 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+     if (pending || nextMode === mode) return;
+     setMode(nextMode);
+     if (nextMode === "login") setConfirmPassword("");
++    turnstileRef.current?.reset();
+     showStatus("");
+   }
+ 
++  function requireCaptcha() {
++    if (captchaToken) return captchaToken;
++    showStatus("Please complete the security check.");
++    return null;
++  }
++
++  function resetCaptcha() {
++    turnstileRef.current?.reset();
++    setCaptchaToken(null);
++  }
++
+   async function completeLogin() {
+     const supabase = createClient();
+     const { data: assurance, error: assuranceError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+@@ -142,7 +157,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+     router.refresh();
+   }
+ 
+-  async function register() {
++  async function register(token: string) {
+     const supabase = createClient();
+     const cleanEmail = email.trim().toLowerCase();
+     const cleanUsername = username.trim().toLowerCase();
+@@ -163,6 +178,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+       options: {
+         data: { username: cleanUsername },
+         emailRedirectTo: `${window.location.origin}/auth/callback?next=/overview`,
++        captchaToken: token,
+       },
+     });
+     if (error) throw error;
+@@ -179,6 +195,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+     setPassword("");
+     setConfirmPassword("");
+     setMode("login");
++    resetCaptcha();
+     showStatus(
+       data.session
+         ? "Account created. Sign in with your email and password."
+@@ -189,18 +206,25 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+ 
+   async function submit(event: FormEvent<HTMLFormElement>) {
+     event.preventDefault();
++    const token = requireCaptcha();
++    if (!token) return;
+     setPending(true);
+     showStatus("");
+     try {
+       if (mode === "register") {
+-        await register();
++        await register(token);
+         return;
+       }
+-      const { error } = await createClient().auth.signInWithPassword({ email: email.trim(), password });
++      const { error } = await createClient().auth.signInWithPassword({
++        email: email.trim(),
++        password,
++        options: { captchaToken: token },
++      });
+       if (error) throw error;
+       await completeLogin();
+     } catch (error) {
+       showStatus(getErrorMessage(error, "Authentication could not be completed."));
++      resetCaptcha();
+     } finally {
+       setPending(false);
+     }
+@@ -259,8 +283,16 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+       </div>
+ 
+       {mode === "login" && <label className="check-label"><input type="checkbox" checked={remember} onChange={(event) => setRemember(event.target.checked)} /><span>Remember me for up to 30 days</span></label>}
++      <TurnstileChallenge
++        key={mode}
++        ref={turnstileRef}
++        siteKey={turnstileSiteKey}
++        action={mode}
++        onTokenChange={setCaptchaToken}
++        onUnavailable={() => showStatus("The security check could not load. Please try again.")}
++      />
+       {status && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{status}</p>}
+-      <button className="primary-button wide auth-submit" type="submit" disabled={pending}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
++      <button className="primary-button wide auth-submit" type="submit" disabled={pending || !turnstileSiteKey}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
+       {mode === "login" && <a className="auth-link" href="/auth/forgot">Forgot your password?</a>}
+     </form>
+   );
+diff --git a/app/auth/page.tsx b/app/auth/page.tsx
+index b4e7097..bcf5874 100644
+--- a/app/auth/page.tsx
++++ b/app/auth/page.tsx
+@@ -3,6 +3,7 @@ import { isSupabaseConfigured } from "../lib/supabase/config";
+ 
+ export default async function AuthPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+   const params = await searchParams;
++  const turnstileSiteKey = process.env.VITE_TURNSTILE_SITE_KEY ?? "";
+   return (
+     <main className="auth-shell">
+       <div className="auth-layout">
+@@ -11,7 +12,7 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
+           <div>
+             <p className="eyebrow">Focused MedTech review</p>
+             <h2>Learn with purpose. Track every step.</h2>
+-            <p>Study with source-aware practice, clear AI explanations, grade planning, and progress that follows you across devices.</p>
++            <p>Study Bacteriology and Hematology with source-aware practice, clear AI explanations, grade planning, and progress that follows you across devices.</p>
+           </div>
+           <ul className="auth-benefits" aria-label="RevIT features">
+             <li><span>01</span>Reviewer-grounded practice</li>
+@@ -20,7 +21,7 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
+           </ul>
+         </aside>
+         {isSupabaseConfigured()
+-          ? <AuthPanel next={params.next} />
++          ? <AuthPanel next={params.next} turnstileSiteKey={turnstileSiteKey} />
+           : <section className="auth-card"><div className="auth-heading"><p className="eyebrow">Setup required</p><h1>Welcome to RevIT.</h1><p>Connect Supabase to enable secure learner accounts and synced study progress.</p></div><p className="form-status info">Add the public Supabase URL and publishable key to your environment. Local reviewer mode remains available.</p><a className="primary-button auth-button-link" href="/overview">Continue locally</a></section>}
+       </div>
+     </main>
+diff --git a/app/auth/forgot/ForgotPanel.tsx b/app/auth/forgot/ForgotPanel.tsx
+index ccc6c02..5f686f3 100644
+--- a/app/auth/forgot/ForgotPanel.tsx
++++ b/app/auth/forgot/ForgotPanel.tsx
+@@ -1,24 +1,42 @@
+ "use client";
+ 
+-import { type FormEvent, useState } from "react";
++import { type FormEvent, useRef, useState } from "react";
++import TurnstileChallenge, { type TurnstileChallengeHandle } from "../../components/auth/TurnstileChallenge";
+ import { createClient } from "../../lib/supabase/client";
+ 
+-export default function ForgotPanel() {
++export default function ForgotPanel({ turnstileSiteKey }: { turnstileSiteKey: string }) {
++  const turnstileRef = useRef<TurnstileChallengeHandle>(null);
+   const [email, setEmail] = useState("");
+   const [pending, setPending] = useState(false);
+   const [sent, setSent] = useState(false);
++  const [status, setStatus] = useState("");
++  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+   async function submit(event: FormEvent<HTMLFormElement>) {
+-    event.preventDefault(); setPending(true);
+-    await createClient().auth.resetPasswordForEmail(email.trim(), { redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset` });
+-    setSent(true); setPending(false);
++    event.preventDefault();
++    if (!captchaToken) return setStatus("Please complete the security check.");
++    setPending(true); setStatus("");
++    const { error } = await createClient().auth.resetPasswordForEmail(email.trim(), {
++      redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset`,
++      captchaToken,
++    });
++    if (error) {
++      setStatus("The recovery request could not be completed. Please try again.");
++      turnstileRef.current?.reset();
++      setCaptchaToken(null);
++    } else {
++      setSent(true);
++    }
++    setPending(false);
+   }
+   return (
+     <form className="auth-card" onSubmit={submit}>
+       <span className="brand-mark auth-brand">R</span><p className="eyebrow">Password recovery</p><h1>Reset your password.</h1>
+       <p>Enter your email. For privacy, the confirmation is the same whether or not an account exists.</p>
+       <label><span>Email</span><input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
++      <TurnstileChallenge ref={turnstileRef} siteKey={turnstileSiteKey} action="recovery" onTokenChange={setCaptchaToken} onUnavailable={() => setStatus("The security check could not load. Please try again.")} />
++      {status && <p className="form-status" role="alert">{status}</p>}
+       {sent && <p className="form-status success" role="status">If an account exists, a recovery link has been sent.</p>}
+-      <button className="primary-button wide" type="submit" disabled={pending}>{pending ? "Sending…" : "Send recovery link"}</button>
++      <button className="primary-button wide" type="submit" disabled={pending || !turnstileSiteKey}>{pending ? "Sending…" : "Send recovery link"}</button>
+       <a className="auth-link" href="/auth">Back to sign in</a>
+     </form>
+   );
+diff --git a/app/auth/forgot/page.tsx b/app/auth/forgot/page.tsx
+index 25b2fb4..b5e2ef2 100644
+--- a/app/auth/forgot/page.tsx
++++ b/app/auth/forgot/page.tsx
+@@ -1,2 +1,4 @@
+ import ForgotPanel from "./ForgotPanel";
+-export default function ForgotPage() { return <main className="auth-shell"><ForgotPanel /></main>; }
++export default function ForgotPage() {
++  return <main className="auth-shell"><ForgotPanel turnstileSiteKey={process.env.VITE_TURNSTILE_SITE_KEY ?? ""} /></main>;
++}
+diff --git a/app/components/StudyCalendar.tsx b/app/components/StudyCalendar.tsx
+index e0e3411..269da05 100644
+--- a/app/components/StudyCalendar.tsx
++++ b/app/components/StudyCalendar.tsx
+@@ -93,7 +93,7 @@ export default function StudyCalendar({ activity, exams, grades, timeZone, onSav
+         <div className="calendar-actions"><button type="button" onClick={() => moveMonth(-1)} aria-label="Previous month">←</button><button type="button" onClick={() => setCursor({ year: Number(todayKey.slice(0, 4)), month: Number(todayKey.slice(5, 7)) - 1 })}>Today</button><button type="button" onClick={() => moveMonth(1)} aria-label="Next month">→</button></div>
+       </div>
+       <div className="calendar-layout">
+-        <div>
++        <div className="calendar-main">
+           <div className="calendar-weekdays" aria-hidden="true">{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => <span key={day}>{day}</span>)}</div>
+           <div className="month-grid" aria-label={`${monthName} calendar`}>
+             {days.map((day) => {
+@@ -103,7 +103,7 @@ export default function StudyCalendar({ activity, exams, grades, timeZone, onSav
+               return (
+                 <button type="button" key={day.key} className={`calendar-day intensity-${intensity} ${day.inMonth ? "" : "outside"} ${day.key === todayKey ? "today" : ""} ${selectedDate === day.key ? "selected" : ""}`} onClick={() => setSelectedDate(day.key)} aria-label={`${day.key}, activity level ${intensity}, ${dayExams.length} exams`}>
+                   <span>{day.day}</span>
+-                  <span className="exam-dots">{dayExams.slice(0, 4).map((exam) => <i className={SUBJECT_TONES[exam.subject]} key={exam.id} title={`${exam.subject} ${exam.assessment_type}`} />)}</span>
++                  <span className="exam-dots" aria-hidden="true">{dayExams.slice(0, 4).map((exam) => <i className={SUBJECT_TONES[exam.subject]} key={exam.id} title={`${exam.subject} ${exam.assessment_type}`} />)}</span>
+                 </button>
+               );
+             })}
+diff --git a/app/globals.css b/app/globals.css
+index 64f1ed7..c0ed12d 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -277,6 +277,7 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
+ .answer-panel strong { font-size: 13px; }.answer-panel p { margin: 5px 0; font-size: 12px; line-height: 1.55; }.answer-panel small { color: var(--muted); font-size: 9px; }
+ .answer-panel .answer-key { margin-top: 10px; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line)); border-radius: 9px; background: color-mix(in srgb, var(--paper) 72%, transparent); }.answer-panel .answer-key b { font-size: inherit; }
+ .answer-rationale { margin: 12px 0 10px; padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--green) 25%, var(--line)); }.answer-rationale > span { color: var(--green-dark); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }.answer-rationale p { color: var(--ink); }
++.reinforcement-note { margin: 10px 0 !important; padding: 9px 11px; border-radius: 8px; background: color-mix(in srgb, var(--amber-soft) 78%, var(--paper)); color: var(--amber) !important; font-size: 10px !important; font-weight: 680; }
+ .quiz-actions { display: flex; justify-content: flex-end; margin-top: 20px; }
+ .results-card { max-width: 720px; margin: 0 auto; padding: 42px; text-align: center; }
+ .result-mark { display: grid; place-items: center; width: 94px; height: 94px; margin: 0 auto 20px; border-radius: 50%; background: var(--green-soft); color: var(--green-dark); font-size: 25px; font-weight: 800; }
+@@ -347,10 +348,12 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
+   }
+ }
+ 
+-@media (max-width: 1100px) {
++@media (max-width: 1240px) {
+   .app-shell { grid-template-columns: 205px minmax(0, 1fr); }
+   .workspace { padding-inline: 24px; }
+   .content-grid { grid-template-columns: 1fr; }
++  .page-heading { align-items: flex-start; flex-direction: column; }
++  .heading-actions { width: 100%; justify-content: flex-start; }
+   .assistant-card { position: static; }
+   .chat-body { min-height: 260px; }
+   .library-layout { grid-template-columns: 1fr; }
+@@ -394,6 +397,7 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
+ .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 4px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface-soft); }.auth-tabs button { border: 0; border-radius: 8px; padding: 10px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 720; }.auth-tabs button.active { background: var(--paper); color: var(--green-dark); box-shadow: 0 3px 10px rgba(0, 0, 0, .07); }
+ .check-label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 10px; }.check-label input { width: 14px; height: 14px; accent-color: var(--green); }
+ .form-status { margin: 0 !important; padding: 10px 12px; border: 1px solid color-mix(in srgb, var(--danger) 28%, var(--line)); border-radius: 9px; background: var(--danger-soft); color: var(--danger) !important; font-size: 10px !important; line-height: 1.55; }.form-status.success { border-color: color-mix(in srgb, var(--green) 28%, var(--line)); background: var(--green-soft); color: var(--green-dark) !important; }.form-status.info { border-color: var(--line); background: var(--surface-soft); color: var(--muted) !important; }
++.turnstile-shell { min-width: 0; display: grid; gap: 7px; padding: 12px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface-soft); }.turnstile-shell > span { color: var(--muted); font-size: 9px; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; }.turnstile-shell > div { max-width: 100%; overflow: hidden; }.turnstile-shell > small { color: var(--muted); font-size: 8px; }.turnstile-unavailable { padding: 11px 12px; border: 1px solid color-mix(in srgb, var(--danger) 30%, var(--line)); border-radius: 10px; background: var(--danger-soft); color: var(--danger); font-size: 10px; line-height: 1.5; }
+ .auth-card .wide { margin-top: 0; }.auth-submit { min-height: 45px; }.auth-link { justify-self: center; color: var(--green); font-size: 10px; font-weight: 700; }.auth-button-link { display: block; text-align: center; text-decoration: none; }
+ @media (max-width: 860px) {
+   .auth-shell { place-items: start center; }.auth-layout { min-height: 0; grid-template-columns: 1fr; }.auth-intro { min-height: 340px; padding: 34px; }.auth-intro h2 { max-width: 560px; }.auth-intro > div > p:last-child { max-width: 580px; }.auth-benefits { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }.auth-benefits li { align-items: flex-start; }.auth-card { min-height: 0; padding: 38px 34px; }
+@@ -408,9 +412,9 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
+ /* Monthly activity calendar */
+ .calendar-card { position: relative; border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: var(--paper); box-shadow: var(--shadow); }
+ .calendar-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }.calendar-heading h2 { margin: 0; font-size: 23px; letter-spacing: -.035em; }.calendar-heading > div > p:last-child { margin: 7px 0 0; color: var(--muted); font-size: 10px; }.calendar-actions { display: flex; gap: 5px; }.calendar-actions button { border: 1px solid var(--line); border-radius: 8px; padding: 7px 9px; background: var(--input); color: var(--ink); font-size: 10px; }
+-.calendar-layout { display: grid; grid-template-columns: minmax(0, 1fr) 210px; gap: 20px; margin-top: 20px; }.calendar-weekdays, .month-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }.calendar-weekdays span { padding: 0 0 7px; color: var(--muted); font-size: 8px; font-weight: 700; text-align: center; text-transform: uppercase; }.month-grid { gap: 4px; }
+-.calendar-day { position: relative; aspect-ratio: 1.15; min-height: 42px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; border: 1px solid transparent; border-radius: 9px; padding: 6px; color: var(--ink); font-size: 9px; }.calendar-day.outside { opacity: .33; }.calendar-day.intensity-0 { background: var(--surface-soft); }.calendar-day.intensity-1 { background: color-mix(in srgb, var(--green-soft) 76%, var(--paper)); }.calendar-day.intensity-2 { background: color-mix(in srgb, var(--green) 25%, var(--paper)); }.calendar-day.intensity-3 { background: color-mix(in srgb, var(--green) 56%, var(--paper)); color: var(--accent-ink); }.calendar-day.intensity-4 { background: var(--green-dark); color: var(--accent-ink); }.calendar-day.today { border-color: var(--green); }.calendar-day.selected { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--green); }
+-.exam-dots { display: flex; flex-wrap: wrap; gap: 2px; }.exam-dots i, .exam-list i { width: 6px; height: 6px; border-radius: 50%; }.exam-dots i.heme, .exam-list i.heme { background: #bb5f7b; }.exam-dots i.chem, .exam-list i.chem { background: #5c85ce; }.exam-dots i.bact, .exam-list i.bact { background: #1c8d70; }.exam-dots i.aubf, .exam-list i.aubf { background: #b78130; }
++.calendar-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(210px, 240px); gap: 20px; margin-top: 20px; }.calendar-main { min-width: 0; overflow: hidden; }.calendar-weekdays, .month-grid { min-width: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }.calendar-weekdays span { min-width: 0; padding: 0 0 7px; color: var(--muted); font-size: 8px; font-weight: 700; text-align: center; text-transform: uppercase; }.month-grid { gap: 4px; }
++.calendar-day { position: relative; isolation: isolate; min-width: 0; aspect-ratio: 1.15; min-height: 44px; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between; border: 1px solid transparent; border-radius: 9px; padding: 6px; color: var(--ink); font-size: 9px; }.calendar-day > span:first-child { position: relative; z-index: 1; line-height: 1; }.calendar-day.outside { opacity: .33; }.calendar-day.intensity-0 { background: var(--surface-soft); }.calendar-day.intensity-1 { background: color-mix(in srgb, var(--green-soft) 76%, var(--paper)); }.calendar-day.intensity-2 { background: color-mix(in srgb, var(--green) 25%, var(--paper)); }.calendar-day.intensity-3 { background: color-mix(in srgb, var(--green) 56%, var(--paper)); color: var(--accent-ink); }.calendar-day.intensity-4 { background: var(--green-dark); color: var(--accent-ink); }.calendar-day.today { border-color: var(--green); }.calendar-day.selected { border-color: var(--green); box-shadow: inset 0 0 0 2px var(--green); }
++.exam-dots { min-width: 0; max-width: 100%; display: flex; flex-wrap: wrap; gap: 2px; }.exam-dots i, .exam-list i { flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%; }.exam-dots i.heme, .exam-list i.heme { background: #bb5f7b; }.exam-dots i.chem, .exam-list i.chem { background: #5c85ce; }.exam-dots i.bact, .exam-list i.bact { background: #1c8d70; }.exam-dots i.aubf, .exam-list i.aubf { background: #b78130; }
+ .calendar-legend { display: flex; align-items: center; justify-content: flex-end; gap: 5px; margin-top: 10px; color: var(--muted); font-size: 8px; }.calendar-legend i { width: 12px; height: 12px; border-radius: 3px; }.calendar-legend i.intensity-0 { background: var(--surface-soft); }.calendar-legend i.intensity-1 { background: var(--green-soft); }.calendar-legend i.intensity-2 { background: color-mix(in srgb, var(--green) 25%, var(--paper)); }.calendar-legend i.intensity-3 { background: color-mix(in srgb, var(--green) 56%, var(--paper)); }.calendar-legend i.intensity-4 { background: var(--green-dark); }.calendar-legend b { margin-left: 6px; font-weight: 600; }
+ .day-details { min-width: 0; padding-left: 18px; border-left: 1px solid var(--line); }.day-details h3 { margin: 0 0 12px; font-size: 14px; }.day-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }.day-stats span { padding: 8px 5px; border-radius: 7px; background: var(--surface-soft); color: var(--muted); font-size: 7px; text-align: center; }.day-stats strong { display: block; color: var(--ink); font-size: 14px; }.subjects-studied, .empty-note { color: var(--muted); font-size: 9px; line-height: 1.5; }.exam-list { display: grid; gap: 5px; margin: 12px 0; }.exam-list button { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 8px; padding: 8px; background: var(--input); color: var(--ink); text-align: left; }.exam-list strong, .exam-list small { display: block; font-size: 8px; }.exam-list small { margin-top: 2px; color: var(--muted); }
+ .up-next { display: flex; align-items: flex-start; gap: 12px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }.up-next strong { font-size: 11px; }.up-next p, .up-next small { margin: 3px 0 0; color: var(--muted); font-size: 9px; }
+@@ -430,3 +434,7 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
+ @media (max-width: 760px) {
+   .heading-actions { width: 100%; justify-content: space-between; }.streak-badge { flex: 1; }.sync-banner { align-items: flex-start; margin-top: -10px; }.calendar-card, .grade-category-card, .grade-ledger-overview { padding: 18px; }.calendar-heading, .grade-ledger-heading { flex-direction: column; }.calendar-actions { width: 100%; justify-content: space-between; }.calendar-day { min-height: 36px; padding: 4px; }.calendar-layout { gap: 14px; }.grade-summary-grid, .grade-category-grid { grid-template-columns: 1fr; }.grade-category-comprehensive { grid-column: auto; }.grade-subject-list label { grid-template-columns: minmax(125px, 1fr) 122px; gap: 12px; }.grade-category-heading h2 { font-size: 22px; }.grade-save-bar { align-items: stretch; flex-direction: column; }.grade-save-bar .form-status { max-width: none; }.account-modal { max-height: calc(100vh - 20px); }.mfa-qr { width: 150px; height: 150px; }
+ }
++
++@media (max-width: 520px) {
++  .calendar-card { padding: 14px; }.calendar-heading { gap: 14px; }.calendar-heading h2 { font-size: 21px; }.calendar-actions button { min-height: 34px; }.month-grid { gap: 3px; }.calendar-day { aspect-ratio: auto; height: 42px; min-height: 42px; padding: 5px; border-radius: 8px; }.exam-dots { gap: 1px; }.exam-dots i { width: 5px; height: 5px; }.calendar-legend { flex-wrap: wrap; justify-content: flex-start; row-gap: 7px; }.calendar-legend b { flex-basis: 100%; margin-left: 0; }.day-stats span { min-width: 0; padding-inline: 3px; }
++}
+diff --git a/app/lib/cloudService.ts b/app/lib/cloudService.ts
+index a679a19..92a3fa8 100644
+--- a/app/lib/cloudService.ts
++++ b/app/lib/cloudService.ts
+@@ -6,6 +6,7 @@ import type {
+   GradeRecord,
+   GradeSubject,
+   Profile,
++  QuestionReinforcement,
+   UserPreferences,
+ } from "./domain";
+ 
+@@ -14,14 +15,15 @@ function errorMessage(error: unknown) {
+ }
+ 
+ export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
+-  const [profile, grades, activity, exams, preferences] = await Promise.all([
++  const [profile, grades, activity, exams, preferences, reinforcement] = await Promise.all([
+     client.from("profiles").select("id,username,first_name,avatar_url,onboarding_complete").eq("id", userId).maybeSingle(),
+     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
+     client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId).order("activity_date", { ascending: true }),
+     client.from("exam_schedule").select("id,user_id,subject,assessment_type,scheduled_date,note").eq("user_id", userId).order("scheduled_date", { ascending: true }),
+     client.from("user_preferences").select("user_id,timezone,theme").eq("user_id", userId).maybeSingle(),
++    client.from("question_reinforcement").select("user_id,question_id,reinforcement_level,updated_at").eq("user_id", userId),
+   ]);
+-  const failure = [profile, grades, activity, exams, preferences].find((result) => result.error)?.error;
++  const failure = [profile, grades, activity, exams, preferences, reinforcement].find((result) => result.error)?.error;
+   if (failure) throw new Error(failure.message);
+   return {
+     profile: profile.data as Profile | null,
+@@ -29,6 +31,7 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
+     activity: (activity.data ?? []) as DailyActivity[],
+     exams: (exams.data ?? []) as ExamSchedule[],
+     preferences: preferences.data as UserPreferences | null,
++    reinforcement: (reinforcement.data ?? []) as QuestionReinforcement[],
+   };
+ }
+ 
+@@ -79,6 +82,27 @@ export async function savePreferences(client: SupabaseClient, userId: string, pr
+   if (error) throw new Error(error.message);
+ }
+ 
++export async function saveQuestionReinforcement(
++  client: SupabaseClient,
++  userId: string,
++  questionId: string,
++  reinforcementLevel: number,
++) {
++  if (reinforcementLevel <= 0) {
++    const { error } = await client.from("question_reinforcement")
++      .delete().eq("user_id", userId).eq("question_id", questionId);
++    if (error) throw new Error(error.message);
++    return;
++  }
++
++  const { error } = await client.from("question_reinforcement").upsert({
++    user_id: userId,
++    question_id: questionId,
++    reinforcement_level: reinforcementLevel,
++  }, { onConflict: "user_id,question_id" });
++  if (error) throw new Error(error.message);
++}
++
+ export async function recordActivity(client: SupabaseClient, input: {
+   eventKey: string;
+   activityDate: string;
+diff --git a/app/lib/domain.ts b/app/lib/domain.ts
+index 984bc35..a33dd85 100644
+--- a/app/lib/domain.ts
++++ b/app/lib/domain.ts
+@@ -77,6 +77,13 @@ export type ExamSchedule = {
+   note: string | null;
+ };
+ 
++export type QuestionReinforcement = {
++  user_id?: string;
++  question_id: string;
++  reinforcement_level: number;
++  updated_at?: string;
++};
++
+ export type UserPreferences = {
+   user_id?: string;
+   timezone: string;
+@@ -89,4 +96,5 @@ export type CloudSnapshot = {
+   activity: DailyActivity[];
+   exams: ExamSchedule[];
+   preferences: UserPreferences | null;
++  reinforcement: QuestionReinforcement[];
+ };
+diff --git a/app/RevITApp.tsx b/app/RevITApp.tsx
+index 29dbe66..a6f4b0c 100644
+--- a/app/RevITApp.tsx
++++ b/app/RevITApp.tsx
+@@ -19,8 +19,15 @@ import {
+   saveExam as saveCloudExam,
+   saveGrade as saveCloudGrade,
+   savePreferences,
++  saveQuestionReinforcement,
+ } from "./lib/cloudService";
+ import type { DailyActivity, ExamSchedule, GradeRecord, Profile, UserPreferences } from "./lib/domain";
++import {
++  chooseAdaptiveQuestion,
++  reinforcementAfterAnswer,
++  reinforcementLevelAfterAnswer,
++  type ReinforcementLevels,
++} from "./lib/adaptiveQuestions";
+ import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCalendar";
+ import { createClient } from "./lib/supabase/client";
+ import {
+@@ -146,12 +153,16 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
+   const [attempts, setAttempts] = useState<Attempt[]>([]);
+   const [storageReady, setStorageReady] = useState(false);
+   const [sessionSize, setSessionSize] = useState("10");
++  const [sessionPoolIds, setSessionPoolIds] = useState<string[]>([]);
++  const [sessionTargetCount, setSessionTargetCount] = useState(0);
+   const [sessionQuestionIds, setSessionQuestionIds] = useState<string[]>([]);
+   const [sessionChoiceOrders, setSessionChoiceOrders] = useState<Record<string, number[]>>({});
+   const [sessionIndex, setSessionIndex] = useState(0);
+   const [sessionAttempts, setSessionAttempts] = useState<Attempt[]>([]);
+   const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
+   const [answerRevealed, setAnswerRevealed] = useState(false);
++  const [reinforcementLevels, setReinforcementLevels] = useState<ReinforcementLevels>({});
++  const [reinforcementReady, setReinforcementReady] = useState(false);
+   const [messages, setMessages] = useState<ChatMessage[]>([]);
+   const [draft, setDraft] = useState("");
+   const [pending, setPending] = useState(false);
+@@ -210,6 +221,8 @@ useEffect(() => {
+       const savedAttempts = JSON.parse(localStorage.getItem("revit-attempts-v1") ?? "[]") as Attempt[];
+       const savedTopics = JSON.parse(localStorage.getItem("revit-selected-topics-v1") ?? "[]") as string[];
+       const savedProfile = JSON.parse(localStorage.getItem("revit-profile-v1") ?? "null") as LearnerProfile | null;
++      const reinforcementKey = `revit-reinforcement-v1:${initialUser?.id ?? "local"}`;
++      const savedReinforcement = JSON.parse(localStorage.getItem(reinforcementKey) ?? "{}") as ReinforcementLevels;
+       if (Array.isArray(savedAttempts)) setAttempts(savedAttempts);
+       if (Array.isArray(savedTopics)) {
+         setSelectedTopicIds(savedTopics.filter((id) => topicById.has(id)));
+@@ -219,11 +232,16 @@ useEffect(() => {
+         setProfile(normalizedProfile);
+         setProfileDraft(normalizedProfile);
+       }
++      if (savedReinforcement && typeof savedReinforcement === "object" && !Array.isArray(savedReinforcement)) {
++        setReinforcementLevels(Object.fromEntries(Object.entries(savedReinforcement)
++          .filter(([id, level]) => questionById.has(id) && Number.isInteger(level) && level > 0 && level <= 3)));
++      }
+     } catch {
+       // Invalid local data should not block a study session.
+     }
++    setReinforcementReady(true);
+     setStorageReady(true);
+-  }, []);
++  }, [initialUser?.id]);
+ 
+   useEffect(() => {
+     if (!storageReady || cloudEnabled) return;
+@@ -267,6 +285,10 @@ useEffect(() => {
+         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, profile.name, profile.photoDataUrl);
+         const nextPreferences = snapshot.preferences ?? preferences;
+         setCloudProfile(nextProfile); setGrades(snapshot.grades); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences);
++        setReinforcementLevels((current) => ({
++          ...current,
++          ...Object.fromEntries(snapshot.reinforcement.map((item) => [item.question_id, item.reinforcement_level])),
++        }));
+         setProfile({ name: nextProfile.first_name || profile.name, photoDataUrl: nextProfile.avatar_url ?? "" });
+         if (nextPreferences.theme === "light" || nextPreferences.theme === "dark") {
+           document.documentElement.dataset.theme = nextPreferences.theme;
+@@ -304,6 +326,12 @@ useEffect(() => {
+     if (storageReady) localStorage.setItem("revit-attempts-v1", JSON.stringify(attempts));
+   }, [attempts, storageReady]);
+ 
++  useEffect(() => {
++    if (!reinforcementReady) return;
++    const reinforcementKey = `revit-reinforcement-v1:${initialUser?.id ?? "local"}`;
++    localStorage.setItem(reinforcementKey, JSON.stringify(reinforcementLevels));
++  }, [initialUser?.id, reinforcementLevels, reinforcementReady]);
++
+   useEffect(() => {
+     if (storageReady) localStorage.setItem("revit-selected-topics-v1", JSON.stringify(selectedTopicIds));
+   }, [selectedTopicIds, storageReady]);
+@@ -356,9 +384,17 @@ useEffect(() => {
+   const weakestTopic = [...practicedTopics].sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts)[0];
+   const currentQuestion = questionById.get(sessionQuestionIds[sessionIndex]);
+   const currentChoiceOrder = currentQuestion
+-    ? sessionChoiceOrders[currentQuestion.id] ?? currentQuestion.choices.map((_, index) => index)
++    ? sessionChoiceOrders[`${sessionIndex}:${currentQuestion.id}`] ?? currentQuestion.choices.map((_, index) => index)
+     : [];
+   const sessionComplete = sessionQuestionIds.length > 0 && sessionIndex >= sessionQuestionIds.length;
++  const sessionRequiresFullCoverage = sessionTargetCount > 0 && sessionTargetCount === sessionPoolIds.length;
++  const sessionHasUnseenQuestions = sessionRequiresFullCoverage
++    && sessionPoolIds.some((id) => !sessionQuestionIds.includes(id));
++  const sessionCanFinish = sessionAttempts.length >= sessionTargetCount && !sessionHasUnseenQuestions;
++  const sessionUniqueQuestionCount = new Set(sessionQuestionIds).size;
++  const sessionProgressCount = sessionRequiresFullCoverage
++    ? sessionUniqueQuestionCount
++    : Math.min(sessionIndex + 1, sessionTargetCount);
+ 
+   function toggleTopic(topicId: string) {
+     setSelectedTopicIds((current) => current.includes(topicId)
+@@ -374,10 +410,14 @@ useEffect(() => {
+   function startSession() {
+     if (!selectedQuestions.length) return;
+     const limit = sessionSize === "all" ? selectedQuestions.length : Number(sessionSize);
+-    const nextQuestions = shuffled(selectedQuestions).slice(0, Math.min(limit, selectedQuestions.length));
+-    const nextQuestionIds = nextQuestions.map((question) => question.id);
+-    setSessionQuestionIds(nextQuestionIds);
+-    setSessionChoiceOrders(Object.fromEntries(nextQuestionIds.map((id) => [id, shuffled([0, 1, 2, 3])])));
++    const poolIds = selectedQuestions.map((question) => question.id);
++    const targetCount = Math.min(limit, poolIds.length);
++    const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, []);
++    if (!firstQuestionId) return;
++    setSessionPoolIds(poolIds);
++    setSessionTargetCount(targetCount);
++    setSessionQuestionIds([firstQuestionId]);
++    setSessionChoiceOrders({ [`0:${firstQuestionId}`]: shuffled([0, 1, 2, 3]) });
+     setSessionIndex(0);
+     setSessionAttempts([]);
+     setSelectedChoice(null);
+@@ -385,6 +425,8 @@ useEffect(() => {
+   }
+ 
+   function leaveSession() {
++    setSessionPoolIds([]);
++    setSessionTargetCount(0);
+     setSessionQuestionIds([]);
+     setSessionChoiceOrders({});
+     setSessionIndex(0);
+@@ -434,6 +476,16 @@ useEffect(() => {
+     };
+     setAttempts((current) => [...current, attempt]);
+     setSessionAttempts((current) => [...current, attempt]);
++    const currentReinforcementLevel = reinforcementLevels[currentQuestion.id] ?? 0;
++    const nextReinforcementLevel = reinforcementLevelAfterAnswer(
++      currentReinforcementLevel,
++      attempt.correct,
++    );
++    setReinforcementLevels((current) => reinforcementAfterAnswer(current, currentQuestion.id, attempt.correct));
++    if (cloudEnabled && initialUser && (!attempt.correct || currentReinforcementLevel > 0)) {
++      void saveQuestionReinforcement(createClient(), initialUser.id, currentQuestion.id, nextReinforcementLevel)
++        .catch(() => setCloudError("Your answer is saved locally, but reinforcement sync needs another attempt."));
++    }
+     setAnswerRevealed(true);
+     void recordStudyEvent({
+       eventKey: `answer:${attempt.id}`,
+@@ -444,7 +496,27 @@ useEffect(() => {
+   }
+ 
+   function nextQuestion() {
+-    setSessionIndex((current) => current + 1);
++    if (sessionCanFinish) {
++      setSessionIndex((current) => current + 1);
++      setSelectedChoice(null);
++      setAnswerRevealed(false);
++      return;
++    }
++
++    const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds);
++    if (!nextQuestionId) {
++      setSessionIndex((current) => current + 1);
++      setSelectedChoice(null);
++      setAnswerRevealed(false);
++      return;
++    }
++    const nextIndex = sessionQuestionIds.length;
++    setSessionQuestionIds((current) => [...current, nextQuestionId]);
++    setSessionChoiceOrders((current) => ({
++      ...current,
++      [`${nextIndex}:${nextQuestionId}`]: shuffled([0, 1, 2, 3]),
++    }));
++    setSessionIndex(nextIndex);
+     setSelectedChoice(null);
+     setAnswerRevealed(false);
+   }
+@@ -788,10 +860,10 @@ useEffect(() => {
+             ) : currentQuestion ? (
+               <section className="quiz-card">
+                 <div className="quiz-topline">
+-                  <div><span>Question {sessionIndex + 1} of {sessionQuestionIds.length}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
++                  <div><span>{sessionRequiresFullCoverage ? `Question ${sessionIndex + 1} · ${sessionUniqueQuestionCount} of ${sessionPoolIds.length} concepts` : `Question ${sessionIndex + 1} of ${sessionTargetCount}`}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
+                   <button className="text-button quiet" type="button" onClick={leaveSession}>Exit session</button>
+                 </div>
+-                <div className="quiz-progress"><span style={{ width: `${((sessionIndex + 1) / sessionQuestionIds.length) * 100}%` }} /></div>
++                <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
+                 <p className="question-source">{subjectById.get(currentQuestion.subjectId)?.name} · Official supplied reviewer</p>
+                 <h2>{currentQuestion.prompt}</h2>
+                 <div className="choice-list">
+@@ -817,13 +889,14 @@ useEffect(() => {
+                     <strong>{selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
+                     <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
+                     <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
++                    {selectedChoice !== currentQuestion.correctAnswer && <p className="reinforcement-note">We’ll bring this concept back later.</p>}
+                     <small>Source: {currentQuestion.source.fileName}, page {currentQuestion.source.page}</small>
+                   </div>
+                 )}
+                 <div className="quiz-actions">
+                   {!answerRevealed
+                     ? <button className="primary-button" type="button" onClick={submitAnswer} disabled={selectedChoice === null}>Check answer</button>
+-                    : <button className="primary-button" type="button" onClick={nextQuestion}>{sessionIndex + 1 === sessionQuestionIds.length ? "See results" : "Next question"}</button>}
++                    : <button className="primary-button" type="button" onClick={nextQuestion}>{sessionCanFinish ? "See results" : "Next question"}</button>}
+                 </div>
+               </section>
+             ) : null}
+diff --git a/supabase/tests/rls_checks.sql b/supabase/tests/rls_checks.sql
+index b72c722..0157d31 100644
+--- a/supabase/tests/rls_checks.sql
++++ b/supabase/tests/rls_checks.sql
+@@ -10,12 +10,17 @@ values
+ set local role authenticated;
+ select set_config('request.jwt.claims', '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}', true);
+ insert into public.grades (user_id, subject, pre_test) values ('11111111-1111-1111-1111-111111111111', 'Hematology', 45);
++insert into public.question_reinforcement (user_id, question_id, reinforcement_level)
++values ('11111111-1111-1111-1111-111111111111', 'clinical-chemistry-instrumentation-001', 1);
+ 
+ select set_config('request.jwt.claims', '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}', true);
+ do $$ begin
+   if exists (select 1 from public.grades where user_id = '11111111-1111-1111-1111-111111111111') then
+     raise exception 'RLS failure: user two can see user one grade';
+   end if;
++  if exists (select 1 from public.question_reinforcement where user_id = '11111111-1111-1111-1111-111111111111') then
++    raise exception 'RLS failure: user two can see user one reinforcement state';
++  end if;
+ end $$;
+ 
+ rollback;
+diff --git a/tests/domain.test.ts b/tests/domain.test.ts
+index cbeec5d..08011e6 100644
+--- a/tests/domain.test.ts
++++ b/tests/domain.test.ts
+@@ -1,6 +1,7 @@
+ import test from "node:test";
+ import assert from "node:assert/strict";
+ import { resolveAuthState } from "../app/lib/authState";
++import { chooseAdaptiveQuestion, reinforcementAfterAnswer } from "../app/lib/adaptiveQuestions";
+ import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
+ import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
+ import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
+@@ -68,6 +69,27 @@ test("calendar supports multiple exams and chooses nearest future assessment", (
+   assert.equal(upcomingExam(exams, "2026-08-20")?.id, "3");
+ });
+ 
++test("adaptive reinforcement spaces retries and removes the boost after a correct answer", () => {
++  const pool = ["a", "b", "c", "d", "e"];
++  const reinforced = reinforcementAfterAnswer({}, "a", false);
++  assert.equal(reinforced.a, 1);
++  assert.equal(chooseAdaptiveQuestion(pool, reinforced, ["a"], () => 0), "b");
++  assert.equal(chooseAdaptiveQuestion(pool, reinforced, ["a", "b"], () => 0), "c");
++  assert.equal(chooseAdaptiveQuestion(pool, reinforced, ["a", "b", "c"], () => 0), "d");
++  assert.equal(chooseAdaptiveQuestion(pool, reinforced, ["a", "b", "c", "d"], () => 0), "a");
++
++  const normalized = reinforcementAfterAnswer(reinforced, "a", true);
++  assert.equal(normalized.a, undefined);
++  assert.equal(chooseAdaptiveQuestion(pool, normalized, ["a", "b", "c", "d"], () => 0), "e");
++  assert.equal(reinforcementAfterAnswer(normalized, "a", false).a, 1);
++});
++
++test("adaptive selection stays inside the active pool and handles small pools", () => {
++  assert.equal(chooseAdaptiveQuestion(["only"], { outside: 3, only: 2 }, ["only"], () => 0), "only");
++  assert.equal(chooseAdaptiveQuestion(["a", "b"], { outside: 3 }, ["a"], () => 0), "b");
++  assert.ok(["hema-1", "hema-2"].includes(chooseAdaptiveQuestion(["hema-1", "hema-2"], { "bacte-1": 3 }, [], () => 0.5) ?? ""));
++});
++
+ test("auth routing distinguishes logged-out, unverified, onboarding, and ready", () => {
+   assert.equal(resolveAuthState({ hasUser: false, emailConfirmed: false, onboardingComplete: false }), "logged-out");
+   assert.equal(resolveAuthState({ hasUser: true, emailConfirmed: false, onboardingComplete: false }), "unverified");
+diff --git a/tests/reviewer-content.test.mjs b/tests/reviewer-content.test.mjs
+index 67ff6c0..c2ffebe 100644
+--- a/tests/reviewer-content.test.mjs
++++ b/tests/reviewer-content.test.mjs
+@@ -38,6 +38,32 @@ test("randomizes displayed choices per review session and labels the PDF rationa
+   assert.match(app, /shuffled\(\[0, 1, 2, 3\]\)/);
+   assert.match(app, /Correct answer:/);
+   assert.match(app, />Rationale</);
++  assert.match(app, /chooseAdaptiveQuestion/);
++  assert.match(app, /We’ll bring this concept back later/);
++});
++
++test("passes Turnstile tokens to protected Supabase auth operations", async () => {
++  const auth = await readFile(new URL("../app/auth/AuthPanel.tsx", import.meta.url), "utf8");
++  const forgot = await readFile(new URL("../app/auth/forgot/ForgotPanel.tsx", import.meta.url), "utf8");
++  const widget = await readFile(new URL("../app/components/auth/TurnstileChallenge.tsx", import.meta.url), "utf8");
++
++  assert.match(auth, /signUp\([\s\S]*captchaToken:/);
++  assert.match(auth, /signInWithPassword\([\s\S]*captchaToken:/);
++  assert.match(auth, /data:\s*\{ username: cleanUsername \}/);
++  assert.match(forgot, /resetPasswordForEmail\([\s\S]*captchaToken/);
++  assert.match(widget, /onExpire=\{\(\) => onTokenChange\(null\)\}/);
++  assert.match(widget, /documentElement\.dataset\.theme/);
++  assert.doesNotMatch(`${auth}\n${forgot}\n${widget}`, /TURNSTILE_SECRET|VITE_TURNSTILE_SECRET_KEY/);
++});
++
++test("calendar uses bounded cells and tablet-first full-width breakpoints", async () => {
++  const calendar = await readFile(new URL("../app/components/StudyCalendar.tsx", import.meta.url), "utf8");
++  const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
++
++  assert.match(calendar, /className="calendar-main"/);
++  assert.match(css, /@media \(max-width: 1240px\)[\s\S]*\.content-grid \{ grid-template-columns: 1fr; \}/);
++  assert.match(css, /\.calendar-day \{[^}]*min-width: 0;[^}]*overflow: hidden;/);
++  assert.match(css, /\.calendar-day\.selected \{[^}]*inset/);
+ });
+ 
+ test("gradebook groups all subjects under assessment categories without number spinners", async () => {
+diff --git a/app/components/auth/TurnstileChallenge.tsx b/app/components/auth/TurnstileChallenge.tsx
+new file mode 100644
+index 0000000..5cbe1c7
+--- /dev/null
++++ b/app/components/auth/TurnstileChallenge.tsx
+@@ -0,0 +1,80 @@
++"use client";
++
++import { Turnstile, type TurnstileInstance, type TurnstileTheme } from "@marsidev/react-turnstile";
++import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
++
++export type TurnstileChallengeHandle = {
++  reset: () => void;
++};
++
++type Props = {
++  siteKey: string;
++  action: "login" | "register" | "recovery";
++  onTokenChange: (token: string | null) => void;
++  onUnavailable?: () => void;
++};
++
++function currentTheme(): TurnstileTheme {
++  if (typeof document === "undefined") return "light";
++  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
++}
++
++const TurnstileChallenge = forwardRef<TurnstileChallengeHandle, Props>(function TurnstileChallenge({
++  siteKey,
++  action,
++  onTokenChange,
++  onUnavailable,
++}, forwardedRef) {
++  const widgetRef = useRef<TurnstileInstance | undefined>(undefined);
++  const [theme, setTheme] = useState<TurnstileTheme>(currentTheme);
++
++  useEffect(() => {
++    const root = document.documentElement;
++    const observer = new MutationObserver(() => setTheme(currentTheme()));
++    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
++    return () => observer.disconnect();
++  }, []);
++
++  useEffect(() => {
++    onTokenChange(null);
++  }, [onTokenChange, theme]);
++
++  useImperativeHandle(forwardedRef, () => ({
++    reset() {
++      widgetRef.current?.reset();
++      onTokenChange(null);
++    },
++  }), [onTokenChange]);
++
++  if (!siteKey) {
++    return <div className="turnstile-unavailable" role="alert">Security check is temporarily unavailable.</div>;
++  }
++
++  return (
++    <div className="turnstile-shell">
++      <span>Security check</span>
++      <Turnstile
++        key={`${action}-${theme}`}
++        ref={widgetRef}
++        siteKey={siteKey}
++        onSuccess={(token) => onTokenChange(token)}
++        onExpire={() => onTokenChange(null)}
++        onError={() => {
++          onTokenChange(null);
++          onUnavailable?.();
++        }}
++        options={{
++          action,
++          theme,
++          size: "flexible",
++          refreshExpired: "auto",
++          refreshTimeout: "auto",
++          retry: "auto",
++        }}
++      />
++      <small>Protected by Cloudflare Turnstile</small>
++    </div>
++  );
++});
++
++export default TurnstileChallenge;
+diff --git a/app/lib/adaptiveQuestions.ts b/app/lib/adaptiveQuestions.ts
+new file mode 100644
+index 0000000..1c700c7
+--- /dev/null
++++ b/app/lib/adaptiveQuestions.ts
+@@ -0,0 +1,76 @@
++export type ReinforcementLevels = Record<string, number>;
++
++export const MAX_REINFORCEMENT_LEVEL = 3;
++export const MIN_REINFORCEMENT_GAP = 3;
++export const REINFORCEMENT_DRAW_CHANCE = 0.4;
++
++function clampRandom(value: number) {
++  if (!Number.isFinite(value)) return 0;
++  return Math.min(Math.max(value, 0), 0.999999999);
++}
++
++export function reinforcementLevelAfterAnswer(currentLevel: number, correct: boolean) {
++  if (correct) return 0;
++  return Math.min(MAX_REINFORCEMENT_LEVEL, Math.max(0, currentLevel) + 1);
++}
++
++export function reinforcementAfterAnswer(
++  current: ReinforcementLevels,
++  questionId: string,
++  correct: boolean,
++) {
++  if (correct && !current[questionId]) return current;
++  const next = { ...current };
++  const level = reinforcementLevelAfterAnswer(current[questionId] ?? 0, correct);
++  if (level === 0) delete next[questionId];
++  else next[questionId] = level;
++  return next;
++}
++
++function weightedPick(
++  candidates: string[],
++  reinforcement: ReinforcementLevels,
++  random: () => number,
++) {
++  const weights = candidates.map((id) => Math.min(4, 1 + (reinforcement[id] ?? 0)));
++  const total = weights.reduce((sum, weight) => sum + weight, 0);
++  let target = clampRandom(random()) * total;
++  for (let index = 0; index < candidates.length; index += 1) {
++    target -= weights[index];
++    if (target < 0) return candidates[index];
++  }
++  return candidates.at(-1) ?? null;
++}
++
++export function chooseAdaptiveQuestion(
++  poolIds: string[],
++  reinforcement: ReinforcementLevels,
++  history: string[],
++  random: () => number = Math.random,
++) {
++  const pool = [...new Set(poolIds)];
++  if (!pool.length) return null;
++
++  const gap = Math.min(MIN_REINFORCEMENT_GAP, Math.max(0, pool.length - 1));
++  const recent = new Set(history.slice(-gap));
++  let eligible = pool.filter((id) => !recent.has(id));
++
++  if (!eligible.length) {
++    const last = history.at(-1);
++    eligible = pool.filter((id) => id !== last);
++  }
++  if (!eligible.length) eligible = pool;
++
++  const reinforced = eligible.filter((id) => (reinforcement[id] ?? 0) > 0);
++  const normal = eligible.filter((id) => (reinforcement[id] ?? 0) === 0);
++
++  let candidates = eligible;
++  if (reinforced.length && normal.length) {
++    candidates = clampRandom(random()) < REINFORCEMENT_DRAW_CHANCE ? reinforced : normal;
++  }
++
++  const unseen = candidates.filter((id) => !history.includes(id));
++  if (!reinforced.includes(candidates[0]) && unseen.length) candidates = unseen;
++
++  return weightedPick(candidates, reinforcement, random);
++}
+diff --git a/supabase/migrations/202608210002_question_reinforcement.sql b/supabase/migrations/202608210002_question_reinforcement.sql
+new file mode 100644
+index 0000000..227e4d6
+--- /dev/null
++++ b/supabase/migrations/202608210002_question_reinforcement.sql
+@@ -0,0 +1,28 @@
++-- Temporary per-user reinforcement for adaptive reviewer selection.
++create table if not exists public.question_reinforcement (
++  user_id uuid not null references auth.users(id) on delete cascade,
++  question_id text not null check (char_length(question_id) between 1 and 180),
++  reinforcement_level smallint not null default 1 check (reinforcement_level between 1 and 3),
++  updated_at timestamptz not null default now(),
++  primary key (user_id, question_id)
++);
++
++drop trigger if exists reinforcement_set_updated_at on public.question_reinforcement;
++create trigger reinforcement_set_updated_at
++before update on public.question_reinforcement
++for each row execute function public.set_updated_at();
++
++alter table public.question_reinforcement enable row level security;
++
++create policy "reinforcement_select_own" on public.question_reinforcement
++for select to authenticated using ((select auth.uid()) = user_id);
++create policy "reinforcement_insert_own" on public.question_reinforcement
++for insert to authenticated with check ((select auth.uid()) = user_id);
++create policy "reinforcement_update_own" on public.question_reinforcement
++for update to authenticated using ((select auth.uid()) = user_id)
++with check ((select auth.uid()) = user_id);
++create policy "reinforcement_delete_own" on public.question_reinforcement
++for delete to authenticated using ((select auth.uid()) = user_id);
++
++grant select, insert, update, delete on public.question_reinforcement to authenticated;
++revoke all on public.question_reinforcement from anon;

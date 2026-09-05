@@ -1,0 +1,609 @@
+--- PAGE 1 ---
+Bacteriology Oral Revalida Reviewer
+Page 1
+ BACTERIOLOGY
+ Oral Revalida Master Reviewer
+ Essay-Type Questions | Multiple Choice | Enumeration | Identification | Rapid-Fire Review
+ Based on the uploaded Bacteriology Handouts 2025-2026
+
+
+--- PAGE 2 ---
+Bacteriology Oral Revalida Reviewer
+Page 2
+PART I - ESSAY / ORAL DISCUSSION QUESTIONS
+1. Discuss the contributions of important scientists to microbiology and bacteriology.
+Answer: Lucretius and Girolamo Fracastoro proposed that disease could be caused by invisible living creatures.
+Antonie van Leeuwenhoek was the first true microbiologist and Father of Bacteriology and Protozoology. Louis
+Pasteur proposed heat for killing bacteria and used attenuated cultures as vaccines. Robert Koch advanced germ
+theory and discovered Bacillus anthracis and Mycobacterium tuberculosis. Ignaz Semmelweis is associated with
+handwashing and hospital hygiene; Joseph Lister used phenol as an antimicrobial; Carl von Linne introduced
+binomial nomenclature; Hans Christian Gram developed the Gram stain; Julius Richard Petri developed the Petri
+plate; Alexander Fleming discovered penicillin; Paul Ehrlich discovered salvarsan for syphilis.
+2. Explain bacterial taxonomy, nomenclature, and identification.
+Answer: Taxonomy is classification, identification, and naming. Hierarchy: Domain -> Kingdom -> Division/Phylum
+-> Class -> Order -> Family -> Genus -> Species. Mnemonic: Dear King David Came Over For Good Soup.
+Subspecies may be differentiated by strain (genetic), serotype/serovar (antigenic), biotype/biovar (biochemical),
+and morphovar (morphological). Binomial nomenclature uses Genus + specific epithet, e.g., Escherichia coli.
+Identification may be genotypic (DNA sequencing, PCR, whole-genome sequencing) or phenotypic (microscopy,
+staining, culture, biochemical tests, serology).
+3. Compare Gram-positive, Gram-negative, acid-fast, and cell-wall-deficient bacteria.
+Answer: Gram-positive bacteria have thick peptidoglycan and teichoic acids and retain crystal violet (purple).
+Gram-negative bacteria have thin peptidoglycan plus an outer membrane containing LPS and appear pink/red after
+counterstaining. Acid-fast bacteria have lipid-rich, mycolic-acid-containing walls and resist acid-alcohol
+decolorization; examples include M. tuberculosis and M. leprae. Mycoplasma and Ureaplasma lack peptidoglycan
+cell walls and contain membrane sterols.
+4. Discuss bacterial cell structures and their functions.
+Answer: Cell envelope protects the bacterium. Cell wall provides structural protection. Plasma membrane controls
+permeability, transport, and energy production. 70S ribosomes synthesize proteins. Inclusion bodies store
+nutrients. Plasmids are extrachromosomal DNA that may carry resistance or virulence genes. Endospores are
+resistant dormant survival structures. Glycocalyx aids protection/adherence; capsules resist phagocytosis and
+desiccation; slime layers promote biofilms; flagella provide motility. Important inclusions: C. diphtheriae -
+Babes-Ernst bodies; M. tuberculosis - Much granules; Y. pestis - bipolar bodies.
+5. Discuss the Gram-staining procedure and function of each reagent.
+Answer: 1) Crystal violet - primary stain. 2) Iodine - mordant. 3) Alcohol/acetone - decolorizer. 4) Safranin -
+counterstain. Gram-positive organisms remain purple; Gram-negative organisms become pink/red.
+6. Differentiate Ziehl-Neelsen from Kinyoun acid-fast staining.
+Answer: Ziehl-Neelsen is the hot method: carbol fuchsin, heat, acid-alcohol, then methylene blue. Kinyoun is the
+cold method: Kinyoun carbol fuchsin without heating, acid-alcohol, then counterstain. Acid-fast organisms are
+red/pink. Mycobacterium is acid-fast; Nocardia is partially/weakly acid-fast.
+7. Discuss physiologic requirements for bacterial growth.
+Answer: Oxygen categories include aerobes, obligate anaerobes, facultative anaerobes, aerotolerant anaerobes,
+and microaerophiles. Capnophiles require increased CO2. Nutritional classifications include autotroph/heterotroph,
+phototroph/chemotroph, and lithotroph/organotroph. Temperature groups include psychrophiles, mesophiles,
+thermophiles/hyperthermophiles, and extremophiles. pH groups include acidophiles, neutrophiles, and
+alkalophiles. Moisture, salt, pressure, and growth factors also affect growth.
+8. Explain the bacterial growth curve.
+Answer: Lag phase: adjustment and biosynthesis without major division. Log/exponential phase: rapid division,
+active metabolism, and greatest antimicrobial/radiation sensitivity. Stationary phase: division balances death as
+
+
+--- PAGE 3 ---
+Bacteriology Oral Revalida Reviewer
+Page 3
+nutrients decline. Death/decline phase: deaths exceed new cells as nutrients disappear and toxic wastes
+accumulate.
+9. Differentiate sterilization, disinfection, and decontamination.
+Answer: Sterilization destroys all microbial life including spores. Disinfection destroys pathogenic microbes but not
+necessarily all organisms/spores. Decontamination reduces/removes pathogens so items are safe to handle or
+discard. Classic autoclaving: 121 C, 15 psi, 15-20 minutes. Other methods include boiling, pasteurization,
+tyndallization, inspissation, dry heat, incineration, and chemical disinfectants.
+10. Discuss Staphylococcus aureus.
+Answer: Gram-positive cocci in clusters; catalase positive; coagulase positive; facultative anaerobe; salt tolerant;
+often golden-yellow and beta-hemolytic. Diseases include food poisoning, TSS, SSSS, bacteremia/sepsis,
+endocarditis, skin infections, osteomyelitis, and septic arthritis. Important factors include coagulase, hyaluronidase,
+staphylokinase, lipase, DNase, beta-lactamase, enterotoxins, PVL, hemolysins, exfoliatins, TSST-1, and Protein A.
+Tests include catalase, coagulase, mannitol fermentation, DNase, and tellurite glycine agar.
+11. Differentiate S. aureus, S. epidermidis, and S. saprophyticus.
+Answer: S. aureus is coagulase positive. Among coagulase-negative staphylococci, S. epidermidis is novobiocin
+susceptible and associated with biofilms/devices; S. saprophyticus is novobiocin resistant and associated with
+UTIs in young sexually active females.
+12. Discuss MRSA and laboratory confirmation.
+Answer: MRSA is methicillin-resistant S. aureus, resistant to methicillin, oxacillin, and nafcillin. Types include
+HA-MRSA and CA-MRSA. Cefoxitin disk diffusion detects oxacillin resistance. PCR detection of the mecA gene is
+the handout's gold-standard confirmation.
+13. Discuss Streptococcus pyogenes.
+Answer: Group A, Gram-positive, catalase-negative, beta-hemolytic streptococcus transmitted by droplets. Major
+antiphagocytic factor: M protein. Products include Streptolysin O, Streptolysin S, DNases, streptokinase,
+hyaluronidase, and pyrogenic toxins. Diseases include pharyngitis, scarlet fever, cellulitis, impetigo, rheumatic
+fever, acute glomerulonephritis, and streptococcal TSS. Important tests: bacitracin susceptible, PYR positive, SXT
+resistant.
+14. Discuss Streptococcus agalactiae.
+Answer: Group B Streptococcus. Habitat: female genital tract and lower GIT. Virulence: sialic-acid-containing
+capsule. Causes neonatal meningitis, sepsis, pneumonia, UTI, and endocarditis. CAMP positive, hippurate
+positive, bacitracin resistant, SXT resistant. Handout recommends screening pregnant women at 35-37 weeks.
+15. Differentiate S. pneumoniae from viridans streptococci.
+Answer: Both may be alpha-hemolytic. S. pneumoniae is lancet-shaped, encapsulated, optochin susceptible, bile
+soluble, and Quellung positive. Viridans streptococci are optochin resistant, bile insoluble, do not grow in 6.5%
+NaCl, are LAP positive and PYR negative, and are associated with subacute bacterial endocarditis.
+16. Discuss Enterococci and their identification.
+Answer: Former Group D streptococci and intestinal microbiota; important species include E. faecalis and E.
+faecium. They can cause nosocomial UTI, endocarditis, bacteremia, and wound infection. They are Gram-positive
+cocci in pairs/chains, PYR positive, bile-esculin positive, and grow in 6.5% NaCl and 40% bile.
+17. Compare N. gonorrhoeae and N. meningitidis.
+Answer: Both are Gram-negative diplococci and oxidase/catalase positive. N. gonorrhoeae is often intracellular in
+PMNs, uses glucose only, and causes gonorrhea, urethritis, cervicitis, neonatal conjunctivitis, and purulent arthritis.
+N. meningitidis uses glucose and maltose, colonizes the nasopharynx, has an important capsule, and causes
+meningitis, meningococcemia, and Waterhouse-Friderichsen syndrome.
+
+
+--- PAGE 4 ---
+Bacteriology Oral Revalida Reviewer
+Page 4
+18. Discuss general characteristics of Enterobacteriaceae.
+Answer: Gram-negative, facultatively anaerobic, non-spore-forming bacilli that ferment glucose and reduce nitrate.
+Generally catalase positive and oxidase negative. Most are motile by peritrichous flagella except the KSY group:
+Klebsiella, Shigella, Yersinia. Most are intestinal microbiota, with Salmonella, Shigella, and Yersinia emphasized
+as exceptions.
+19. Discuss Pseudomonas aeruginosa.
+Answer: Nonfermentative Gram-negative rod; obligate aerobe; non-spore-forming; motile by polar flagella;
+catalase and oxidase positive; non-lactose fermenter. Colonies may be flat/spreading, beta-hemolytic, with
+fruity/grape-like or corn-tortilla odor. Pigments: pyocyanin (blue-green), pyoverdin (yellow-green), pyorubin (red),
+pyomelanin (brown/black). Associated with nosocomial respiratory infection, CF, UTI, wounds, swimmer's ear,
+hot-tub syndrome, and ecthyma gangrenosum.
+20. Compare Vibrio cholerae, Campylobacter jejuni, and Helicobacter pylori.
+Answer: V. cholerae: curved/comma-shaped Gram-negative rod, oxidase positive, polar motility, alkaline
+preference, cholera toxin, rice-water stool. C. jejuni: curved/seagull-wing Gram-negative rod, microaerophilic,
+optimum about 42 C, associated with poultry, inflammatory/bloody diarrhea and Guillain-Barre syndrome. H. pylori:
+spiral Gram-negative rod, microaerophilic, strongly urease positive, oxidase/catalase positive, associated with
+Type B gastritis, peptic ulcer disease, and gastric carcinoma.
+21. Compare tetanus and botulism.
+Answer: Both involve Gram-positive anaerobic spore-forming Clostridium. C. tetani has a terminal spore and
+produces tetanospasmin, blocking inhibitory neurotransmitters (GABA/glycine) and causing spastic paralysis,
+trismus, and risus sardonicus. C. botulinum has subterminal spores and botulinum toxin, which blocks
+acetylcholine release and causes diplopia, ptosis, dysphagia, and descending flaccid paralysis.
+22. Discuss Mycobacterium tuberculosis and acid-fastness.
+Answer: Mycobacteria have mycolic-acid-rich lipid cell walls, producing acid-fastness and poor Gram staining. M.
+tuberculosis is slow-growing, acid-fast, may show cording, and causes pulmonary TB, Pott's disease, and
+disseminated TB. MDR-TB is resistant to isoniazid and rifampin.
+
+
+--- PAGE 5 ---
+Bacteriology Oral Revalida Reviewer
+Page 5
+PART II - MULTIPLE-CHOICE QUESTIONS
+1. Who is considered the Father of Bacteriology and Protozoology?
+A. Robert Koch
+B. Louis Pasteur
+C. Antonie van Leeuwenhoek
+D. Joseph Lister
+Answer: C. Antonie van Leeuwenhoek
+2. The primary stain in Gram staining is:
+A. Safranin
+B. Crystal violet
+C. Iodine
+D. Methylene blue
+Answer: B. Crystal violet
+3. Which reagent acts as the mordant during Gram staining?
+A. Iodine
+B. Safranin
+C. Alcohol
+D. Carbol fuchsin
+Answer: A. Iodine
+4. Which bacterial structure contains genes for resistance or virulence?
+A. Ribosome
+B. Plasmid
+C. Endospore
+D. Capsule
+Answer: B. Plasmid
+5. A terminal endospore producing a drumstick appearance is characteristic of:
+A. Bacillus anthracis
+B. Clostridium botulinum
+C. Clostridium tetani
+D. C. difficile
+Answer: C. Clostridium tetani
+6. Which microscope is useful for observing thin organisms such as spirochetes?
+A. Bright-field
+B. Dark-field
+C. SEM
+D. TEM
+Answer: B. Dark-field
+7. Which phase demonstrates greatest susceptibility to antimicrobial agents?
+A. Lag
+B. Log
+C. Stationary
+D. Death
+Answer: B. Log/exponential
+8. An organism requiring increased CO2 is called a:
+
+
+--- PAGE 6 ---
+Bacteriology Oral Revalida Reviewer
+Page 6
+A. Halophile
+B. Capnophile
+C. Thermophile
+D. Psychrophile
+Answer: B. Capnophile
+9. Optimum temperature for most pathogenic bacteria is approximately:
+A. 0-10 C
+B. 10-20 C
+C. 35-37 C
+D. 60-70 C
+Answer: C. 35-37 C
+10. Which medium differentiates lactose fermenters from non-lactose fermenters?
+A. Chocolate agar
+B. MacConkey agar
+C. Nutrient agar
+D. Thioglycollate
+Answer: B. MacConkey agar
+11. A lactose fermenter on MacConkey agar produces:
+A. Black colonies
+B. Colorless colonies
+C. Pink colonies
+D. Green colonies
+Answer: C. Pink colonies
+12. Standard autoclaving uses:
+A. 100 C for 10 min
+B. 121 C, 15 psi, 15-20 min
+C. 160 C for 2 hr
+D. 63 C for 30 min
+Answer: B. 121 C, 15 psi, 15-20 min
+13. Gram-positive cocci that are catalase positive most likely belong to:
+A. Streptococcus
+B. Staphylococcus
+C. Enterococcus
+D. Neisseria
+Answer: B. Staphylococcus
+14. Most important differentiating test for S. aureus:
+A. Oxidase
+B. Coagulase
+C. Indole
+D. Urease
+Answer: B. Coagulase
+15. Which organism is novobiocin resistant?
+A. S. aureus
+B. S. epidermidis
+C. S. saprophyticus
+D. S. pyogenes
+
+
+--- PAGE 7 ---
+Bacteriology Oral Revalida Reviewer
+Page 7
+Answer: C. S. saprophyticus
+16. Gold-standard MRSA gene in the handout:
+A. vanA
+B. mecA
+C. tox
+D. erm
+Answer: B. mecA
+17. Major antiphagocytic virulence factor of S. pyogenes:
+A. Capsule
+B. M protein
+C. Protein A
+D. Coagulase
+Answer: B. M protein
+18. The CAMP test identifies:
+A. S. pyogenes
+B. S. agalactiae
+C. S. pneumoniae
+D. S. aureus
+Answer: B. S. agalactiae
+19. Which is optochin susceptible and bile soluble?
+A. Viridans streptococcus
+B. S. pneumoniae
+C. E. faecalis
+D. S. pyogenes
+Answer: B. S. pneumoniae
+20. Growth in 6.5% NaCl is characteristic of:
+A. S. pneumoniae
+B. Viridans streptococci
+C. Enterococci
+D. S. agalactiae
+Answer: C. Enterococci
+21. N. gonorrhoeae utilizes:
+A. Glucose only
+B. Maltose only
+C. Glucose and maltose
+D. Lactose and sucrose
+Answer: A. Glucose only
+22. N. meningitidis utilizes:
+A. Glucose only
+B. Glucose and maltose
+C. Lactose only
+D. Sucrose only
+Answer: B. Glucose and maltose
+23. Hockey-puck colonies characterize:
+
+
+--- PAGE 8 ---
+Bacteriology Oral Revalida Reviewer
+Page 8
+A. N. gonorrhoeae
+B. Moraxella catarrhalis
+C. S. pneumoniae
+D. P. aeruginosa
+Answer: B. Moraxella catarrhalis
+24. Enterobacteriaceae are generally:
+A. Oxidase positive
+B. Oxidase negative
+C. Strict anaerobes
+D. Spore forming
+Answer: B. Oxidase negative
+25. Which is a nonmotile Enterobacteriaceae in the KSY mnemonic?
+A. E. coli
+B. Proteus
+C. Klebsiella
+D. Enterobacter
+Answer: C. Klebsiella
+26. Blue-green pigment of P. aeruginosa:
+A. Pyoverdin
+B. Pyocyanin
+C. Pyorubin
+D. Pyomelanin
+Answer: B. Pyocyanin
+27. Which organism produces rice-water stools?
+A. C. jejuni
+B. V. cholerae
+C. Salmonella Typhi
+D. Shigella
+Answer: B. V. cholerae
+28. A seagull-wing appearance suggests:
+A. V. cholerae
+B. Campylobacter
+C. Helicobacter
+D. Pseudomonas
+Answer: B. Campylobacter
+29. C. jejuni grows optimally at:
+A. 4 C
+B. 25 C
+C. 37 C
+D. 42 C
+Answer: D. 42 C
+30. Strongly urease-positive organism associated with peptic ulcer:
+A. C. jejuni
+B. H. pylori
+C. V. cholerae
+D. P. aeruginosa
+
+
+--- PAGE 9 ---
+Bacteriology Oral Revalida Reviewer
+Page 9
+Answer: B. H. pylori
+31. Which organism causes spastic paralysis?
+A. C. botulinum
+B. C. tetani
+C. C. difficile
+D. B. anthracis
+Answer: B. C. tetani
+32. Which causes descending flaccid paralysis?
+A. C. tetani
+B. C. botulinum
+C. C. difficile
+D. B. cereus
+Answer: B. C. botulinum
+33. Acid-fast property of Mycobacterium results primarily from:
+A. LPS
+B. Teichoic acid
+C. Mycolic acid
+D. Capsule
+Answer: C. Mycolic acid
+34. Which organism is weakly/partially acid-fast?
+A. Listeria
+B. Nocardia
+C. Corynebacterium
+D. Bacillus
+Answer: B. Nocardia
+35. Tumbling motility is characteristic of:
+A. Listeria monocytogenes
+B. Bacillus anthracis
+C. C. tetani
+D. Corynebacterium diphtheriae
+Answer: A. Listeria monocytogenes
+36. Which organism causes rat-bite fever?
+A. Pasteurella
+B. Streptobacillus moniliformis
+C. Francisella tularensis
+D. Brucella
+Answer: B. Streptobacillus moniliformis
+37. Clue cells and positive whiff test suggest:
+A. Gonorrhea
+B. Bacterial vaginosis
+C. Syphilis
+D. Chancroid
+Answer: B. Bacterial vaginosis
+38. Whooping cough is caused by:
+
+
+--- PAGE 10 ---
+Bacteriology Oral Revalida Reviewer
+Page 10
+A. Brucella
+B. Bordetella pertussis
+C. Francisella
+D. Legionella
+Answer: B. Bordetella pertussis
+39. Undulant fever is associated with:
+A. Brucellosis
+B. Tularemia
+C. Anthrax
+D. Tetanus
+Answer: A. Brucellosis
+40. Question-mark-shaped spirochetes are characteristic of:
+A. Treponema
+B. Borrelia
+C. Leptospira
+D. Campylobacter
+Answer: C. Leptospira
+
+
+--- PAGE 11 ---
+Bacteriology Oral Revalida Reviewer
+Page 11
+PART III - ENUMERATION FOR ORAL REVALIDA
+1. Enumerate: Taxonomic hierarchy.
+Answer: Domain; Kingdom; Division/Phylum; Class; Order; Family; Genus; Species.
+2. Enumerate: Gram-staining reagents in order.
+Answer: Crystal violet; Iodine; Alcohol/acetone; Safranin.
+3. Enumerate: Flagellar arrangements.
+Answer: Atrichous; Monotrichous; Amphitrichous; Lophotrichous; Peritrichous.
+4. Enumerate: Types of microscopy.
+Answer: Bright-field; Phase-contrast; Dark-field; Fluorescent; TEM; SEM.
+5. Enumerate: Major staining classifications.
+Answer: Simple; Differential; Negative; Diagnostic antibody/DNA probe-mediated; Special/selective.
+6. Enumerate: Oxygen classifications.
+Answer: Aerobe; Obligate anaerobe; Facultative anaerobe; Aerotolerant anaerobe; Microaerophile.
+7. Enumerate: Four phases of bacterial growth.
+Answer: Lag; Log/exponential; Stationary/plateau; Death/decline.
+8. Enumerate: Culture media by consistency.
+Answer: Liquid; Semisolid; Solid.
+9. Enumerate: Culture media by use.
+Answer: Simple/general-purpose/supportive; Enrichment; Enriched/nonselective; Differential; Selective.
+10. Enumerate: Biosafety levels.
+Answer: BSL-1; BSL-2; BSL-3; BSL-4.
+11. Enumerate: Bioterrorism agent categories.
+Answer: Category A; Category B; Category C.
+12. Enumerate: Microbiology QC components.
+Answer: Media control; Reagent/stain control; Equipment calibration; Internal QC strains; Documentation.
+13. Enumerate: Common S. aureus diseases.
+Answer: SSSS; TSS; Food poisoning; Bacteremia; Sepsis; Endocarditis; Folliculitis; Furuncle; Carbuncle;
+Impetigo; Osteomyelitis; Septic arthritis.
+14. Enumerate: Major S. aureus enzymes.
+Answer: Coagulase; Hyaluronidase; Staphylokinase; Lipase; DNase; Beta-lactamase.
+15. Enumerate: Important S. aureus toxins/factors.
+Answer: Enterotoxins; Panton-Valentine leukocidin; Hemolysins; Exfoliatin A/B; TSST-1; Protein A.
+16. Enumerate: Important S. pyogenes virulence products.
+Answer: M protein; Streptolysin O; Streptolysin S; DNases; Streptokinase; Hyaluronidase; Pyrogenic toxins A/B/C.
+17. Enumerate: Diseases caused by S. pyogenes.
+
+
+--- PAGE 12 ---
+Bacteriology Oral Revalida Reviewer
+Page 12
+Answer: Pharyngitis/tonsillitis; Scarlet fever; Cellulitis; Impetigo; Rheumatic fever; Acute glomerulonephritis;
+Streptococcal TSS.
+18. Enumerate: Laboratory tests for S. agalactiae.
+Answer: CAMP; Hippurate hydrolysis; Bacitracin; SXT.
+19. Enumerate: Laboratory tests for S. pneumoniae.
+Answer: Optochin susceptibility; Bile solubility; Neufeld Quellung reaction.
+20. Enumerate: Tests useful for Enterococci.
+Answer: Gram stain; Culture; PYR; Bile esculin; 6.5% NaCl; Carbohydrate utilization; Antimicrobial susceptibility.
+21. Enumerate: N. gonorrhoeae virulence factors.
+Answer: Pili; LOS; PorB; IgA protease; Transferrin receptors.
+22. Enumerate: N. meningitidis virulence factors.
+Answer: Capsule; LOS; IgA protease; Pili.
+23. Enumerate: Nonmotile Enterobacteriaceae: KSY.
+Answer: Klebsiella; Shigella; Yersinia.
+24. Enumerate: P. aeruginosa pigments.
+Answer: Pyocyanin - blue-green; Pyoverdin - yellow-green/yellow-brown; Pyorubin - red; Pyomelanin -
+brown/black.
+25. Enumerate: P. aeruginosa associated conditions.
+Answer: Nosocomial respiratory infections; CF lung infections; UTI; Wounds; Ecthyma gangrenosum; Swimmer's
+ear; Hot-tub/Jacuzzi syndrome.
+26. Enumerate: Major diseases associated with H. pylori.
+Answer: Type B gastritis; Peptic ulcer disease; Gastric carcinoma.
+27. Enumerate: Clinical manifestations of botulism.
+Answer: Diplopia; Ptosis; Dysphagia; Descending flaccid paralysis; Usually no fever; Patient usually conscious.
+28. Enumerate: Major forms of botulism.
+Answer: Foodborne; Infant; Wound.
+29. Enumerate: Bacterial vaginosis findings.
+Answer: Clue cells; Positive whiff/KOH test; Fishy amine odor; Vaginal pH >4.5; Thin gray discharge.
+30. Enumerate: Two phases of leptospirosis.
+Answer: First: flu-like illness, fever, myalgia, conjunctival suffusion. Second/Weil disease: jaundice, renal failure,
+hemorrhage, meningitis.
+
+
+--- PAGE 13 ---
+Bacteriology Oral Revalida Reviewer
+Page 13
+PART IV - IDENTIFY THE ORGANISM
+1. Gram-positive cocci in clusters, catalase positive, coagulase positive.
+Answer: Staphylococcus aureus
+2. Gram-positive cocci, catalase negative, beta-hemolytic, bacitracin susceptible, PYR
+positive.
+Answer: Streptococcus pyogenes
+3. Beta-hemolytic streptococcus with arrowhead hemolysis on CAMP.
+Answer: Streptococcus agalactiae
+4. Alpha-hemolytic, lancet-shaped diplococci, optochin susceptible, bile soluble.
+Answer: Streptococcus pneumoniae
+5. Alpha-hemolytic, optochin resistant, bile insoluble.
+Answer: Viridans streptococcus
+6. Bile-esculin positive, PYR positive, grows in 6.5% NaCl.
+Answer: Enterococcus
+7. Gram-negative kidney-bean diplococci inside PMNs; glucose positive only.
+Answer: Neisseria gonorrhoeae
+8. Gram-negative diplococcus utilizing glucose and maltose.
+Answer: Neisseria meningitidis
+9. Gram-negative coccus with hockey-puck colony.
+Answer: Moraxella catarrhalis
+10. Oxidase-negative, glucose-fermenting, nitrate-reducing Gram-negative bacillus.
+Answer: Enterobacteriaceae
+11. Nonfermenter, oxidase positive, fruity odor, blue-green pigment.
+Answer: Pseudomonas aeruginosa
+12. Curved Gram-negative rod causing rice-water diarrhea.
+Answer: Vibrio cholerae
+13. Seagull-wing Gram-negative bacillus growing optimally at 42 C.
+Answer: Campylobacter jejuni
+14. Spiral Gram-negative organism, strongly urease positive, peptic ulcer association.
+Answer: Helicobacter pylori
+15. Gram-positive anaerobic bacillus with terminal spore and drumstick appearance.
+Answer: Clostridium tetani
+16. Gram-positive anaerobic spore former causing descending flaccid paralysis.
+Answer: Clostridium botulinum
+17. Gram-positive branching filamentous organism, weakly acid-fast.
+
+
+--- PAGE 14 ---
+Bacteriology Oral Revalida Reviewer
+Page 14
+Answer: Nocardia
+18. Acid-fast bacillus with mycolic-acid-rich wall and cording.
+Answer: Mycobacterium tuberculosis
+19. Small Gram-negative coccobacillus causing whooping cough.
+Answer: Bordetella pertussis
+20. Small Gram-negative coccobacillus associated with unpasteurized milk and
+undulant fever.
+Answer: Brucella
+21. Gram-negative coccobacillus associated with rabbits, ticks, and tularemia.
+Answer: Francisella tularensis
+22. Pleomorphic Gram-negative bacillus with necklace/string-of-beads appearance
+causing rat-bite fever.
+Answer: Streptobacillus moniliformis
+23. Clue cells, pH >4.5, positive whiff test.
+Answer: Gardnerella vaginalis
+24. Thin spirochete with hooked/question-mark ends, jaundice and renal failure.
+Answer: Leptospira interrogans
+
+
+--- PAGE 15 ---
+Bacteriology Oral Revalida Reviewer
+Page 15
+PART V - RAPID-FIRE REVALIDA
+1. Father of Bacteriology? -> Antonie van Leeuwenhoek
+2. Father of Taxonomy? -> Carl von Linne
+3. Developer of Gram stain? -> Hans Christian Gram
+4. Primary Gram stain? -> Crystal violet
+5. Mordant? -> Iodine
+6. Decolorizer? -> Alcohol/acetone
+7. Counterstain? -> Safranin
+8. Acid-fast primary stain? -> Carbol fuchsin
+9. Major acid-fast wall component? -> Mycolic acid
+10. Bacterial ribosome? -> 70S
+11. Protein synthesis site? -> Ribosome
+12. Extrachromosomal DNA? -> Plasmid
+13. Best method for motility? -> Hanging drop
+14. Standard sterilization? -> 121 C, 15 psi, 15-20 min
+15. Staphylococci catalase? -> Positive
+16. Streptococci catalase? -> Negative
+17. S. aureus coagulase? -> Positive
+18. S. epidermidis novobiocin? -> Susceptible
+19. S. saprophyticus novobiocin? -> Resistant
+20. MRSA gene? -> mecA
+21. GAS? -> S. pyogenes
+22. GBS? -> S. agalactiae
+23. GAS virulence factor? -> M protein
+24. GBS test? -> CAMP
+25. Pneumococcus shape? -> Lancet-shaped diplococci
+26. Pneumococcus optochin? -> Susceptible
+27. Pneumococcus bile? -> Soluble
+28. Enterococcus PYR? -> Positive
+29. Enterococcus 6.5% NaCl? -> Growth
+30. Gonococcus carbohydrate? -> Glucose only
+31. Meningococcus carbohydrates? -> Glucose + maltose
+32. Moraxella colony sign? -> Hockey puck
+33. Enterobacteriaceae oxidase? -> Negative
+34. Pseudomonas oxidase? -> Positive
+35. P. aeruginosa blue-green pigment? -> Pyocyanin
+36. Cholera stool? -> Rice-water
+37. Campylobacter morphology? -> Seagull/gull-wing
+38. C. jejuni optimum temperature? -> 42 C
+39. H. pylori hallmark enzyme? -> Urease
+
+
+--- PAGE 16 ---
+Bacteriology Oral Revalida Reviewer
+Page 16
+40. Tetanus paralysis? -> Spastic
+41. Botulism paralysis? -> Descending flaccid
+42. C. tetani spore? -> Terminal
+43. C. botulinum spore? -> Subterminal
+44. Weakly acid-fast branching organism? -> Nocardia
+45. TB cell-wall lipid? -> Mycolic acid
+46. MDR-TB resistance? -> Isoniazid + rifampin
+47. Whooping cough? -> Bordetella pertussis
+48. Undulant fever? -> Brucella
+49. Rat-bite fever? -> Streptobacillus moniliformis
+50. Question-mark spirochete? -> Leptospira
+Suggested oral-answer framework: Gram reaction -> morphology -> oxygen requirement -> culture ->
+biochemical tests -> virulence -> disease -> specimen/laboratory diagnosis.

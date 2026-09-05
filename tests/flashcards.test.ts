@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { questions, topics } from "../app/content/reviewerContent";
 import {
@@ -55,4 +56,17 @@ test("shuffle changes only temporary order and does not mutate the input", () =>
   assert.deepEqual(original, ["a", "b", "c", "d"]);
   assert.deepEqual(shuffled, ["b", "c", "d", "a"]);
   assert.deepEqual([...shuffled].sort(), [...original].sort());
+});
+
+test("flashcards switch inside Review Library instead of using a separate navigation tab", async () => {
+  const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const switcher = await readFile(new URL("../app/components/ReviewModeSwitch.tsx", import.meta.url), "utf8");
+
+  assert.doesNotMatch(app, /id: "flashcards"/);
+  assert.doesNotMatch(app, /activeView === "flashcards"/);
+  assert.match(app, /activeView === "library" && \(libraryMode === "flashcards"/);
+  assert.match(switcher, /label: "MCQs"/);
+  assert.match(switcher, /label: "Flashcards"/);
+  assert.match(switcher, /\/icons\/mcqs\.svg/);
+  assert.match(switcher, /\/icons\/flashcards\.svg/);
 });

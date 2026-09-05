@@ -1,0 +1,871 @@
+--- PAGE 1 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 1
+ HEMATOLOGY 1
+ Oral Revalida Master Reviewer
+ Essay / Oral Questions • Multiple Choice • Enumeration • High-Yield Review
+Compiled from the comprehensive review material provided in the conversation.
+
+
+--- PAGE 2 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 2
+PART I - ESSAY / ORAL REVALIDA QUESTIONS
+1. What is Quality Assessment in the hematology laboratory?
+Answer: Quality Assessment is a system used to ensure reliable laboratory results. It includes quality assurance and
+quality control. Quality control monitors accuracy and precision over time. The Total Testing Process has preanalytical,
+analytical, and postanalytical phases, and errors can occur in any phase.
+2. Explain the three phases of the Total Testing Process.
+Answer: Preanalytical: patient identification, specimen collection, tube selection, order of draw, and processing.
+Analytical: actual testing, instrument operation, assay performance, QC, and flags. Postanalytical: result reporting and
+interpretation, critical-value reporting, and result transmission.
+3. What should you do when an assay is out of control?
+Answer: Reassay the control. If the problem persists, check the control material and reagents, then reassay. If unresolved,
+recalibrate the instrument and determine whether repair or other corrective action is needed.
+4. Explain proper patient identification before blood collection.
+Answer: Use 3-way identification: obtain verbal identification including complete name and date of birth; check the
+identification band; and compare the labeled specimen with the patient ID band before leaving the bedside.
+5. Differentiate STAT, ASAP, timed, and routine specimens.
+Answer: STAT means immediately and has highest priority. ASAP means as soon as possible. Timed specimens are
+collected at a specified time. Routine specimens have no special urgency. Review-note priority: STAT, Timed, ASAP,
+Routine.
+6. Explain factors that can cause hemolysis.
+Answer: A needle that is too small, pulling a syringe plunger too rapidly, forcefully expelling blood into a tube, vigorous
+shaking or mixing, and collecting before alcohol dries can cause hemolysis.
+7. What are important considerations in venipuncture?
+Answer: Correct identification and positioning, vein selection, tourniquet use, cleansing and drying, needle insertion,
+order of draw, tube mixing, bedside labeling, and prompt transport. In the H pattern, the median cubital vein is preferred,
+followed by cephalic and basilic veins.
+8. Why should blood not be collected above an IV site?
+Answer: IV fluid can dilute or contaminate the specimen and produce erroneous results. Dextrose-containing fluid can
+markedly increase measured glucose.
+9. Explain capillary blood collection and when it is preferred.
+Answer: Capillary blood comes from finger, heel, or earlobe puncture and contains arterial and venous blood with small
+amounts of interstitial/intracellular fluid. It is useful in infants and young children, newborn screening, and some
+point-of-care tests.
+10. Why is the first drop of capillary blood usually discarded?
+Answer: It may contain tissue fluid and residual alcohol that can alter the specimen. Follow manufacturer instructions
+when a test specifically requires the first drop.
+11. Explain the function of EDTA.
+Answer: EDTA prevents coagulation by chelating calcium. It is preferred for CBC, morphology, and HbA1c. Too little may
+allow clotting; excess EDTA can shrink RBCs and falsely decrease hematocrit and ESR.
+12. Explain the importance of the correct blood-to-anticoagulant ratio in citrate tubes.
+
+
+--- PAGE 3 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 3
+Answer: Sodium citrate preserves labile clotting factors for coagulation testing. Proper fill volume is essential; too little
+blood can produce falsely prolonged clotting times.
+13. Explain the major stages of hematopoiesis.
+Answer: Yolk sac stage: early embryonic hematopoiesis. Hepatic stage: fetal liver is the major site, with spleen, thymus,
+and lymph nodes contributing. Myeloid/bone marrow stage: marrow becomes the major site around the fifth to sixth
+month of gestation and remains primary after birth.
+14. What general morphologic changes occur as hematopoietic cells mature?
+Answer: Cell size and nuclear-to-cytoplasmic ratio generally decrease. Chromatin condenses, nucleoli disappear, nuclear
+shape becomes more characteristic, and cytoplasmic staining/granulation becomes more developed.
+15. Explain erythropoiesis.
+Answer: Erythropoiesis is RBC production and maturation. Tissue hypoxia increases erythropoietin, which stimulates
+marrow. Erythroid precursors mature through normoblast stages to reticulocytes and then mature erythrocytes.
+16. What is the primary stimulus for erythropoiesis?
+Answer: Tissue hypoxia. It stimulates renal erythropoietin production, which increases bone marrow RBC production.
+17. Explain hemoglobin structure.
+Answer: Hemoglobin contains four globin polypeptide chains and four heme groups. Each heme contains iron that binds
+oxygen. Globin-chain composition determines hemoglobin type.
+18. Differentiate HbA1, HbA2, HbF, and embryonic hemoglobins.
+Answer: HbA/HbA1 = alpha2 beta2; HbA2 = alpha2 delta2; HbF = alpha2 gamma2. Embryonic hemoglobins include
+Gower 1 = zeta2 epsilon2, Gower 2 = alpha2 epsilon2, and Portland = zeta2 gamma2.
+19. Explain the oxyhemoglobin dissociation curve.
+Answer: It shows oxygen pressure versus hemoglobin oxygen saturation and has a sigmoid shape due to cooperative
+binding. A right shift means decreased oxygen affinity and easier tissue unloading; a left shift means increased affinity.
+Temperature, pH, CO2, and 2,3-DPG affect the curve.
+20. Differentiate methemoglobin, carboxyhemoglobin, and sulfhemoglobin.
+Answer: Methemoglobin contains Fe3+ and cannot normally bind oxygen. Carboxyhemoglobin is hemoglobin bound to
+carbon monoxide. Sulfhemoglobin is an irreversible sulfur-containing altered hemoglobin that may cause greenish
+discoloration.
+21. Explain hemoglobin electrophoresis.
+Answer: It separates hemoglobins according to electrical charge. Alkaline electrophoresis is common; acid electrophoresis
+helps distinguish variants that comigrate at alkaline pH. HPLC and capillary electrophoresis also identify variants.
+22. Explain preparation and examination of a peripheral blood smear.
+Answer: A good wedge smear is about two-thirds to three-fourths the slide length, smooth, finger-shaped, with a
+feathered edge, visible lateral margins, and no holes or streaks. Examine at 10x for quality, 40x for differential
+area/morphology, and 100x oil for detailed morphology and differential.
+23. What is a Romanowsky stain?
+Answer: A Romanowsky stain contains methylene blue and/or oxidation products plus a halogenated fluorescein dye
+such as eosin. Examples include Wright, Giemsa, Wright-Giemsa, and Leishman stains.
+24. Explain the major RBC morphological abnormalities.
+Answer: Abnormalities involve size (anisocytosis, microcytosis, macrocytosis), shape (poikilocytes), hemoglobin content
+(hypochromia/hyperchromia), inclusions, and distribution (rouleaux/agglutination).
+
+
+--- PAGE 4 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 4
+25. Differentiate rouleaux from RBC agglutination.
+Answer: Rouleaux is a stack-of-coins arrangement often linked to increased plasma proteins and can disperse with saline.
+Agglutination is irregular antibody-mediated clumping, often IgM-related, and true agglutination remains after saline is
+added.
+26. Explain iron deficiency anemia.
+Answer: Iron deficiency anemia results from inadequate iron for hemoglobin synthesis. Causes include inadequate intake,
+increased demand, impaired absorption, and chronic blood loss. It is typically microcytic and hypochromic and may cause
+fatigue, weakness, dyspnea, glossitis, angular cheilosis, koilonychia, and pica.
+27. Differentiate iron deficiency anemia from anemia of chronic disease.
+Answer: IDA: low serum iron, low ferritin, high TIBC, low transferrin saturation, decreased stores. Anemia of chronic
+disease: low serum iron, increased ferritin, decreased TIBC, low-to-normal saturation, and iron stores that are present or
+increased; hepcidin limits iron availability.
+28. Explain megaloblastic anemia.
+Answer: Defective DNA synthesis, commonly from vitamin B12 or folate deficiency, causes nuclear-cytoplasmic
+asynchrony. Peripheral blood often shows macro-ovalocytes and hypersegmented neutrophils; pancytopenia can occur.
+29. Differentiate vitamin B12 deficiency from folate deficiency.
+Answer: Both can cause megaloblastic anemia, but neurologic manifestations strongly point to vitamin B12 deficiency.
+B12 deficiency may take years to develop because stores are substantial; folate deficiency can develop more quickly.
+30. Explain hemolytic anemia and its classification.
+Answer: Hemolytic anemia occurs when RBC destruction exceeds marrow replacement. Classify it as hereditary/acquired,
+intrinsic/extrinsic, acute/chronic, and intravascular/extravascular.
+31. Differentiate intravascular and extravascular hemolysis.
+Answer: Intravascular hemolysis occurs within circulation, often through fragmentation or complement-mediated
+destruction. Extravascular hemolysis occurs mainly through macrophage removal, especially in the spleen.
+32. Explain sickle cell disease.
+Answer: Sickle cell disease results from valine replacing glutamic acid at beta-globin position 6. Deoxygenated HbS
+polymerizes and deforms RBCs. HbSS is disease; HbAS is trait.
+33. Explain thalassemia.
+Answer: Thalassemia is an inherited quantitative globin-chain disorder with decreased production of one or more globin
+chains. It causes reduced hemoglobin synthesis, microcytic hypochromic cells, target cells, and ineffective erythropoiesis.
+34. Differentiate alpha and beta thalassemia.
+Answer: Alpha thalassemia decreases alpha-chain production and can produce Hb Bart’s and HbH. Beta thalassemia
+decreases beta-chain production; HbA2 and HbF measurements help distinguish it. Beta-thalassemia major causes severe
+microcytic hypochromic anemia with markedly increased HbF.
+35. Explain granulopoiesis.
+Answer: Sequence: myeloblast, promyelocyte, myelocyte, metamyelocyte, band, mature granulocyte. The myelocyte is
+the youngest stage identifiable by specific granules and the last stage capable of division.
+36. Differentiate neutrophils, eosinophils, and basophils.
+Answer: Neutrophils usually have 2-5 lobes and pink-violet granules and are major phagocytes. Eosinophils are often
+bilobed with orange-red granules and participate in allergy/parasitic responses. Basophils have dark purple-blue granules
+containing mediators such as histamine and heparin.
+37. Compare B cells, T cells, and NK cells.
+
+
+--- PAGE 5 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 5
+Answer: B cells mature in bone marrow and mediate humoral immunity through antibody-producing plasma cells. T cells
+mature in thymus and mediate cellular immunity. NK cells kill virus-infected or tumor cells without prior antigen-specific
+sensitization.
+38. Differentiate leukemoid reaction from CML.
+Answer: Leukemoid reaction is reactive, usually with neutrophilia and left shift, and has increased LAP. CML is neoplastic,
+has granulocytes at multiple maturation stages with eosinophilia/basophilia, decreased LAP, and is associated with the
+Philadelphia chromosome.
+39. Explain leukemia versus lymphoma.
+Answer: Leukemia is a malignant hematopoietic proliferation that is initially systemic and involves marrow and often
+blood. Lymphoma begins in lymphatic tissue and is initially localized; marrow/blood spread can create a leukemic phase.
+40. Differentiate AML and ALL using cytochemistry.
+Answer: AML generally shows MPO and Sudan Black B positivity. ALL is generally MPO/SBB negative and may express
+TdT, reflecting immature lymphoid cells.
+
+
+--- PAGE 6 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 6
+PART II - MULTIPLE CHOICE QUESTIONS
+1. Which phase includes specimen collection and patient identification?
+A. Analytical
+B. Postanalytical
+C. Preanalytical
+D. Post-QC
+Answer: C. Preanalytical
+2. Which is the highest-priority specimen?
+A. Routine
+B. ASAP
+C. Timed
+D. STAT
+Answer: D. STAT
+3. The preferred vein in the H pattern is:
+A. Basilic
+B. Cephalic
+C. Median cubital
+D. Dorsal hand vein
+Answer: C. Median cubital
+4. Which anticoagulant is preferred for CBC?
+A. Sodium citrate
+B. EDTA
+C. Heparin
+D. Sodium fluoride
+Answer: B. EDTA
+5. EDTA prevents clotting primarily by:
+A. Activating thrombin
+B. Destroying fibrinogen
+C. Chelating calcium
+D. Increasing platelet activation
+Answer: C. Chelating calcium
+6. Which tube is commonly used for coagulation testing?
+A. Blue
+B. Green
+C. Lavender
+D. Gray
+Answer: A. Blue
+7. Which specimen problem is associated with excessive EDTA?
+A. RBC swelling
+B. RBC shrinkage
+C. Increased MCV
+D. Increased hematocrit
+
+
+--- PAGE 7 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 7
+Answer: B. RBC shrinkage
+8. Which is the major stimulus for erythropoiesis?
+A. Hyperglycemia
+B. Tissue hypoxia
+C. Hypercalcemia
+D. Leukocytosis
+Answer: B. Tissue hypoxia
+9. Which cell contains residual RNA and represents the immature circulating RBC?
+A. Normoblast
+B. Reticulocyte
+C. Spherocyte
+D. Erythroblast
+Answer: B. Reticulocyte
+10. HbF is:
+A. alpha2 beta2
+B. alpha2 delta2
+C. alpha2 gamma2
+D. zeta2 epsilon2
+Answer: C. alpha2 gamma2
+11. Which hemoglobin is associated with carbon monoxide?
+A. Methemoglobin
+B. Carboxyhemoglobin
+C. Sulfhemoglobin
+D. Oxyhemoglobin
+Answer: B. Carboxyhemoglobin
+12. A right shift of the oxygen dissociation curve indicates:
+A. Increased oxygen affinity
+B. Decreased oxygen affinity
+C. No oxygen release
+D. Increased hemoglobin synthesis
+Answer: B. Decreased oxygen affinity
+13. Which RBC has a bull’s-eye appearance?
+A. Spherocyte
+B. Schistocyte
+C. Target cell
+D. Sickle cell
+Answer: C. Target cell
+14. Which RBC is associated with microangiopathic hemolytic anemia?
+A. Target cell
+B. Schistocyte
+C. Stomatocyte
+D. Ovalocyte
+
+
+--- PAGE 8 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 8
+Answer: B. Schistocyte
+15. Which inclusion represents denatured hemoglobin?
+A. Howell-Jolly body
+B. Pappenheimer body
+C. Heinz body
+D. Cabot ring
+Answer: C. Heinz body
+16. Which inclusion is composed of nuclear remnants?
+A. Howell-Jolly body
+B. Heinz body
+C. Pappenheimer body
+D. Basophilic stippling
+Answer: A. Howell-Jolly body
+17. Which stain demonstrates iron-containing inclusions?
+A. PAS
+B. Prussian blue
+C. Wright
+D. Sudan Black B
+Answer: B. Prussian blue
+18. Iron deficiency anemia is typically:
+A. Macrocytic hyperchromic
+B. Normocytic hyperchromic
+C. Microcytic hypochromic
+D. Macrocytic normochromic
+Answer: C. Microcytic hypochromic
+19. Which finding is expected in iron deficiency anemia?
+A. Increased ferritin
+B. Decreased TIBC
+C. Increased TIBC
+D. Increased transferrin saturation
+Answer: C. Increased TIBC
+20. Which deficiency is strongly associated with neurologic manifestations?
+A. Iron
+B. Folate
+C. Vitamin B12
+D. Vitamin C
+Answer: C. Vitamin B12
+21. Hypersegmented neutrophils are classically associated with:
+A. Iron deficiency anemia
+B. Megaloblastic anemia
+C. Hereditary spherocytosis
+D. Sickle cell anemia
+
+
+--- PAGE 9 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 9
+Answer: B. Megaloblastic anemia
+22. Sickle cell disease results from substitution of:
+A. Valine for glutamic acid
+B. Glutamic acid for valine
+C. Lysine for glutamic acid
+D. Glycine for valine
+Answer: A. Valine for glutamic acid
+23. HbS polymerization is promoted by:
+A. Oxygenation
+B. Deoxygenation
+C. Hyperglycemia
+D. Alkalinization only
+Answer: B. Deoxygenation
+24. Which is characteristic of thalassemia?
+A. Increased globin synthesis
+B. Quantitative globin-chain defect
+C. Normal RBC morphology
+D. Macrocytosis only
+Answer: B. Quantitative globin-chain defect
+25. Which cell is the largest mature leukocyte in peripheral blood?
+A. Neutrophil
+B. Lymphocyte
+C. Monocyte
+D. Basophil
+Answer: C. Monocyte
+26. Which granulocyte has orange-red granules?
+A. Neutrophil
+B. Basophil
+C. Eosinophil
+D. Monocyte
+Answer: C. Eosinophil
+27. Which cell is primarily associated with humoral immunity?
+A. T cell
+B. B cell
+C. NK cell
+D. Neutrophil
+Answer: B. B cell
+28. Which cell destroys tumor and virus-infected cells without prior antigen-specific sensitization?
+A. B cell
+B. T helper cell
+C. NK cell
+D. Monocyte
+
+
+--- PAGE 10 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 10
+Answer: C. NK cell
+29. Which condition is associated with a decreased LAP score?
+A. Leukemoid reaction
+B. CML
+C. Bacterial infection
+D. Pregnancy
+Answer: B. CML
+30. The Philadelphia chromosome is associated with:
+A. ALL
+B. AML
+C. CML
+D. Multiple myeloma
+Answer: C. CML
+31. Which stain differentiates granulocytic from lymphocytic cells?
+A. PAS
+B. MPO
+C. Sudan Black B
+D. TRAP
+Answer: C. Sudan Black B
+32. TdT is most useful as a marker of:
+A. Mature RBCs
+B. Immature lymphoid cells
+C. Mature neutrophils
+D. Platelets
+Answer: B. Immature lymphoid cells
+33. Which condition is characterized by giant lysosomal granules and recurrent infections?
+A. Chediak-Higashi syndrome
+B. G6PD deficiency
+C. Hereditary spherocytosis
+D. CML
+Answer: A. Chediak-Higashi syndrome
+34. Chronic granulomatous disease involves defective:
+A. Hemoglobin synthesis
+B. NADPH oxidase/oxidative burst
+C. Platelet production
+D. DNA synthesis
+Answer: B. NADPH oxidase/oxidative burst
+35. Which automated analyzer principle measures resistance as cells pass through an aperture?
+A. Optical scatter
+B. Electrical impedance
+C. Electrophoresis
+D. Centrifugation
+
+
+--- PAGE 11 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 11
+Answer: B. Electrical impedance
+
+
+--- PAGE 12 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 12
+PART III - ENUMERATION
+1. Enumerate the 3 phases of the Total Testing Process.
+Answer:
+1. Preanalytical
+2. Analytical
+3. Postanalytical
+2. Give 4 causes of errors detected by QC.
+Answer:
+1. Test system failure
+2. Adverse environmental conditions
+3. Operator variance
+4. Problems affecting test performance
+3. Give corrective steps for an out-of-control assay.
+Answer:
+1. Reassay
+2. Check control
+3. Check reagents
+4. Recalibrate/inspect instrument
+4. Enumerate the 3 methods of blood collection.
+Answer:
+1. Arterial puncture
+2. Venipuncture
+3. Capillary puncture
+5. Give the order of collection priority.
+Answer:
+1. STAT
+2. Timed
+3. ASAP
+4. Routine
+6. Give the 3-way patient identification procedure.
+Answer:
+1. Verbal identification
+2. Check ID band
+3. Compare labeled specimen with patient ID
+7. Enumerate common venipuncture veins in the H pattern.
+Answer:
+1. Median cubital
+2. Cephalic
+3. Basilic
+8. Enumerate conditions in which venipuncture sites should be avoided.
+Answer:
+1. IV therapy site
+2. Mastectomy side
+3. Hematoma
+
+
+--- PAGE 13 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 13
+4. Scar tissue
+5. Dialysis fistula
+6. Thrombosed veins
+7. Edematous arms
+8. Recent blood transfusion site
+9. Burned areas
+9. Enumerate causes of hemolysis during collection.
+Answer:
+1. Needle too small
+2. Pulling syringe plunger too quickly
+3. Forceful expulsion into tube
+4. Vigorous shaking
+5. Alcohol not allowed to dry
+10. Give acceptable capillary puncture sites.
+Answer:
+1. Middle finger
+2. Ring finger
+3. Lateral/medial plantar heel in infants
+11. Give reasons for choosing capillary puncture in infants.
+Answer:
+1. Small/inaccessible veins
+2. Deep venipuncture may be dangerous
+3. Prevent excessive blood loss
+4. Certain tests such as newborn screening
+12. Enumerate capillary blood order of collection.
+Answer:
+1. Capillary blood gases
+2. Blood smear
+3. EDTA
+4. Other anticoagulated tubes
+5. Serum tubes
+13. Enumerate common blood tube additives/anticoagulants and uses.
+Answer:
+1. EDTA - hematology/CBC
+2. Sodium citrate - coagulation
+3. Heparin - chemistry/plasma testing
+4. Sodium fluoride - preserves glucose
+5. Serum tube/no anticoagulant - serum testing
+6. ACD - cellular/blood banking applications
+7. SPS - blood cultures
+14. Enumerate stages of erythroid maturation.
+Answer:
+1. Pronormoblast/proerythroblast
+2. Basophilic normoblast
+3. Polychromatophilic normoblast
+
+
+--- PAGE 14 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 14
+4. Orthochromic normoblast
+5. Reticulocyte
+6. Mature erythrocyte
+15. Enumerate general maturation changes in hematopoietic cells.
+Answer:
+1. Decreased cell size
+2. Decreased N:C ratio
+3. Increased chromatin condensation
+4. Decreased/absent nucleoli
+5. Characteristic nuclear shape
+6. Cytoplasmic specialization
+16. Enumerate major categories of RBC abnormalities.
+Answer:
+1. Size
+2. Shape
+3. Hemoglobin content
+4. Inclusion bodies
+5. Distribution
+17. Enumerate common RBC shape abnormalities.
+Answer:
+1. Spherocyte
+2. Elliptocyte
+3. Target cell
+4. Echinocyte
+5. Sickle cell
+6. Schistocyte
+7. Teardrop cell
+8. Stomatocyte
+9. Acanthocyte
+18. Enumerate important RBC inclusions.
+Answer:
+1. Basophilic stippling
+2. Cabot rings
+3. Heinz bodies
+4. Howell-Jolly bodies
+5. Pappenheimer bodies
+6. Parasitic inclusions
+19. Enumerate common causes/associations of schistocytes.
+Answer:
+1. Microangiopathic hemolytic anemia
+2. DIC
+3. Uremia
+4. TTP
+5. HUS
+6. Mechanical/prosthetic valves
+20. Enumerate major mechanisms of anemia.
+
+
+--- PAGE 15 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 15
+Answer:
+1. Ineffective erythropoiesis
+2. Insufficient erythropoiesis
+3. Blood loss
+4. Hemolysis
+21. Enumerate morphologic classifications of anemia by RBC size.
+Answer:
+1. Normocytic
+2. Microcytic
+3. Macrocytic
+22. Enumerate major causes of microcytic anemia.
+Answer:
+1. Iron deficiency anemia
+2. Thalassemia
+3. Anemia of chronic disease/inflammation
+4. Sideroblastic anemia
+5. Lead-related disorders
+23. Enumerate clinical manifestations of iron deficiency anemia.
+Answer:
+1. Fatigue
+2. Weakness
+3. Shortness of breath
+4. Glossitis
+5. Angular cheilosis
+6. Koilonychia
+7. Pica
+24. Enumerate laboratory tests used to evaluate iron status.
+Answer:
+1. Serum iron
+2. TIBC
+3. Serum ferritin
+4. Transferrin saturation
+5. Free erythrocyte protoporphyrin
+6. Prussian blue stain
+25. Enumerate screening tests for megaloblastic anemia.
+Answer:
+1. CBC
+2. Reticulocyte count
+3. WBC manual differential
+4. Serum bilirubin
+5. LDH
+26. Enumerate causes of megaloblastic anemia.
+Answer:
+1. Vitamin B12 deficiency
+2. Folate deficiency
+27. Enumerate classifications of hemolytic anemia.
+
+
+--- PAGE 16 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 16
+Answer:
+1. Acute vs chronic
+2. Hereditary vs acquired
+3. Intrinsic vs extrinsic
+4. Intravascular vs extravascular
+28. Enumerate intrinsic RBC defects.
+Answer:
+1. Membrane defects
+2. Enzyme deficiencies
+3. Hemoglobinopathies
+4. PNH
+29. Enumerate extrinsic causes of hemolysis.
+Answer:
+1. Immune hemolysis
+2. Microangiopathic hemolysis
+3. Macroangiopathic hemolysis
+4. Infections
+5. Drug-induced hemolysis
+6. Thermal/mechanical injury
+30. Enumerate hemoglobin variants discussed.
+Answer:
+1. HbS
+2. HbC
+3. HbE
+4. HbO
+5. HbD
+31. Enumerate major sickle syndromes.
+Answer:
+1. HbSS - sickle cell disease
+2. HbAS - sickle cell trait
+3. HbSC - double heterozygous condition
+32. Enumerate major types of thalassemia.
+Answer:
+1. Alpha thalassemia
+2. Beta thalassemia
+33. Enumerate alpha-thalassemia classifications.
+Answer:
+1. Silent carrier
+2. Alpha-thalassemia minor/trait
+3. HbH disease
+4. Alpha-thalassemia major/hydrops fetalis
+34. Enumerate beta-thalassemia classifications.
+Answer:
+1. Beta-thalassemia major
+2. Beta-thalassemia minor/trait
+
+
+--- PAGE 17 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 17
+35. Enumerate the granulocytes.
+Answer:
+1. Neutrophils
+2. Eosinophils
+3. Basophils
+36. Enumerate the agranulocytes.
+Answer:
+1. Monocytes
+2. Lymphocytes
+37. Enumerate stages of granulopoiesis.
+Answer:
+1. Myeloblast
+2. Promyelocyte
+3. Myelocyte
+4. Metamyelocyte
+5. Band
+6. Mature granulocyte
+38. Enumerate lymphocyte populations.
+Answer:
+1. B lymphocytes
+2. T lymphocytes
+3. NK cells
+39. Enumerate quantitative WBC abnormalities.
+Answer:
+1. Leukocytosis
+2. Leukopenia
+3. Neutrophilia
+4. Neutropenia
+5. Eosinophilia
+6. Eosinopenia
+7. Basophilia
+8. Basopenia
+9. Monocytosis
+10. Monocytopenia
+11. Lymphocytosis
+12. Lymphocytopenia
+40. Enumerate common causes of eosinophilia.
+Answer:
+1. Allergic disorders
+2. Dermatoses
+3. Parasitic infections
+4. Some leukemias
+5. Some nonparasitic infections
+41. Enumerate examples associated with neutrophilia.
+Answer:
+1. Infection
+
+
+--- PAGE 18 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 18
+2. Inflammation
+3. Surgery
+4. Burns
+5. Stress
+6. Physical stimuli
+7. Some drugs/hormones
+8. Some leukemias
+42. Enumerate important genetic leukocyte abnormalities.
+Answer:
+1. Pelger-Huet anomaly
+2. Hereditary neutrophil hypersegmentation
+3. Alder-Reilly anomaly
+4. Chediak-Higashi syndrome
+5. May-Hegglin anomaly
+6. Chronic granulomatous disease
+7. Leukocyte adhesion deficiency
+8. Hyper-IgE syndrome
+9. Myeloperoxidase deficiency
+43. Enumerate the three types of leukocyte adhesion deficiency.
+Answer:
+1. LAD-I
+2. LAD-II
+3. LAD-III
+44. Enumerate major features of chronic granulomatous disease.
+Answer:
+1. Defective oxidative burst
+2. NADPH oxidase defect
+3. Recurrent bacterial infections
+4. Recurrent fungal infections
+5. Granuloma formation
+6. Abnormal/negative NBT reduction
+45. Enumerate major B/T lymphocyte disorders in the notes.
+Answer:
+1. DiGeorge syndrome
+2. X-linked agammaglobulinemia
+3. Severe combined immunodeficiency
+4. Wiskott-Aldrich syndrome
+46. Enumerate important terminology.
+Answer:
+1. Leukemia
+2. Aleukemic leukemia
+3. Lymphoma
+4. Leukemic lymphoma
+47. Enumerate proposed etiologic factors for leukemia.
+
+
+--- PAGE 19 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 19
+Answer:
+1. Viral factors
+2. Bone marrow damage
+3. Chromosomal defects
+4. Genetic factors
+5. Immune dysfunction
+48. Enumerate the major acute leukemia categories.
+Answer:
+1. AML/ANLL
+2. ALL
+49. Enumerate methods used in leukemia classification.
+Answer:
+1. Cellular morphology
+2. Cytochemical staining
+3. Immunologic markers
+4. Cytogenetics
+5. Molecular abnormalities
+6. Clinical syndrome
+50. Enumerate major lymphoproliferative disorders.
+Answer:
+1. T- and B-cell leukemias
+2. Non-Hodgkin lymphoma
+3. Hodgkin lymphoma
+4. Hairy cell leukemia
+5. Mycosis fungoides/Sezary syndrome
+6. CLL
+51. Enumerate major myeloproliferative disorders.
+Answer:
+1. Chronic myelogenous leukemia
+2. Myelofibrosis with myeloid metaplasia
+3. Essential thrombocythemia
+4. Polycythemia vera
+52. Enumerate the RBC indices.
+Answer:
+1. MCV
+2. MCH
+3. MCHC
+53. What are the major components of the CBC according to the notes?
+Answer:
+1. RBC count
+2. WBC count
+3. Hemoglobin
+4. Hematocrit
+5. WBC differential
+6. MCV
+7. MCH
+
+
+--- PAGE 20 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 20
+8. MCHC
+Note: the review notes state that platelet count is not included in the CBC definition presented there.
+54. Enumerate situations requiring 200-cell WBC differential counts.
+Answer:
+1. Eosinophils >10%
+2. Basophils >2%
+3. Monocytes >11%
+4. Lymphocytes exceed neutrophils, except in children
+55. Enumerate principles of automated cell counting.
+Answer:
+1. Electrical impedance
+2. Optical light scatter/flow cytometry
+56. Enumerate methods of displaying automated analyzer data.
+Answer:
+1. Histogram
+2. Dot plot/scattergram
+
+
+--- PAGE 21 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 21
+HIGH-YIELD ORAL REVALIDA QUESTIONS
+Memorize these first. They open the door to many common follow-up questions.
+1. Explain hematopoiesis from embryo to adult.
+2. Explain erythropoiesis and the role of EPO.
+3. Differentiate HbA, HbA2, HbF, Gower 1, Gower 2, and Portland.
+4. Explain the oxygen dissociation curve and right vs left shift.
+5. Describe normal RBC morphology.
+6. Enumerate and identify RBC poikilocytes.
+7. Differentiate rouleaux and agglutination.
+8. Explain iron deficiency anemia and its laboratory findings.
+9. Differentiate IDA from anemia of chronic disease.
+10. Explain megaloblastic anemia and differentiate B12 from folate deficiency.
+11. Classify hemolytic anemia.
+12. Differentiate intravascular and extravascular hemolysis.
+13. Explain sickle cell disease.
+14. Differentiate sickle cell disease and sickle cell trait.
+15. Explain alpha and beta thalassemia.
+16. Explain granulopoiesis from myeloblast to mature neutrophil.
+17. Differentiate neutrophil, eosinophil, and basophil.
+18. Differentiate B, T, and NK cells.
+19. Differentiate leukemoid reaction and CML.
+20. Explain leukemia vs lymphoma.
+21. Differentiate AML and ALL using cytochemistry.
+22. Explain CML and the Philadelphia chromosome.
+23. Explain polycythemia vera.
+24. Explain myelofibrosis and the significance of teardrop cells.
+25. Explain CBC components and RBC indices.
+26. Explain principles of automated hematology analyzers.
+27. Explain specimen rejection and preanalytical errors.
+28. Explain EDTA and consequences of incorrect blood-to-anticoagulant ratio.
+29. Demonstrate proper venipuncture verbally from patient identification to specimen transport.
+30. Explain peripheral blood smear preparation, staining, and examination.
+
+
+--- PAGE 22 ---
+Hematology 1 - Oral Revalida Master Reviewer
+Page 22
+Oral answer framework: Definition -> cause/etiology -> pathophysiology/principle -> morphology -> laboratory findings
+-> confirmatory test -> important differential diagnosis.

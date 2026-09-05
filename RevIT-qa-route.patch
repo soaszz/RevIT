@@ -1,0 +1,11 @@
+diff --git a/app/qa/page.tsx b/app/qa/page.tsx
+new file mode 100644
+index 0000000..32c6491
+--- /dev/null
++++ b/app/qa/page.tsx
+@@ -0,0 +1,5 @@
++import RevITApp from "../../RevITApp";
++
++export default function QualityAssurancePage() {
++  return <RevITApp cloudEnabled={false} />;
++}

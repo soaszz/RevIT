@@ -1,0 +1,13 @@
+diff --git "a/C:\\Users\\mypc\\Documents\\ChatGPT\\Reviewer\\test-current/tests/reviewer-content.test.mjs" "b/C:\\Users\\mypc\\Documents\\ChatGPT\\Reviewer\\test-diff/tests/reviewer-content.test.mjs"
+index fc0ef5f..0f405a6 100644
+--- "a/C:\\Users\\mypc\\Documents\\ChatGPT\\Reviewer\\test-current/tests/reviewer-content.test.mjs"
++++ "b/C:\\Users\\mypc\\Documents\\ChatGPT\\Reviewer\\test-diff/tests/reviewer-content.test.mjs"
+@@ -31,7 +31,7 @@ test("uses RevIT and Groq branding while keeping the MedTech AI tab", async () =
+   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+   const route = await readFile(new URL("../app/api/chat/route.ts", import.meta.url), "utf8");
+ 
+-  assert.match(layout, /RevIT \| Bacteriology and hematology reviewer/i);
++  assert.match(layout, /RevIT \| Medical Technology Review/i);
+   assert.match(layout, /data-theme="light"/i);
+   assert.match(layout, /revit-theme/i);
+   assert.match(app, /Ask RevIT AI/i);

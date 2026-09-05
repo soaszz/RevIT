@@ -1,0 +1,25 @@
+diff --git a/app/RevITApp.tsx b/app/RevITApp.tsx
+index 081f68c..29dbe66 100644
+--- a/app/RevITApp.tsx
++++ b/app/RevITApp.tsx
+@@ -627,7 +627,7 @@ useEffect(() => {
+         <div className="sidebar-note">
+           <p>Official library</p>
+           <strong>{questions.length} questions</strong>
+-          <span>Bacteriology + Hematology 1</span>
++          <span>CC + Hema + Bacte + AUBF</span>
+         </div>
+         <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
+           <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
+@@ -713,8 +713,8 @@ useEffect(() => {
+               <div className="source-summary-card">
+                 <span className="ai-mark">PDF</span>
+                 <p className="eyebrow">Supplied sources</p>
+-                <h2>Three official reviewers mapped</h2>
+-                <p>Two bacteriology editions and one Hematology 1 master reviewer now power scoring and source references.</p>
++                <h2>Three official PDF reviewers mapped</h2>
++                <p>Clinical Chemistry, Hematology, Bacteriology, and AUBF now power scoring, rationales, and page-level source references.</p>
+                 {subjects.map((subject) => (
+                   <div className="source-stat" key={subject.id}>
+                     <span>{subject.name}</span>
+               </div>

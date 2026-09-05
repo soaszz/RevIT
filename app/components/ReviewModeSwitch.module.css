@@ -1,0 +1,85 @@
+.switcher {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.label {
+  padding-left: 8px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.options {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 9px;
+  background: var(--surface-soft);
+}
+
+.option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 11px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 720;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  background: currentColor;
+  mask: var(--review-mode-icon) center / contain no-repeat;
+  -webkit-mask: var(--review-mode-icon) center / contain no-repeat;
+  opacity: .72;
+}
+
+.option:hover {
+  color: var(--green-dark);
+}
+
+.option.active {
+  border-color: color-mix(in srgb, var(--green) 30%, var(--line));
+  background: var(--green-soft);
+  color: var(--green-dark);
+  box-shadow: 0 3px 9px color-mix(in srgb, var(--sidebar) 8%, transparent);
+}
+
+.option.active .icon {
+  opacity: 1;
+}
+
+@media (max-width: 520px) {
+  .switcher {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .label {
+    padding: 3px 5px 0;
+  }
+
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}

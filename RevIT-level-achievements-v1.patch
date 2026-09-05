@@ -1,0 +1,1001 @@
+diff --git a/README.md b/README.md
+index 4449d1f..5e06e9f 100644
+--- a/README.md
++++ b/README.md
+@@ -11,6 +11,13 @@ RevIT is a source-aware medtech reviewer with official bacteriology and hematolo
+ - My Grades and a separate, non-persisting simulator using the exact 10/15/30/30/15 weights and a 65% passing mark.
+ - Transparent remaining-average, maximum-possible, and next-assessment guidance. AI never decides grades or passing status.
+ - Light/dark semantic PDF and AI badges, plus responsive desktop and mobile layouts.
++- V1 XP, scalable levels, eight achievement definitions, one-time level-up notices, and responsive progression UI in the sidebar and Home.
++
++## Supabase migrations
++
++Run every file in `supabase/migrations` in timestamp order using the Supabase SQL Editor or CLI. V1 progression is defined in `202608300005_level_achievements_v1.sql`; it creates and seeds the progression tables, enables RLS, and extends the existing idempotent activity writer without modifying the database until you run it.
++
++Levels follow `25 × (level - 1) × (level + 2)`, producing the requested 0, 100, 250, 450, and 700 XP thresholds for Levels 1–5 and 1,000 XP for Level 6.
+ 
+ ## Safety and scope
+ 
+diff --git a/app/RevITApp.tsx b/app/RevITApp.tsx
+index 540a5b1..df4ef43 100644
+--- a/app/RevITApp.tsx
++++ b/app/RevITApp.tsx
+@@ -4,6 +4,7 @@ import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "re
+ import Image from "next/image";
+ import { useRouter } from "next/navigation";
+ import AccountSettings from "./components/AccountSettings";
++import AchievementModal, { XpProgress } from "./components/AchievementModal";
+ import AiMarkdown from "./components/AiMarkdown";
+ import GradesPage from "./components/GradesPage";
+ import Onboarding from "./components/Onboarding";
+@@ -19,9 +20,7 @@ import {
+   localProfileToCloud,
+   migrateLocalActivity,
+   migrateLocalQuestionAttempts,
+-  queueActivity,
+   queueQuestionAttempt,
+-  recordActivity,
+   saveExam as saveCloudExam,
+   saveGrade as saveCloudGrade,
+   savePreferences,
+@@ -29,6 +28,7 @@ import {
+   saveQuestionAttempt,
+ } from "./lib/cloudService";
+ import type { DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, StudyPlan, UserPreferences } from "./lib/domain";
++import type { ProgressEvent, ProgressionUpdate } from "./lib/xpService";
+ import {
+   chooseAdaptiveQuestion,
+   reinforcementAfterAnswer,
+@@ -40,6 +40,18 @@ import { dateKeyInTimeZone, greetingFor, calculateStreak } from "./lib/studyCale
+ import { normalizeStudyPlans, studyPlansStorageKey } from "./lib/studyPlanner";
+ import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
+ import { createClient } from "./lib/supabase/client";
++import {
++  emptyProgression,
++  flushCloudProgressEventQueue,
++  loadCloudProgression,
++  loadLocalProgression,
++  markCurrentLevelSeen,
++  queueCloudProgressEvents,
++  recordCloudProgressEvents,
++  recordLocalProgressEvents,
++  shouldShowLevelUp,
++} from "./lib/xpService";
++import { levelProgress, XP_REWARDS } from "./lib/xpConfig";
+ import {
+   chatTitleFromFirstMessage,
+   createAiChat,
+@@ -228,6 +240,24 @@ function mergeLocalAttemptActivity(attempts: Attempt[], existing: DailyActivity[
+   return [...map.values()].sort((a, b) => a.activity_date.localeCompare(b.activity_date));
+ }
+ 
++function activityAfterEvent(current: DailyActivity[], activityDate: string, input: {
++  questions?: number;
++  correct?: number;
++  reviews?: number;
++  subject?: string;
++}) {
++  const existing = current.find((day) => day.activity_date === activityDate);
++  const updated: DailyActivity = {
++    ...(existing ?? { activity_date: activityDate, questions_answered: 0, correct_answers: 0, review_count: 0, subjects_studied: [] }),
++    questions_answered: (existing?.questions_answered ?? 0) + (input.questions ?? 0),
++    correct_answers: (existing?.correct_answers ?? 0) + (input.correct ?? 0),
++    review_count: (existing?.review_count ?? 0) + (input.reviews ?? 0),
++    subjects_studied: input.subject ? [...new Set([...(existing?.subjects_studied ?? []), input.subject])] : (existing?.subjects_studied ?? []),
++  };
++  return [...current.filter((day) => day.activity_date !== activityDate), updated]
++    .sort((a, b) => a.activity_date.localeCompare(b.activity_date));
++}
++
+ export type InitialUser = { id: string; email: string; username?: string };
+ 
+ export default function RevITApp({ initialUser = null, cloudEnabled = false }: { initialUser?: InitialUser | null; cloudEnabled?: boolean }) {
+@@ -282,6 +312,21 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
+   const [attemptHistoryAvailable, setAttemptHistoryAvailable] = useState(!cloudEnabled);
+   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+   const attemptMigrationStarted = useRef(false);
++  const [progression, setProgression] = useState(emptyProgression);
++  const [progressionReady, setProgressionReady] = useState(false);
++  const [progressionError, setProgressionError] = useState("");
++  const [achievementsOpen, setAchievementsOpen] = useState(false);
++  const [levelUp, setLevelUp] = useState<number | null>(null);
++  const progressionOwnerKey = initialUser?.id ?? "local";
++  const progressMetrics = useMemo(() => {
++    const currentStreak = calculateStreak(activity, dateKeyInTimeZone(new Date(), preferences.timezone));
++    return {
++      questionsAnswered: cloudEnabled ? activity.reduce((sum, day) => sum + day.questions_answered, 0) : attempts.length,
++      aiMessages: activity.reduce((sum, day) => sum + day.review_count, 0),
++      streakDays: currentStreak.longest,
++      examsCreated: exams.length,
++    };
++  }, [activity, attempts.length, cloudEnabled, exams.length, preferences.timezone]);
+ 
+ useEffect(() => {
+   const validViews: View[] = [
+@@ -416,6 +461,14 @@ useEffect(() => {
+       try {
+         const client = createClient();
+         await flushActivityQueue(client);
++        let progressionUpdate: ProgressionUpdate | null = null;
++        let progressionLoadError = "";
++        try {
++          await flushCloudProgressEventQueue(client, initialUser!.id);
++          progressionUpdate = await loadCloudProgression(client, initialUser!.id);
++        } catch (error) {
++          progressionLoadError = error instanceof Error ? error.message : "Progression could not be loaded.";
++        }
+         const snapshot = await loadCloudSnapshot(client, initialUser!.id);
+         if (cancelled) return;
+         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, profile.name, profile.photoDataUrl);
+@@ -428,6 +481,12 @@ useEffect(() => {
+           ...Object.fromEntries(snapshot.reinforcement.map((item) => [item.question_id, item.reinforcement_level])),
+         }));
+         setProfile({ name: nextProfile.first_name || profile.name, photoDataUrl: nextProfile.avatar_url ?? "" });
++        if (progressionUpdate) {
++          setProgression(progressionUpdate.snapshot);
++          markCurrentLevelSeen(progressionOwnerKey, levelProgress(progressionUpdate.snapshot.totalXp).level);
++        }
++        setProgressionError(progressionLoadError);
++        setProgressionReady(true);
+         if (nextPreferences.theme === "light" || nextPreferences.theme === "dark") {
+           document.documentElement.dataset.theme = nextPreferences.theme;
+           document.documentElement.style.colorScheme = nextPreferences.theme;
+@@ -571,6 +630,26 @@ useEffect(() => {
+     localStorage.setItem("revit-activity-v1", JSON.stringify(activity));
+   }, [activity, cloudEnabled, storageReady]);
+ 
++  useEffect(() => {
++    if (!storageReady || cloudEnabled) return;
++    const update = loadLocalProgression(progressionOwnerKey, progressMetrics);
++    if (!progressionReady) {
++      setProgression(update.snapshot);
++      markCurrentLevelSeen(progressionOwnerKey, levelProgress(update.snapshot.totalXp).level);
++      setProgressionReady(true);
++      return;
++    }
++    applyProgressionUpdate(update);
++  // Metrics are the existing local sources of truth; progression changes are applied inside this effect.
++  // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, [cloudEnabled, progressMetrics, progressionOwnerKey, storageReady]);
++
++  useEffect(() => {
++    if (levelUp === null) return;
++    const timeout = window.setTimeout(() => setLevelUp(null), 6000);
++    return () => window.clearTimeout(timeout);
++  }, [levelUp]);
++
+   const selectedQuestions = useMemo(
+     () => questions.filter((question) => selectedTopicIds.includes(question.topicId)),
+     [selectedTopicIds],
+@@ -752,32 +831,56 @@ useEffect(() => {
+     openView("assistant");
+   }
+ 
++  function applyProgressionUpdate(update: ProgressionUpdate) {
++    const previousLevel = levelProgress(progression.totalXp).level;
++    const nextLevel = levelProgress(update.snapshot.totalXp).level;
++    setProgression(update.snapshot);
++    setProgressionError("");
++    if (progressionReady && nextLevel > previousLevel && shouldShowLevelUp(progressionOwnerKey, nextLevel)) {
++      setLevelUp(nextLevel);
++    }
++  }
++
++  async function persistProgressEvents(events: ProgressEvent[], metrics = progressMetrics) {
++    try {
++      const update = cloudEnabled && initialUser
++        ? await recordCloudProgressEvents(createClient(), initialUser.id, events)
++        : recordLocalProgressEvents(progressionOwnerKey, events, metrics);
++      applyProgressionUpdate(update);
++    } catch (error) {
++      if (cloudEnabled && initialUser) queueCloudProgressEvents(initialUser.id, events);
++      setProgressionError(`Progression is queued and will sync when the connection recovers: ${error instanceof Error ? error.message : "unknown error"}`);
++    }
++  }
++
+   async function recordStudyEvent(input: {
+     eventKey: string;
+     questions?: number;
+     correct?: number;
+     reviews?: number;
+     subject?: string;
+-  }) {
++  }, xp = 0, extraEvents: Array<{ eventKey: string; xp: number }> = []) {
+     const activityDate = dateKeyInTimeZone(new Date(), preferences.timezone);
+-    setActivity((current) => {
+-      const existing = current.find((day) => day.activity_date === activityDate);
+-      const updated: DailyActivity = {
+-        ...(existing ?? { activity_date: activityDate, questions_answered: 0, correct_answers: 0, review_count: 0, subjects_studied: [] }),
+-        questions_answered: (existing?.questions_answered ?? 0) + (input.questions ?? 0),
+-        correct_answers: (existing?.correct_answers ?? 0) + (input.correct ?? 0),
+-        review_count: (existing?.review_count ?? 0) + (input.reviews ?? 0),
+-        subjects_studied: input.subject ? [...new Set([...(existing?.subjects_studied ?? []), input.subject])] : (existing?.subjects_studied ?? []),
+-      };
+-      return [...current.filter((day) => day.activity_date !== activityDate), updated].sort((a, b) => a.activity_date.localeCompare(b.activity_date));
+-    });
+-    if (!cloudEnabled || !initialUser) return;
+-    const payload = { ...input, activityDate };
+-    try { await recordActivity(createClient(), payload); }
+-    catch {
+-      queueActivity(payload);
+-      setCloudError("Study activity is queued and will sync when the connection recovers.");
++    const nextActivity = activityAfterEvent(activity, activityDate, input);
++    setActivity(nextActivity);
++    const nextMetrics = {
++      ...progressMetrics,
++      questionsAnswered: progressMetrics.questionsAnswered + (input.questions ?? 0),
++      aiMessages: progressMetrics.aiMessages + (input.reviews ?? 0),
++      streakDays: calculateStreak(nextActivity, activityDate).longest,
++    };
++    const events: ProgressEvent[] = [
++      { ...input, activityDate, xp },
++      ...extraEvents.map((event) => ({ ...event, activityDate })),
++    ];
++    if ((input.questions ?? 0) > 0 || (input.reviews ?? 0) > 0) {
++      events.push({ eventKey: `xp:daily-streak:${activityDate}`, activityDate, xp: XP_REWARDS.DAILY_STREAK });
+     }
++    await persistProgressEvents(events, nextMetrics);
++  }
++
++  async function recordProgressOnlyEvent(eventKey: string, xp: number, metrics = progressMetrics) {
++    await persistProgressEvents([{ eventKey, xp, activityDate: dateKeyInTimeZone(new Date(), preferences.timezone) }], metrics);
+   }
+ 
+   function submitAnswer() {
+@@ -831,17 +934,19 @@ useEffect(() => {
+       questions: 1,
+       correct: attempt.correct ? 1 : 0,
+       subject: subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId,
+-    });
++    }, attempt.correct ? XP_REWARDS.CORRECT_QUESTION : 0);
+   }
+ 
+   function nextQuestion() {
+     if (sessionStrictWrongOnly) {
++      if (sessionCanFinish && sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
+       setSessionIndex((current) => current + 1);
+       setSelectedChoice(null);
+       setAnswerRevealed(false);
+       return;
+     }
+     if (sessionCanFinish) {
++      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
+       setSessionIndex((current) => current + 1);
+       setSelectedChoice(null);
+       setAnswerRevealed(false);
+@@ -850,6 +955,7 @@ useEffect(() => {
+ 
+     const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds, Math.random, questionPerformance);
+     if (!nextQuestionId) {
++      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, XP_REWARDS.COMPLETE_STUDY_SESSION);
+       setSessionIndex((current) => current + 1);
+       setSelectedChoice(null);
+       setAnswerRevealed(false);
+@@ -1093,7 +1199,11 @@ useEffect(() => {
+       }
+ 
+       setMessages((current) => [...current, assistantMessage]);
+-      void recordStudyEvent({ eventKey: `ai-review:${userMessage.id}`, reviews: 1, subject: "MedTech AI" });
++      void recordStudyEvent(
++        { eventKey: `ai-review:${userMessage.id}`, reviews: 1, subject: "MedTech AI" },
++        0,
++        [{ eventKey: "xp:first-ai-message", xp: XP_REWARDS.FIRST_AI_MESSAGE }],
++      );
+     } catch (error) {
+       setMessages((current) => [...current, {
+         id: crypto.randomUUID(),
+@@ -1118,6 +1228,7 @@ useEffect(() => {
+   }
+ 
+   async function persistExam(exam: Omit<ExamSchedule, "id"> & { id?: string }) {
++    const isFirstExam = exams.length === 0 && !exam.id;
+     if (cloudEnabled && initialUser) {
+       const saved = await saveCloudExam(createClient(), initialUser.id, exam);
+       setExams((current) => [...current.filter((item) => item.id !== saved.id && !(item.subject === saved.subject && item.assessment_type === saved.assessment_type)), saved].sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date)));
+@@ -1125,6 +1236,9 @@ useEffect(() => {
+       const saved = { ...exam, id: exam.id ?? crypto.randomUUID() } as ExamSchedule;
+       setExams((current) => [...current.filter((item) => item.id !== saved.id && !(item.subject === saved.subject && item.assessment_type === saved.assessment_type)), saved].sort((a, b) => a.scheduled_date.localeCompare(b.scheduled_date)));
+     }
++    if (isFirstExam) {
++      await recordProgressOnlyEvent("xp:first-exam", XP_REWARDS.FIRST_EXAM, { ...progressMetrics, examsCreated: 1 });
++    }
+   }
+ 
+   async function removeExam(id: string) {
+@@ -1152,6 +1266,7 @@ useEffect(() => {
+   const activeNavItem = navItems.find((item) => item.id === activeView) ?? navItems[0];
+   const activeAiChat = aiChats.find((chat) => chat.id === activeChatId) ?? null;
+   const chatBusy = pending || chatActionPending || chatMessagesLoading;
++  const currentLevel = levelProgress(progression.totalXp);
+ 
+   return (
+     <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+@@ -1197,10 +1312,16 @@ useEffect(() => {
+           <strong>{questions.length} questions</strong>
+           <span>CC + Hema + Bacte + AUBF</span>
+         </div>
+-        <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
+-          <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
+-          <span className="profile-copy"><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
+-        </button>
++        <div className="profile-card">
++          <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
++            <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
++            <span className="profile-copy"><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
++          </button>
++          <button className="profile-level" type="button" onClick={() => setAchievementsOpen(true)} aria-label="Open achievements">
++            <span><b>Level {currentLevel.level}</b><strong>{currentLevel.title}</strong></span>
++            <XpProgress totalXp={progression.totalXp} compact />
++          </button>
++        </div>
+       </aside>
+ 
+       <section className="workspace">
+@@ -1219,6 +1340,9 @@ useEffect(() => {
+             <p>{heading.description}</p>
+           </div>
+           <div className="heading-actions">
++            {activeView === "overview" && <button className="home-level-card" type="button" onClick={() => setAchievementsOpen(true)} aria-label="Open achievements">
++              <span>Level {currentLevel.level}</span><strong>{currentLevel.title}</strong><XpProgress totalXp={progression.totalXp} compact />
++            </button>}
+             {activeView === "overview" && <span className="streak-badge"><strong>{streak.current}</strong><span>day streak<small>{streak.longest} longest · {streak.activeDays} active</small></span></span>}
+             {activeView === "overview" && <button className="primary-button" type="button" onClick={() => openView("library")}>Choose topics</button>}
+           </div>
+@@ -1226,6 +1350,7 @@ useEffect(() => {
+ 
+         {cloudLoading && <div className="sync-banner">Loading your cloud workspace…</div>}
+         {cloudError && <div className="sync-banner error" role="status"><span>{cloudError}</span><button type="button" onClick={() => window.location.reload()}>Retry</button></div>}
++        {progressionError && <div className="sync-banner error" role="status"><span>{progressionError}</span><button type="button" onClick={() => window.location.reload()}>Retry</button></div>}
+         {!cloudEnabled && <div className="sync-banner local"><span>Local mode: reviewer data stays on this device until Supabase is connected.</span><a href="/auth">Connect account</a></div>}
+ 
+         {activeView === "overview" && (
+@@ -1542,6 +1667,12 @@ useEffect(() => {
+           </div>
+         )}
+ 
++        {achievementsOpen && <AchievementModal progression={progression} metrics={progressMetrics} onClose={() => setAchievementsOpen(false)} />}
++        {levelUp !== null && <div className="level-up-toast" role="status" aria-live="polite">
++          <button type="button" onClick={() => setLevelUp(null)} aria-label="Dismiss level up notification">×</button>
++          <span>Level up</span><strong>You reached Level {levelUp}</strong><p>Keep improving.</p>
++        </div>}
++
+         {profileOpen && !cloudEnabled && (
+           <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setProfileOpen(false); }}>
+             <section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+diff --git a/app/components/AchievementModal.tsx b/app/components/AchievementModal.tsx
+new file mode 100644
+index 0000000..3f95915
+--- /dev/null
++++ b/app/components/AchievementModal.tsx
+@@ -0,0 +1,35 @@
++"use client";
++
++import type { ProgressionSnapshot, ProgressMetrics } from "../lib/domain";
++import { levelProgress, metricForCondition } from "../lib/xpConfig";
++
++export function XpProgress({ totalXp, compact = false }: { totalXp: number; compact?: boolean }) {
++  const progress = levelProgress(totalXp);
++  return <div className={`xp-progress ${compact ? "compact" : ""}`}>
++    <div className="xp-progress-copy"><span>{progress.totalXp} / {progress.nextLevelXp} XP</span>{!compact && <small>{progress.xpNeeded} XP to Level {progress.level + 1}</small>}</div>
++    <div className="xp-meter" role="progressbar" aria-label={`Level ${progress.level} XP progress`} aria-valuemin={0} aria-valuemax={progress.nextLevelXp} aria-valuenow={progress.totalXp}><span style={{ width: `${progress.progressPercent}%` }} /></div>
++  </div>;
++}
++
++export default function AchievementModal({ progression, metrics, onClose }: { progression: ProgressionSnapshot; metrics: ProgressMetrics; onClose: () => void }) {
++  const level = levelProgress(progression.totalXp);
++  const unlockedIds = new Set(progression.unlocked.map((item) => item.achievement_id));
++  const unlocked = progression.achievements.filter((achievement) => unlockedIds.has(achievement.id));
++  const locked = progression.achievements.filter((achievement) => !unlockedIds.has(achievement.id));
++  const completeMetrics = { ...metrics, studySessions: progression.studySessions };
++
++  return <div className="achievement-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
++    <section className="achievement-modal" role="dialog" aria-modal="true" aria-labelledby="achievement-title">
++      <div className="achievement-heading"><div><p className="eyebrow">Your progression</p><h2 id="achievement-title">Level {level.level} · {level.title}</h2></div><button type="button" onClick={onClose} aria-label="Close achievements">×</button></div>
++      <XpProgress totalXp={progression.totalXp} />
++      <div className="achievement-count"><strong>{unlocked.length} / {progression.achievements.length}</strong><span>achievements unlocked</span></div>
++      <div className="achievement-section"><div className="achievement-section-title"><h3>Unlocked</h3><span>{unlocked.length}</span></div>
++        {unlocked.length ? <div className="achievement-list">{unlocked.map((achievement) => <article className="achievement-row unlocked" key={achievement.id}><span className="achievement-icon" aria-hidden="true">{achievement.icon ?? "✦"}</span><div><strong>{achievement.name}</strong><p>{achievement.description}</p></div><b>+{achievement.xp_reward} XP</b></article>)}</div> : <p className="achievement-empty">Your first achievement is one answered question away.</p>}
++      </div>
++      <div className="achievement-section"><div className="achievement-section-title"><h3>Locked</h3><span>{locked.length}</span></div><div className="achievement-list">{locked.map((achievement) => {
++        const current = metricForCondition(achievement.condition_type, completeMetrics);
++        return <article className="achievement-row locked" key={achievement.id}><span className="achievement-icon" aria-hidden="true">○</span><div><strong>{achievement.name}</strong><p>{achievement.description}</p><small>{Math.min(current, achievement.condition_value)} / {achievement.condition_value}</small></div><b>+{achievement.xp_reward} XP</b></article>;
++      })}</div></div>
++    </section>
++  </div>;
++}
+diff --git a/app/globals.css b/app/globals.css
+index 3b3fe86..ac3147c 100644
+--- a/app/globals.css
++++ b/app/globals.css
+@@ -683,3 +683,25 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
+ @media (max-width: 440px) {
+   .plan-library-list { display: grid; grid-template-columns: 1fr; overflow-x: visible; }.plan-library-list > button { min-width: 0; width: 100%; }.today-plan-stats { grid-template-columns: 1fr; }.plan-toolbar button { flex: 1 1 42%; }.plan-block-actions { grid-template-columns: 1fr; }
+ }
++
++/* V1 level progression and achievements */
++.profile-card { margin-top: 18px; overflow: hidden; border: 1px solid #29443e; border-radius: 13px; background: var(--sidebar-surface); }
++.profile-card .profile { width: 100%; margin: 0; padding: 11px 12px 9px; }
++.profile-level { width: 100%; display: grid; gap: 7px; border: 0; border-top: 1px solid #29443e; padding: 9px 12px 11px; background: transparent; color: #fff; text-align: left; }
++.profile-level:hover { background: var(--sidebar-active); }.profile-level > span { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }.profile-level b { color: #9fd9c8; font-size: 9px; text-transform: uppercase; letter-spacing: .07em; }.profile-level strong { overflow: hidden; font-size: 9px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
++.xp-progress { display: grid; gap: 8px; }.xp-progress-copy { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 10px; }.xp-progress-copy small { color: var(--muted); font-size: 9px; }.xp-meter { overflow: hidden; height: 7px; border-radius: 99px; background: var(--surface-soft); }.xp-meter > span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--green), #44bea0); transition: width .35s ease; }
++.profile-level .xp-progress-copy { color: #a9c0ba; font-size: 8px; }.profile-level .xp-meter { height: 4px; background: #29443e; }
++.home-level-card { min-width: 185px; display: grid; grid-template-columns: auto 1fr; gap: 3px 9px; border: 1px solid color-mix(in srgb, var(--green) 32%, var(--line)); border-radius: 12px; padding: 9px 11px; background: var(--paper); color: var(--ink); text-align: left; box-shadow: var(--shadow); }.home-level-card:hover { border-color: var(--green); transform: translateY(-1px); }.home-level-card > span { color: var(--green); font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }.home-level-card > strong { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }.home-level-card .xp-progress { grid-column: 1 / -1; gap: 4px; }.home-level-card .xp-progress-copy { font-size: 8px; }.home-level-card .xp-meter { height: 4px; }
++.sidebar-collapsed .profile-card { margin-top: auto; border: 0; background: transparent; }.sidebar-collapsed .profile-card .profile { margin: 0; }.sidebar-collapsed .profile-level { justify-items: center; border-top: 0; padding: 7px 0; }.sidebar-collapsed .profile-level > span strong, .sidebar-collapsed .profile-level .xp-progress { display: none; }.sidebar-collapsed .profile-level > span { justify-content: center; }.sidebar-collapsed .profile-level b { font-size: 8px; }
++
++.achievement-backdrop { position: fixed; z-index: 85; inset: 0; display: grid; place-items: center; overflow-y: auto; padding: 20px; background: rgba(5,18,15,.72); backdrop-filter: blur(7px); }.achievement-modal { width: min(720px, 100%); max-height: min(860px, calc(100svh - 40px)); overflow-y: auto; padding: clamp(22px, 4vw, 34px); border: 1px solid var(--line); border-radius: 22px; background: var(--paper); color: var(--ink); box-shadow: 0 30px 100px rgba(0,0,0,.34); }.achievement-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.achievement-heading h2 { margin: 4px 0 0; font-size: clamp(24px, 4vw, 34px); letter-spacing: -.045em; }.achievement-heading > button { flex: 0 0 auto; display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 9px; background: var(--input); color: var(--muted); font-size: 20px; }
++.achievement-modal > .xp-progress { margin-top: 24px; padding: 16px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface-soft); }.achievement-count { display: flex; align-items: baseline; gap: 8px; margin: 18px 0 26px; }.achievement-count strong { color: var(--green-dark); font-size: 22px; }.achievement-count span { color: var(--muted); font-size: 10px; }.achievement-section + .achievement-section { margin-top: 26px; }.achievement-section-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }.achievement-section-title h3 { margin: 0; font-size: 14px; }.achievement-section-title span { display: grid; place-items: center; min-width: 25px; height: 25px; border-radius: 99px; background: var(--surface-soft); color: var(--muted); font-size: 9px; font-weight: 750; }
++.achievement-list { display: grid; gap: 8px; }.achievement-row { min-width: 0; display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: var(--input); }.achievement-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 11px; background: var(--green-soft); color: var(--green-dark); font-size: 12px; font-weight: 850; }.achievement-row strong { display: block; font-size: 12px; }.achievement-row p { margin: 4px 0 0; color: var(--muted); font-size: 9px; line-height: 1.45; }.achievement-row small { display: block; margin-top: 6px; color: var(--muted); font-size: 8px; font-weight: 700; }.achievement-row > b { color: var(--green); font-size: 9px; white-space: nowrap; }.achievement-row.locked { background: var(--surface-soft); opacity: .78; }.achievement-row.locked .achievement-icon { background: var(--paper); color: var(--muted); }.achievement-empty { margin: 0; padding: 18px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: 10px; text-align: center; }
++.level-up-toast { position: fixed; z-index: 95; right: 24px; bottom: 24px; width: min(330px, calc(100vw - 32px)); overflow: hidden; border: 1px solid color-mix(in srgb, var(--green) 42%, var(--line)); border-radius: 16px; padding: 20px; background: var(--paper); color: var(--ink); box-shadow: 0 24px 70px rgba(4,27,22,.28); animation: level-up-in .3s ease both; }.level-up-toast::before { position: absolute; inset: 0 auto 0 0; width: 4px; background: var(--green); content: ""; }.level-up-toast > button { position: absolute; top: 9px; right: 9px; border: 0; background: transparent; color: var(--muted); font-size: 18px; }.level-up-toast > span { color: var(--green); font-size: 9px; font-weight: 850; text-transform: uppercase; letter-spacing: .14em; }.level-up-toast strong { display: block; margin-top: 7px; font-size: 18px; }.level-up-toast p { margin: 5px 0 0; color: var(--muted); font-size: 10px; }
++@keyframes level-up-in { from { opacity: 0; transform: translateY(12px); } }
++
++@media (max-width: 1240px) { .home-level-card { min-width: 210px; } }
++@media (max-height: 820px) and (min-width: 761px) { .sidebar-note { display: none; }.sidebar nav { gap: 4px; margin-top: 14px; }.nav-link { min-height: 43px; }.sidebar-theme-toggle { margin-top: 12px; }.profile-card { margin-top: auto; } }
++@media (max-width: 760px) { .heading-actions { flex-wrap: wrap; }.home-level-card { order: -1; width: 100%; }.streak-badge { min-width: 170px; }.achievement-backdrop { align-items: start; padding: 10px; }.achievement-modal { max-height: calc(100svh - 20px); border-radius: 17px; padding: 20px 16px; }.level-up-toast { right: 16px; bottom: 16px; } }
++@media (max-width: 520px) { .achievement-row { grid-template-columns: 36px minmax(0, 1fr); gap: 10px; padding: 11px; }.achievement-icon { width: 36px; height: 36px; border-radius: 9px; }.achievement-row > b { grid-column: 2; } }
++@media (prefers-reduced-motion: reduce) { .level-up-toast { animation: none; }.xp-meter > span { transition: none; } }
+diff --git a/app/lib/domain.ts b/app/lib/domain.ts
+index 8ccce36..8fd37b5 100644
+--- a/app/lib/domain.ts
++++ b/app/lib/domain.ts
+@@ -168,3 +168,42 @@ export type CloudSnapshot = {
+   attempts: QuestionAttempt[];
+   attemptHistoryAvailable: boolean;
+ };
++
++export type AchievementConditionType =
++  | "questions_answered"
++  | "ai_messages"
++  | "streak_days"
++  | "exam_created"
++  | "study_sessions";
++
++export type Achievement = {
++  id: string;
++  name: string;
++  description: string;
++  icon: string | null;
++  xp_reward: number;
++  condition_type: AchievementConditionType;
++  condition_value: number;
++  created_at?: string;
++};
++
++export type UserAchievement = {
++  id: string;
++  user_id?: string;
++  achievement_id: string;
++  unlocked_at: string;
++};
++
++export type ProgressionSnapshot = {
++  totalXp: number;
++  achievements: Achievement[];
++  unlocked: UserAchievement[];
++  studySessions: number;
++};
++
++export type ProgressMetrics = {
++  questionsAnswered: number;
++  aiMessages: number;
++  streakDays: number;
++  examsCreated: number;
++};
+diff --git a/app/lib/xpConfig.ts b/app/lib/xpConfig.ts
+new file mode 100644
+index 0000000..cd0e0d4
+--- /dev/null
++++ b/app/lib/xpConfig.ts
+@@ -0,0 +1,77 @@
++import type { Achievement, AchievementConditionType } from "./domain";
++
++export const XP_REWARDS = {
++  CORRECT_QUESTION: 5,
++  COMPLETE_STUDY_SESSION: 20,
++  FIRST_AI_MESSAGE: 10,
++  DAILY_STREAK: 10,
++  FIRST_EXAM: 10,
++} as const;
++
++export const ACHIEVEMENT_CATALOG: Achievement[] = [
++  { id: "10000000-0000-4000-8000-000000000001", name: "First Steps", description: "Answer your first question", icon: "✦", xp_reward: 25, condition_type: "questions_answered", condition_value: 1 },
++  { id: "10000000-0000-4000-8000-000000000002", name: "AI Explorer", description: "Send your first message to RevIT AI", icon: "AI", xp_reward: 25, condition_type: "ai_messages", condition_value: 1 },
++  { id: "10000000-0000-4000-8000-000000000003", name: "Question Starter", description: "Answer 100 questions", icon: "100", xp_reward: 50, condition_type: "questions_answered", condition_value: 100 },
++  { id: "10000000-0000-4000-8000-000000000004", name: "Question Master", description: "Answer 500 questions", icon: "500", xp_reward: 100, condition_type: "questions_answered", condition_value: 500 },
++  { id: "10000000-0000-4000-8000-000000000005", name: "3 Day Streak", description: "Study for 3 consecutive days", icon: "3×", xp_reward: 50, condition_type: "streak_days", condition_value: 3 },
++  { id: "10000000-0000-4000-8000-000000000006", name: "7 Day Streak", description: "Study for 7 consecutive days", icon: "7×", xp_reward: 100, condition_type: "streak_days", condition_value: 7 },
++  { id: "10000000-0000-4000-8000-000000000007", name: "First Exam", description: "Add your first exam to the schedule", icon: "E", xp_reward: 25, condition_type: "exam_created", condition_value: 1 },
++  { id: "10000000-0000-4000-8000-000000000008", name: "Consistent Learner", description: "Complete 10 study sessions", icon: "10", xp_reward: 100, condition_type: "study_sessions", condition_value: 10 },
++];
++
++const LEVEL_TITLES = ["New Explorer", "Curious Learner", "Knowledge Builder", "Skilled Reviewer", "Mastery in Motion"] as const;
++
++export type LevelProgress = {
++  level: number;
++  title: string;
++  totalXp: number;
++  currentLevelXp: number;
++  nextLevelXp: number;
++  xpNeeded: number;
++  progressPercent: number;
++};
++
++export function xpThresholdForLevel(level: number) {
++  const safeLevel = Math.max(1, Math.floor(level));
++  return 25 * (safeLevel - 1) * (safeLevel + 2);
++}
++
++export function levelForXp(totalXp: number) {
++  const safeXp = Math.max(0, Math.floor(totalXp));
++  let level = 1;
++  while (xpThresholdForLevel(level + 1) <= safeXp) level += 1;
++  return level;
++}
++
++export function levelTitle(level: number) {
++  return LEVEL_TITLES[level - 1] ?? "Dedicated Scholar";
++}
++
++export function levelProgress(totalXp: number): LevelProgress {
++  const safeXp = Math.max(0, Math.floor(totalXp));
++  const level = levelForXp(safeXp);
++  const currentLevelXp = xpThresholdForLevel(level);
++  const nextLevelXp = xpThresholdForLevel(level + 1);
++  return {
++    level,
++    title: levelTitle(level),
++    totalXp: safeXp,
++    currentLevelXp,
++    nextLevelXp,
++    xpNeeded: Math.max(0, nextLevelXp - safeXp),
++    progressPercent: Math.min(100, (safeXp / nextLevelXp) * 100),
++  };
++}
++
++export function metricForCondition(
++  condition: AchievementConditionType,
++  metrics: { questionsAnswered: number; aiMessages: number; streakDays: number; examsCreated: number; studySessions: number },
++) {
++  switch (condition) {
++    case "questions_answered": return metrics.questionsAnswered;
++    case "ai_messages": return metrics.aiMessages;
++    case "streak_days": return metrics.streakDays;
++    case "exam_created": return metrics.examsCreated;
++    case "study_sessions": return metrics.studySessions;
++  }
++}
+diff --git a/app/lib/xpService.ts b/app/lib/xpService.ts
+new file mode 100644
+index 0000000..cafe346
+--- /dev/null
++++ b/app/lib/xpService.ts
+@@ -0,0 +1,169 @@
++import type { SupabaseClient } from "@supabase/supabase-js";
++import type { Achievement, ProgressionSnapshot, ProgressMetrics, UserAchievement } from "./domain";
++import { ACHIEVEMENT_CATALOG, metricForCondition } from "./xpConfig";
++
++export type ProgressEvent = {
++  eventKey: string;
++  xp: number;
++  activityDate: string;
++  questions?: number;
++  correct?: number;
++  reviews?: number;
++  subject?: string;
++};
++
++export type ProgressionUpdate = { snapshot: ProgressionSnapshot; newlyUnlocked: Achievement[] };
++type LocalProgressStore = { totalXp: number; eventKeys: string[]; unlocked: UserAchievement[] };
++
++const LOCAL_PROGRESS_VERSION = "v1";
++const CLOUD_QUEUE_VERSION = "v1";
++
++function localProgressKey(ownerKey: string) { return `revit-progression-${LOCAL_PROGRESS_VERSION}:${ownerKey}`; }
++function cloudQueueKey(userId: string) { return `revit-progression-queue-${CLOUD_QUEUE_VERSION}:${userId}`; }
++function emptyLocalStore(): LocalProgressStore { return { totalXp: 0, eventKeys: [], unlocked: [] }; }
++
++function readLocalStore(ownerKey: string): LocalProgressStore {
++  try {
++    const parsed = JSON.parse(localStorage.getItem(localProgressKey(ownerKey)) ?? "null") as Partial<LocalProgressStore> | null;
++    if (!parsed) return emptyLocalStore();
++    return {
++      totalXp: Number.isFinite(parsed.totalXp) ? Math.max(0, Math.floor(parsed.totalXp!)) : 0,
++      eventKeys: Array.isArray(parsed.eventKeys) ? [...new Set(parsed.eventKeys.filter((key): key is string => typeof key === "string"))] : [],
++      unlocked: Array.isArray(parsed.unlocked)
++        ? parsed.unlocked.filter((item): item is UserAchievement => Boolean(item && typeof item.achievement_id === "string" && typeof item.unlocked_at === "string"))
++        : [],
++    };
++  } catch { return emptyLocalStore(); }
++}
++
++function writeLocalStore(ownerKey: string, store: LocalProgressStore) {
++  localStorage.setItem(localProgressKey(ownerKey), JSON.stringify(store));
++}
++
++function snapshotFromLocal(store: LocalProgressStore): ProgressionSnapshot {
++  return {
++    totalXp: store.totalXp,
++    achievements: ACHIEVEMENT_CATALOG,
++    unlocked: store.unlocked,
++    studySessions: store.eventKeys.filter((key) => key.startsWith("study-session:")).length,
++  };
++}
++
++function unlockLocalAchievements(store: LocalProgressStore, metrics: ProgressMetrics) {
++  const unlockedIds = new Set(store.unlocked.map((item) => item.achievement_id));
++  const studySessions = store.eventKeys.filter((key) => key.startsWith("study-session:")).length;
++  const newlyUnlocked = ACHIEVEMENT_CATALOG.filter((achievement) => (
++    !unlockedIds.has(achievement.id)
++    && metricForCondition(achievement.condition_type, { ...metrics, studySessions }) >= achievement.condition_value
++  ));
++  if (!newlyUnlocked.length) return newlyUnlocked;
++  const unlockedAt = new Date().toISOString();
++  store.unlocked.push(...newlyUnlocked.map((achievement) => ({ id: crypto.randomUUID(), achievement_id: achievement.id, unlocked_at: unlockedAt })));
++  store.totalXp += newlyUnlocked.reduce((sum, achievement) => sum + achievement.xp_reward, 0);
++  return newlyUnlocked;
++}
++
++export function loadLocalProgression(ownerKey: string, metrics: ProgressMetrics): ProgressionUpdate {
++  const store = readLocalStore(ownerKey);
++  const newlyUnlocked = unlockLocalAchievements(store, metrics);
++  if (newlyUnlocked.length) writeLocalStore(ownerKey, store);
++  return { snapshot: snapshotFromLocal(store), newlyUnlocked };
++}
++
++export function recordLocalProgressEvents(ownerKey: string, events: ProgressEvent[], metrics: ProgressMetrics): ProgressionUpdate {
++  const store = readLocalStore(ownerKey);
++  const knownEvents = new Set(store.eventKeys);
++  for (const event of events) {
++    if (knownEvents.has(event.eventKey)) continue;
++    knownEvents.add(event.eventKey);
++    store.eventKeys.push(event.eventKey);
++    store.totalXp += Math.max(0, Math.floor(event.xp));
++  }
++  const newlyUnlocked = unlockLocalAchievements(store, metrics);
++  writeLocalStore(ownerKey, store);
++  return { snapshot: snapshotFromLocal(store), newlyUnlocked };
++}
++
++async function checkCloudAchievements(client: SupabaseClient) {
++  const { data, error } = await client.rpc("check_and_unlock_achievements");
++  if (error) throw new Error(error.message);
++  return (data ?? []) as Achievement[];
++}
++
++async function loadCloudProgressionRows(client: SupabaseClient, userId: string): Promise<ProgressionSnapshot> {
++  const [progress, achievements, unlocked, sessions] = await Promise.all([
++    client.from("user_progress").select("total_xp").eq("user_id", userId).maybeSingle(),
++    client.from("achievements").select("id,name,description,icon,xp_reward,condition_type,condition_value,created_at").order("condition_value", { ascending: true }),
++    client.from("user_achievements").select("id,user_id,achievement_id,unlocked_at").eq("user_id", userId).order("unlocked_at", { ascending: true }),
++    client.from("activity_events").select("id", { count: "exact", head: true }).eq("user_id", userId).like("event_key", "study-session:%"),
++  ]);
++  const failure = [progress, achievements, unlocked, sessions].find((result) => result.error)?.error;
++  if (failure) throw new Error(failure.message);
++  return {
++    totalXp: Number(progress.data?.total_xp ?? 0),
++    achievements: (achievements.data ?? []) as Achievement[],
++    unlocked: (unlocked.data ?? []) as UserAchievement[],
++    studySessions: sessions.count ?? 0,
++  };
++}
++
++export async function loadCloudProgression(client: SupabaseClient, userId: string): Promise<ProgressionUpdate> {
++  const { error } = await client.from("user_progress").upsert({ user_id: userId, total_xp: 0 }, { onConflict: "user_id", ignoreDuplicates: true });
++  if (error) throw new Error(error.message);
++  const newlyUnlocked = await checkCloudAchievements(client);
++  return { snapshot: await loadCloudProgressionRows(client, userId), newlyUnlocked };
++}
++
++export async function recordCloudProgressEvents(client: SupabaseClient, userId: string, events: ProgressEvent[]): Promise<ProgressionUpdate> {
++  for (const event of events) {
++    const { error } = await client.rpc("record_study_activity", {
++      p_event_key: event.eventKey,
++      p_activity_date: event.activityDate,
++      p_questions: event.questions ?? 0,
++      p_correct: event.correct ?? 0,
++      p_review_count: event.reviews ?? 0,
++      p_subject: event.subject ?? null,
++      p_xp: Math.max(0, Math.floor(event.xp)),
++    });
++    if (error) throw new Error(error.message);
++  }
++  const newlyUnlocked = await checkCloudAchievements(client);
++  return { snapshot: await loadCloudProgressionRows(client, userId), newlyUnlocked };
++}
++
++export function queueCloudProgressEvents(userId: string, events: ProgressEvent[]) {
++  const key = cloudQueueKey(userId);
++  try {
++    const current = JSON.parse(localStorage.getItem(key) ?? "[]") as ProgressEvent[];
++    const byKey = new Map(current.map((event) => [event.eventKey, event]));
++    events.forEach((event) => byKey.set(event.eventKey, event));
++    localStorage.setItem(key, JSON.stringify([...byKey.values()]));
++  } catch { localStorage.setItem(key, JSON.stringify(events)); }
++}
++
++export async function flushCloudProgressEventQueue(client: SupabaseClient, userId: string) {
++  const key = cloudQueueKey(userId);
++  const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as ProgressEvent[];
++  if (!queued.length) return null;
++  const update = await recordCloudProgressEvents(client, userId, queued);
++  localStorage.removeItem(key);
++  return update;
++}
++
++export function emptyProgression(): ProgressionSnapshot {
++  return { totalXp: 0, achievements: ACHIEVEMENT_CATALOG, unlocked: [], studySessions: 0 };
++}
++
++export function markCurrentLevelSeen(ownerKey: string, level: number) {
++  const key = `revit-level-notified-v1:${ownerKey}`;
++  const seen = Number(localStorage.getItem(key) ?? 0);
++  if (level > seen) localStorage.setItem(key, String(level));
++}
++
++export function shouldShowLevelUp(ownerKey: string, level: number) {
++  const key = `revit-level-notified-v1:${ownerKey}`;
++  const seen = Number(localStorage.getItem(key) ?? 0);
++  if (level <= seen) return false;
++  localStorage.setItem(key, String(level));
++  return true;
++}
+diff --git a/supabase/migrations/202608300005_level_achievements_v1.sql b/supabase/migrations/202608300005_level_achievements_v1.sql
+new file mode 100644
+index 0000000..ee2f4a6
+--- /dev/null
++++ b/supabase/migrations/202608300005_level_achievements_v1.sql
+@@ -0,0 +1,191 @@
++-- RevIT Level Up and Achievement System V1.
++-- Run with the Supabase CLI or paste this complete file into the SQL editor.
++
++create table if not exists public.user_progress (
++  id uuid primary key default gen_random_uuid(),
++  user_id uuid not null references auth.users(id) on delete cascade,
++  total_xp integer not null default 0 check (total_xp >= 0),
++  created_at timestamptz not null default now(),
++  updated_at timestamptz not null default now(),
++  unique (user_id)
++);
++
++create table if not exists public.achievements (
++  id uuid primary key default gen_random_uuid(),
++  name text not null,
++  description text not null,
++  icon text,
++  xp_reward integer not null default 0 check (xp_reward >= 0),
++  condition_type text not null check (condition_type in ('questions_answered', 'ai_messages', 'streak_days', 'exam_created', 'study_sessions')),
++  condition_value integer not null check (condition_value > 0),
++  created_at timestamptz not null default now()
++);
++
++create table if not exists public.user_achievements (
++  id uuid primary key default gen_random_uuid(),
++  user_id uuid not null references auth.users(id) on delete cascade,
++  achievement_id uuid not null references public.achievements(id) on delete cascade,
++  unlocked_at timestamptz not null default now(),
++  unique (user_id, achievement_id)
++);
++
++insert into public.achievements (id, name, description, icon, xp_reward, condition_type, condition_value)
++values
++  ('10000000-0000-4000-8000-000000000001', 'First Steps', 'Answer your first question', '✦', 25, 'questions_answered', 1),
++  ('10000000-0000-4000-8000-000000000002', 'AI Explorer', 'Send your first message to RevIT AI', 'AI', 25, 'ai_messages', 1),
++  ('10000000-0000-4000-8000-000000000003', 'Question Starter', 'Answer 100 questions', '100', 50, 'questions_answered', 100),
++  ('10000000-0000-4000-8000-000000000004', 'Question Master', 'Answer 500 questions', '500', 100, 'questions_answered', 500),
++  ('10000000-0000-4000-8000-000000000005', '3 Day Streak', 'Study for 3 consecutive days', '3×', 50, 'streak_days', 3),
++  ('10000000-0000-4000-8000-000000000006', '7 Day Streak', 'Study for 7 consecutive days', '7×', 100, 'streak_days', 7),
++  ('10000000-0000-4000-8000-000000000007', 'First Exam', 'Add your first exam to the schedule', 'E', 25, 'exam_created', 1),
++  ('10000000-0000-4000-8000-000000000008', 'Consistent Learner', 'Complete 10 study sessions', '10', 100, 'study_sessions', 10)
++on conflict (id) do update set name = excluded.name, description = excluded.description, icon = excluded.icon, xp_reward = excluded.xp_reward, condition_type = excluded.condition_type, condition_value = excluded.condition_value;
++
++create or replace function public.handle_new_user_progress()
++returns trigger language plpgsql security definer set search_path = public as $$
++begin
++  insert into public.user_progress (user_id) values (new.id) on conflict (user_id) do nothing;
++  return new;
++end;
++$$;
++
++drop trigger if exists on_auth_user_progress_created on auth.users;
++create trigger on_auth_user_progress_created after insert on auth.users for each row execute function public.handle_new_user_progress();
++
++insert into public.user_progress (user_id) select id from auth.users on conflict (user_id) do nothing;
++
++drop trigger if exists user_progress_set_updated_at on public.user_progress;
++create trigger user_progress_set_updated_at before update on public.user_progress for each row execute function public.set_updated_at();
++
++alter table public.user_progress enable row level security;
++alter table public.achievements enable row level security;
++alter table public.user_achievements enable row level security;
++
++drop policy if exists "user_progress_select_own" on public.user_progress;
++create policy "user_progress_select_own" on public.user_progress for select to authenticated using ((select auth.uid()) = user_id);
++drop policy if exists "user_progress_insert_own" on public.user_progress;
++create policy "user_progress_insert_own" on public.user_progress for insert to authenticated with check ((select auth.uid()) = user_id);
++drop policy if exists "user_progress_update_own" on public.user_progress;
++create policy "user_progress_update_own" on public.user_progress for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
++
++drop policy if exists "achievements_public_read" on public.achievements;
++create policy "achievements_public_read" on public.achievements for select to anon, authenticated using (true);
++
++drop policy if exists "user_achievements_select_own" on public.user_achievements;
++create policy "user_achievements_select_own" on public.user_achievements for select to authenticated using ((select auth.uid()) = user_id);
++drop policy if exists "user_achievements_insert_own" on public.user_achievements;
++create policy "user_achievements_insert_own" on public.user_achievements for insert to authenticated with check ((select auth.uid()) = user_id);
++
++grant select on public.achievements to anon, authenticated;
++revoke insert, update, delete on public.achievements from anon, authenticated;
++grant select, insert, update on public.user_progress to authenticated;
++grant select, insert on public.user_achievements to authenticated;
++revoke all on public.user_progress, public.user_achievements from anon;
++
++-- Reuse activity_events as the idempotency ledger for both study data and XP.
++drop function if exists public.record_study_activity(text,date,integer,integer,integer,text);
++create or replace function public.record_study_activity(
++  p_event_key text,
++  p_activity_date date,
++  p_questions integer default 0,
++  p_correct integer default 0,
++  p_review_count integer default 0,
++  p_subject text default null,
++  p_xp integer default 0
++) returns boolean language plpgsql security definer set search_path = public as $$
++declare
++  owner uuid := auth.uid();
++  inserted_event uuid;
++begin
++  if owner is null then raise exception 'Authentication required'; end if;
++  if char_length(p_event_key) not between 1 and 180 then raise exception 'Invalid event key'; end if;
++  if p_questions < 0 or p_correct < 0 or p_correct > p_questions or p_review_count < 0 then raise exception 'Invalid activity counts'; end if;
++  if p_xp not in (0, 5, 10, 20) then raise exception 'Invalid XP award'; end if;
++
++  insert into public.activity_events (user_id, event_key, activity_date)
++  values (owner, p_event_key, p_activity_date)
++  on conflict (user_id, event_key) do nothing
++  returning id into inserted_event;
++  if inserted_event is null then return false; end if;
++
++  if p_questions > 0 or p_review_count > 0 then
++    insert into public.daily_activity (user_id, activity_date, questions_answered, correct_answers, review_count, subjects_studied)
++    values (owner, p_activity_date, p_questions, p_correct, p_review_count, case when p_subject is null then '{}' else array[p_subject] end)
++    on conflict (user_id, activity_date) do update set
++      questions_answered = daily_activity.questions_answered + excluded.questions_answered,
++      correct_answers = daily_activity.correct_answers + excluded.correct_answers,
++      review_count = daily_activity.review_count + excluded.review_count,
++      subjects_studied = array(select distinct value from unnest(daily_activity.subjects_studied || excluded.subjects_studied) as value),
++      updated_at = now();
++  end if;
++
++  if p_xp > 0 then
++    insert into public.user_progress (user_id, total_xp) values (owner, p_xp)
++    on conflict (user_id) do update set total_xp = user_progress.total_xp + excluded.total_xp, updated_at = now();
++  end if;
++  return true;
++end;
++$$;
++revoke all on function public.record_study_activity(text,date,integer,integer,integer,text,integer) from public;
++grant execute on function public.record_study_activity(text,date,integer,integer,integer,text,integer) to authenticated;
++
++create or replace function public.check_and_unlock_achievements()
++returns setof public.achievements language plpgsql security definer set search_path = public as $$
++declare
++  owner uuid := auth.uid();
++  questions_total integer := 0;
++  ai_total integer := 0;
++  exam_total integer := 0;
++  session_total integer := 0;
++  longest_streak integer := 0;
++  unlocked_ids uuid[] := '{}';
++  reward_total integer := 0;
++begin
++  if owner is null then raise exception 'Authentication required'; end if;
++  insert into public.user_progress (user_id) values (owner) on conflict (user_id) do nothing;
++
++  select coalesce(sum(questions_answered), 0)::integer, coalesce(sum(review_count), 0)::integer
++  into questions_total, ai_total from public.daily_activity where user_id = owner;
++  select count(*)::integer into exam_total from public.exam_schedule where user_id = owner;
++  select count(*)::integer into session_total from public.activity_events where user_id = owner and event_key like 'study-session:%';
++
++  select coalesce(max(run_length), 0)::integer into longest_streak
++  from (
++    select count(*)::integer as run_length
++    from (
++      select activity_date, activity_date - (row_number() over (order by activity_date))::integer as streak_group
++      from public.daily_activity
++      where user_id = owner and (questions_answered > 0 or review_count > 0)
++    ) meaningful_days
++    group by streak_group
++  ) streak_runs;
++
++  with eligible as (
++    select achievement.id from public.achievements achievement
++    where case achievement.condition_type
++      when 'questions_answered' then questions_total >= achievement.condition_value
++      when 'ai_messages' then ai_total >= achievement.condition_value
++      when 'streak_days' then longest_streak >= achievement.condition_value
++      when 'exam_created' then exam_total >= achievement.condition_value
++      when 'study_sessions' then session_total >= achievement.condition_value
++      else false
++    end
++  ), inserted as (
++    insert into public.user_achievements (user_id, achievement_id)
++    select owner, eligible.id from eligible
++    on conflict (user_id, achievement_id) do nothing
++    returning achievement_id
++  )
++  select coalesce(array_agg(inserted.achievement_id), '{}'), coalesce(sum(achievement.xp_reward), 0)::integer
++  into unlocked_ids, reward_total
++  from inserted join public.achievements achievement on achievement.id = inserted.achievement_id;
++
++  if reward_total > 0 then
++    update public.user_progress set total_xp = total_xp + reward_total, updated_at = now() where user_id = owner;
++  end if;
++
++  return query select achievement.* from public.achievements achievement where achievement.id = any(unlocked_ids) order by achievement.condition_value, achievement.created_at;
++end;
++$$;
++revoke all on function public.check_and_unlock_achievements() from public;
++grant execute on function public.check_and_unlock_achievements() to authenticated;
+diff --git a/supabase/tests/rls_checks.sql b/supabase/tests/rls_checks.sql
+index c513569..1b373dc 100644
+--- a/supabase/tests/rls_checks.sql
++++ b/supabase/tests/rls_checks.sql
+@@ -22,6 +22,9 @@ select public.record_question_attempt(
+   'gram-staining', 'Gram staining', 'Staining principle', 'Medium',
+   1, false, 'reviewer', 'cccccccc-1111-1111-1111-111111111111', false, now()
+ );
++update public.user_progress set total_xp = 25 where user_id = '11111111-1111-1111-1111-111111111111';
++insert into public.user_achievements (user_id, achievement_id)
++values ('11111111-1111-1111-1111-111111111111', '10000000-0000-4000-8000-000000000001');
+ 
+ select set_config('request.jwt.claims', '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}', true);
+ do $$ begin
+@@ -40,6 +43,15 @@ do $$ begin
+   if exists (select 1 from public.question_attempts where user_id = '11111111-1111-1111-1111-111111111111') then
+     raise exception 'RLS failure: user two can see user one question attempts';
+   end if;
++  if exists (select 1 from public.user_progress where user_id = '11111111-1111-1111-1111-111111111111') then
++    raise exception 'RLS failure: user two can see user one XP';
++  end if;
++  if exists (select 1 from public.user_achievements where user_id = '11111111-1111-1111-1111-111111111111') then
++    raise exception 'RLS failure: user two can see user one achievements';
++  end if;
++  if (select count(*) from public.achievements) <> 8 then
++    raise exception 'RLS failure: public achievement definitions are not readable';
++  end if;
+ end $$;
+ 
+ do $$ begin
+diff --git a/tests/domain.test.ts b/tests/domain.test.ts
+index 0daef3e..e9edd86 100644
+--- a/tests/domain.test.ts
++++ b/tests/domain.test.ts
+@@ -9,6 +9,7 @@ import { calculateExpression, calculatorExpressionToLatex, calculatorExpressionW
+ import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
+ import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
+ import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
++import { ACHIEVEMENT_CATALOG, levelForXp, levelProgress, metricForCondition, xpThresholdForLevel, XP_REWARDS } from "../app/lib/xpConfig";
+ 
+ function grades(values: Partial<GradeValues>): GradeValues { return { ...EMPTY_GRADES, ...values }; }
+ 
+@@ -163,3 +164,21 @@ test("auth routing distinguishes logged-out, unverified, onboarding, and ready",
+   assert.equal(resolveAuthState({ hasUser: true, emailConfirmed: true, onboardingComplete: false }), "onboarding");
+   assert.equal(resolveAuthState({ hasUser: true, emailConfirmed: true, onboardingComplete: true }), "ready");
+ });
++
++test("level thresholds match V1 and continue with the same scalable curve", () => {
++  assert.deepEqual([1, 2, 3, 4, 5, 6].map(xpThresholdForLevel), [0, 100, 250, 450, 700, 1000]);
++  assert.equal(levelForXp(0), 1);
++  assert.equal(levelForXp(99), 1);
++  assert.equal(levelForXp(100), 2);
++  assert.equal(levelForXp(450), 4);
++  assert.equal(levelProgress(250).title, "Knowledge Builder");
++  assert.equal(levelProgress(250).nextLevelXp, 450);
++  assert.equal(levelProgress(250).xpNeeded, 200);
++});
++
++test("all V1 action XP is centralized and achievement definitions are unique", () => {
++  assert.deepEqual(XP_REWARDS, { CORRECT_QUESTION: 5, COMPLETE_STUDY_SESSION: 20, FIRST_AI_MESSAGE: 10, DAILY_STREAK: 10, FIRST_EXAM: 10 });
++  assert.equal(ACHIEVEMENT_CATALOG.length, 8);
++  assert.equal(new Set(ACHIEVEMENT_CATALOG.map((achievement) => achievement.id)).size, 8);
++  assert.equal(metricForCondition("study_sessions", { questionsAnswered: 4, aiMessages: 2, streakDays: 3, examsCreated: 1, studySessions: 10 }), 10);
++});

@@ -1,0 +1,222 @@
+diff --git a/RevIT-current2/app/RevITApp.tsx b/RevIT-diff-current2/app/RevITApp.tsx
+index 254b9a5..f70890f 100644
+--- a/RevIT-current2/app/RevITApp.tsx
++++ b/RevIT-diff-current2/app/RevITApp.tsx
+@@ -667,11 +667,11 @@ useEffect(() => {
+                 <article className="metric-card">
+                   <div className="metric-label"><span>Topics practiced</span><small>{cloudEnabled ? "Cloud synced" : "On this device"}</small></div>
+                   <strong>{practicedTopics.length}</strong>
+-                  <p>{attempts.length} total attempts saved locally</p>
++                  <p>{attempts.length} total attempts {cloudEnabled ? "recorded" : "saved locally"}</p>
+                 </article>
+               </section>
+ 
+-              <StudyCalendar activity={activity} exams={exams} timeZone={preferences.timezone} onSaveExam={persistExam} onDeleteExam={removeExam} />
++              <StudyCalendar activity={activity} exams={exams} grades={grades} timeZone={preferences.timezone} onSaveExam={persistExam} onDeleteExam={removeExam} />
+ 
+               <section className="focus-card">
+                 <div className="section-heading">
+diff --git a/RevIT-diff-current2/app/auth/mfa/MfaChallenge.tsx b/RevIT-diff-current2/app/auth/mfa/MfaChallenge.tsx
+new file mode 100644
+index 0000000..96508d3
+--- /dev/null
++++ b/RevIT-diff-current2/app/auth/mfa/MfaChallenge.tsx
+@@ -0,0 +1,41 @@
++"use client";
++
++import type { Factor } from "@supabase/supabase-js";
++import { useRouter } from "next/navigation";
++import { type FormEvent, useEffect, useState } from "react";
++import { createClient } from "../../lib/supabase/client";
++
++export default function MfaChallenge({ next }: { next: string }) {
++  const router = useRouter();
++  const [factorId, setFactorId] = useState("");
++  const [code, setCode] = useState("");
++  const [status, setStatus] = useState("Loading your authenticator…");
++  const [pending, setPending] = useState(false);
++
++  useEffect(() => {
++    let cancelled = false;
++    void createClient().auth.mfa.listFactors().then((result: { data: { totp: Factor[] } | null; error: Error | null }) => {
++      if (cancelled) return;
++      const factor = result.data?.totp.find((candidate) => candidate.status === "verified");
++      if (result.error || !factor) setStatus(result.error?.message ?? "No verified authenticator was found. Sign in again or contact support.");
++      else { setFactorId(factor.id); setStatus("Enter the current six-digit code from your authenticator app."); }
++    });
++    return () => { cancelled = true; };
++  }, []);
++
++  async function submit(event: FormEvent<HTMLFormElement>) {
++    event.preventDefault(); setPending(true); setStatus("");
++    const { error } = await createClient().auth.mfa.challengeAndVerify({ factorId, code });
++    if (error) { setStatus(error.message); setPending(false); return; }
++    router.replace(next.startsWith("/") && !next.startsWith("//") ? next : "/overview");
++  }
++
++  return (
++    <form className="auth-card" onSubmit={submit}>
++      <span className="brand-mark auth-brand">R</span><p className="eyebrow">Two-factor authentication</p><h1>Confirm it’s you.</h1><p>{status}</p>
++      <label><span>Authentication code</span><input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, ""))} required /></label>
++      <button className="primary-button wide" type="submit" disabled={pending || !factorId || code.length !== 6}>{pending ? "Verifying…" : "Verify and continue"}</button>
++      <a className="auth-link" href="/auth">Return to sign in</a>
++    </form>
++  );
++}
+diff --git a/RevIT-diff-current2/app/auth/mfa/page.tsx b/RevIT-diff-current2/app/auth/mfa/page.tsx
+new file mode 100644
+index 0000000..a17d407
+--- /dev/null
++++ b/RevIT-diff-current2/app/auth/mfa/page.tsx
+@@ -0,0 +1,6 @@
++import MfaChallenge from "./MfaChallenge";
++
++export default async function MfaPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
++  const { next = "/overview" } = await searchParams;
++  return <main className="auth-shell"><MfaChallenge next={next} /></main>;
++}
+diff --git a/RevIT-current2/app/components/GradesPage.tsx b/RevIT-diff-current2/app/components/GradesPage.tsx
+index 10a2ed3..79bd339 100644
+--- a/RevIT-current2/app/components/GradesPage.tsx
++++ b/RevIT-diff-current2/app/components/GradesPage.tsx
+@@ -46,7 +46,7 @@ export default function GradesPage({ grades, onSave }: { grades: GradeRecord[];
+     setPending(true); setStatus("");
+     try {
+       await onSave({ ...actualRecord, ...actual, subject });
+-      setSimulated(actual); setStatus("Actual grades saved to the cloud.");
++      setSimulated(actual); setStatus("Actual grades saved.");
+     } catch (error) { setStatus(error instanceof Error ? error.message : "Grades could not be saved."); }
+     finally { setPending(false); }
+   }
+diff --git a/RevIT-current2/app/components/StudyCalendar.tsx b/RevIT-diff-current2/app/components/StudyCalendar.tsx
+index 5e78f64..e0e3411 100644
+--- a/RevIT-current2/app/components/StudyCalendar.tsx
++++ b/RevIT-diff-current2/app/components/StudyCalendar.tsx
+@@ -6,10 +6,12 @@ import {
+   SUBJECTS,
+   type DailyActivity,
+   type ExamSchedule,
++  type GradeRecord,
+   type GradeSubject,
+   type AssessmentType,
+ } from "../lib/domain";
+ import { buildMonthGrid, dateKeyInTimeZone, examStatus, intensityFor, upcomingExam } from "../lib/studyCalendar";
++import { calculateGrade } from "../lib/gradeCalculator";
+ 
+ const SUBJECT_TONES: Record<GradeSubject, string> = {
+   Hematology: "heme",
+@@ -18,9 +20,10 @@ const SUBJECT_TONES: Record<GradeSubject, string> = {
+   AUBF: "aubf",
+ };
+ 
+-export default function StudyCalendar({ activity, exams, timeZone, onSaveExam, onDeleteExam }: {
++export default function StudyCalendar({ activity, exams, grades, timeZone, onSaveExam, onDeleteExam }: {
+   activity: DailyActivity[];
+   exams: ExamSchedule[];
++  grades: GradeRecord[];
+   timeZone: string;
+   onSaveExam: (exam: Omit<ExamSchedule, "id"> & { id?: string }) => Promise<void>;
+   onDeleteExam: (id: string) => Promise<void>;
+@@ -48,6 +51,8 @@ export default function StudyCalendar({ activity, exams, timeZone, onSaveExam, o
+   const selectedActivity = activityByDate.get(selectedDate);
+   const selectedExams = examsByDate.get(selectedDate) ?? [];
+   const nextExam = upcomingExam(exams, todayKey);
++  const nextExamGrade = nextExam ? grades.find((record) => record.subject === nextExam.subject) : null;
++  const nextExamGradeSummary = nextExamGrade ? calculateGrade(nextExamGrade) : null;
+ 
+   function moveMonth(amount: number) {
+     const date = new Date(Date.UTC(cursor.year, cursor.month + amount, 1));
+@@ -117,7 +122,7 @@ export default function StudyCalendar({ activity, exams, timeZone, onSaveExam, o
+       </div>
+       <div className="up-next">
+         <span className="state-pill">Up next</span>
+-        {nextExam ? <div><strong>{nextExam.subject} · {nextExam.assessment_type}</strong><p>{new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${nextExam.scheduled_date}T12:00:00Z`))} · {examStatus(nextExam.scheduled_date, todayKey)}</p>{nextExam.note && <small>{nextExam.note}</small>}</div> : <div><strong>No upcoming assessment</strong><p>Add a date to keep the closest exam visible here.</p></div>}
++        {nextExam ? <div><strong>{nextExam.subject} · {nextExam.assessment_type}</strong><p>{new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeZone: "UTC" }).format(new Date(`${nextExam.scheduled_date}T12:00:00Z`))} · {examStatus(nextExam.scheduled_date, todayKey)}</p>{nextExamGradeSummary?.normalizedPerformance != null && <small>Current completed-work performance: {nextExamGradeSummary.normalizedPerformance.toFixed(1)}%</small>}{nextExam.note && <small>{nextExam.note}</small>}</div> : <div><strong>No upcoming assessment</strong><p>Add a date to keep the closest exam visible here.</p></div>}
+       </div>
+       {formOpen && <div className="inline-modal" role="dialog" aria-modal="true" aria-label="Assessment date editor"><form onSubmit={submit}><div className="profile-modal-heading"><div><p className="eyebrow">Exam schedule</p><h2>{editing ? "Edit assessment" : "Add assessment"}</h2></div><button type="button" onClick={() => setFormOpen(false)} aria-label="Close">×</button></div><label className="profile-name-field"><span>Subject</span><select value={subject} onChange={(event) => setSubject(event.target.value as GradeSubject)}>{SUBJECTS.map((item) => <option key={item}>{item}</option>)}</select></label><label className="profile-name-field"><span>Assessment</span><select value={assessmentType} onChange={(event) => setAssessmentType(event.target.value as AssessmentType)}>{ASSESSMENT_TYPES.map((item) => <option key={item}>{item}</option>)}</select></label><label className="profile-name-field"><span>Date</span><input type="date" value={scheduledDate} onChange={(event) => setScheduledDate(event.target.value)} required /></label><label className="profile-name-field"><span>Note</span><textarea rows={3} maxLength={240} value={note} onChange={(event) => setNote(event.target.value)} /></label>{status && <p className="form-status" role="alert">{status}</p>}<div className="profile-modal-actions">{editing && <button className="danger-button" type="button" onClick={() => void remove(editing.id)} disabled={pending}>Delete</button>}<button className="text-button quiet" type="button" onClick={() => setFormOpen(false)}>Cancel</button><button className="primary-button" type="submit" disabled={pending}>{pending ? "Saving…" : "Save date"}</button></div></form></div>}
+     </section>
+diff --git a/RevIT-current2/app/lib/supabase/client.ts b/RevIT-diff-current2/app/lib/supabase/client.ts
+index fe7a793..ecce690 100644
+--- a/RevIT-current2/app/lib/supabase/client.ts
++++ b/RevIT-diff-current2/app/lib/supabase/client.ts
+@@ -1,12 +1,12 @@
+ import { createBrowserClient } from "@supabase/ssr";
+-import { supabaseConfig } from "./config";
++import { SUPABASE_COOKIE_MAX_AGE, supabaseConfig } from "./config";
+ 
+ let browserClient: ReturnType<typeof createBrowserClient> | null = null;
+ 
+ export function createClient() {
+   if (!browserClient) {
+     const { url, key } = supabaseConfig();
+-    browserClient = createBrowserClient(url, key);
++    browserClient = createBrowserClient(url, key, { cookieOptions: { maxAge: SUPABASE_COOKIE_MAX_AGE } });
+   }
+   return browserClient;
+ }
+diff --git a/RevIT-current2/app/lib/supabase/config.ts b/RevIT-diff-current2/app/lib/supabase/config.ts
+index 7cd87c9..8d9960d 100644
+--- a/RevIT-current2/app/lib/supabase/config.ts
++++ b/RevIT-diff-current2/app/lib/supabase/config.ts
+@@ -5,6 +5,8 @@ export function isSupabaseConfigured() {
+   );
+ }
+ 
++export const SUPABASE_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
++
+ export function supabaseConfig() {
+   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+diff --git a/RevIT-current2/app/lib/supabase/proxy.ts b/RevIT-diff-current2/app/lib/supabase/proxy.ts
+index 273683d..d62e231 100644
+--- a/RevIT-current2/app/lib/supabase/proxy.ts
++++ b/RevIT-diff-current2/app/lib/supabase/proxy.ts
+@@ -1,6 +1,6 @@
+ import { createServerClient } from "@supabase/ssr";
+ import { NextResponse, type NextRequest } from "next/server";
+-import { isSupabaseConfigured, supabaseConfig } from "./config";
++import { isSupabaseConfigured, SUPABASE_COOKIE_MAX_AGE, supabaseConfig } from "./config";
+ 
+ const PUBLIC_PATHS = ["/auth", "/api/chat"];
+ 
+@@ -14,6 +14,7 @@ export async function updateSession(request: NextRequest) {
+   const { url, key } = supabaseConfig();
+   let response = NextResponse.next({ request });
+   const supabase = createServerClient(url, key, {
++    cookieOptions: { maxAge: SUPABASE_COOKIE_MAX_AGE },
+     cookies: {
+       getAll: () => request.cookies.getAll(),
+       setAll(cookiesToSet, headersToSet) {
+diff --git a/RevIT-current2/app/lib/supabase/server.ts b/RevIT-diff-current2/app/lib/supabase/server.ts
+index 74f07f2..34bea40 100644
+--- a/RevIT-current2/app/lib/supabase/server.ts
++++ b/RevIT-diff-current2/app/lib/supabase/server.ts
+@@ -1,12 +1,13 @@
+ import { createServerClient } from "@supabase/ssr";
+ import { cookies } from "next/headers";
+-import { supabaseConfig } from "./config";
++import { SUPABASE_COOKIE_MAX_AGE, supabaseConfig } from "./config";
+ 
+ export async function createClient() {
+   const { url, key } = supabaseConfig();
+   const cookieStore = await cookies();
+ 
+   return createServerClient(url, key, {
++    cookieOptions: { maxAge: SUPABASE_COOKIE_MAX_AGE },
+     cookies: {
+       getAll: () => cookieStore.getAll(),
+       setAll(cookiesToSet) {
+diff --git a/RevIT-current2/app/page.tsx b/RevIT-diff-current2/app/page.tsx
+index 74a3d7c..f145acd 100644
+--- a/RevIT-current2/app/page.tsx
++++ b/RevIT-diff-current2/app/page.tsx
+@@ -10,6 +10,9 @@ export default async function Home() {
+   if (!claimsData?.claims?.sub) redirect("/auth");
+   const { data: userData, error } = await supabase.auth.getUser();
+   if (error || !userData.user) redirect("/auth");
++  if (!userData.user.email_confirmed_at) redirect(`/auth/verify?email=${encodeURIComponent(userData.user.email ?? "")}`);
++  const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
++  if (assurance?.nextLevel === "aal2" && assurance.currentLevel !== "aal2") redirect("/auth/mfa?next=/overview");
+   return <RevITApp cloudEnabled initialUser={{
+     id: userData.user.id,
+     email: userData.user.email ?? "",

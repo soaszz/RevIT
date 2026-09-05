@@ -1,0 +1,49 @@
+diff --git a/app/auth/AuthPanel.tsx b/app/auth/AuthPanel.tsx
+index dffdd8c..84aa221 100644
+--- a/app/auth/AuthPanel.tsx
++++ b/app/auth/AuthPanel.tsx
+@@ -10,6 +10,15 @@ type StatusType = "error" | "success" | "info";
+ 
+ const safeNextPath = (next: string) => next.startsWith("/") && !next.startsWith("//") ? next : "/overview";
+ 
++function getErrorMessage(error: unknown, fallback: string) {
++  if (error instanceof Error && error.message) return error.message;
++  if (typeof error === "object" && error !== null && "message" in error) {
++    const message = (error as { message?: unknown }).message;
++    if (typeof message === "string" && message.trim()) return message;
++  }
++  return fallback;
++}
++
+ function AuthThemeToggle() {
+   function toggleTheme() {
+     const root = document.documentElement;
+@@ -89,10 +98,6 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+     }
+     if (password.length < 8) throw new Error("Use a password with at least 8 characters.");
+ 
+-    const { data: availability, error: availabilityError } = await supabase.rpc("is_username_available", { candidate: cleanUsername });
+-    if (availabilityError) throw availabilityError;
+-    if (!availability) throw new Error("That username is already taken.");
+-
+     const { data, error } = await supabase.auth.signUp({
+       email: cleanEmail,
+       password,
+@@ -135,7 +140,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+       if (error) throw error;
+       await completeLogin();
+     } catch (error) {
+-      showStatus(error instanceof Error ? error.message : "Authentication could not be completed.");
++      showStatus(getErrorMessage(error, "Authentication could not be completed."));
+     } finally {
+       setPending(false);
+     }
+@@ -150,7 +155,7 @@ export default function AuthPanel({ next = "/overview" }: { next?: string }) {
+       if (error) throw error;
+       await completeLogin();
+     } catch (error) {
+-      showStatus(error instanceof Error ? error.message : "That code could not be verified.");
++      showStatus(getErrorMessage(error, "That code could not be verified."));
+     } finally {
+       setPending(false);
+     }
