@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import AccountSettings from "./components/AccountSettings";
 import AchievementModal, { XpProgress } from "./components/AchievementModal";
 import AiMarkdown from "./components/AiMarkdown";
+import Flashcards from "./components/Flashcards";
 import GradesPage from "./components/GradesPage";
 import LeaderboardPage from "./components/LeaderboardPage";
 import LegalConsentGate from "./components/LegalConsentGate";
@@ -79,7 +80,7 @@ import {
   topics,
 } from "./content/reviewerContent";
 
-type View = "overview" | "library" | "progress" | "leaderboards" | "weakness" | "planner" | "grades" | "assistant";
+type View = "overview" | "library" | "flashcards" | "progress" | "leaderboards" | "weakness" | "planner" | "grades" | "assistant";
 type Attempt = QuestionAttempt;
 type ReviewTimerConfig = { enabled: boolean; duration: ReviewTimerDuration };
 
@@ -105,6 +106,7 @@ const SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects";
 const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Overview", icon: "/icons/home.svg" },
   { id: "library", label: "Review Library", icon: "/icons/qna.svg" },
+  { id: "flashcards", label: "Flashcards", icon: "/icons/qna.svg" },
   { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
   { id: "leaderboards", label: "Leaderboards", icon: "/icons/leaderboards.svg" },
   { id: "weakness", label: "Weakness Analytics", icon: "/icons/weakness.svg" },
@@ -132,6 +134,11 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     eyebrow: "Structured practice",
     title: "Review Library",
     description: "Choose a subject or topic and build a focused session from the official reviewer library.",
+  },
+  flashcards: {
+    eyebrow: "Flashcards",
+    title: "Review at your own pace.",
+    description: "Review questions and reveal their answers by subject and topic.",
   },
   progress: {
     eyebrow: "Performance analytics",
@@ -168,6 +175,7 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
 const viewTitles: Record<View, string> = {
   overview: "Overview",
   library: "Review Library",
+  flashcards: "Flashcards",
   progress: "Progress",
   leaderboards: "Leaderboards",
   weakness: "Weakness Analytics",
@@ -370,6 +378,7 @@ useEffect(() => {
   const validViews: View[] = [
     "overview",
     "library",
+    "flashcards",
     "progress",
     "leaderboards",
     "weakness",
@@ -1749,6 +1758,8 @@ useEffect(() => {
             ) : null}
           </div>
         )}
+
+        {activeView === "flashcards" && <Flashcards />}
 
         {activeView === "progress" && (
           <div className="progress-shell">

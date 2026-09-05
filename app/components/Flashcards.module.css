@@ -1,0 +1,297 @@
+.reviewerShell {
+  width: min(920px, 100%);
+  margin: 0 auto;
+}
+
+.sessionToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.sessionToolbar p {
+  margin-bottom: 5px;
+}
+
+.sessionToolbar strong {
+  font-size: 12px;
+}
+
+.toolbarActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cardStage {
+  display: grid;
+  perspective: 1400px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cardFace {
+  position: relative;
+  grid-area: 1 / 1;
+  display: flex;
+  min-width: 0;
+  min-height: clamp(390px, 54vh, 560px);
+  flex-direction: column;
+  padding: clamp(26px, 5vw, 52px);
+  border: 1px solid color-mix(in srgb, var(--green) 28%, var(--line));
+  border-radius: 22px;
+  background: linear-gradient(145deg, var(--paper) 52%, var(--surface-tint));
+  box-shadow: 0 22px 58px color-mix(in srgb, var(--sidebar) 11%, transparent);
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  transition: transform 380ms ease, opacity 220ms ease, visibility 380ms;
+}
+
+.cardHitArea {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cardHitArea:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 4px;
+}
+
+.cardFront {
+  transform: rotateY(0deg);
+  visibility: visible;
+}
+
+.cardBack {
+  transform: rotateY(180deg);
+  visibility: hidden;
+}
+
+.flipped .cardFront {
+  transform: rotateY(-180deg);
+  visibility: hidden;
+}
+
+.flipped .cardBack {
+  transform: rotateY(0deg);
+  visibility: visible;
+}
+
+.cardTopline {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  pointer-events: none;
+}
+
+.cardTopline p {
+  margin: 0;
+}
+
+.cardTopline > span {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border-radius: 99px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.subjectLabel,
+.sideLabel {
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.topicLabel {
+  margin-top: 7px !important;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.questionArea {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  flex: 1 1 auto;
+  place-items: center;
+  padding: clamp(44px, 9vh, 90px) 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+.questionArea h2 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(23px, 3.3vw, 34px);
+  font-weight: 680;
+  line-height: 1.38;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+
+.flipControl {
+  position: relative;
+  z-index: 3;
+  align-self: center;
+  min-width: 130px;
+  text-align: center;
+}
+
+.answerBlock h2 {
+  margin: 15px 0 0;
+  color: var(--ink);
+  font-size: clamp(24px, 3.2vw, 34px);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+
+.answerBlock,
+.explanationBlock {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.answerBlock p,
+.explanationBlock p {
+  margin: 0;
+}
+
+.explanationBlock {
+  flex: 1 1 auto;
+  margin: clamp(30px, 6vh, 52px) 0;
+  padding-top: 24px;
+  border-top: 1px solid color-mix(in srgb, var(--green) 26%, var(--line));
+}
+
+.explanationBlock p:last-child {
+  margin-top: 14px;
+  color: var(--ink);
+  font-size: clamp(14px, 1.7vw, 17px);
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+}
+
+.navigation {
+  display: grid;
+  grid-template-columns: minmax(120px, auto) 1fr minmax(120px, auto);
+  align-items: center;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.navigation > span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.navigation button {
+  min-height: 43px;
+}
+
+.navigation button:last-child {
+  justify-self: end;
+}
+
+.navigation button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+  box-shadow: none;
+}
+
+.keyboardHint {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 9px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardFace {
+    transform: none;
+    transition: opacity 150ms ease, visibility 150ms;
+  }
+
+  .cardFront,
+  .flipped .cardBack {
+    opacity: 1;
+  }
+
+  .cardBack,
+  .flipped .cardFront {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .sessionToolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .toolbarActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cardFace {
+    min-height: 440px;
+    border-radius: 18px;
+    padding: 24px 20px;
+  }
+
+  .questionArea {
+    padding-block: 48px;
+  }
+
+  .navigation {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .navigation > span {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .navigation button {
+    width: 100%;
+    min-height: 46px;
+  }
+}
+
+@media (max-width: 420px) {
+  .cardTopline {
+    gap: 12px;
+  }
+
+  .questionArea h2 {
+    font-size: 22px;
+  }
+}
