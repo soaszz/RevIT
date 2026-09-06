@@ -1513,7 +1513,7 @@ useEffect(() => {
         </button>
         <Link className="sidebar-support" href="/support" title={sidebarCollapsed ? "Support RevIT" : undefined}>
           <span className="sidebar-support-frog" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} sizes="42px" /></span>
-          <span className="sidebar-support-copy"><small>Completely optional</small><strong>Support RevIT</strong><span>Help support continued development</span></span>
+          <span className="sidebar-support-copy"><strong>Support RevIT</strong><span>Help support continued development</span></span>
           <span className="sidebar-support-arrow" aria-hidden="true">›</span>
         </Link>
         <div className="profile-card">

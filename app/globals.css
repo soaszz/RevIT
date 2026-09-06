@@ -123,9 +123,8 @@ button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-
 .sidebar-support-frog { position: relative; display: block; width: 42px; height: 42px; overflow: hidden; border-radius: 11px; background: rgba(22, 229, 190, .08); }
 .sidebar-support-frog img { position: absolute; top: -18px; left: -20px; width: 82px; height: 82px; max-width: none; }
 .sidebar-support-copy { min-width: 0; }
-.sidebar-support-copy small, .sidebar-support-copy strong, .sidebar-support-copy span { display: block; }
-.sidebar-support-copy small { color: #88cbb9; font-size: 8px; font-weight: 760; letter-spacing: .05em; text-transform: uppercase; }
-.sidebar-support-copy strong { margin-top: 3px; font-size: 13px; letter-spacing: -.01em; }
+.sidebar-support-copy strong, .sidebar-support-copy span { display: block; }
+.sidebar-support-copy strong { margin: 0; font-size: 13px; letter-spacing: -.01em; }
 .sidebar-support-copy span { overflow: hidden; margin-top: 3px; color: #a9c0ba; font-size: 8px; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
 .sidebar-support-arrow { color: #88cbb9; font-size: 18px; line-height: 1; }
 .profile { display: flex; align-items: center; gap: 10px; margin-top: 18px; padding: 8px 6px; border: 0; background: transparent; color: #fff; text-align: left; }
