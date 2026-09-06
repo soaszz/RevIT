@@ -1,9 +1,9 @@
 import type { Profile } from "./domain";
 
-export const CURRENT_TERMS_VERSION = "2026-09-03";
-export const CURRENT_PRIVACY_VERSION = "2026-09-03";
+export const CURRENT_TERMS_VERSION = "2026-09-06";
+export const CURRENT_PRIVACY_VERSION = "2026-09-06";
 
-export const LEGAL_EFFECTIVE_DATE = "September 3, 2026";
+export const LEGAL_EFFECTIVE_DATE = "September 6, 2026";
 
 export type LegalConsent = Pick<
   Profile,

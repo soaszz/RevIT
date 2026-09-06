@@ -29,7 +29,7 @@ const sections: LegalSection[] = [
   },
   {
     title: "RevIT AI",
-    content: <><p>RevIT AI provides educational assistance and may make mistakes, omit context, or produce outdated or incomplete information. Verify important information against approved references, manufacturer instructions, institutional policies, and qualified instructors or professionals.</p><p>Official reviewer answers remain separate from AI-generated explanations. AI output does not change the official answer used to score reviewer questions.</p></>,
+    content: <><p>RevIT AI provides educational assistance and may make mistakes, omit context, or produce outdated or incomplete information. Verify important information against approved references, manufacturer instructions, institutional policies, and qualified instructors or professionals.</p><p>AI responses are not official reviewer answers unless they are explicitly sourced from official RevIT material. Official reviewer answers and scoring remain separate from AI-generated explanations.</p><p>RevIT may use third-party AI infrastructure or providers to process AI requests. Those providers do not control the official answer used to score reviewer questions.</p></>,
   },
   {
     title: "Reviewer and Educational Content",
@@ -48,11 +48,19 @@ const sections: LegalSection[] = [
     content: <p>You retain responsibility for content you submit, including profile information, study-plan notes, calendar notes, and AI prompts. Submit only content you are permitted to use. Do not enter patient-identifying information or confidential clinical records into RevIT or RevIT AI.</p>,
   },
   {
+    title: "Voluntary Support",
+    content: <><p>RevIT is currently provided without requiring payment for access. RevIT may offer users the option to voluntarily support its continued development and operating costs. Contributions are completely optional, are not required to access RevIT, do not purchase premium functionality, and do not create a subscription or paid membership. Choosing not to contribute does not reduce your normal access.</p><p>A contribution does not guarantee additional features, services, support, continued availability, or any particular development outcome. RevIT does not represent voluntary contributions as charitable or tax-deductible donations.</p><p>A third-party payment service used for voluntary support may apply its own terms, privacy practices, fees, eligibility requirements, or processing rules.</p></>,
+  },
+  {
+    title: "Third-Party Services",
+    content: <><p>RevIT relies on or links to third-party services where applicable, including infrastructure for authentication, data storage, hosting, and AI processing. Voluntary support may be offered through a QR code or link associated with an external payment service.</p><p>When support is completed externally, payment processing occurs through that third party. RevIT does not control the third party’s availability, security, processing decisions, terms, privacy practices, or fees, and the Support RevIT interface does not collect your card or payment-account credentials.</p></>,
+  },
+  {
     title: "Service Availability",
     content: <p>RevIT may change, suspend, or temporarily become unavailable because of maintenance, security work, service-provider availability, internet conditions, or other operational needs. Features that depend on Supabase, Groq, or other services may be unavailable when those services are unavailable.</p>,
   },
   {
-    title: "Account Suspension or Termination",
+    title: "Account Suspension and Termination",
     content: <p>Access may be restricted or ended when reasonably necessary to address unlawful activity, security risks, material violations of these terms, or harm to RevIT or other users. Where practical, reasonable notice or an opportunity to correct the issue may be provided.</p>,
   },
   {
@@ -73,7 +81,7 @@ const sections: LegalSection[] = [
   },
   {
     title: "Effective Date",
-    content: <p>This draft is effective September 3, 2026. It should be reviewed and adapted by qualified legal counsel before production publication, including the governing-law, contact, jurisdiction, and operator-identity details appropriate to RevIT.</p>,
+    content: <p>This draft is effective September 6, 2026. It should be reviewed and adapted by qualified legal counsel before production publication, including the governing-law, contact, jurisdiction, and operator-identity details appropriate to RevIT.</p>,
   },
 ];
 

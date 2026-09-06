@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AccountSettings from "./components/AccountSettings";
 import AchievementModal, { XpProgress } from "./components/AchievementModal";
@@ -1510,11 +1511,11 @@ useEffect(() => {
           <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
           <span className="sidebar-control-copy"><strong>Appearance</strong><small>Light / dark</small></span>
         </button>
-        <div className="sidebar-note">
-          <p>Official library</p>
-          <strong>{questions.length} questions</strong>
-          <span>CC + Hema + Bacte + AUBF</span>
-        </div>
+        <Link className="sidebar-support" href="/support" title={sidebarCollapsed ? "Support RevIT" : undefined}>
+          <span className="sidebar-support-frog" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} sizes="42px" /></span>
+          <span className="sidebar-support-copy"><small>Completely optional</small><strong>Support RevIT</strong><span>Help support continued development</span></span>
+          <span className="sidebar-support-arrow" aria-hidden="true">›</span>
+        </Link>
         <div className="profile-card">
           <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
             <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
@@ -1533,7 +1534,7 @@ useEffect(() => {
             <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home"><RevITLogo /></button>
             <span className="mobile-current-view"><i aria-hidden="true"><Image src={activeNavItem.icon} alt="" width={15} height={15} /></i>{activeNavItem.label}</span>
           </div>
-          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => openView(event.target.value as View)}>{navItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label><button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
+          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => { if (event.target.value === "support") router.push("/support"); else openView(event.target.value as View); }}>{navItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}<option value="support">Support RevIT (optional)</option></select></label><button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
         </header>
 
         <div className="page-heading">

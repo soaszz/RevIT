@@ -48,6 +48,10 @@ const sections: LegalSection[] = [
     content: <p>RevIT processes data through Supabase and, when live AI is configured and used, Groq. Information may also pass through the hosting and network providers that deliver the application. RevIT does not currently contain advertising or data-broker integrations in the inspected codebase.</p>,
   },
   {
+    title: "Voluntary Support and External Payments",
+    content: <><p>The Support RevIT interface may display a static QR code associated with an external payment provider. When you choose to use that QR, the contribution is completed outside RevIT through the third-party provider and is subject to that provider’s own terms, privacy practices, fees, and processing rules.</p><p>RevIT itself does not ask for or collect payment-card details, bank credentials, payment-app PINs, one-time passcodes, transaction identifiers, contribution amounts, or payment-account information through the Support RevIT interface. The current implementation has no payment webhook, contribution history, supporter account, or contributor tracking.</p><p>Scanning or using the QR may cause the external payment provider and your payment app or device to process information under their own policies. RevIT does not receive that provider-side payment information merely because it displays the QR.</p></>,
+  },
+  {
     title: "Retention and Deletion",
     content: <><p>The inspected codebase retains cloud records until they are changed or deleted through implemented features, removed by the operator, or deleted through account-cascade behavior. Deleting an authentication user is configured to cascade to related profile and user-owned database records. The current interface includes deletion for selected items such as AI chats and exam entries, but it does not include a self-service delete-account workflow.</p><p>Clearing browser site data removes local-only information from that browser but does not delete cloud records. Contact details for production account or data-deletion requests must be configured before publication.</p></>,
   },
@@ -69,10 +73,10 @@ const sections: LegalSection[] = [
   },
   {
     title: "Effective Date",
-    content: <p>This draft is effective September 3, 2026. Material service or data-practice changes should be reflected in a new centralized privacy version and presented to users for review.</p>,
+    content: <p>This draft is effective September 6, 2026. Material service or data-practice changes should be reflected in a new centralized privacy version and presented to users for review.</p>,
   },
 ];
 
 export default function PrivacyPage() {
-  return <LegalPage title="Privacy Policy" summary="This draft policy describes the account, study, preference, and AI information processed by the current RevIT codebase." sections={sections} />;
+  return <LegalPage title="Privacy Policy" summary="This draft policy describes the account, study, preference, AI, and voluntary-support information processed by the current RevIT codebase." sections={sections} />;
 }
