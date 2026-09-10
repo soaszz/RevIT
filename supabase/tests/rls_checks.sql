@@ -101,7 +101,10 @@ end;
 $$;
 
 select * from public.check_and_unlock_achievements();
-update public.user_preferences set leaderboard_opt_in = true
+update public.user_preferences
+set leaderboard_opt_in = true,
+    mtap_features_enabled = true,
+    mtap_onboarding_completed = true
 where user_id = '11111111-1111-1111-1111-111111111111';
 
 select set_config('request.jwt.claims', '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}', true);
@@ -129,6 +132,9 @@ do $$ begin
   end if;
   if exists (select 1 from public.profiles where id = '11111111-1111-1111-1111-111111111111') then
     raise exception 'RLS failure: user two can see user one profile or consent';
+  end if;
+  if exists (select 1 from public.user_preferences where user_id = '11111111-1111-1111-1111-111111111111') then
+    raise exception 'RLS failure: user two can see user one private preferences or MTAP choice';
   end if;
   if (select count(*) from public.achievements) <> 8 then
     raise exception 'RLS failure: public achievement definitions are not readable';

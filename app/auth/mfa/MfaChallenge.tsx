@@ -17,7 +17,7 @@ export default function MfaChallenge({ next }: { next: string }) {
     void createClient().auth.mfa.listFactors().then((result: { data: { totp: Factor[] } | null; error: Error | null }) => {
       if (cancelled) return;
       const factor = result.data?.totp.find((candidate) => candidate.status === "verified");
-      if (result.error || !factor) setStatus(result.error?.message ?? "No verified authenticator was found. Sign in again or contact support.");
+      if (result.error || !factor) setStatus("No verified authenticator was found. Sign in again or contact support.");
       else { setFactorId(factor.id); setStatus("Enter the current six-digit code from your authenticator app."); }
     });
     return () => { cancelled = true; };
@@ -26,7 +26,7 @@ export default function MfaChallenge({ next }: { next: string }) {
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setPending(true); setStatus("");
     const { error } = await createClient().auth.mfa.challengeAndVerify({ factorId, code });
-    if (error) { setStatus(error.message); setPending(false); return; }
+    if (error) { setStatus("That code could not be verified. Try a current code or sign in again."); setPending(false); return; }
     router.replace(next.startsWith("/") && !next.startsWith("//") ? next : "/overview");
   }
 

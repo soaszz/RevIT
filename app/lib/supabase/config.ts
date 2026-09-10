@@ -7,6 +7,15 @@ export function isSupabaseConfigured() {
 
 export const SUPABASE_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
+export function supabaseCookieOptions() {
+  return {
+    maxAge: SUPABASE_COOKIE_MAX_AGE,
+    path: "/",
+    sameSite: "lax" as const,
+    secure: process.env.NODE_ENV === "production",
+  };
+}
+
 export function supabaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;

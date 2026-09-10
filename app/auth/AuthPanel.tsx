@@ -13,12 +13,10 @@ type StatusType = "error" | "success" | "info";
 
 const safeNextPath = (next: string) => next.startsWith("/") && !next.startsWith("//") ? next : "/overview";
 
+class AuthInputError extends Error {}
+
 function getErrorMessage(error: unknown, fallback: string) {
-  if (error instanceof Error && error.message) return error.message;
-  if (typeof error === "object" && error !== null && "message" in error) {
-    const message = (error as { message?: unknown }).message;
-    if (typeof message === "string" && message.trim()) return message;
-  }
+  if (error instanceof AuthInputError && error.message) return error.message;
   return fallback;
 }
 
@@ -158,17 +156,17 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
     const supabase = createClient();
     const cleanEmail = email.trim().toLowerCase();
     const cleanUsername = username.trim().toLowerCase();
-    if (!cleanEmail || !username.trim() || !password) throw new Error("Email, username, and password are required.");
-    if (!legalConsent) throw new Error("Please read and agree to the Terms of Service and Privacy Policy.");
+    if (!cleanEmail || !username.trim() || !password) throw new AuthInputError("Email, username, and password are required.");
+    if (!legalConsent) throw new AuthInputError("Please read and agree to the Terms of Service and Privacy Policy.");
     if (!/^[a-z0-9_]{3,24}$/.test(cleanUsername)) {
-      throw new Error("Username must be 3–24 characters using letters, numbers, or underscores.");
+      throw new AuthInputError("Username must be 3–24 characters using letters, numbers, or underscores.");
     }
-    if (password.length < 8) throw new Error("Use a password with at least 8 characters.");
-    if (password !== confirmPassword) throw new Error("Passwords do not match.");
+    if (password.length < 8) throw new AuthInputError("Use a password with at least 8 characters.");
+    if (password !== confirmPassword) throw new AuthInputError("Passwords do not match.");
 
     const { data: availability, error: availabilityError } = await supabase.rpc("is_username_available", { candidate: cleanUsername });
     if (availabilityError) throw availabilityError;
-    if (!availability) throw new Error("That username is already taken.");
+    if (!availability) throw new AuthInputError("That username is already taken.");
 
     const { data, error } = await supabase.auth.signUp({
       email: cleanEmail,
@@ -226,7 +224,12 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
       if (error) throw error;
       await completeLogin();
     } catch (error) {
-      showStatus(getErrorMessage(error, "Authentication could not be completed."));
+      showStatus(getErrorMessage(
+        error,
+        mode === "login"
+          ? "Email or password is incorrect, or sign-in could not be completed."
+          : "Account creation could not be completed. Please try again.",
+      ));
       resetCaptcha();
     } finally {
       setPending(false);

@@ -22,6 +22,8 @@ Leaderboards are defined in `202609030006_leaderboards_v1.sql`. Apply it only af
 
 Versioned Terms of Service and Privacy Policy consent is defined in `202609030007_legal_consent_versioning.sql`. Apply it after the leaderboard migration. The exact SQL Editor steps, column and RLS details, verification scenarios, security test, future-version test, and rollback warning are in `docs/legal-consent-supabase-setup.md`.
 
+Persistent RevIT AI quotas are defined in `202609050008_ai_api_rate_limits.sql`. Apply it last before enabling `GROQ_API_KEY`. Vercel environment, Supabase, Turnstile, HTTPS, provider-key, and post-deployment verification steps are in `docs/production-security-setup.md`.
+
 Levels follow `25 × (level - 1) × (level + 2)`, producing the requested 0, 100, 250, 450, and 700 XP thresholds for Levels 1–5 and 1,000 XP for Level 6.
 
 ## Safety and scope

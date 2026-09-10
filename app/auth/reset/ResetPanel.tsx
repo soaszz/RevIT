@@ -13,7 +13,7 @@ export default function ResetPanel() {
     if (password.length < 8) return setStatus("Use a password with at least 8 characters.");
     if (password !== confirm) return setStatus("The passwords do not match.");
     const { error } = await createClient().auth.updateUser({ password });
-    if (error) return setStatus(error.message);
+    if (error) return setStatus("The password could not be updated. Request a new recovery link and try again.");
     await createClient().auth.signOut({ scope: "local" });
     setComplete(true); setStatus("Password updated. Sign in with your new password.");
   }

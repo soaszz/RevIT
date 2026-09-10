@@ -21,15 +21,15 @@ const sections: LegalSection[] = [
   },
   {
     title: "Plans, Calendar, and Preferences",
-    content: <><p>The current Study Planner stores plan titles, dates, blocks, times, categories, subjects, topics, notes, completion state, and calendar-link state in local browser storage scoped to the signed-in user or local mode. Exam schedules and study activity used by the calendar may be stored in Supabase when cloud accounts are enabled.</p><p>RevIT also stores preferences such as timezone, theme, and optional leaderboard participation. Selected topics, sidebar state, sound preference, and session-policy markers may be kept in browser storage.</p></>,
+    content: <><p>The current Study Planner stores plan titles, dates, blocks, times, categories, subjects, topics, notes, completion state, and calendar-link state in local browser storage scoped to the signed-in user or local mode. Exam schedules and study activity used by the calendar may be stored in Supabase when cloud accounts are enabled.</p><p>RevIT also stores preferences such as timezone, theme, optional leaderboard participation, whether you enabled NU MTAP-specific features, and whether you completed that preference prompt. The MTAP choice is private and is not added to your public profile or leaderboard results. Selected topics, sidebar state, sound preference, and session-policy markers may be kept in browser storage.</p></>,
   },
   {
     title: "RevIT AI and Saved Conversations",
-    content: <><p>When you use RevIT AI, recent chat messages are sent through RevIT’s server route to Groq when a Groq API key is configured. Groq processes that text to generate an educational response. When no key is configured, the app returns a limited built-in demo response without sending the prompt to Groq.</p><p>For signed-in cloud users, RevIT stores AI conversation titles, user messages, assistant messages, and timestamps in Supabase so chat history can be reopened. Do not submit patient-identifying information, confidential clinical records, or information you are not authorized to share.</p></>,
+    content: <><p>When you use RevIT AI, recent chat messages are sent through RevIT’s server route to Groq when a Groq API key is configured. Groq processes that text to generate an educational response. When no key is configured, the app returns a limited built-in demo response without sending the prompt to Groq.</p><p>For signed-in cloud users, RevIT stores AI conversation titles, user messages, assistant messages, and timestamps in Supabase so chat history can be reopened. RevIT also stores short-lived request reservation and successful-usage timestamps, your applicable access tier, and quota configuration to enforce per-minute and daily limits. Failed validation and failed provider requests are not recorded as completed usage. Do not submit patient-identifying information, confidential clinical records, or information you are not authorized to share.</p></>,
   },
   {
     title: "How Information Is Used",
-    content: <p>RevIT uses this information to authenticate accounts, verify email, maintain sessions, synchronize profiles and study records, deliver reviewer and planning features, calculate deterministic grades and learning analytics, operate adaptive repetition, track activity and achievements, save AI conversations, display optional leaderboards, protect the service, and troubleshoot failures.</p>,
+    content: <p>RevIT uses this information to authenticate accounts, verify email, maintain sessions, synchronize profiles and study records, personalize access to optional NU MTAP-specific tools, deliver reviewer and planning features, calculate deterministic grades and learning analytics, operate adaptive repetition, track activity and achievements, save AI conversations, display optional leaderboards, protect the service, and troubleshoot failures.</p>,
   },
   {
     title: "Supabase Storage and Processing",
@@ -37,7 +37,7 @@ const sections: LegalSection[] = [
   },
   {
     title: "Local Browser and Device Storage",
-    content: <p>RevIT uses localStorage and sessionStorage for theme, selected topics, local or cached question attempts, adaptive-repetition state, local-mode profile and study data, Study Planner records, sound and sidebar preferences, queued sync operations, level-notice state, and remember-me or session-only markers. Browser storage remains on the device and browser profile until cleared by you, the browser, or device-management settings.</p>,
+    content: <p>RevIT uses localStorage and sessionStorage for theme, selected topics, local or cached question attempts, adaptive-repetition state, local-mode profile and study data, the local-mode MTAP preference, Study Planner records, sound and sidebar preferences, queued sync operations, level-notice state, and remember-me or session-only markers. Browser storage remains on the device and browser profile until cleared by you, the browser, or device-management settings.</p>,
   },
   {
     title: "Leaderboard Visibility",
@@ -61,7 +61,7 @@ const sections: LegalSection[] = [
   },
   {
     title: "Your Choices",
-    content: <p>You can switch theme, choose remember-me or session-only access, keep leaderboard participation off, remove or change supported profile and study records, clear local browser storage, and sign out rather than accept a new policy version. Some choices may limit available features.</p>,
+    content: <p>You can switch theme, choose remember-me or session-only access, keep leaderboard participation off, enable or disable MTAP Features in Settings at any time, remove or change supported profile and study records, clear local browser storage, and sign out rather than accept a new policy version. Disabling MTAP Features hides only MTAP-specific tools and does not delete your grades or other study data.</p>,
   },
   {
     title: "Policy Updates",

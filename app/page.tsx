@@ -10,7 +10,7 @@ export default async function Home() {
   if (!claimsData?.claims?.sub) redirect("/auth");
   const { data: userData, error } = await supabase.auth.getUser();
   if (error || !userData.user) redirect("/auth");
-  if (!userData.user.email_confirmed_at) redirect(`/auth/verify?email=${encodeURIComponent(userData.user.email ?? "")}`);
+  if (!userData.user.email_confirmed_at) redirect("/auth/verify");
   const { data: assurance } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
   if (assurance?.nextLevel === "aal2" && assurance.currentLevel !== "aal2") redirect("/auth/mfa?next=/overview");
   return <RevITApp cloudEnabled initialUser={{

@@ -105,8 +105,8 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
         if (cancelled) return;
         setRows(result.rows);
         setPosition(result.currentPosition);
-      } catch (loadError) {
-        if (!cancelled) setError(loadError instanceof Error ? loadError.message : "The leaderboard could not be loaded.");
+      } catch {
+        if (!cancelled) setError("The leaderboard could not be loaded. Please try again.");
       } finally {
         if (!cancelled) setLoading(false);
       }

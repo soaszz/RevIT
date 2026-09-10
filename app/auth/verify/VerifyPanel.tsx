@@ -19,7 +19,9 @@ export default function VerifyPanel({ email }: { email: string }) {
       email,
       options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/overview` },
     });
-    setStatus(error ? error.message : "If the address can receive a verification email, a new message has been sent.");
+    setStatus(error
+      ? "The verification email could not be resent. Please try again."
+      : "If the address can receive a verification email, a new message has been sent.");
     if (!error) setSeconds(60);
   }
 

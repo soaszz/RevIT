@@ -1,6 +1,8 @@
 import Groq from "groq-sdk";
-
-type InputMessage = { role: "user" | "assistant"; content: string };
+import { finalizeAiRequest, rateLimitHeaders, reserveAiRequest } from "../../lib/aiRateLimit";
+import { AiRequestError, isSameOriginRequest, readAiRequest } from "../../lib/aiRequest";
+import { isSupabaseConfigured } from "../../lib/supabase/config";
+import { createClient } from "../../lib/supabase/server";
 
 const MEDTECH_INSTRUCTIONS = `You are RevIT AI, an educational assistant exclusively for Medical Technology, Medical Laboratory Science, medicine, biomedical science, and closely related health sciences.
 
@@ -78,17 +80,6 @@ Do not replace local clinical policies, manufacturer instructions, or profession
 For patient-specific questions, provide general educational context and recommend consultation with an appropriate qualified professional.
 For an apparent emergency, advise contacting local emergency services.`;
 
-function validMessages(value: unknown): value is InputMessage[] {
-  return Array.isArray(value) && value.length > 0 && value.length <= 12 && value.every((message) => {
-    if (!message || typeof message !== "object") return false;
-    const candidate = message as Record<string, unknown>;
-    return (candidate.role === "user" || candidate.role === "assistant")
-      && typeof candidate.content === "string"
-      && candidate.content.trim().length > 0
-      && candidate.content.length <= 4000;
-  });
-}
-
 function demoAnswer(question: string) {
   const normalized = question.toLowerCase();
 
@@ -113,70 +104,153 @@ function statusFromError(error: unknown) {
   return typeof status === "number" ? status : null;
 }
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json() as { messages?: unknown };
-    if (!validMessages(body.messages)) {
-      return Response.json({ error: "Please send a valid question." }, { status: 400 });
-    }
+const NO_STORE_HEADERS = {
+  "Cache-Control": "private, no-store, max-age=0",
+  "Pragma": "no-cache",
+};
 
-    const apiKey = process.env.GROQ_API_KEY?.trim();
-    const latestQuestion = body.messages.at(-1)!.content;
+function json(body: Record<string, unknown>, status = 200, headers?: Record<string, string>) {
+  return Response.json(body, {
+    status,
+    headers: { ...NO_STORE_HEADERS, ...headers },
+  });
+}
+
+function safeLog(event: string, providerStatus?: number | null) {
+  console.error("RevIT AI request failed", {
+    event,
+    ...(providerStatus ? { providerStatus } : {}),
+  });
+}
+
+export async function POST(request: Request) {
+  if (!isSameOriginRequest(request)) {
+    return json({ error: "This request origin is not allowed." }, 403);
+  }
+
+  let messages: Awaited<ReturnType<typeof readAiRequest>>;
+  try {
+    messages = await readAiRequest(request);
+  } catch (error) {
+    if (error instanceof AiRequestError) return json({ error: error.publicMessage }, error.status);
+    safeLog("request_validation_failed");
+    return json({ error: "The request could not be processed." }, 400);
+  }
+
+  const apiKey = process.env.GROQ_API_KEY?.trim();
+  const latestQuestion = messages.at(-1)!.content;
+  if (!isSupabaseConfigured()) {
     if (!apiKey) {
-      return Response.json({
+      return json({
         answer: demoAnswer(latestQuestion),
         citations: [],
         grounded: false,
         mode: "demo",
       });
     }
+    safeLog("live_ai_requires_auth_store");
+    return json({ error: "RevIT AI is temporarily unavailable." }, 503);
+  }
 
-    const groq = new Groq({ apiKey });
-    let answer = "";
-    try {
-      const completion = await groq.chat.completions.create({
-        model: process.env.GROQ_MODEL?.trim() || "openai/gpt-oss-120b",
-        messages: [
-          { role: "system", content: MEDTECH_INSTRUCTIONS },
-          ...body.messages.slice(-10),
-        ],
-        temperature: 0.2,
-        max_completion_tokens: 1200,
-      });
-      answer = completion.choices[0]?.message?.content?.trim() ?? "";
-    } catch (error) {
-      const status = statusFromError(error);
-      if (status === 429) {
-        return Response.json(
-          { error: "RevIT AI is temporarily unavailable because its Groq rate limit has been reached." },
-          { status: 503 },
-        );
-      }
-      if (status === 401 || status === 403) {
-        return Response.json(
-          { error: "RevIT AI is not configured with a valid Groq API key." },
-          { status: 503 },
-        );
-      }
-      if (status === 404) {
-        return Response.json(
-          { error: "The configured Groq model is unavailable. Check GROQ_MODEL in the deployment settings." },
-          { status: 503 },
-        );
-      }
-      throw error;
+  let supabase: Awaited<ReturnType<typeof createClient>>;
+  try {
+    supabase = await createClient();
+    const { data: userData, error: authError } = await supabase.auth.getUser();
+    if (authError || !userData.user) {
+      return json({ error: "Sign in to use RevIT AI." }, 401);
     }
-    if (!answer) throw new Error("Groq returned an empty answer");
+  } catch {
+    safeLog("auth_service_unavailable");
+    return json({ error: "RevIT AI is temporarily unavailable." }, 503);
+  }
 
-    return Response.json({
-      answer,
+  if (!apiKey) {
+    return json({
+      answer: demoAnswer(latestQuestion),
       citations: [],
       grounded: false,
-      mode: "live",
-      provider: "Groq",
+      mode: "demo",
     });
-  } catch (error) {
-    console.error("RevIT assistant error", error);
-    return Response.json({ error: "The assistant is temporarily unavailable. Please try again." }, { status: 500 });
   }
+
+  let reservation;
+  try {
+    reservation = await reserveAiRequest(supabase);
+  } catch {
+    safeLog("rate_limit_store_unavailable");
+    return json({ error: "RevIT AI is temporarily unavailable." }, 503);
+  }
+
+  const quotaHeaders = rateLimitHeaders(reservation);
+  if (!reservation.allowed || !reservation.reservationId) {
+    const retryAfter = Math.max(1, reservation.retryAfterSeconds);
+    const dailyLimitReached = reservation.dailyRemaining === 0 && retryAfter > 120;
+    return json(
+      {
+        error: dailyLimitReached
+          ? `You have reached your ${reservation.dailyLimit}-question daily RevIT AI limit. Please try again after the UTC reset.`
+          : `Too many RevIT AI requests. Please wait ${retryAfter} seconds and try again.`,
+        tier: reservation.tier,
+      },
+      429,
+      { ...quotaHeaders, "Retry-After": String(retryAfter) },
+    );
+  }
+
+  const cancelReservation = async () => {
+    try {
+      await finalizeAiRequest(supabase, reservation.reservationId!, false);
+    } catch {
+      safeLog("rate_limit_reservation_cleanup_failed");
+    }
+  };
+
+  let answer = "";
+  try {
+    const groq = new Groq({ apiKey, maxRetries: 0, timeout: 30_000 });
+    const completion = await groq.chat.completions.create({
+      model: process.env.GROQ_MODEL?.trim() || "openai/gpt-oss-120b",
+      messages: [
+        { role: "system", content: MEDTECH_INSTRUCTIONS },
+        ...messages.slice(-10),
+      ],
+      temperature: 0.2,
+      max_completion_tokens: 1200,
+    });
+    answer = completion.choices[0]?.message?.content?.trim() ?? "";
+  } catch (error) {
+    await cancelReservation();
+    const status = statusFromError(error);
+    safeLog("provider_request_failed", status);
+    return json(
+      { error: status === 429 ? "RevIT AI is busy right now. Please try again shortly." : "RevIT AI is temporarily unavailable." },
+      503,
+      quotaHeaders,
+    );
+  }
+  if (!answer) {
+    await cancelReservation();
+    safeLog("provider_empty_response");
+    return json({ error: "RevIT AI could not produce an answer. Please try again." }, 503, quotaHeaders);
+  }
+
+  try {
+    await finalizeAiRequest(supabase, reservation.reservationId, true);
+  } catch {
+    safeLog("rate_limit_finalization_failed");
+    return json({ error: "RevIT AI is temporarily unavailable." }, 503, quotaHeaders);
+  }
+
+  return json({
+    answer,
+    citations: [],
+    grounded: false,
+    mode: "live",
+    provider: "Groq",
+    usage: {
+      tier: reservation.tier,
+      minuteRemaining: reservation.minuteRemaining,
+      dailyRemaining: reservation.dailyRemaining,
+    },
+  }, 200, quotaHeaders);
 }

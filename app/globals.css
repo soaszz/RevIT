@@ -542,6 +542,31 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .onboarding-backdrop { position: fixed; z-index: 80; inset: 0; overflow-y: auto; display: grid; place-items: center; padding: 20px; background: rgba(5,18,15,.76); backdrop-filter: blur(8px); }.onboarding-card { width: min(560px, 100%); padding: clamp(24px, 5vw, 42px); border: 1px solid var(--line); border-radius: 22px; background: var(--paper); box-shadow: 0 30px 100px rgba(0,0,0,.3); }.onboarding-card h1 { font-size: clamp(31px, 6vw, 46px); }.onboarding-card > div > p:last-child { color: var(--muted); line-height: 1.65; }.onboarding-card form { display: grid; gap: 16px; }
 .account-modal { width: min(620px, 100%); min-height: min(590px, calc(100vh - 40px)); max-height: min(860px, calc(100vh - 40px)); overflow-y: auto; display: flex; flex-direction: column; }.account-modal .auth-tabs { margin: 18px 0; }.security-stack { display: grid; gap: 25px; }.security-stack > form { display: grid; gap: 12px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
 .account-modal-footer { display: flex; justify-content: flex-start; margin-top: auto; padding-top: 20px; }.account-signout { min-width: 92px; }
+.mtap-preference-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 16px; margin-top: 20px; padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-soft); }
+.mtap-preference-card h3 { margin: 2px 0 6px; color: var(--ink); font-size: 17px; letter-spacing: -.025em; }
+.mtap-preference-card > div > p:last-child { max-width: 420px; margin: 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+.mtap-preference-card .form-status { grid-column: 1 / -1; }
+.mtap-switch { display: grid; grid-template-columns: auto auto; align-items: center; gap: 8px; cursor: pointer; }
+.mtap-switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.mtap-switch > span { position: relative; width: 42px; height: 24px; border: 1px solid var(--line); border-radius: 99px; background: var(--input); transition: background-color .18s ease, border-color .18s ease; }
+.mtap-switch > span::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--muted); transition: transform .18s ease, background-color .18s ease; }
+.mtap-switch input:checked + span { border-color: var(--green); background: var(--green); }
+.mtap-switch input:checked + span::after { transform: translateX(18px); background: white; }
+.mtap-switch input:focus-visible + span { outline: 3px solid color-mix(in srgb, var(--green) 24%, transparent); outline-offset: 2px; }
+.mtap-switch input:disabled + span { opacity: .58; cursor: wait; }
+.mtap-switch strong { min-width: 42px; color: var(--green-dark); font-size: 10px; text-align: right; }
+.mtap-onboarding-card { display: grid; gap: 22px; }
+.mtap-onboarding-note { display: grid; gap: 6px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface-soft); }
+.mtap-onboarding-note strong { color: var(--ink); font-size: 11px; }
+.mtap-onboarding-note span { color: var(--muted); font-size: 9px; line-height: 1.55; }
+.mtap-onboarding-actions { display: grid; gap: 9px; }
+.mtap-onboarding-actions button { width: 100%; min-height: 44px; }
+.grade-simulator-summary { border-color: color-mix(in srgb, var(--green) 30%, var(--line)); background: var(--green-soft) !important; }
+
+@media (max-width: 520px) {
+  .mtap-preference-card { grid-template-columns: 1fr; }
+  .mtap-switch { justify-self: start; }
+}
 
 /* Monthly activity calendar */
 .calendar-card { position: relative; border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: var(--paper); box-shadow: var(--shadow); }
@@ -765,6 +790,7 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 
 /* RevIT brand, public legal documents, and versioned consent */
 .page-heading h1 { font-size: clamp(27px, 3vw, 39px); line-height: 1.08; letter-spacing: -.045em; }
+.page-heading h1.overview-greeting { max-width: 960px; font-size: clamp(42px, 5.4vw, 68px); font-weight: 850; line-height: 1; letter-spacing: -.06em; text-wrap: balance; }
 .revit-loading-content p strong, .revit-loading-content p span { display: block; }
 .revit-loading-content p strong { color: var(--ink); font-size: 12px; letter-spacing: .02em; }
 .revit-loading-content p span { margin-top: 5px; font-size: 11px; font-weight: 500; }

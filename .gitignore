@@ -21,6 +21,12 @@
 # misc
 .DS_Store
 *.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+.npmrc
 
 # debug
 npm-debug.log*
@@ -39,6 +45,9 @@ yarn-error.log*
 /.wrangler/
 /outputs/
 /work/
+
+# local comparison/workspace copies
+/RevIT*-working/
 
 # local provider experiment (not used by RevIT)
 /chatbot/

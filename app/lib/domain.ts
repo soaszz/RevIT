@@ -161,6 +161,8 @@ export type UserPreferences = {
   timezone: string;
   theme: "light" | "dark" | "system";
   leaderboard_opt_in: boolean;
+  mtap_features_enabled: boolean;
+  mtap_onboarding_completed: boolean;
 };
 
 export type CloudSnapshot = {

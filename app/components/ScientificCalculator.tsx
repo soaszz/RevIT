@@ -43,7 +43,13 @@ function HistoryIcon({ direction }: { direction: "undo" | "redo" }) {
 }
 
 function katexMarkup(latex: string, displayMode = false) {
-  return katex.renderToString(latex, { displayMode, throwOnError: false, strict: "ignore", trust: true, output: "html" });
+  return katex.renderToString(latex, {
+    displayMode,
+    throwOnError: false,
+    strict: "ignore",
+    trust: (context) => context.command === "\\htmlClass",
+    output: "html",
+  });
 }
 
 function resultLatex(result: string) {

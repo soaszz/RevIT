@@ -60,7 +60,11 @@ function categoryPercentage(matrix: GradeMatrix, field: (typeof GRADE_FIELDS)[nu
   return (totalScore / (field.max * SUBJECTS.length)) * field.weight * 100;
 }
 
-export default function GradesPage({ grades, onSave }: { grades: GradeRecord[]; onSave: (record: GradeRecord) => Promise<void> }) {
+export default function GradesPage({ grades, onSave, showSimulator }: {
+  grades: GradeRecord[];
+  onSave: (record: GradeRecord) => Promise<void>;
+  showSimulator: boolean;
+}) {
   const [matrix, setMatrix] = useState<GradeMatrix>(() => matrixFromRecords(grades));
   const [pending, setPending] = useState(false);
   const [status, setStatus] = useState("");
@@ -101,9 +105,9 @@ export default function GradesPage({ grades, onSave }: { grades: GradeRecord[]; 
       })));
       setStatusType("success");
       setStatus("All subject grades were saved.");
-    } catch (error) {
+    } catch {
       setStatusType("error");
-      setStatus(error instanceof Error ? error.message : "Grades could not be saved.");
+      setStatus("Grades could not be saved. Please try again.");
     } finally {
       setPending(false);
     }
@@ -117,7 +121,7 @@ export default function GradesPage({ grades, onSave }: { grades: GradeRecord[]; 
           <span className="state-pill">Pass mark {PASSING_GRADE}%</span>
         </div>
         <div className="grade-summary-grid">
-          <div><span>Current weighted grade</span><strong>{overallPercentage.toFixed(2)}%</strong><small>Sum of the five category percentages</small></div>
+          {showSimulator && <div className="grade-simulator-summary"><span>Grade Simulator</span><strong>{overallPercentage.toFixed(2)}%</strong><small>Projected weighted grade from the scores currently entered</small></div>}
           <div><span>Grades recorded</span><strong>{completedEntries} / {SUBJECTS.length * GRADE_FIELDS.length}</strong><small>Across four subjects and five assessments</small></div>
           <div><span>Assessments remaining</span><strong>{SUBJECTS.length * GRADE_FIELDS.length - completedEntries}</strong><small>Blank entries can be completed later</small></div>
         </div>

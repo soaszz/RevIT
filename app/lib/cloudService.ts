@@ -11,6 +11,7 @@ import type {
   UserPreferences,
 } from "./domain";
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "./legal";
+import { validateAvatarFile } from "./avatarValidation";
 
 const PROFILE_COLUMNS = "id,username,first_name,avatar_url,onboarding_complete,terms_accepted_at,terms_version,privacy_accepted_at,privacy_version";
 
@@ -40,6 +41,16 @@ export function isMissingLeaderboardSchemaError(error: { code?: string; message?
     || error.code === "PGRST204"
     || error.code === "42703"
     || (error.message?.toLowerCase().includes("leaderboard") ?? false);
+}
+
+export function isMissingMtapPreferenceSchemaError(error: { code?: string; message?: string } | null | undefined) {
+  if (!error) return false;
+  const message = error.message?.toLowerCase() ?? "";
+  return error.code === "PGRST202"
+    || error.code === "PGRST204"
+    || error.code === "42703"
+    || message.includes("mtap_features_enabled")
+    || message.includes("mtap_onboarding_completed");
 }
 
 type QuestionAttemptRow = {
@@ -86,11 +97,24 @@ const QUESTION_ATTEMPT_COLUMNS = "id,user_id,question_id,subject_id,subject_name
 
 export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
   const preferencesPromise = (async () => {
+    const mtap = await client.from("user_preferences")
+      .select("user_id,timezone,theme,leaderboard_opt_in,mtap_features_enabled,mtap_onboarding_completed")
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (!mtap.error) return mtap;
+    if (!isMissingMtapPreferenceSchemaError(mtap.error)) return mtap;
     const current = await client.from("user_preferences")
       .select("user_id,timezone,theme,leaderboard_opt_in")
       .eq("user_id", userId)
       .maybeSingle();
-    if (!current.error) return current;
+    if (!current.error) return {
+      ...current,
+      data: current.data ? {
+        ...current.data,
+        mtap_features_enabled: false,
+        mtap_onboarding_completed: false,
+      } : null,
+    };
     if (!isMissingLeaderboardSchemaError(current.error)) return current;
     const legacy = await client.from("user_preferences")
       .select("user_id,timezone,theme")
@@ -98,7 +122,12 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
       .maybeSingle();
     return {
       ...legacy,
-      data: legacy.data ? { ...legacy.data, leaderboard_opt_in: false } : null,
+      data: legacy.data ? {
+        ...legacy.data,
+        leaderboard_opt_in: false,
+        mtap_features_enabled: false,
+        mtap_onboarding_completed: false,
+      } : null,
     };
   })();
   const [profile, grades, activity, exams, preferences, reinforcement, attempts] = await Promise.all([
@@ -206,11 +235,16 @@ export async function saveProfile(client: SupabaseClient, profile: Profile) {
 }
 
 export async function uploadAvatar(client: SupabaseClient, userId: string, file: File) {
-  const extension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "png";
-  const path = `${userId}/avatar-${Date.now()}.${extension}`;
-  const { error } = await client.storage.from("avatars").upload(path, file, { cacheControl: "3600", upsert: true });
+  const validated = await validateAvatarFile(file);
+  const version = Date.now();
+  const path = `${userId}/avatar.${validated.extension}`;
+  const { error } = await client.storage.from("avatars").upload(path, file, {
+    cacheControl: "3600",
+    contentType: validated.contentType,
+    upsert: true,
+  });
   if (error) throw new Error(error.message);
-  return client.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+  return `${client.storage.from("avatars").getPublicUrl(path).data.publicUrl}?v=${version}`;
 }
 
 export async function saveGrade(client: SupabaseClient, userId: string, record: GradeRecord) {
@@ -238,7 +272,7 @@ export async function deleteExam(client: SupabaseClient, userId: string, id: str
 export async function savePreferences(client: SupabaseClient, userId: string, preferences: UserPreferences) {
   const { data, error } = await client.from("user_preferences")
     .upsert({ ...preferences, user_id: userId })
-    .select("user_id,timezone,theme,leaderboard_opt_in")
+    .select("user_id,timezone,theme,leaderboard_opt_in,mtap_features_enabled,mtap_onboarding_completed")
     .single();
   if (error) throw new Error(error.message);
   return data as UserPreferences;

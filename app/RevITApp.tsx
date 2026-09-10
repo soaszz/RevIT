@@ -11,6 +11,8 @@ import Flashcards from "./components/Flashcards";
 import GradesPage from "./components/GradesPage";
 import LeaderboardPage from "./components/LeaderboardPage";
 import LegalConsentGate from "./components/LegalConsentGate";
+import MtapOnboarding from "./components/MtapOnboarding";
+import MtapPreferenceControl from "./components/MtapPreferenceControl";
 import Onboarding from "./components/Onboarding";
 import QuestionTimer from "./components/QuestionTimer";
 import ReviewModeSwitch, { type ReviewLibraryMode } from "./components/ReviewModeSwitch";
@@ -51,6 +53,8 @@ import { playReviewSound, unlockReviewSounds } from "./lib/reviewSounds";
 import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
 import { createClient } from "./lib/supabase/client";
 import { hasCurrentLegalConsent } from "./lib/legal";
+import { canAccessFeature } from "./lib/features";
+import { LOCAL_PREFERENCES_STORAGE_KEY, normalizeUserPreferences, withMtapFeaturePreference } from "./lib/userPreferences";
 import {
   emptyProgression,
   flushCloudProgressEventQueue,
@@ -73,6 +77,7 @@ import {
   updateAiChatTitle,
   type AiChat,
 } from "./lib/aiChatService";
+import { AVATAR_ACCEPT, validateAvatarFile } from "./lib/avatarValidation";
 import {
   questionById,
   questions,
@@ -158,8 +163,8 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
   },
   grades: {
     eyebrow: "Grade tracking",
-    title: "Grades & Simulator",
-    description: "Record assessments by subject and use deterministic calculations to review weighted results and possible outcomes.",
+    title: "Grades",
+    description: "Record assessments by subject and review your saved grade history.",
   },
   assistant: {
     eyebrow: "Educational AI support",
@@ -344,6 +349,8 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Manila",
     theme: "system",
     leaderboard_opt_in: false,
+    mtap_features_enabled: false,
+    mtap_onboarding_completed: false,
   }));
   const [cloudLoading, setCloudLoading] = useState(cloudEnabled);
   const [cloudError, setCloudError] = useState("");
@@ -455,6 +462,9 @@ useEffect(() => {
       const savedProfile = JSON.parse(localStorage.getItem("revit-profile-v1") ?? "null") as LearnerProfile | null;
       const savedSidebarCollapsed = localStorage.getItem("revit-sidebar-collapsed") === "true";
       const savedSoundEffects = localStorage.getItem(SOUND_EFFECTS_STORAGE_KEY);
+      const savedPreferences = !initialUser
+        ? JSON.parse(localStorage.getItem(LOCAL_PREFERENCES_STORAGE_KEY) ?? "null") as Partial<UserPreferences> | null
+        : null;
       const reinforcementKey = `revit-reinforcement-v1:${initialUser?.id ?? "local"}`;
       const savedReinforcement = JSON.parse(localStorage.getItem(reinforcementKey) ?? "{}") as ReinforcementLevels;
       setAttempts(normalizeAttempts(rawAttempts));
@@ -468,6 +478,12 @@ useEffect(() => {
       }
       setSidebarCollapsed(savedSidebarCollapsed);
       setSoundEffectsEnabled(savedSoundEffects !== "false");
+      if (!initialUser) {
+        setPreferences(normalizeUserPreferences(
+          savedPreferences,
+          Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Manila",
+        ));
+      }
       if (savedReinforcement && typeof savedReinforcement === "object" && !Array.isArray(savedReinforcement)) {
         setReinforcementLevels(Object.fromEntries(Object.entries(savedReinforcement)
           .filter(([id, level]) => questionById.has(id) && Number.isInteger(level) && level > 0 && level <= 3)));
@@ -554,14 +570,14 @@ useEffect(() => {
         try {
           await flushCloudProgressEventQueue(client, initialUser!.id);
           progressionUpdate = await loadCloudProgression(client, initialUser!.id);
-        } catch (error) {
-          progressionLoadError = error instanceof Error ? error.message : "Progression could not be loaded.";
+        } catch {
+          progressionLoadError = "Progression could not be loaded. It will retry when the connection recovers.";
         }
         const snapshot = await loadCloudSnapshot(client, initialUser!.id);
         if (cancelled) return;
         const fallbackName = initialUser!.username?.trim() || DEFAULT_PROFILE.name;
         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, fallbackName, "");
-        const nextPreferences = snapshot.preferences ?? preferences;
+        const nextPreferences = normalizeUserPreferences(snapshot.preferences ?? preferences, preferences.timezone);
         setCloudProfile(nextProfile); setGrades(snapshot.grades); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences);
         setAttempts((current) => mergeAttempts(snapshot.attempts, current));
         setAttemptHistoryAvailable(snapshot.attemptHistoryAvailable);
@@ -584,8 +600,8 @@ useEffect(() => {
         document.documentElement.dataset.theme = resolvedTheme;
         document.documentElement.style.colorScheme = resolvedTheme;
         if (savedTheme !== "light" && savedTheme !== "dark" && cloudTheme) localStorage.setItem("revit-theme", cloudTheme);
-      } catch (error) {
-        if (!cancelled) setCloudError(error instanceof Error ? error.message : "Cloud data could not be loaded.");
+      } catch {
+        if (!cancelled) setCloudError("Cloud data could not be loaded. Please try again.");
       } finally {
         if (!cancelled) {
           setProgressionReady(true);
@@ -617,10 +633,10 @@ useEffect(() => {
           setMessages([]);
           setLoadedChatId(null);
         }
-      } catch (error) {
+      } catch {
         if (!cancelled) {
           setAiChats([]);
-          setChatError(error instanceof Error ? error.message : "Chat history could not be loaded.");
+          setChatError("Chat history could not be loaded. Please try again.");
         }
       } finally {
         if (!cancelled) {
@@ -646,11 +662,11 @@ useEffect(() => {
         if (cancelled) return;
         setMessages(storedMessages.map(({ id, role, content }) => ({ id, role, content })));
         setLoadedChatId(activeChatId);
-      } catch (error) {
+      } catch {
         if (!cancelled) {
           setMessages([]);
           setLoadedChatId(activeChatId);
-          setChatError(error instanceof Error ? error.message : "This conversation could not be loaded.");
+          setChatError("This conversation could not be loaded. Please try again.");
         }
       } finally {
         if (!cancelled) setChatMessagesLoading(false);
@@ -676,8 +692,8 @@ useEffect(() => {
         if (!cancelled) {
           setActivity(snapshot.activity);
         }
-      } catch (error) {
-        if (!cancelled) setCloudError(`Local history is preserved, but migration needs retry: ${error instanceof Error ? error.message : "unknown error"}`);
+      } catch {
+        if (!cancelled) setCloudError("Local history is preserved, but cloud migration needs to retry.");
       }
     }
     void migrate();
@@ -720,6 +736,11 @@ useEffect(() => {
     const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (localZone) setPreferences((current) => ({ ...current, timezone: localZone }));
   }, [cloudEnabled]);
+
+  useEffect(() => {
+    if (!storageReady || cloudEnabled) return;
+    localStorage.setItem(LOCAL_PREFERENCES_STORAGE_KEY, JSON.stringify(preferences));
+  }, [cloudEnabled, preferences, storageReady]);
 
   useEffect(() => {
     if (!storageReady || cloudEnabled) return;
@@ -1006,9 +1027,9 @@ useEffect(() => {
         update = recordLocalProgressEvents(progressionOwnerKey, events, metrics);
       }
       applyProgressionUpdate(update);
-    } catch (error) {
+    } catch {
       if (cloudEnabled && initialUser) queueCloudProgressEvents(initialUser.id, events);
-      setProgressionError(`Progression is queued and will sync when the connection recovers: ${error instanceof Error ? error.message : "unknown error"}`);
+      setProgressionError("Progression is queued and will sync when the connection recovers.");
     }
   }
 
@@ -1197,15 +1218,26 @@ useEffect(() => {
     }
   }
 
-  function chooseProfilePhoto(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      setProfileError("Choose a PNG, JPG, WebP, or another image file.");
+  async function updateMtapFeatures(enabled: boolean) {
+    const nextPreferences = withMtapFeaturePreference(preferences, enabled);
+
+    if (cloudEnabled && initialUser) {
+      const saved = await savePreferences(createClient(), initialUser.id, nextPreferences);
+      setPreferences(normalizeUserPreferences(saved, nextPreferences.timezone));
       return;
     }
-    if (file.size > 2 * 1024 * 1024) {
-      setProfileError("Choose an image smaller than 2 MB so it can be saved on this device.");
+
+    localStorage.setItem(LOCAL_PREFERENCES_STORAGE_KEY, JSON.stringify(nextPreferences));
+    setPreferences(nextPreferences);
+  }
+
+  async function chooseProfilePhoto(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    try {
+      await validateAvatarFile(file);
+    } catch (error) {
+      setProfileError(error instanceof Error ? error.message : "Choose a valid image smaller than 2 MB.");
       return;
     }
     const reader = new FileReader();
@@ -1258,8 +1290,8 @@ useEffect(() => {
       setActiveChatId(chat.id);
       setLoadedChatId(chat.id);
       setMessages([]);
-    } catch (error) {
-      setChatError(error instanceof Error ? error.message : "A new chat could not be created.");
+    } catch {
+      setChatError("A new chat could not be created. Please try again.");
     } finally {
       setChatActionPending(false);
     }
@@ -1289,8 +1321,8 @@ useEffect(() => {
         setLoadedChatId(null);
         setActiveChatId(nextChatId);
       }
-    } catch (error) {
-      setChatError(error instanceof Error ? error.message : "The conversation could not be deleted.");
+    } catch {
+      setChatError("The conversation could not be deleted. Please try again.");
     } finally {
       setChatActionPending(false);
     }
@@ -1343,8 +1375,8 @@ useEffect(() => {
         } else {
           moveChatToTop(persistedChatId);
         }
-      } catch (error) {
-        setChatError(`This question could not be saved to chat history. ${error instanceof Error ? error.message : "You can continue in this tab."}`);
+      } catch {
+        setChatError("This question could not be saved to chat history. You can continue in this tab.");
       }
     }
 
@@ -1359,7 +1391,7 @@ useEffect(() => {
           messages: nextMessages.slice(-12).map(({ role, content }) => ({ role, content })),
         }),
       });
-      const data = await response.json() as {
+      let data: {
         answer?: string;
         citations?: string[];
         grounded?: boolean;
@@ -1367,6 +1399,11 @@ useEffect(() => {
         provider?: "Groq";
         error?: string;
       };
+      try {
+        data = await response.json() as typeof data;
+      } catch {
+        throw new Error("The assistant could not answer right now. Please try again.");
+      }
       if (!response.ok || !data.answer) throw new Error(data.error || "The assistant could not answer right now.");
       let assistantMessage: ChatMessage = {
         id: crypto.randomUUID(),
@@ -1383,8 +1420,8 @@ useEffect(() => {
           const storedAssistantMessage = await saveAiMessage(client, persistedChatId, "assistant", data.answer);
           assistantMessage = { ...assistantMessage, id: storedAssistantMessage.id };
           moveChatToTop(persistedChatId);
-        } catch (error) {
-          setChatError(`The answer is visible, but it could not be saved. ${error instanceof Error ? error.message : "Please try again later."}`);
+        } catch {
+          setChatError("The answer is visible, but it could not be saved. Please try again later.");
         }
       }
 
@@ -1455,11 +1492,17 @@ useEffect(() => {
   const todayKey = dateKeyInTimeZone(new Date(), preferences.timezone);
   const streak = calculateStreak(activity, todayKey);
   const firstName = cloudProfile?.first_name || profile.name.split(/\s+/)[0] || "Learner";
+  const gradeSimulatorEnabled = canAccessFeature("gradeSimulator", preferences);
   const heading = activeView === "overview" ? {
     ...baseHeading,
+    title: `${greetingFor(new Date(), preferences.timezone)}, ${firstName}`,
     description: streak.current > 0
-      ? `${greetingFor(new Date(), preferences.timezone)}, ${firstName}. You have a ${streak.current}-day study streak.`
-      : `${greetingFor(new Date(), preferences.timezone)}, ${firstName}. Your next completed review starts a new study streak.`,
+      ? `You have a ${streak.current}-day study streak.`
+      : "Your next completed review starts a new study streak.",
+  } : activeView === "grades" && gradeSimulatorEnabled ? {
+    ...baseHeading,
+    title: "Grades & Simulator",
+    description: "Record assessments by subject and use deterministic calculations to review weighted results and possible outcomes.",
   } : baseHeading;
   const selectedTopicNames = selectedTopicIds.map((id) => topicById.get(id)?.name).filter(Boolean);
   const profileInitials = profile.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R";
@@ -1540,7 +1583,7 @@ useEffect(() => {
         <div className="page-heading">
           <div>
             <p className="eyebrow">{heading.eyebrow}</p>
-            <h1>{heading.title}</h1>
+            <h1 className={activeView === "overview" ? "overview-greeting" : undefined}>{heading.title}</h1>
             <p>{heading.description}</p>
           </div>
           <div className="heading-actions">
@@ -1826,7 +1869,7 @@ useEffect(() => {
           />
         )}
 
-        {activeView === "grades" && <GradesPage grades={grades} onSave={persistGrade} />}
+        {activeView === "grades" && <GradesPage grades={grades} onSave={persistGrade} showSimulator={gradeSimulatorEnabled} />}
 
         {activeView === "assistant" && (
           <div className="assistant-page">
@@ -1919,7 +1962,7 @@ useEffect(() => {
                     {profileDraft.photoDataUrl ? "" : (profileDraft.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R")}
                   </span>
                   <div>
-                    <label className="photo-upload">Choose photo<input type="file" accept="image/*" onChange={chooseProfilePhoto} /></label>
+                    <label className="photo-upload">Choose photo<input type="file" accept={AVATAR_ACCEPT} onChange={(event) => void chooseProfilePhoto(event)} /></label>
                     {profileDraft.photoDataUrl && <button className="text-button quiet" type="button" onClick={() => setProfileDraft((current) => ({ ...current, photoDataUrl: "" }))}>Remove photo</button>}
                     <small>PNG, JPG, or WebP up to 2 MB</small>
                   </div>
@@ -1929,11 +1972,13 @@ useEffect(() => {
                 <p className="profile-privacy">Your name and photo are saved only in this browser on this device.</p>
                 <div className="profile-modal-actions"><button className="text-button quiet" type="button" onClick={() => setProfileOpen(false)}>Cancel</button><button className="primary-button" type="submit">Save profile</button></div>
               </form>
+              <MtapPreferenceControl enabled={preferences.mtap_features_enabled} onChange={updateMtapFeatures} />
             </section>
           </div>
         )}
-        {profileOpen && cloudEnabled && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} />}
+        {profileOpen && cloudEnabled && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} onMtapFeaturesChange={updateMtapFeatures} />}
         {cloudEnabled && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} />}
+        {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>
       <ScientificCalculator />
     </main>

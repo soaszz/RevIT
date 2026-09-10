@@ -1,13 +1,13 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { SUPABASE_COOKIE_MAX_AGE, supabaseConfig } from "./config";
+import { supabaseConfig, supabaseCookieOptions } from "./config";
 
 export async function createClient() {
   const { url, key } = supabaseConfig();
   const cookieStore = await cookies();
 
   return createServerClient(url, key, {
-    cookieOptions: { maxAge: SUPABASE_COOKIE_MAX_AGE },
+    cookieOptions: supabaseCookieOptions(),
     cookies: {
       getAll: () => cookieStore.getAll(),
       setAll(cookiesToSet) {

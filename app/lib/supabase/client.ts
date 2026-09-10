@@ -1,12 +1,15 @@
 import { createBrowserClient } from "@supabase/ssr";
-import { SUPABASE_COOKIE_MAX_AGE, supabaseConfig } from "./config";
+import { supabaseConfig, supabaseCookieOptions } from "./config";
 
 let browserClient: ReturnType<typeof createBrowserClient> | null = null;
 
 export function createClient() {
   if (!browserClient) {
     const { url, key } = supabaseConfig();
-    browserClient = createBrowserClient(url, key, { cookieOptions: { maxAge: SUPABASE_COOKIE_MAX_AGE } });
+    browserClient = createBrowserClient(url, key, {
+      cookieOptions: supabaseCookieOptions(),
+      auth: { detectSessionInUrl: false },
+    });
   }
   return browserClient;
 }

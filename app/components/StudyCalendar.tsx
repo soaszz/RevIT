@@ -86,14 +86,14 @@ export default function StudyCalendar({ activity, exams, grades, studyPlans, tim
     try {
       await onSaveExam({ id: editing?.id, subject, assessment_type: assessmentType, scheduled_date: scheduledDate, note: note.trim() || null });
       setSelectedDate(scheduledDate); setFormOpen(false);
-    } catch (error) { setStatus(error instanceof Error ? error.message : "Exam date could not be saved."); }
+    } catch { setStatus("Exam date could not be saved. Please try again."); }
     finally { setPending(false); }
   }
 
   async function remove(id: string) {
     setPending(true); setStatus("");
     try { await onDeleteExam(id); setFormOpen(false); }
-    catch (error) { setStatus(error instanceof Error ? error.message : "Exam date could not be deleted."); }
+    catch { setStatus("Exam date could not be deleted. Please try again."); }
     finally { setPending(false); }
   }
 
