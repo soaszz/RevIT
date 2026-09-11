@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const socialImage = `${protocol}://${host}/og.png`;
   const title = "RevIT | Review It Thoroughly";
-  const description = "RevIT is a focused Medical Technology review platform for structured practice, study planning, progress tracking, and educational AI support.";
+  const description = "RevIT helps Medical Technology students review their subjects and prepare for MTAP and board exams with structured practice, study planning, progress tracking, and educational AI support.";
 
   return {
     title: {
@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title,
       description,
       type: "website",
-      images: [{ url: socialImage, width: 1536, height: 1024, alt: "RevIT — Review It Thoroughly" }],
+      images: [{ url: socialImage, width: 1536, height: 1024, alt: "RevIT Medical Technology reviewer for MTAP and board exam preparation" }],
     },
     twitter: {
       card: "summary_large_image",

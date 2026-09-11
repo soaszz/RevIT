@@ -21,9 +21,9 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
             <span className="sr-only">RevIT</span>
           </a>
           <div className="auth-hero-copy">
-            <p className="eyebrow">Focused MedTech review</p>
+            <p className="eyebrow">MedTech review and exam prep</p>
             <h2>Review It<br />Thoroughly.</h2>
-            <p>A focused review platform for Medical Technology students. Practice structured reviewer questions, identify areas that need more attention, plan your studies, and track your progress in one place.</p>
+            <p>Study across Medical Technology subjects and prepare for MTAP and board exams. Practice structured reviewer questions, identify areas that need more attention, plan your studies, and track your progress in one place.</p>
           </div>
           <ul className="auth-benefits" aria-label="RevIT features">
             <li><span>01</span><div><strong>Structured Reviewer Practice</strong><p>Practice organized Medical Technology questions by subject and topic.</p></div></li>
