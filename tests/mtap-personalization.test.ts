@@ -8,19 +8,21 @@ import {
   withMtapFeaturePreference,
 } from "../app/lib/userPreferences";
 
-test("only the Grade Simulator currently requires MTAP access", () => {
+test("only Grades tools require MTAP access", () => {
   const standard = defaultUserPreferences("Asia/Manila");
   const controlled = Object.entries(FEATURES)
     .filter(([, access]) => access.requiresMtap)
     .map(([feature]) => feature);
 
-  assert.deepEqual(controlled, ["gradeSimulator"]);
+  assert.deepEqual(controlled, ["grades", "gradeSimulator"]);
   assert.equal(canAccessFeature("gradeSimulator", standard), false);
-  assert.equal(canAccessFeature("grades", standard), true);
+  assert.equal(canAccessFeature("grades", standard), false);
   assert.equal(canAccessFeature("reviewLibrary", standard), true);
   assert.equal(canAccessFeature("revitAi", standard), true);
   assert.equal(canAccessFeature("achievements", standard), true);
-  assert.equal(canAccessFeature("gradeSimulator", withMtapFeaturePreference(standard, true)), true);
+  const enabled = withMtapFeaturePreference(standard, true);
+  assert.equal(canAccessFeature("grades", enabled), true);
+  assert.equal(canAccessFeature("gradeSimulator", enabled), true);
 });
 
 test("legacy users default to standard RevIT and either choice completes onboarding", () => {
@@ -64,9 +66,13 @@ test("onboarding, settings, access control, and private persistence are wired to
   assert.match(app, /withMtapFeaturePreference\(preferences, enabled\)/);
 
   assert.match(settings, /MTAP Features/);
-  assert.match(settings, /Enable features designed for National University MTAP preparation\./);
+  assert.match(settings, /Show or hide the Grades tab for National University MTAP preparation\./);
   assert.match(settings, /role="switch"/);
 
+  assert.match(onboarding, /Standard RevIT hides only Grades/);
+  assert.match(app, /const gradesEnabled = canAccessFeature\("grades", preferences\)/);
+  assert.match(app, /const availableNavItems = navItems\.filter/);
+  assert.match(app, /activeView === "grades" && gradesEnabled/);
   assert.match(app, /canAccessFeature\("gradeSimulator", preferences\)/);
   assert.match(app, /showSimulator=\{gradeSimulatorEnabled\}/);
   assert.match(grades, /showSimulator &&/);

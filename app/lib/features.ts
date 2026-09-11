@@ -26,7 +26,7 @@ export const FEATURES: Readonly<Record<RevITFeature, FeatureAccess>> = Object.fr
   studyPlanner: { requiresMtap: false },
   calendar: { requiresMtap: false },
   examSchedule: { requiresMtap: false },
-  grades: { requiresMtap: false },
+  grades: { requiresMtap: true },
   gradeSimulator: { requiresMtap: true },
   revitAi: { requiresMtap: false },
   xp: { requiresMtap: false },

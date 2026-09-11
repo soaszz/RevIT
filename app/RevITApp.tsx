@@ -426,6 +426,14 @@ useEffect(() => {
   }, [activeView]);
 
   useEffect(() => {
+    const preferencesReady = storageReady && (!cloudEnabled || !cloudLoading);
+    if (!preferencesReady || activeView !== "grades" || canAccessFeature("grades", preferences)) return;
+
+    setActiveView("overview");
+    window.history.replaceState(null, "", "/overview");
+  }, [activeView, cloudEnabled, cloudLoading, preferences, storageReady]);
+
+  useEffect(() => {
     const root = document.documentElement;
     let savedTheme: string | null = null;
     try {
@@ -1219,16 +1227,22 @@ useEffect(() => {
   }
 
   async function updateMtapFeatures(enabled: boolean) {
+    const previousPreferences = preferences;
     const nextPreferences = withMtapFeaturePreference(preferences, enabled);
-
-    if (cloudEnabled && initialUser) {
-      const saved = await savePreferences(createClient(), initialUser.id, nextPreferences);
-      setPreferences(normalizeUserPreferences(saved, nextPreferences.timezone));
-      return;
-    }
-
-    localStorage.setItem(LOCAL_PREFERENCES_STORAGE_KEY, JSON.stringify(nextPreferences));
     setPreferences(nextPreferences);
+
+    try {
+      if (cloudEnabled && initialUser) {
+        const saved = await savePreferences(createClient(), initialUser.id, nextPreferences);
+        setPreferences(normalizeUserPreferences(saved, nextPreferences.timezone));
+        return;
+      }
+
+      localStorage.setItem(LOCAL_PREFERENCES_STORAGE_KEY, JSON.stringify(nextPreferences));
+    } catch (error) {
+      setPreferences(previousPreferences);
+      throw error;
+    }
   }
 
   async function chooseProfilePhoto(event: ChangeEvent<HTMLInputElement>) {
@@ -1492,7 +1506,9 @@ useEffect(() => {
   const todayKey = dateKeyInTimeZone(new Date(), preferences.timezone);
   const streak = calculateStreak(activity, todayKey);
   const firstName = cloudProfile?.first_name || profile.name.split(/\s+/)[0] || "Learner";
+  const gradesEnabled = canAccessFeature("grades", preferences);
   const gradeSimulatorEnabled = canAccessFeature("gradeSimulator", preferences);
+  const availableNavItems = navItems.filter((item) => item.id !== "grades" || gradesEnabled);
   const heading = activeView === "overview" ? {
     ...baseHeading,
     title: `${greetingFor(new Date(), preferences.timezone)}, ${firstName}`,
@@ -1510,7 +1526,7 @@ useEffect(() => {
   const accountProfile = cloudProfile ?? (initialUser
     ? localProfileToCloud(initialUser.id, initialUser.username ?? `learner_${initialUser.id.slice(0, 8)}`, initialUser.username?.trim() || DEFAULT_PROFILE.name, "")
     : null);
-  const activeNavItem = navItems.find((item) => item.id === activeView) ?? navItems[0];
+  const activeNavItem = availableNavItems.find((item) => item.id === activeView) ?? availableNavItems[0];
   const activeAiChat = aiChats.find((chat) => chat.id === activeChatId) ?? null;
   const chatBusy = pending || chatActionPending || chatMessagesLoading;
   const currentLevel = levelProgress(progression.totalXp);
@@ -1536,7 +1552,7 @@ useEffect(() => {
           </div>
         </div>
         <nav aria-label="Primary navigation">
-          {navItems.map((item) => (
+          {availableNavItems.map((item) => (
             <button
               className={`nav-link ${activeView === item.id ? "active" : ""}`}
               type="button"
@@ -1577,7 +1593,7 @@ useEffect(() => {
             <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home"><RevITLogo /></button>
             <span className="mobile-current-view"><i aria-hidden="true"><Image src={activeNavItem.icon} alt="" width={15} height={15} /></i>{activeNavItem.label}</span>
           </div>
-          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => { if (event.target.value === "support") router.push("/support"); else openView(event.target.value as View); }}>{navItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}<option value="support">Support RevIT (optional)</option></select></label><button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
+          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => { if (event.target.value === "support") router.push("/support"); else openView(event.target.value as View); }}>{availableNavItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}<option value="support">Support RevIT (optional)</option></select></label><button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
         </header>
 
         <div className="page-heading">
@@ -1869,7 +1885,7 @@ useEffect(() => {
           />
         )}
 
-        {activeView === "grades" && <GradesPage grades={grades} onSave={persistGrade} showSimulator={gradeSimulatorEnabled} />}
+        {activeView === "grades" && gradesEnabled && <GradesPage grades={grades} onSave={persistGrade} showSimulator={gradeSimulatorEnabled} />}
 
         {activeView === "assistant" && (
           <div className="assistant-page">

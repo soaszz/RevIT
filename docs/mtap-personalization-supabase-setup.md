@@ -15,6 +15,8 @@ The MTAP choice is stored on each user’s existing private `user_preferences` r
 
 Existing users receive `false` for both fields and see the question once after normal account initialization. New preference rows receive the same defaults. Choosing either answer saves `mtap_onboarding_completed = true`; Settings changes also set it to `true`, so the one-time question does not reopen.
 
+Choosing MTAP shows the Grades tab. Choosing standard RevIT hides only the Grades tab on desktop and mobile; all other navigation remains available, and any existing grade data is preserved if the preference is changed later.
+
 ## Security verification
 
 The migration retains authenticated own-row access and explicitly revokes anonymous access. The MTAP fields are not selected by leaderboard functions and are not copied to `profiles`, avatar metadata, or other public surfaces.

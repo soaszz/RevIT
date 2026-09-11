@@ -17,8 +17,8 @@ export default function MtapPreferenceControl({ enabled, onChange }: {
     try {
       await onChange(enabledNext);
       setStatus(enabledNext
-        ? "MTAP features are enabled."
-        : "MTAP features are disabled. Your existing data is preserved.");
+        ? "MTAP features are enabled. The Grades tab is available."
+        : "Standard RevIT is enabled. The Grades tab is hidden, and your existing data is preserved.");
     } catch {
       setError(true);
       setStatus("MTAP preference could not be saved. Please try again.");
@@ -32,7 +32,7 @@ export default function MtapPreferenceControl({ enabled, onChange }: {
       <div>
         <p className="eyebrow">Personalization</p>
         <h3 id="mtap-features-label">MTAP Features</h3>
-        <p>Enable features designed for National University MTAP preparation.</p>
+        <p>Show or hide the Grades tab for National University MTAP preparation.</p>
       </div>
       <label className="mtap-switch">
         <input

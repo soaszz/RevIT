@@ -28,8 +28,8 @@ export default function MtapOnboarding({ onChoose }: {
           <p id="mtap-onboarding-description">Are you currently a National University student or studying at NU MOA, a 4th year Medical Technology student, and taking MTAP?</p>
         </div>
         <div className="mtap-onboarding-note">
-          <strong>Your choice only changes MTAP-specific tools.</strong>
-          <span>The Review Library, Progress, Weakness Analytics, Study Planner, Calendar, Exam Schedule, RevIT AI, XP, Achievements, and Grades remain available either way.</span>
+          <strong>Your choice only changes access to Grades.</strong>
+          <span>Choose Yes to show the Grades tab. Standard RevIT hides only Grades; the Review Library, Progress, Leaderboards, Weakness Analytics, Study Planner, RevIT AI, XP, and Achievements remain available.</span>
         </div>
         {status && <p className="form-status error" role="alert">{status}</p>}
         <div className="mtap-onboarding-actions">
