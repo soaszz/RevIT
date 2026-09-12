@@ -17,7 +17,7 @@ export default function MtapPreferenceControl({ enabled, onChange }: {
     try {
       await onChange(enabledNext);
       setStatus(enabledNext
-        ? "NU Revit is enabled. Grades are available, and additional subjects are grouped under Other Majors."
+        ? "NU Revit is enabled. Grades are available, and subjects are grouped under MTAP 1 and Other Majors."
         : "Standard RevIT is enabled. Grades are hidden, every subject remains available, and your existing data is preserved.");
     } catch {
       setError(true);

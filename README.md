@@ -1,31 +1,27 @@
 # RevIT
 
-RevIT is a Medical Technology study and review platform built for subject review, MTAP preparation, and board exam preparation. It combines source-aware reviewer questions, Groq-powered educational explanations, Supabase accounts and cross-device study data, an activity calendar, exam scheduling, and deterministic grade planning.
+RevIT is a study and review platform for Medical Technology students. It brings reviewers, practice tools, study planning, and progress tracking together so learners can study with more focus and see what to improve next.
 
-## What is included
+## How RevIT helps
 
-- A growing source-aware reviewer library organized by subject and topic, currently covering Clinical Chemistry, Hematology, Bacteriology, AUBF, Parasitology, and Mycology and Virology with source filename and page retained.
-- Registration, separate sign-in after account creation, password recovery, remember-me/session-only behavior, protected routes, profile onboarding, avatar upload, password changes, other-device sign-out, and optional TOTP two-factor authentication.
-- Row-level-secured cloud storage for profiles, grades, daily activity, idempotent activity events, exam schedules, and preferences.
-- Monthly activity intensity, timezone-safe streaks, date details, independent exam markers, and an Up Next assessment.
-- My Grades and a separate, non-persisting simulator using the exact 10/15/30/30/15 weights and a 65% passing mark.
-- Transparent remaining-average, maximum-possible, and next-assessment guidance. AI never decides grades or passing status.
-- Light/dark semantic PDF and AI badges, plus responsive desktop and mobile layouts.
-- V1 XP, scalable levels, eight achievement definitions, one-time level-up notices, and responsive progression UI in the sidebar and Home.
-- Optional V1 global and subject leaderboards for Questions, Accuracy, and Study XP with Daily/Weekly/All-Time periods, private current-user progress, and database-side anti-farming rules.
+- **Practice with MCQs:** Answer reviewer questions by subject and topic, check the correct answer, and learn from educational explanations.
+- **Study with Deck Cards:** Turn reviewer content into focused flashcard decks, choose the topics you need, and shuffle cards for repeated practice.
+- **Find content quickly:** Search the subject libraries in both NU RevIT and Standard RevIT.
+- **Review major subjects:** Study Clinical Chemistry, Hematology, Bacteriology, Analysis of Urine and Other Body Fluids, Parasitology, and Mycology and Virology, with more subjects supported as the library grows.
+- **Strengthen weak areas:** See which subjects and topics need more attention and use that insight to guide your next review session.
+- **Plan study sessions:** Create study plans, organize activities by date and time, add them to the RevIT calendar, and keep upcoming exams visible.
+- **Track progress:** Monitor answered questions, accuracy, study activity, streaks, XP, levels, and achievements.
+- **Manage grades:** NU RevIT users can record assessment scores, view weighted results, and explore possible outcomes with the Grade Simulator.
+- **Stay motivated:** Optional leaderboards let learners compare question activity, accuracy, and Study XP across different time periods.
+- **Continue across devices:** An account keeps supported study progress, preferences, grades, schedules, and activity connected.
+- **Study comfortably anywhere:** RevIT supports responsive desktop and mobile layouts together with light and dark themes.
 
-## Supabase migrations
+## NU RevIT and Standard RevIT
 
-Run every file in `supabase/migrations` in timestamp order using the Supabase SQL Editor or CLI. V1 progression is defined in `202608300005_level_achievements_v1.sql`; it creates and seeds the progression tables, enables RLS, and extends the existing idempotent activity writer without modifying the database until you run it.
+**NU RevIT** includes MTAP-focused features such as Grades. Clinical Chemistry, Hematology, Bacteriology, and AUBF are grouped under **MTAP 1**, while Parasitology and Mycology and Virology are grouped under **Other Majors** in both the MCQ and Deck Card libraries.
 
-Leaderboards are defined in `202609030006_leaderboards_v1.sql`. Apply it only after the five earlier migrations. The complete beginner-friendly setup, verification, security, query-testing, and rollback guide is in `docs/leaderboards-v1-supabase-setup.md`.
+**Standard RevIT** keeps every available subject visible in one searchable MCQ and Deck Card library. Learners can switch modes without losing their existing study data.
 
-Versioned Terms of Service and Privacy Policy consent is defined in `202609030007_legal_consent_versioning.sql`. Apply it after the leaderboard migration. The exact SQL Editor steps, column and RLS details, verification scenarios, security test, future-version test, and rollback warning are in `docs/legal-consent-supabase-setup.md`.
+## Built for learning
 
-Persistent RevIT AI quotas are defined in `202609050008_ai_api_rate_limits.sql`. Apply it last before enabling `GROQ_API_KEY`. Vercel environment, Supabase, Turnstile, HTTPS, provider-key, and post-deployment verification steps are in `docs/production-security-setup.md`.
-
-Levels follow `25 × (level - 1) × (level + 2)`, producing the requested 0, 100, 250, 450, and 700 XP thresholds for Levels 1–5 and 1,000 XP for Level 6.
-
-## Safety and scope
-
-The assistant is for education. It does not diagnose, prescribe, select patient treatment, or replace clinical policy, manufacturer instructions for use, or professional judgment. Official supplied answers remain the scoring source of truth. Grade and streak outcomes are calculated locally from documented rules, not by the AI.
+RevIT is designed to support subject review, MTAP preparation, and board exam preparation. Its study tools and educational explanations help reinforce learning, but they do not replace official course materials, laboratory policies, clinical guidance, or professional judgment.

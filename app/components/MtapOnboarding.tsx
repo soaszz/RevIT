@@ -29,7 +29,7 @@ export default function MtapOnboarding({ onChoose }: {
         </div>
         <div className="mtap-onboarding-note">
           <strong>Your choice only changes access to Grades.</strong>
-          <span>Choose Yes to show the Grades tab. Standard RevIT hides only Grades and presents every subject in one searchable list. NU Revit groups additional subjects under Other Majors; all other study tools remain available in both.</span>
+          <span>Choose Yes to show the Grades tab. Standard RevIT hides only Grades and presents every subject in one searchable list. NU Revit groups subjects under MTAP 1 and Other Majors; all other study tools remain available in both.</span>
         </div>
         {status && <p className="form-status error" role="alert">{status}</p>}
         <div className="mtap-onboarding-actions">

@@ -12,13 +12,22 @@ test("standard RevIT keeps every subject in one flat collection", () => {
   assert.deepEqual(sections[0].subjects.map((subject) => subject.id), subjects.map((subject) => subject.id));
 });
 
-test("NU RevIT groups supplemental subjects under Other Majors", () => {
+test("NU RevIT groups subjects under MTAP 1 and Other Majors", () => {
   const sections = buildSubjectSections(subjects, true);
+  const mtapOne = sections.find((section) => section.title === "MTAP 1");
   const otherMajors = sections.find((section) => section.title === "Other Majors");
 
+  assert.ok(mtapOne);
   assert.ok(otherMajors);
+  assert.deepEqual(mtapOne.subjects.map((subject) => subject.id), [
+    "clinical-chemistry",
+    "hematology",
+    "bacteriology",
+    "aubf",
+  ]);
   assert.deepEqual(otherMajors.subjects.map((subject) => subject.id), ["parasitology", "mycology-and-virology"]);
-  assert.ok(sections[0].subjects.every((subject) => subject.category !== "Other Majors"));
+  assert.ok(mtapOne.subjects.every((subject) => subject.category === "MTAP 1"));
+  assert.ok(otherMajors.subjects.every((subject) => subject.category === "Other Majors"));
 });
 
 test("library search matches subject and topic metadata", () => {
@@ -26,6 +35,12 @@ test("library search matches subject and topic metadata", () => {
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "malaria").map((subject) => subject.id), ["parasitology"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "yeasts").map((subject) => subject.id), ["mycology-and-virology"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "blood gases").map((subject) => subject.id), ["clinical-chemistry"]);
+  assert.deepEqual(filterSubjectsBySearch(subjects, topics, "MTAP 1").map((subject) => subject.id), [
+    "clinical-chemistry",
+    "hematology",
+    "bacteriology",
+    "aubf",
+  ]);
   assert.equal(filterSubjectsBySearch(subjects, topics, "").length, subjects.length);
 });
 

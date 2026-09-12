@@ -4,6 +4,7 @@
       "id": "clinical-chemistry",
       "name": "Clinical Chemistry",
       "description": "Instrumentation, analytes, organ systems, toxicology, endocrinology, and integrated chemistry cases.",
+      "category": "MTAP 1",
       "topicIds": [
         "clinical-chemistry-6-1",
         "clinical-chemistry-6-2",
@@ -21,6 +22,7 @@
       "id": "hematology",
       "name": "Hematology",
       "description": "Core procedures, anemias, leukocyte disorders, hematologic malignancies, and problem-solving.",
+      "category": "MTAP 1",
       "topicIds": [
         "hematology-1-1",
         "hematology-1-2",
@@ -36,6 +38,7 @@
       "id": "bacteriology",
       "name": "Bacteriology",
       "description": "Specimens, culture and identification, clinically important bacteria, anaerobes, and mycobacteria.",
+      "category": "MTAP 1",
       "topicIds": [
         "bacteriology-8-1",
         "bacteriology-8-2",
@@ -51,6 +54,7 @@
       "id": "aubf",
       "name": "AUBF",
       "description": "Urinalysis, urine microscopy, body-fluid analysis, and integrated laboratory cases.",
+      "category": "MTAP 1",
       "topicIds": [
         "aubf-7-1",
         "aubf-7-2",

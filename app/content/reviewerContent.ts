@@ -5,7 +5,7 @@ export type Subject = {
   name: string;
   description: string;
   topicIds: string[];
-  category?: "Other Majors";
+  category: "MTAP 1" | "Other Majors";
 };
 
 export type SourcePdf = {
