@@ -11,6 +11,7 @@ import Flashcards from "./components/Flashcards";
 import GradesPage from "./components/GradesPage";
 import LeaderboardPage from "./components/LeaderboardPage";
 import LegalConsentGate from "./components/LegalConsentGate";
+import LibrarySearch from "./components/LibrarySearch";
 import MtapOnboarding from "./components/MtapOnboarding";
 import MtapPreferenceControl from "./components/MtapPreferenceControl";
 import Onboarding from "./components/Onboarding";
@@ -54,6 +55,7 @@ import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAna
 import { createClient } from "./lib/supabase/client";
 import { hasCurrentLegalConsent } from "./lib/legal";
 import { canAccessFeature } from "./lib/features";
+import { buildSubjectSections, filterSubjectsBySearch } from "./lib/reviewerLibrary";
 import { LOCAL_PREFERENCES_STORAGE_KEY, normalizeUserPreferences, withMtapFeaturePreference } from "./lib/userPreferences";
 import {
   emptyProgression,
@@ -300,6 +302,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const router = useRouter();
   const [activeView, setActiveView] = useState<View>("overview");
   const [libraryMode, setLibraryMode] = useState<ReviewLibraryMode>("mcqs");
+  const [subjectSearch, setSubjectSearch] = useState("");
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [storageReady, setStorageReady] = useState(false);
@@ -833,6 +836,15 @@ useEffect(() => {
       ? selectedQuestions.filter((question) => wrongQuestionIds.has(question.id))
       : selectedQuestions,
     [selectedQuestions, wrongAnswersOnly, wrongQuestionIds],
+  );
+
+  const visibleSubjects = useMemo(
+    () => filterSubjectsBySearch(subjects, topics, subjectSearch),
+    [subjectSearch],
+  );
+  const subjectSections = useMemo(
+    () => buildSubjectSections(visibleSubjects, preferences.mtap_features_enabled),
+    [preferences.mtap_features_enabled, visibleSubjects],
   );
 
   const topicStats = useMemo(() => topics.map((topic) => {
@@ -1650,7 +1662,7 @@ useEffect(() => {
                 </div>
                 <p>{weakestTopic
                   ? `This is currently your lowest-performing practiced topic across ${weakestTopic.attempts} attempt${weakestTopic.attempts === 1 ? "" : "s"}. A focused session will keep it from being hidden by stronger areas.`
-                  : "Select any combination of Clinical Chemistry, Hematology, Bacteriology, and AUBF topics. RevIT preserves topic attribution in mixed reviews."}</p>
+                  : "Select any combination of Clinical Chemistry, Hematology, Bacteriology, AUBF, Parasitology, and Mycology and Virology topics. RevIT preserves topic attribution in mixed reviews."}</p>
                 <div className="focus-actions">
                   <button className="primary-button" type="button" onClick={() => openView("library")}>{weakestTopic ? "Build focused review" : "Open review library"}</button>
                   <button className="text-button" type="button" onClick={() => openView("progress")}>View progress</button>
@@ -1675,8 +1687,8 @@ useEffect(() => {
               <div className="source-summary-card">
                 <span className="ai-mark">PDF</span>
                 <p className="eyebrow">Supplied sources</p>
-                <h2>Three official PDF reviewers mapped</h2>
-                <p>Clinical Chemistry, Hematology, Bacteriology, and AUBF now power scoring, rationales, and page-level source references.</p>
+                <h2>Six official PDF reviewers mapped</h2>
+                <p>Clinical Chemistry, Hematology, Bacteriology, AUBF, Parasitology, and Mycology and Virology now power scoring, rationales, and page-level source references.</p>
                 {subjects.map((subject) => (
                   <div className="source-stat" key={subject.id}>
                     <span>{subject.name}</span>
@@ -1695,78 +1707,103 @@ useEffect(() => {
         )}
 
         {activeView === "library" && (libraryMode === "flashcards" ? (
-          <Flashcards />
+          <Flashcards isNuRevit={preferences.mtap_features_enabled} />
         ) : (
           <div className="library-shell">
             {sessionQuestionIds.length === 0 ? (
-              <div className="library-layout">
-                <div className="subject-list">
-                  {subjects.map((subject) => {
-                    const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
-                    const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
-                    const subjectFullySelected = subjectSelected === subjectTopics.length;
-                    return (
-                      <section className="subject-card" key={subject.id}>
-                        <div className="subject-heading">
-                          <div><p className="eyebrow">{questions.filter((question) => question.subjectId === subject.id).length} official MCQs</p><h2>{subject.name}</h2><p>{subject.description}</p></div>
-                          <button className="text-button" type="button" onClick={() => toggleSubject(subject.id)}>{subjectFullySelected ? "Unselect subject" : "Select subject"}</button>
-                        </div>
-                        <div className="topic-selection-grid">
-                          {subjectTopics.map((topic) => {
-                            const count = questions.filter((question) => question.topicId === topic.id).length;
-                            const selected = selectedTopicIds.includes(topic.id);
-                            return (
-                              <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
-                                <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                                <span className="topic-select-copy"><strong>{topic.name}</strong><small>{topic.description}</small><em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em></span>
-                              </label>
-                            );
-                          })}
-                        </div>
-                        <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
-                      </section>
-                    );
-                  })}
-                </div>
+              <>
+                <LibrarySearch
+                  id="mcq-library-search"
+                  value={subjectSearch}
+                  resultCount={visibleSubjects.length}
+                  onChange={setSubjectSearch}
+                />
+                <div className="library-layout">
+                  <div className="subject-list">
+                    {subjectSections.map((section) => (
+                      <div className="subject-category" key={section.id}>
+                        {section.title && (
+                          <div className="subject-category-heading">
+                            <div><p className="eyebrow">NU Revit collection</p><h2>{section.title}</h2></div>
+                            {section.description && <p>{section.description}</p>}
+                          </div>
+                        )}
+                        {section.subjects.map((subject) => {
+                          const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
+                          const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
+                          const subjectFullySelected = subjectTopics.length > 0 && subjectSelected === subjectTopics.length;
+                          return (
+                            <section className="subject-card" key={subject.id}>
+                              <div className="subject-heading">
+                                <div><p className="eyebrow">{questions.filter((question) => question.subjectId === subject.id).length} official MCQs</p><h2>{subject.name}</h2><p>{subject.description}</p></div>
+                                <button className="text-button" type="button" onClick={() => toggleSubject(subject.id)}>{subjectFullySelected ? "Unselect subject" : "Select subject"}</button>
+                              </div>
+                              <div className="topic-selection-grid">
+                                {subjectTopics.map((topic) => {
+                                  const count = questions.filter((question) => question.topicId === topic.id).length;
+                                  const selected = selectedTopicIds.includes(topic.id);
+                                  return (
+                                    <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                      <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                      <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                      <span className="topic-select-copy"><strong>{topic.name}</strong><small>{topic.description}</small><em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em></span>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                              <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                            </section>
+                          );
+                        })}
+                      </div>
+                    ))}
+                    {!visibleSubjects.length && (
+                      <div className="library-empty-state">
+                        <h2>No subjects found</h2>
+                        <p>Try another subject or topic name.</p>
+                        <button className="text-button" type="button" onClick={() => setSubjectSearch("")}>Clear search</button>
+                      </div>
+                    )}
+                  </div>
 
-                <aside className="selection-panel">
-                  <p className="eyebrow">Session setup</p>
-                  <h2>{selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"} selected</h2>
-                  <p>{wrongAnswersOnly
-                    ? `${sessionQuestions.length} wrong-answer question${sessionQuestions.length === 1 ? " is" : "s are"} available from your selection.`
-                    : `${sessionQuestions.length} official questions are available from your selection.`}</p>
-                  <div className="selection-controls">
-                    <button className="text-button" type="button" onClick={() => setSelectedTopicIds(topics.map((topic) => topic.id))}>Select all</button>
-                    <button className="text-button" type="button" onClick={selectAllWrongAnswers} disabled={!wrongTopicIds.length}>All wrong answers</button>
-                    <button className="text-button quiet" type="button" onClick={() => setSelectedTopicIds([])}>Clear all</button>
-                  </div>
-                  <div className="wrong-answer-filter">
-                    <input id="wrong-answers-only" type="checkbox" aria-describedby="wrong-answers-only-help" checked={wrongAnswersOnly} onChange={(event) => setWrongAnswersOnly(event.target.checked)} />
-                    <label htmlFor="wrong-answers-only">Wrong answers only<small id="wrong-answers-only-help">Practice only questions whose latest answer was wrong.</small></label>
-                  </div>
-                  {wrongAnswersOnly && selectedTopicIds.length > 0 && sessionQuestions.length === 0 && <p className="wrong-answer-empty">No wrong-answer questions remain in these topics.</p>}
-                  <label className="field-label" htmlFor="session-size">Questions this session</label>
-                  <select id="session-size" value={sessionSize} onChange={(event) => setSessionSize(event.target.value)}>
-                    <option value="10">10 questions</option>
-                    <option value="20">20 questions</option>
-                    <option value="30">30 questions</option>
-                    <option value="40">40 questions</option>
-                    <option value="50">50 questions</option>
-                    <option value="all">All selected questions</option>
-                  </select>
-                  <ReviewSessionPreferences
-                    timerEnabled={timerEnabled}
-                    timerDuration={timerDuration}
-                    soundEffectsEnabled={soundEffectsEnabled}
-                    onTimerEnabledChange={setTimerEnabled}
-                    onTimerDurationChange={setTimerDuration}
-                    onSoundEffectsEnabledChange={setSoundEffectsEnabled}
-                  />
-                  <button className="primary-button wide" type="button" onClick={startSession} disabled={!sessionQuestions.length}>Start review</button>
-                  {selectedTopicNames.length > 0 && <div className="selected-tags">{selectedTopicNames.map((name) => <span key={name}>{name}</span>)}</div>}
-                </aside>
-              </div>
+                  <aside className="selection-panel">
+                    <p className="eyebrow">Session setup</p>
+                    <h2>{selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"} selected</h2>
+                    <p>{wrongAnswersOnly
+                      ? `${sessionQuestions.length} wrong-answer question${sessionQuestions.length === 1 ? " is" : "s are"} available from your selection.`
+                      : `${sessionQuestions.length} official questions are available from your selection.`}</p>
+                    <div className="selection-controls">
+                      <button className="text-button" type="button" onClick={() => setSelectedTopicIds(topics.map((topic) => topic.id))}>Select all</button>
+                      <button className="text-button" type="button" onClick={selectAllWrongAnswers} disabled={!wrongTopicIds.length}>All wrong answers</button>
+                      <button className="text-button quiet" type="button" onClick={() => setSelectedTopicIds([])}>Clear all</button>
+                    </div>
+                    <div className="wrong-answer-filter">
+                      <input id="wrong-answers-only" type="checkbox" aria-describedby="wrong-answers-only-help" checked={wrongAnswersOnly} onChange={(event) => setWrongAnswersOnly(event.target.checked)} />
+                      <label htmlFor="wrong-answers-only">Wrong answers only<small id="wrong-answers-only-help">Practice only questions whose latest answer was wrong.</small></label>
+                    </div>
+                    {wrongAnswersOnly && selectedTopicIds.length > 0 && sessionQuestions.length === 0 && <p className="wrong-answer-empty">No wrong-answer questions remain in these topics.</p>}
+                    <label className="field-label" htmlFor="session-size">Questions this session</label>
+                    <select id="session-size" value={sessionSize} onChange={(event) => setSessionSize(event.target.value)}>
+                      <option value="10">10 questions</option>
+                      <option value="20">20 questions</option>
+                      <option value="30">30 questions</option>
+                      <option value="40">40 questions</option>
+                      <option value="50">50 questions</option>
+                      <option value="all">All selected questions</option>
+                    </select>
+                    <ReviewSessionPreferences
+                      timerEnabled={timerEnabled}
+                      timerDuration={timerDuration}
+                      soundEffectsEnabled={soundEffectsEnabled}
+                      onTimerEnabledChange={setTimerEnabled}
+                      onTimerDurationChange={setTimerDuration}
+                      onSoundEffectsEnabledChange={setSoundEffectsEnabled}
+                    />
+                    <button className="primary-button wide" type="button" onClick={startSession} disabled={!sessionQuestions.length}>Start review</button>
+                    {selectedTopicNames.length > 0 && <div className="selected-tags">{selectedTopicNames.map((name) => <span key={name}>{name}</span>)}</div>}
+                  </aside>
+                </div>
+              </>
             ) : sessionComplete ? (
               <SessionSummary attempts={sessionAttempts} onDone={leaveSession} cloudEnabled={cloudEnabled && attemptHistoryAvailable} />
             ) : currentQuestion ? (

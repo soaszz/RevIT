@@ -58,6 +58,27 @@
         "aubf-7-4",
         "aubf-7-5"
       ]
+    },
+    {
+      "id": "parasitology",
+      "name": "Parasitology",
+      "description": "Protozoa, helminths, arthropod vectors, diagnostic methods, epidemiology, and clinically important parasitic infections.",
+      "topicIds": [
+        "parasitology-8-11"
+      ],
+      "category": "Other Majors"
+    },
+    {
+      "id": "mycology-and-virology",
+      "name": "Mycology and Virology",
+      "description": "Fungal specimens and identification, medically important fungi, virology principles, viral diseases, and clinical problem-solving.",
+      "topicIds": [
+        "mycology-and-virology-8-9-1",
+        "mycology-and-virology-8-9-2",
+        "mycology-and-virology-8-10-1",
+        "mycology-and-virology-8-10-2"
+      ],
+      "category": "Other Majors"
     }
   ],
   "topics": [
@@ -461,6 +482,71 @@
           "fileName": "AUBF.pdf",
           "pageRange": "61-73",
           "kind": "Official supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "parasitology-8-11",
+      "subjectId": "parasitology",
+      "name": "Parasites, Diagnosis, and Epidemiology",
+      "description": "Intestinal, blood, tissue, and opportunistic parasites; malaria, vectors, transmission, morphology, and laboratory diagnosis.",
+      "sourcePdfs": [
+        {
+          "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "2-19",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "mycology-and-virology-8-9-1",
+      "subjectId": "mycology-and-virology",
+      "name": "Specimens, Yeasts, and Basic Identification",
+      "description": "Fungal specimen collection and direct examination; yeast morphology, culture, and presumptive identification.",
+      "sourcePdfs": [
+        {
+          "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "2-4, 14-15",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "mycology-and-virology-8-9-2",
+      "subjectId": "mycology-and-virology",
+      "name": "Dimorphic, Dermatophytic, and Opportunistic Fungi",
+      "description": "Dimorphic fungi, dermatophytes, dematiaceous and hyaline molds, Mucorales, and opportunistic mycoses.",
+      "sourcePdfs": [
+        {
+          "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "4-7, 15-16",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "mycology-and-virology-8-10-1",
+      "subjectId": "mycology-and-virology",
+      "name": "Virology Principles and Major Viral Diseases",
+      "description": "Viral classification, respiratory and gastrointestinal viruses, HIV, rabies, and laboratory diagnosis.",
+      "sourcePdfs": [
+        {
+          "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "8-10, 16-17",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "mycology-and-virology-8-10-2",
+      "subjectId": "mycology-and-virology",
+      "name": "Virology Clinical Identification and Problem Solving",
+      "description": "Clinical case identification, specimen selection, molecular testing, emerging viruses, and antiviral assessment.",
+      "sourcePdfs": [
+        {
+          "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "10-13, 17-18",
+          "kind": "Original supplied MCQ reviewer"
         }
       ]
     }
@@ -25344,6 +25430,2626 @@
         "fileName": "AUBF.pdf",
         "page": 73,
         "kind": "Official supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-001",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A clinician suspects pinworm infection in a child with nocturnal perianal itching. Which specimen collection method gives the most appropriate diagnostic material?",
+      "choices": [
+        "Routine stool O&P only",
+        "Serial cellophane tape preparations",
+        "Urine sediment",
+        "Sputum examination"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Serial cellophane tape preparations",
+      "explanation": "Enterobius vermicularis eggs are deposited around the perianal region, so serial adhesive-tape preparations are preferred over routine stool examination.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-002",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which stool finding may form after eosinophils disintegrate during an inflammatory response to parasites?",
+      "choices": [
+        "Charcot-Leyden crystals",
+        "Howell-Jolly bodies",
+        "Hemosiderin granules",
+        "Schuffner dots"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Charcot-Leyden crystals",
+      "explanation": "Charcot-Leyden crystals are associated with breakdown products of eosinophils and may be encountered in parasitic disease.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-003",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A patient acquires a tapeworm after eating undercooked freshwater fish. Which parasite best fits this route?",
+      "choices": [
+        "Diphyllobothrium latum",
+        "Taenia saginata",
+        "Hymenolepis nana",
+        "Echinococcus granulosus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Diphyllobothrium latum",
+      "explanation": "D. latum infection is acquired through ingestion of infected raw or inadequately cooked freshwater fish.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-004",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "African trypanosomiasis caused by Trypanosoma brucei is transmitted by which vector?",
+      "choices": [
+        "Tsetse fly",
+        "Sand fly",
+        "Mosquito",
+        "Tick"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Tsetse fly",
+      "explanation": "T. brucei gambiense and T. brucei rhodesiense are transmitted through the bite of the tsetse fly.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-005",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A stool specimen from a patient with prolonged diarrhea contains coccidian oocysts that stain with a modified acid-fast method. Which organism is compatible with this finding?",
+      "choices": [
+        "Cystoisospora belli",
+        "Dientamoeba fragilis",
+        "Entamoeba gingivalis",
+        "Trichomonas vaginalis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cystoisospora belli",
+      "explanation": "Cystoisospora belli produces oocysts that can be demonstrated in stool using modified acid-fast staining.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-006",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which specimen would be least useful when looking for Trichomonas vaginalis?",
+      "choices": [
+        "Vaginal discharge",
+        "Urethral discharge",
+        "Urine",
+        "Feces"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Feces",
+      "explanation": "T. vaginalis is a urogenital parasite, so fecal material is not the expected diagnostic specimen.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-007",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which permanent staining method is especially useful for identifying Dientamoeba fragilis in stool?",
+      "choices": [
+        "Trichrome stain",
+        "Modified acid-fast stain",
+        "Gram stain",
+        "India ink"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trichrome stain",
+      "explanation": "A trichrome-stained fecal smear is a preferred method for demonstrating D. fragilis trophozoites.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-008",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which intestinal protozoan is strongly associated with waterborne outbreaks after ingestion of infective cysts?",
+      "choices": [
+        "Giardia lamblia",
+        "Entamoeba gingivalis",
+        "Balantidium coli",
+        "Trichomonas vaginalis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Giardia lamblia",
+      "explanation": "Giardia cysts can contaminate food and water and have caused well-described waterborne outbreaks.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-009",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "An amoeba recovered from a gingival lesion contains ingested leukocytes. Which organism is most consistent?",
+      "choices": [
+        "Entamoeba gingivalis",
+        "Entamoeba histolytica",
+        "Naegleria fowleri",
+        "Iodamoeba butschlii"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Entamoeba gingivalis",
+      "explanation": "E. gingivalis inhabits the mouth and may ingest polymorphonuclear leukocytes.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-010",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which finding most strongly supports pathogenic Entamoeba histolytica rather than morphologically identical E. dispar?",
+      "choices": [
+        "Trophozoites containing ingested RBCs",
+        "Four nuclei in a cyst",
+        "A central karyosome alone",
+        "Presence in formed stool"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trophozoites containing ingested RBCs",
+      "explanation": "Ingested RBCs within trophozoites are an important morphologic clue supporting true pathogenic E. histolytica.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-011",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A child develops rapidly progressive meningoencephalitis after swimming in warm freshwater. Motile amoebae are found in CSF. Which parasite is most likely?",
+      "choices": [
+        "Naegleria fowleri",
+        "Endolimax nana",
+        "Dientamoeba fragilis",
+        "Entamoeba coli"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Naegleria fowleri",
+      "explanation": "N. fowleri is a free-living amoeba associated with warm freshwater and causes primary amebic meningoencephalitis.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-012",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which morphology favors the rhabditiform larva of Strongyloides stercoralis over hookworm?",
+      "choices": [
+        "Short buccal cavity and prominent genital primordium",
+        "Long buccal cavity and tiny genital primordium",
+        "Terminal spine",
+        "Operculum"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Short buccal cavity and prominent genital primordium",
+      "explanation": "The Strongyloides rhabditiform larva has a short buccal cavity and a relatively prominent genital primordium.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-013",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A child develops visceral larva migrans after ingesting dog ascarid eggs. Which diagnostic approach is most appropriate?",
+      "choices": [
+        "Serologic testing for Toxocara",
+        "Skin snip",
+        "Routine urine sediment",
+        "Cellophane tape preparation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Serologic testing for Toxocara",
+      "explanation": "Toxocara species cause visceral or ocular larva migrans in humans, and serology is the diagnostic method emphasized in the source.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-014",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which parasite can maintain infection through internal autoinfection and become especially dangerous during immunosuppression?",
+      "choices": [
+        "Strongyloides stercoralis",
+        "Trichuris trichiura",
+        "Paragonimus westermani",
+        "Fasciola hepatica"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Strongyloides stercoralis",
+      "explanation": "S. stercoralis can undergo internal autoinfection, permitting infection to persist for years and progress to hyperinfection in immunosuppressed patients.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-015",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which parasite is most appropriately investigated by examining urine for characteristic eggs?",
+      "choices": [
+        "Schistosoma haematobium",
+        "Schistosoma mansoni",
+        "Onchocerca volvulus",
+        "Enterobius vermicularis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Schistosoma haematobium",
+      "explanation": "Adult S. haematobium inhabit veins around the bladder, and their eggs are commonly recovered from urine.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-016",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A patient has chronic cough and hemoptysis from a parasitic lung infection. Eggs may be recovered from sputum. Which parasite is most likely?",
+      "choices": [
+        "Paragonimus westermani",
+        "Trichinella spiralis",
+        "Wuchereria bancrofti",
+        "Hymenolepis nana"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Paragonimus westermani",
+      "explanation": "Adult P. westermani inhabit the lung, allowing eggs to be coughed into sputum and sometimes swallowed into stool.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-017",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which two parasites may both be acquired from poorly cooked pork?",
+      "choices": [
+        "Taenia solium and Trichinella spiralis",
+        "Taenia saginata and Ascaris lumbricoides",
+        "Hymenolepis nana and Trichuris trichiura",
+        "Diphyllobothrium latum and Toxocara canis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Taenia solium and Trichinella spiralis",
+      "explanation": "T. solium cysticerci and encysted T. spiralis larvae can both be acquired by eating inadequately cooked infected pork.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-018",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which human cestode produces an operculated egg?",
+      "choices": [
+        "Diphyllobothrium latum",
+        "Taenia solium",
+        "Hymenolepis nana",
+        "Dipylidium caninum"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Diphyllobothrium latum",
+      "explanation": "D. latum is the operculated cestode emphasized in the source.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-019",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Where are adult Echinococcus granulosus tapeworms normally found?",
+      "choices": [
+        "Dog intestine",
+        "Human intestine",
+        "Sheep liver",
+        "Human blood"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Dog intestine",
+      "explanation": "Dogs are the definitive hosts and harbor adult E. granulosus; humans may become accidental intermediate hosts with hydatid cysts.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-020",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Why can humans develop either intestinal taeniasis or tissue cysticercosis from Taenia solium?",
+      "choices": [
+        "Humans can function as definitive or accidental intermediate hosts",
+        "The parasite has no intermediate host",
+        "Only larvae infect humans",
+        "Only eggs infect humans"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Humans can function as definitive or accidental intermediate hosts",
+      "explanation": "Eating cysticerci can lead to an adult intestinal worm, whereas ingesting eggs can lead to tissue cysticerci, making humans either definitive or accidental intermediate hosts.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-021",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which cestode can complete both intermediate and definitive host stages within a human host?",
+      "choices": [
+        "Hymenolepis nana",
+        "Taenia saginata",
+        "Echinococcus granulosus",
+        "Diphyllobothrium latum"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Hymenolepis nana",
+      "explanation": "H. nana can complete its life cycle in one human, with tissue cysticercoid and adult intestinal stages.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-022",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "In a blood smear, Babesia may be confused with the early ring forms of which malaria parasite?",
+      "choices": [
+        "Plasmodium falciparum",
+        "Plasmodium vivax",
+        "Plasmodium ovale",
+        "Plasmodium malariae"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Plasmodium falciparum",
+      "explanation": "Babesia often resembles P. falciparum ring forms and may show multiple rings within erythrocytes.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-023",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which stain is particularly useful for demonstrating Cryptosporidium oocysts in stool?",
+      "choices": [
+        "Modified acid-fast stain",
+        "Routine Gram stain",
+        "India ink",
+        "Wright stain"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Modified acid-fast stain",
+      "explanation": "Cryptosporidium oocysts can be visualized as small acid-fast-positive structures using modified acid-fast staining.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-024",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which filarial parasite is normally diagnosed from skin snips rather than peripheral blood?",
+      "choices": [
+        "Onchocerca volvulus",
+        "Wuchereria bancrofti",
+        "Brugia malayi",
+        "Loa loa"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Onchocerca volvulus",
+      "explanation": "O. volvulus microfilariae are located mainly in superficial skin tissues, so skin snips are the appropriate diagnostic specimen.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-025",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which malaria species is associated with the most severe disease, including cerebral involvement and blackwater fever?",
+      "choices": [
+        "Plasmodium falciparum",
+        "Plasmodium vivax",
+        "Plasmodium ovale",
+        "Plasmodium malariae"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Plasmodium falciparum",
+      "explanation": "P. falciparum can produce severe hemolysis, multiorgan disease, blackwater fever, and cerebral malaria.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-026",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A daycare center has an outbreak of diarrhea. Which group contains parasites specifically highlighted as important possibilities?",
+      "choices": [
+        "Giardia, Dientamoeba, and Cryptosporidium",
+        "Entamoeba coli, Endolimax nana, and Trichomonas vaginalis",
+        "Toxoplasma, Schistosoma, and Taenia",
+        "Onchocerca, Loa loa, and Wuchereria"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Giardia, Dientamoeba, and Cryptosporidium",
+      "explanation": "Giardia, Dientamoeba fragilis, and Cryptosporidium have all been implicated in nursery-school outbreaks.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-027",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "What is the principal purpose of a formalin-ethyl acetate concentration procedure in stool parasitology?",
+      "choices": [
+        "Concentrating protozoan cysts and helminth eggs",
+        "Demonstrating trophozoite motility",
+        "Culturing malaria parasites",
+        "Recovering microfilariae from blood"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Concentrating protozoan cysts and helminth eggs",
+      "explanation": "The concentration procedure improves recovery of protozoan cysts, coccidian oocysts, and helminth eggs from feces.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-028",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which feature is characteristic of an Iodamoeba butschlii cyst?",
+      "choices": [
+        "Large glycogen vacuole",
+        "Terminal spine",
+        "Multiple polar filaments",
+        "Ingested RBCs"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Large glycogen vacuole",
+      "explanation": "I. butschlii cysts characteristically contain a large glycogen vacuole, readily demonstrated with iodine.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-029",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which test can be used to assess whether Schistosoma eggs remain viable?",
+      "choices": [
+        "Miracidial hatching test",
+        "Germ tube test",
+        "Knott concentration",
+        "KOH preparation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Miracidial hatching test",
+      "explanation": "Viable Schistosoma eggs can hatch and release miracidia, making the miracidial hatching procedure useful for viability assessment.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-030",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which two parasites should be strongly considered during a waterborne diarrheal outbreak?",
+      "choices": [
+        "Giardia and Cryptosporidium",
+        "Trichomonas vaginalis and Toxoplasma",
+        "Onchocerca and Wuchereria",
+        "Taenia and Trichinella"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Giardia and Cryptosporidium",
+      "explanation": "Both Giardia cysts and Cryptosporidium oocysts are transmitted through contaminated water and have caused outbreaks.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-031",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which organisms are commonly detected using fecal antigen immunoassays?",
+      "choices": [
+        "Giardia and Cryptosporidium",
+        "Ascaris and Trichuris",
+        "Strongyloides and hookworm",
+        "Taenia and Echinococcus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Giardia and Cryptosporidium",
+      "explanation": "Fecal immunoassays are widely used to detect Giardia and Cryptosporidium antigens.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-032",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Microsporidial infection most often begins at which body site according to the source?",
+      "choices": [
+        "Gastrointestinal tract",
+        "Central nervous system",
+        "Bone marrow",
+        "Cardiac muscle"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Gastrointestinal tract",
+      "explanation": "The source describes the gastrointestinal tract as the likely initial site after ingestion of infective microsporidial spores.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-033",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Acanthamoeba keratitis has most commonly been linked to what exposure in the source?",
+      "choices": [
+        "Contaminated contact-lens care solutions",
+        "Eating undercooked pork",
+        "Mosquito bites",
+        "Freshwater fish"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Contaminated contact-lens care solutions",
+      "explanation": "Many Acanthamoeba eye infections have been associated with contaminated lens-care solutions, especially homemade saline.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-034",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which culture approach is highly sensitive for recovering Acanthamoeba from corneal material or lens solution?",
+      "choices": [
+        "Non-nutrient agar seeded with E. coli",
+        "Sabouraud agar alone",
+        "Blood agar in CO2",
+        "Thioglycollate broth"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Non-nutrient agar seeded with E. coli",
+      "explanation": "Acanthamoeba can be recovered on non-nutrient agar seeded with E. coli, which serves as a food source.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-035",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Microsporidia have been particularly important opportunistic pathogens in which population?",
+      "choices": [
+        "Immunocompromised patients",
+        "Only healthy adults",
+        "Only neonates",
+        "Only travelers"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Immunocompromised patients",
+      "explanation": "Human microsporidiosis has been most strongly associated with immunocompromised patients, including those with AIDS.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-036",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "How does the decolorization step of a modified acid-fast stain for coccidia differ from routine acid-fast bacillus staining?",
+      "choices": [
+        "A weaker acid decolorizer is used",
+        "No decolorizer is used",
+        "Only alcohol is used",
+        "A stronger acid-alcohol mixture is required"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "A weaker acid decolorizer is used",
+      "explanation": "Modified acid-fast procedures commonly use a weaker sulfuric-acid decolorizer than the acid-alcohol used for mycobacteria.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-037",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which symptom-parasite combination is most appropriate?",
+      "choices": [
+        "Giardiasis - malabsorption",
+        "Trichuriasis - prominent myalgia",
+        "Enterobiasis - dysentery",
+        "Onchocerciasis - hematuria"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Giardiasis - malabsorption",
+      "explanation": "Giardiasis may cause malabsorption. The other pairings do not match the clinical associations emphasized in the source.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-038",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which egg is characterized by a thin shell, a six-hooked embryo, and polar filaments?",
+      "choices": [
+        "Hymenolepis nana",
+        "Taenia species",
+        "Trichuris trichiura",
+        "Schistosoma mansoni"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Hymenolepis nana",
+      "explanation": "H. nana eggs have a thin shell surrounding an oncosphere and characteristic polar filaments.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-039",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "What is the Knott concentration technique designed to recover?",
+      "choices": [
+        "Microfilariae from blood",
+        "Operculated eggs from stool",
+        "Strongyloides larvae from stool",
+        "Amoebic trophozoites from CSF"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Microfilariae from blood",
+      "explanation": "Knott concentration lyses red cells and concentrates microfilariae from blood for microscopic examination.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-040",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which Schistosoma species has an egg with a prominent lateral spine?",
+      "choices": [
+        "Schistosoma mansoni",
+        "Schistosoma haematobium",
+        "Schistosoma japonicum",
+        "Schistosoma mekongi"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Schistosoma mansoni",
+      "explanation": "S. mansoni eggs have a large lateral spine, while S. haematobium eggs characteristically have a terminal spine.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-041",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which parasitology request should be treated as an urgent STAT examination?",
+      "choices": [
+        "Blood films for malaria",
+        "Routine pinworm tape examination",
+        "Routine Giardia O&P",
+        "Hydatid cyst serology"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Blood films for malaria",
+      "explanation": "Malaria blood films require rapid processing and examination because delayed diagnosis, especially with P. falciparum, can be fatal.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-042",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "An immunosuppressed patient develops recurrent pneumonia, abdominal symptoms, gram-negative sepsis, and has a remote history of residence in Southeast Asia. Which chronic parasitic infection should be suspected?",
+      "choices": [
+        "Strongyloides stercoralis",
+        "Naegleria fowleri",
+        "Trypanosoma cruzi",
+        "Paragonimus westermani"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Strongyloides stercoralis",
+      "explanation": "Latent Strongyloides infection can persist through autoinfection and progress to hyperinfection or disseminated disease during immunosuppression.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-043",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Eosinophilic meningoencephalitis caused by a rat lungworm is associated with which parasite?",
+      "choices": [
+        "Angiostrongylus cantonensis",
+        "Necator americanus",
+        "Strongyloides stercoralis",
+        "Ancylostoma braziliense"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Angiostrongylus cantonensis",
+      "explanation": "A. cantonensis is associated with eosinophilic meningitis/meningoencephalitis and larval migration.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-044",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "In hydatid disease, how is the human host classified?",
+      "choices": [
+        "Accidental intermediate host",
+        "Definitive host",
+        "Vector",
+        "Reservoir definitive host"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Accidental intermediate host",
+      "explanation": "Humans accidentally ingest E. granulosus eggs and develop hydatid cysts, functioning as accidental intermediate hosts.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-045",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A hunter develops fever, muscle pain, and periorbital edema after eating undercooked bear meat. Which parasite is most likely?",
+      "choices": [
+        "Trichinella spiralis",
+        "Taenia saginata",
+        "Toxoplasma gondii",
+        "Hymenolepis nana"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trichinella spiralis",
+      "explanation": "Trichinella larvae can be acquired from inadequately cooked bear meat and cause fever, myalgia, and periorbital edema.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-046",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Accidental ingestion of Taenia solium eggs places humans in which role and produces what disease?",
+      "choices": [
+        "Intermediate host with cysticercosis",
+        "Definitive host with hydatid disease",
+        "Vector with taeniasis",
+        "Reservoir with malaria"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Intermediate host with cysticercosis",
+      "explanation": "Ingested T. solium eggs release larvae that migrate into human tissues, producing cysticercosis and making the human an accidental intermediate host.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-047",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A transplant recipient receiving immunosuppressive therapy develops persistent diarrhea. Which organism-method pairing is especially appropriate?",
+      "choices": [
+        "Microsporidia - modified trichrome stain",
+        "Toxoplasma - Gram stain",
+        "Trichinella - trichrome stool stain",
+        "Paragonimus - urine sediment"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Microsporidia - modified trichrome stain",
+      "explanation": "Microsporidia can cause severe diarrhea in immunocompromised patients, and modified trichrome staining is a recommended diagnostic method.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-048",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A traveler returning from India has eosinophilia, lymphadenopathy, and swelling involving the spermatic cord. Which laboratory approach is most appropriate for suspected filariasis?",
+      "choices": [
+        "Examine thick blood films for microfilariae",
+        "Perform a pinworm tape test",
+        "Perform a KOH skin scraping",
+        "Examine sputum for operculated eggs"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Examine thick blood films for microfilariae",
+      "explanation": "The clinical setting suggests lymphatic filariasis, for which thick blood films can aid recovery of circulating microfilariae.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-049",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which coccidian parasite is particularly important for enteric precautions because its oocysts are immediately infective when passed in stool?",
+      "choices": [
+        "Cryptosporidium",
+        "Cystoisospora belli",
+        "Cyclospora cayetanensis",
+        "Toxoplasma gondii"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cryptosporidium",
+      "explanation": "Cryptosporidium oocysts are immediately infective on passage and can therefore contribute to nosocomial transmission.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-050",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A patient from Brazil has chronic cardiomyopathy. Myocardial tissue contains numerous amastigotes. Which parasite is the most likely cause?",
+      "choices": [
+        "Trypanosoma cruzi",
+        "Trypanosoma brucei",
+        "Leishmania donovani",
+        "Babesia microti"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trypanosoma cruzi",
+      "explanation": "T. cruzi causes Chagas disease and can persist as amastigotes in cardiac and other striated muscle.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-051",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which history is especially important when evaluating blood films for malaria?",
+      "choices": [
+        "Travel location, return date, and antimalarial drug history",
+        "Favorite foods only",
+        "Vaccination history only",
+        "Family history of anemia only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Travel location, return date, and antimalarial drug history",
+      "explanation": "Travel destination, timing of return, and antimalarial use can strongly affect species likelihood, relapse considerations, drug resistance, and parasite density.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-052",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "A municipal water system is linked to a large diarrheal outbreak. Which parasite is particularly well documented in this setting?",
+      "choices": [
+        "Cryptosporidium",
+        "Cystoisospora belli",
+        "Dientamoeba fragilis",
+        "Schistosoma mansoni"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cryptosporidium",
+      "explanation": "Cryptosporidium has caused well-documented outbreaks associated with contaminated municipal water.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-053",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Outbreaks associated with imported berries, basil, leafy greens, and similar fresh produce should raise suspicion for which coccidian parasite?",
+      "choices": [
+        "Cyclospora cayetanensis",
+        "Cystoisospora belli",
+        "Cryptosporidium only",
+        "Toxoplasma gondii"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cyclospora cayetanensis",
+      "explanation": "Cyclospora has been linked to foodborne outbreaks involving fresh produce such as berries, basil, and leafy vegetables.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-054",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "What is the preferred diagnostic specimen for Onchocerca volvulus microfilariae?",
+      "choices": [
+        "Skin snip",
+        "Peripheral blood at midnight",
+        "Urine sediment",
+        "Sputum"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Skin snip",
+      "explanation": "Onchocerca microfilariae are found in superficial skin rather than routinely circulating in peripheral blood.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-055",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which helminth egg has a barrel-like shape with polar plugs at both ends?",
+      "choices": [
+        "Trichuris trichiura",
+        "Hookworm",
+        "Fasciola hepatica",
+        "Diphyllobothrium latum"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trichuris trichiura",
+      "explanation": "T. trichiura eggs have a characteristic thick shell and bipolar plugs.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-056",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Ingestion of embryonated eggs from which animal ascarid can produce visceral or ocular larva migrans in humans?",
+      "choices": [
+        "Toxocara canis",
+        "Strongyloides stercoralis",
+        "Schistosoma japonicum",
+        "Opisthorchis sinensis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Toxocara canis",
+      "explanation": "Humans can ingest infective Toxocara eggs and become accidental hosts for migrating larvae.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-057",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which feature is shared by Plasmodium vivax and Plasmodium ovale?",
+      "choices": [
+        "Schuffner dots and a true relapse stage",
+        "No malarial pigment",
+        "Preference for old RBCs",
+        "Typical multiple applique forms"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Schuffner dots and a true relapse stage",
+      "explanation": "Both P. vivax and P. ovale infect younger RBCs, may display Schuffner stippling, and can relapse because of persistent liver stages.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-058",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which pair of parasites can undergo internal autoinfection?",
+      "choices": [
+        "Cryptosporidium and Strongyloides stercoralis",
+        "Giardia and Entamoeba coli",
+        "Cystoisospora and Giardia",
+        "Toxoplasma and Trichuris"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cryptosporidium and Strongyloides stercoralis",
+      "explanation": "The source specifically notes internal autoinfection in Cryptosporidium and S. stercoralis.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-059",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "An immunocompromised patient has chronic diarrhea despite repeated routine O&P examinations being negative. Which organisms may require special stains and remain undetected on routine studies?",
+      "choices": [
+        "Cryptosporidium and microsporidia",
+        "Taenia solium and Entamoeba coli",
+        "Ascaris and Trichuris",
+        "Giardia and Balantidium only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cryptosporidium and microsporidia",
+      "explanation": "Cryptosporidium requires modified acid-fast methods and microsporidia require specialized modified trichrome staining, so routine O&P methods may miss them.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-060",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "What microscopic structure can confirm that a tiny spore is microsporidial?",
+      "choices": [
+        "Polar tubule",
+        "Operculum",
+        "Terminal spine",
+        "Four nuclei"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Polar tubule",
+      "explanation": "Demonstration of the characteristic polar tubule supports confirmation of microsporidial spores.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-061",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "The early ring forms of Plasmodium knowlesi may closely resemble which malaria species?",
+      "choices": [
+        "Plasmodium falciparum",
+        "Plasmodium vivax",
+        "Plasmodium ovale",
+        "Plasmodium malariae"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Plasmodium falciparum",
+      "explanation": "Early P. knowlesi rings can resemble P. falciparum, creating a potential identification problem.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-062",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which parasite stage is immediately infective when passed in human stool?",
+      "choices": [
+        "Cryptosporidium oocyst",
+        "Ascaris egg",
+        "Cyclospora oocyst",
+        "Schistosoma egg"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cryptosporidium oocyst",
+      "explanation": "Cryptosporidium oocysts are already infective when excreted, unlike several other parasites that require environmental development.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-063",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Older trophozoites and schizonts of Plasmodium knowlesi can resemble which species?",
+      "choices": [
+        "Plasmodium malariae",
+        "Plasmodium falciparum",
+        "Plasmodium vivax",
+        "Plasmodium ovale"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Plasmodium malariae",
+      "explanation": "More mature P. knowlesi stages can resemble P. malariae, including band-like forms.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-064",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which parasite's oocysts may show autofluorescence and can then be confirmed with modified acid-fast staining?",
+      "choices": [
+        "Cyclospora cayetanensis",
+        "Entamoeba histolytica",
+        "Dientamoeba fragilis",
+        "Toxoplasma tachyzoites"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cyclospora cayetanensis",
+      "explanation": "Cyclospora oocysts exhibit autofluorescence, a useful presumptive feature before confirmatory staining.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-065",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which feature makes Plasmodium knowlesi potentially dangerous?",
+      "choices": [
+        "A rapid 24-hour erythrocytic cycle and ability to infect RBCs of different ages",
+        "A 72-hour cycle limited to old RBCs",
+        "An inability to multiply in humans",
+        "Only dormant liver infection"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "A rapid 24-hour erythrocytic cycle and ability to infect RBCs of different ages",
+      "explanation": "P. knowlesi has a rapid 24-hour erythrocytic cycle, can involve RBCs across age groups, and may cause serious disease.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-066",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Which laboratory combination is appropriate for confirming microsporidial infection according to the source?",
+      "choices": [
+        "Light microscopy with a modified trichrome stain",
+        "Routine Gram stain with bright-field microscopy",
+        "Modified acid-fast stain only",
+        "India ink preparation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Light microscopy with a modified trichrome stain",
+      "explanation": "Modified trichrome staining examined by light microscopy is a recommended approach for demonstrating microsporidial spores.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-067",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "What is an important limitation when interpreting Blastocystis species microscopically?",
+      "choices": [
+        "Morphologically similar subtypes may differ in pathogenicity",
+        "Every visible organism is definitely pathogenic",
+        "Only one subtype infects humans",
+        "Organism number alone proves pathogenicity"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Morphologically similar subtypes may differ in pathogenicity",
+      "explanation": "The source notes multiple morphologically indistinguishable subtypes or strains, some potentially pathogenic and others nonpathogenic.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-068",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "Why should malaria thick and thin films be prepared promptly from EDTA blood?",
+      "choices": [
+        "Delayed preparation can alter parasite morphology and reduce organism recovery",
+        "EDTA immediately kills all RBCs",
+        "Malaria parasites cannot be stained from fresh blood",
+        "Only serum can preserve parasites"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Delayed preparation can alter parasite morphology and reduce organism recovery",
+      "explanation": "Holding EDTA blood too long can change parasite morphology, reduce organism recovery, and impair staining quality.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "parasitology-8-11-069",
+      "subjectId": "parasitology",
+      "topicId": "parasitology-8-11",
+      "prompt": "What is a defining preparation feature of a malaria thick blood film?",
+      "choices": [
+        "RBCs are lysed during or before staining",
+        "RBC morphology is preserved by fixation",
+        "Less blood is examined than in a thin film",
+        "It is primarily used for species-level RBC morphology"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "RBCs are lysed during or before staining",
+    "explanation": "Thick films require lysis of RBCs, allowing a larger volume of blood to be screened sensitively for parasites.",
+    "source": {
+      "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+      "page": 13,
+      "kind": "Original supplied MCQ reviewer"
+    }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-001",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "A laboratory receives several specimens for fungal culture. Which specimen type is generally least desirable because it may contain little material and is easily contaminated by surrounding flora?",
+      "choices": [
+        "Tissue biopsy",
+        "Cerebrospinal fluid",
+        "Needle aspirate",
+        "Surface swab"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Surface swab",
+      "explanation": "Swabs are generally poor specimens for fungal recovery because they may dry out, contain insufficient material, and collect contaminating skin flora.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-002",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "A technologist prepares a direct examination of skin scrapings for suspected fungal infection. Which reagent is most appropriate for clearing keratin and background debris?",
+      "choices": [
+        "10% KOH",
+        "India ink",
+        "Acid-fast stain",
+        "Gram iodine"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "10% KOH",
+      "explanation": "KOH preparations help dissolve keratinous material and other debris in skin, hair, and nail specimens, making fungal elements easier to visualize.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-003",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "An encapsulated yeast is suspected in the CSF of an immunocompromised patient. Which direct preparation can demonstrate a clear capsule surrounding the yeast?",
+      "choices": [
+        "India ink preparation",
+        "KOH mount only",
+        "Modified acid-fast stain",
+        "Lactophenol cotton blue culture mount"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "India ink preparation",
+      "explanation": "India ink excludes the polysaccharide capsule of Cryptococcus neoformans, producing a clear halo around the yeast cell.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-004",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "A patient has a superficial infection involving hair, skin, and nails. Which group of fungi should receive strong consideration?",
+      "choices": [
+        "Dermatophytes",
+        "Mucorales only",
+        "Dimorphic systemic fungi only",
+        "Cryptococcus species"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Dermatophytes",
+      "explanation": "Dermatophytes are specialized for keratinized tissues and commonly cause infections of skin, hair, and/or nails.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-005",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "A yeast isolate is being evaluated for presumptive identification as Candida albicans. Which rapid test is especially useful?",
+      "choices": [
+        "Germ tube test",
+        "Oxidase test",
+        "Coagulase test",
+        "Acid-fast stain"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Germ tube test",
+      "explanation": "Most C. albicans isolates produce true germ tubes after short incubation under appropriate conditions, making this a useful presumptive identification test.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-006",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "A filament extending from a yeast cell shows a constriction where it emerges. How should this finding be interpreted?",
+      "choices": [
+        "A true germ tube",
+        "A pseudohyphal structure",
+        "An arthroconidium",
+        "A sporangium"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "A pseudohyphal structure",
+      "explanation": "True germ tubes lack a constriction at their point of origin. A constriction favors pseudohyphal development and can cause false interpretation of a germ tube test.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-007",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "Why is cornmeal agar with Tween 80 useful when evaluating an unknown yeast?",
+      "choices": [
+        "It enhances demonstration of characteristic microscopic structures",
+        "It detects viral antigens",
+        "It measures antifungal concentration",
+        "It selects only dimorphic molds"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "It enhances demonstration of characteristic microscopic structures",
+      "explanation": "Cornmeal Tween 80 agar promotes formation and visualization of structures such as blastoconidia, pseudohyphae, true hyphae, arthroconidia, and chlamydoconidia.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-008",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "A CSF yeast isolate produces blastoconidia but no pseudohyphae or arthroconidia. Which pair of tests would be particularly useful if Cryptococcus neoformans is suspected?",
+      "choices": [
+        "Urease and niger seed agar",
+        "Coagulase and catalase",
+        "Optochin and bile solubility",
+        "Germ tube and oxidase"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Urease and niger seed agar",
+      "explanation": "C. neoformans is urease positive and produces brown to black pigmentation on niger seed (birdseed) agar because of phenol oxidase activity.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-009",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "What causes the dark pigmentation of Cryptococcus neoformans colonies on birdseed agar?",
+      "choices": [
+        "Melanin production associated with phenol oxidase activity",
+        "Hemolysin production",
+        "Urea degradation alone",
+        "Capsule dissolution"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Melanin production associated with phenol oxidase activity",
+      "explanation": "Phenol oxidase enables C. neoformans to oxidize diphenolic compounds and produce melanin, yielding brown to black colonies.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-010",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "Which yeast is classically germ tube positive and can form terminal chlamydoconidia?",
+      "choices": [
+        "Candida albicans",
+        "Candida glabrata",
+        "Rhodotorula species",
+        "Cryptococcus neoformans"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Candida albicans",
+      "explanation": "C. albicans commonly produces germ tubes and characteristic thick-walled terminal chlamydoconidia under appropriate culture conditions.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-011",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "A yeast forms only blastoconidia on cornmeal Tween 80 agar, without pseudohyphae or arthroconidia. Which genus best matches this pattern?",
+      "choices": [
+        "Cryptococcus",
+        "Trichosporon",
+        "Geotrichum",
+        "Candida tropicalis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cryptococcus",
+      "explanation": "Cryptococcus species characteristically produce blastoconidia but lack pseudohyphae and arthroconidia.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-012",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "A germ tube-negative yeast recovered from an immunocompromised patient produces pink to coral colonies and is urease positive. Which organism is most likely?",
+      "choices": [
+        "Rhodotorula species",
+        "Candida albicans",
+        "Geotrichum candidum",
+        "Candida tropicalis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Rhodotorula species",
+      "explanation": "Rhodotorula species are notable for pink to coral pigmentation and may act as opportunistic pathogens in immunosuppressed patients.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-1-013",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-1",
+      "prompt": "Which yeast is capable of producing ascospores under appropriate culture conditions?",
+      "choices": [
+        "Saccharomyces cerevisiae",
+        "Candida albicans",
+        "Cryptococcus neoformans",
+        "Candida glabrata"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Saccharomyces cerevisiae",
+      "explanation": "S. cerevisiae is an ascomycetous yeast and can form ascospores on appropriate sporulation media.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-014",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A thermally dimorphic fungus is cultured at room temperature and at body temperature. In infected tissue, which form is generally expected for the dimorphic fungi described in the source?",
+      "choices": [
+        "Yeast phase",
+        "Mold phase",
+        "Sporangial phase",
+        "No fungal structures"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Yeast phase",
+      "explanation": "The source describes dimorphic molds as occurring in the yeast form in infected tissues and at approximately 37 C, with mold growth at lower culture temperatures.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-015",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "Which mold produces thick-walled, barrel-shaped arthroconidia separated by empty cells in its environmental phase?",
+      "choices": [
+        "Coccidioides immitis",
+        "Histoplasma capsulatum",
+        "Sporothrix schenckii",
+        "Blastomyces dermatitidis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Coccidioides immitis",
+      "explanation": "The mold phase of C. immitis forms distinctive barrel-shaped arthroconidia separated by empty or ghost cells.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-016",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A tissue isolate of a dimorphic fungus contains elongated, cigar-shaped yeast forms. Which organism is most characteristic?",
+      "choices": [
+        "Sporothrix schenckii",
+        "Coccidioides immitis",
+        "Histoplasma capsulatum",
+        "Aspergillus fumigatus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Sporothrix schenckii",
+      "explanation": "S. schenckii produces characteristic oval to elongated cigar-shaped yeast forms in tissue.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-017",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "Which mold phase produces large tuberculate macroconidia and may resemble Sepedonium microscopically?",
+      "choices": [
+        "Histoplasma capsulatum",
+        "Candida albicans",
+        "Cryptococcus neoformans",
+        "Malassezia furfur"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Histoplasma capsulatum",
+      "explanation": "The mold phase of H. capsulatum produces large, thick-walled tuberculate macroconidia that can resemble Sepedonium.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-018",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A large parent yeast cell has numerous smaller buds arranged around its circumference in a 'mariner's wheel' appearance. Which organism is suggested?",
+      "choices": [
+        "Paracoccidioides brasiliensis",
+        "Sporothrix schenckii",
+        "Histoplasma capsulatum",
+        "Coccidioides immitis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Paracoccidioides brasiliensis",
+      "explanation": "The multiple budding yeast form of P. brasiliensis creates the classic mariner's wheel appearance.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-019",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "Septate hyphae are clearly seen in a mold culture. Which major fungal group can be excluded based on the source's description?",
+      "choices": [
+        "Mucorales",
+        "Dermatophytes",
+        "Dematiaceous molds",
+        "Dimorphic molds"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Mucorales",
+      "explanation": "Common Mucorales such as Rhizopus and Mucor display broad aseptate or sparsely septate hyphae, unlike the septate groups listed.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-020",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A KOH preparation of skin scales shows short hyphae mixed with round or oval budding yeast, producing a 'spaghetti and meatballs' appearance. What is the likely organism?",
+      "choices": [
+        "Malassezia furfur",
+        "Cryptococcus neoformans",
+        "Candida glabrata",
+        "Histoplasma capsulatum"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Malassezia furfur",
+      "explanation": "The combination of short hyphae and budding yeast in skin scales is characteristic of M. furfur, the cause of tinea versicolor.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-021",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "Which dermatophyte genus may infect skin, hair, and nails?",
+      "choices": [
+        "Trichophyton",
+        "Microsporum",
+        "Epidermophyton",
+        "Malassezia"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trichophyton",
+      "explanation": "Trichophyton species can involve all three keratinized sites. Microsporum typically affects skin and hair, while Epidermophyton affects skin and nails.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-022",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A dermatophyte develops a distinctive cherry-red pigment and teardrop-shaped microconidia along the hyphae. Which species is most likely?",
+      "choices": [
+        "Trichophyton rubrum",
+        "Trichophyton tonsurans",
+        "Microsporum audouinii",
+        "Epidermophyton floccosum"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trichophyton rubrum",
+      "explanation": "T. rubrum is distinguished by its characteristic red pigmentation and compatible microscopic morphology.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-023",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A dermatophyte produces large smooth club-shaped macroconidia but no microconidia. Which genus is most consistent?",
+      "choices": [
+        "Epidermophyton",
+        "Trichophyton",
+        "Microsporum",
+        "Aspergillus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Epidermophyton",
+      "explanation": "Epidermophyton species characteristically lack microconidia and form club-shaped macroconidia.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-024",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A mold colony is dark brown to black on both the surface and reverse, and microscopy shows pigmented septate hyphae. How should the mold be classified?",
+      "choices": [
+        "Dematiaceous mold",
+        "Hyaline mold",
+        "Dermatophyte only",
+        "Mucorales"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Dematiaceous mold",
+      "explanation": "Dematiaceous molds contain dark pigment in their hyphae and typically produce dark colonies.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-025",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A rapidly growing mold begins white and later develops a black pepper-like surface from abundant black conidia. Which organism best fits?",
+      "choices": [
+        "Aspergillus niger",
+        "Aspergillus fumigatus",
+        "Penicillium species",
+        "Fusarium species"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Aspergillus niger",
+      "explanation": "A. niger produces black conidia that create a pepper-like colony surface while the reverse remains relatively pale.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-026",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "Which Aspergillus species is most commonly associated with pulmonary aspergillosis and produces phialides mainly on the upper portion of the vesicle?",
+      "choices": [
+        "Aspergillus fumigatus",
+        "Aspergillus niger",
+        "Aspergillus terreus",
+        "Aspergillus flavus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Aspergillus fumigatus",
+      "explanation": "A. fumigatus is a major cause of aspergillosis and typically sporulates from the upper half to two-thirds of the vesicle.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-027",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A hyaline mold produces rose-lavender colonies and canoe- or sickle-shaped multiseptate macroconidia. Which genus is most likely?",
+      "choices": [
+        "Fusarium",
+        "Phialophora",
+        "Exophiala",
+        "Rhizopus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Fusarium",
+      "explanation": "Fusarium species are hyaline molds recognized by their characteristic curved, multiseptate macroconidia.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-028",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A rapidly growing cottony nonseptate mold has rhizoids that arise between the sporangiophores rather than directly opposite them. Which organism is favored?",
+      "choices": [
+        "Lichtheimia (formerly Absidia)",
+        "Rhizopus",
+        "Aspergillus",
+        "Penicillium"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Lichtheimia (formerly Absidia)",
+      "explanation": "The source distinguishes Lichtheimia from Rhizopus by the location of the rhizoids relative to the sporangiophores.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-029",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "An HIV-positive patient has encapsulated yeast in CSF, a positive urease test, and brown growth on niger seed agar. What is the most likely cause of meningitis?",
+      "choices": [
+        "Cryptococcus neoformans",
+        "Candida albicans",
+        "Candida tropicalis",
+        "Rhodotorula species"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cryptococcus neoformans",
+      "explanation": "Encapsulation, urease positivity, and melanin-producing brown colonies on niger seed agar strongly support C. neoformans.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-030",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "An immunocompromised patient's bone marrow contains small intracellular yeast-like cells. Culture at room temperature produces tuberculate macroconidia. Which fungus is most likely?",
+      "choices": [
+        "Histoplasma capsulatum",
+        "Coccidioides immitis",
+        "Sporothrix schenckii",
+        "Aspergillus fumigatus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Histoplasma capsulatum",
+      "explanation": "H. capsulatum is thermally dimorphic, appears as small intracellular yeast in tissue, and produces tuberculate macroconidia in its mold phase.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-031",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "A lung specimen from an immunocompromised patient shows cup-shaped cysts with GMS stain, and the organism does not grow on routine fungal media. Which organism should be suspected?",
+      "choices": [
+        "Pneumocystis jirovecii",
+        "Histoplasma capsulatum",
+        "Candida albicans",
+        "Scopulariopsis species"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Pneumocystis jirovecii",
+      "explanation": "P. jirovecii is identified in respiratory material using special stains such as GMS and is not recovered on routine fungal culture media.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-032",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "Sputum contains large spherules filled with endospores. Culture produces septate hyphae with barrel-shaped arthroconidia. Which fungus is indicated?",
+      "choices": [
+        "Coccidioides immitis",
+        "Histoplasma capsulatum",
+        "Talaromyces marneffei",
+        "Cryptococcus neoformans"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Coccidioides immitis",
+      "explanation": "C. immitis forms spherules containing endospores in tissue and highly infectious barrel-shaped arthroconidia in its mold phase.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-9-2-033",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-9-2",
+      "prompt": "Which mold is identified in the source as the most common cause of human mucormycosis?",
+      "choices": [
+        "Rhizopus species",
+        "Candida albicans",
+        "Penicillium species",
+        "Scopulariopsis species"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Rhizopus species",
+      "explanation": "Rhizopus species are highlighted as the most common cause of mucormycosis, particularly in patients with serious underlying disease.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-034",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "Which viral property serves as a fundamental basis for initial classification?",
+      "choices": [
+        "Whether the genome contains RNA or DNA",
+        "Gram reaction",
+        "Ability to form spores",
+        "Catalase activity"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Whether the genome contains RNA or DNA",
+      "explanation": "Viruses are initially classified in part by their nucleic acid composition, with viral genomes containing either RNA or DNA.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-035",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "Which virus is a major cause of bronchiolitis and other serious respiratory disease in infants?",
+      "choices": [
+        "Respiratory syncytial virus",
+        "Rotavirus",
+        "Norovirus",
+        "Epstein-Barr virus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Respiratory syncytial virus",
+      "explanation": "RSV is a major pediatric respiratory pathogen and is especially important in infants, causing bronchiolitis, pneumonia, and related syndromes.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-036",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "A patient develops myocarditis and pleuritic chest pain from an enteroviral infection. Which virus is strongly associated with this syndrome?",
+      "choices": [
+        "Coxsackie B virus",
+        "RSV",
+        "CMV",
+        "Rotavirus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Coxsackie B virus",
+      "explanation": "Coxsackie B viruses are classically associated with myocarditis, pericarditis, and pleurodynia.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-037",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "Which herpesvirus can produce a mononucleosis-like illness similar to Epstein-Barr virus infection?",
+      "choices": [
+        "Cytomegalovirus",
+        "HSV-2",
+        "Varicella-zoster virus",
+        "Human papillomavirus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cytomegalovirus",
+      "explanation": "CMV may cause a self-limited mononucleosis-like syndrome, especially in otherwise healthy individuals.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-038",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "Which pair is emphasized in the source as important causes of viral pneumonia in adults?",
+      "choices": [
+        "Influenza virus and adenovirus",
+        "Rotavirus and norovirus",
+        "HBV and HCV",
+        "Coxsackie A and B only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Influenza virus and adenovirus",
+      "explanation": "Influenza viruses and adenoviruses are important causes of adult respiratory disease, including pneumonia.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-039",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "A young child has severe gastroenteritis, vomiting, and dehydration. Which Reoviridae member should be considered?",
+      "choices": [
+        "Rotavirus",
+        "Norovirus",
+        "Hantavirus",
+        "Parvovirus B19"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Rotavirus",
+      "explanation": "Rotavirus is an important cause of gastroenteritis in infants and young children and can produce significant dehydration.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-040",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "A child develops fever and a characteristic slapped-cheek rash. Which virus is the likely cause?",
+      "choices": [
+        "Parvovirus B19",
+        "Adenovirus",
+        "Rotavirus",
+        "Coxsackie B virus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Parvovirus B19",
+      "explanation": "Parvovirus B19 causes erythema infectiosum, also known as fifth disease, which classically produces a slapped-cheek rash.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-041",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "Which virus is commonly responsible for outbreaks of gastroenteritis among adults after contaminated food or water exposure?",
+      "choices": [
+        "Norovirus",
+        "RSV",
+        "Parvovirus B19",
+        "CMV"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Norovirus",
+      "explanation": "Noroviruses cause community and institutional outbreaks of acute gastroenteritis across age groups, including adults.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-042",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "A patient has genital warts and cervical cells showing koilocytosis. Which viral group is most closely associated?",
+      "choices": [
+        "Human papillomavirus",
+        "Rotavirus",
+        "Rabies virus",
+        "RSV"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Human papillomavirus",
+      "explanation": "HPV causes anogenital warts, and infected squamous cells may show koilocytosis. Certain HPV types are associated with anogenital neoplasia.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-043",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "Which approaches may assist in diagnosing viral infections in addition to conventional viral culture?",
+      "choices": [
+        "Serology, nucleic acid testing, and histologic/cytologic methods",
+        "Only Gram staining",
+        "Only bacterial culture",
+        "Only coagulation testing"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Serology, nucleic acid testing, and histologic/cytologic methods",
+      "explanation": "The source describes serology, nucleic acid methods such as PCR/probes, and cytologic or histologic examination as useful alternatives to culture.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-044",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "A patient has a reactive HIV screening test followed by a negative differentiation assay, but nucleic acid testing detects viral RNA. What does the molecular result support?",
+      "choices": [
+        "HIV infection can be present before a full antibody response develops",
+        "The molecular result proves the patient is uninfected",
+        "Maternal IgG caused the RNA result",
+        "The virus cannot be detected during early infection"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "HIV infection can be present before a full antibody response develops",
+      "explanation": "Nucleic acid methods can detect viral RNA during early infection before antibodies become sufficiently detectable.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-045",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "A patient with suspected rabies encephalitis undergoes antemortem testing. Which specimen and method are described as useful for direct antigen detection?",
+      "choices": [
+        "Nuchal skin biopsy with immunofluorescence",
+        "Urine culture",
+        "Stool antigen test",
+        "Bone marrow KOH preparation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Nuchal skin biopsy with immunofluorescence",
+      "explanation": "Rabies antigen can be demonstrated by direct immunofluorescence in cutaneous nerves around hair follicles from a nuchal skin biopsy.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-1-046",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-1",
+      "prompt": "Which molecular method is increasingly used for rapid confirmation of influenza and other respiratory viral infections?",
+      "choices": [
+        "RT-PCR",
+        "Coagulase testing",
+        "KOH microscopy",
+        "Urease testing"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "RT-PCR",
+      "explanation": "RT-PCR provides sensitive and rapid detection of respiratory viruses and has increasingly replaced slower culture-based approaches.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-047",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "A patient has painful genital vesicles. Which specimen provides useful material for rapid direct detection of herpes simplex viral antigen?",
+      "choices": [
+        "Vesicle or lesion material",
+        "Stool",
+        "Bone marrow",
+        "Hair shaft"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Vesicle or lesion material",
+      "explanation": "Material collected directly from an active vesicle can be examined using rapid antigen methods, and molecular methods can also detect HSV sensitively.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-048",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "A college student has marked fatigue, pharyngitis, and lymphadenopathy, but a rapid heterophile test is negative. If other common causes have been excluded, which virus should receive additional specific testing?",
+      "choices": [
+        "Epstein-Barr virus",
+        "Rotavirus",
+        "Rabies virus",
+        "Hantavirus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Epstein-Barr virus",
+      "explanation": "EBV-specific testing may help establish infectious mononucleosis when a rapid heterophile assay is negative, especially when the clinical syndrome remains suggestive.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-049",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "An older gardener develops encephalitis after heavy mosquito exposure in an area where dead birds have been observed. Which virus best fits the epidemiology?",
+      "choices": [
+        "West Nile virus",
+        "Norovirus",
+        "Parvovirus B19",
+        "Rotavirus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "West Nile virus",
+      "explanation": "Birds are important reservoirs for West Nile virus and mosquitoes transmit infection to incidental human hosts, in whom neurologic disease may occur.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-050",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "A worker develops severe pulmonary illness after entering a rodent-infested building and inhaling contaminated material. Which virus should be suspected?",
+      "choices": [
+        "Hantavirus",
+        "Rotavirus",
+        "West Nile virus",
+        "EBV"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Hantavirus",
+      "explanation": "Hantavirus pulmonary syndrome is associated with exposure to aerosolized rodent excreta and can progress to severe respiratory disease and pulmonary edema.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-051",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "A three-year-old develops vomiting, diarrhea, and severe dehydration during the winter. Bacterial stool cultures are negative. Which virus is especially likely?",
+      "choices": [
+        "Rotavirus",
+        "CMV",
+        "EBV",
+        "Hepatitis D virus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Rotavirus",
+      "explanation": "Rotavirus commonly causes significant winter gastroenteritis in infants and young children.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-052",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "Which measurements are useful in the source's discussion of HIV treatment assessment?",
+      "choices": [
+        "Viral load, CD4 lymphocyte quantitation, and resistance testing",
+        "PT and APTT only",
+        "Serum sodium only",
+        "Fungal culture only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Viral load, CD4 lymphocyte quantitation, and resistance testing",
+      "explanation": "The source discusses plasma viral load, CD4 lymphocyte counts, and genotype/phenotype resistance testing as relevant laboratory information for antiviral management.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-053",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "An infant with congenital heart disease develops apnea and bronchiolitis. Bacterial testing is unrevealing. Which virus is especially important to test for?",
+      "choices": [
+        "RSV",
+        "Norovirus",
+        "Rotavirus",
+        "EBV"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "RSV",
+      "explanation": "RSV is a major cause of bronchiolitis and hospitalization for respiratory illness in infants, with severe disease risk in vulnerable children.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-054",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "A person is bitten by a suspicious wild fox that cannot be captured for testing. According to the source, what immediate management is indicated?",
+      "choices": [
+        "Rabies immune globulin plus rabies vaccination",
+        "Wait for neurologic symptoms",
+        "Perform weekly throat cultures",
+        "Administer antifungal therapy"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Rabies immune globulin plus rabies vaccination",
+      "explanation": "When a potentially rabid animal cannot be tested, the source recommends prompt postexposure prophylaxis with rabies immune globulin and vaccine.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-055",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "Which test is emphasized for laboratory confirmation of severe acute respiratory syndrome caused by the SARS coronavirus?",
+      "choices": [
+        "RT-PCR",
+        "Latex agglutination",
+        "Blood culture",
+        "KOH preparation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "RT-PCR",
+      "explanation": "The source identifies RT-PCR as the recommended laboratory method for confirming SARS coronavirus infection.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-056",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "A pregnant patient has active genital herpes lesions, and her premature infant develops a fatal disseminated infection despite negative bacterial studies. Which virus is the likely cause?",
+      "choices": [
+        "HSV",
+        "RSV",
+        "CMV only",
+        "EBV"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "HSV",
+      "explanation": "The source describes neonatal disseminated HSV, particularly HSV-2 associated with maternal genital infection, as potentially fatal.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-057",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "An adult who had chickenpox as a child develops a localized painful vesicular eruption years later. Which virus has reactivated?",
+      "choices": [
+        "Varicella-zoster virus",
+        "HSV-1",
+        "EBV",
+        "Norovirus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Varicella-zoster virus",
+      "explanation": "Varicella-zoster virus remains latent in sensory ganglia after chickenpox and may later reactivate as shingles.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-058",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "A cruise ship experiences an outbreak of acute vomiting and diarrhea involving many adult passengers. Which virus is the most likely cause?",
+      "choices": [
+        "Norovirus",
+        "Rotavirus",
+        "RSV",
+        "Parainfluenza virus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Norovirus",
+      "explanation": "Norovirus is a classic cause of explosive gastroenteritis outbreaks in settings such as cruise ships and affects adults as well as children.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-059",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "An immunocompromised transplant patient develops hemorrhagic cystitis. Which virus-specimen combination is most appropriate to investigate?",
+      "choices": [
+        "BK virus in urine",
+        "HPV in serum",
+        "EBV in stool",
+        "HBV in skin"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "BK virus in urine",
+      "explanation": "BK polyomavirus has urinary tract tropism and can cause renal and bladder disease in immunocompromised patients; urine is an appropriate specimen.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-060",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "Which virus belongs to the filovirus group and can appear filamentous, curved, or looped on electron microscopy?",
+      "choices": [
+        "Ebola virus",
+        "West Nile virus",
+        "Poliovirus",
+        "Zika virus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Ebola virus",
+      "explanation": "Ebola is a filovirus with characteristic filamentous forms and is associated with severe viral hemorrhagic fever.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-061",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "Which mosquito-borne flavivirus is associated with congenital microcephaly and other adverse pregnancy outcomes?",
+      "choices": [
+        "Zika virus",
+        "West Nile virus",
+        "Hepatitis C virus",
+        "Norovirus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Zika virus",
+      "explanation": "The source links Zika virus infection with serious fetal neurologic abnormalities, including microcephaly.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "mycology-and-virology-8-10-2-062",
+      "subjectId": "mycology-and-virology",
+      "topicId": "mycology-and-virology-8-10-2",
+      "prompt": "A pregnant traveler develops hepatitis-like illness after visiting an endemic region and tests negative for hepatitis A. Which fecal-oral hepatitis virus is particularly dangerous during pregnancy?",
+      "choices": [
+        "Hepatitis E virus",
+        "Hepatitis B virus",
+        "Hepatitis C virus",
+        "Hepatitis D virus"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Hepatitis E virus",
+      "explanation": "Hepatitis E is transmitted by the fecal-oral route and is associated with a substantially increased risk of severe or fatal disease during pregnancy.",
+      "source": {
+        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
       }
     }
   ]

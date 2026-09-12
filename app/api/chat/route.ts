@@ -12,6 +12,7 @@ ALLOWED TOPICS:
 - Clinical Chemistry
 - Microbiology and Bacteriology
 - Parasitology
+- Mycology and Virology
 - Immunology and Serology
 - Immunohematology and Blood Banking
 - Histopathology and Cytology

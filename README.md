@@ -4,7 +4,7 @@ RevIT is a Medical Technology study and review platform built for subject review
 
 ## What is included
 
-- A growing source-aware reviewer library organized by subject and topic, currently covering Clinical Chemistry, Hematology, Bacteriology, and AUBF with source filename and page retained.
+- A growing source-aware reviewer library organized by subject and topic, currently covering Clinical Chemistry, Hematology, Bacteriology, AUBF, Parasitology, and Mycology and Virology with source filename and page retained.
 - Registration, separate sign-in after account creation, password recovery, remember-me/session-only behavior, protected routes, profile onboarding, avatar upload, password changes, other-device sign-out, and optional TOTP two-factor authentication.
 - Row-level-secured cloud storage for profiles, grades, daily activity, idempotent activity events, exam schedules, and preferences.
 - Monthly activity intensity, timezone-safe streaks, date details, independent exam markers, and an Up Next assessment.

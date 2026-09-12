@@ -286,8 +286,23 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .topic-meter i.unstarted { background: var(--surface-soft); }
 
 .library-shell, .progress-shell, .assistant-page { max-width: 1440px; margin: 0 auto; }
+.library-search { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); box-shadow: var(--shadow); }
+.library-search > div:first-child { min-width: 190px; }
+.library-search label, .library-search > div:first-child span { display: block; }
+.library-search label { color: var(--ink); font-size: 12px; font-weight: 720; }
+.library-search > div:first-child span { margin-top: 4px; color: var(--muted); font-size: 9px; }
+.library-search-control { display: grid; grid-template-columns: auto minmax(180px, 360px) auto; align-items: center; width: min(100%, 470px); border: 1px solid var(--line); border-radius: 10px; background: var(--input); color: var(--muted); }
+.library-search-control > span { padding-left: 12px; color: var(--green); font-size: 20px; line-height: 1; }
+.library-search-control input { min-width: 0; width: 100%; border: 0; padding: 11px 10px; outline: 0; background: transparent; color: var(--ink); font-size: 12px; }
+.library-search-control input::placeholder { color: var(--muted); }
+.library-search-control button { align-self: stretch; border: 0; border-left: 1px solid var(--line); padding: 0 12px; background: transparent; color: var(--green); font-size: 9px; font-weight: 750; }
+.library-search-control:focus-within { border-color: var(--green); box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 14%, transparent); }
 .library-layout { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 22px; align-items: start; }
 .subject-list { display: grid; gap: 18px; }
+.subject-category { display: grid; gap: 18px; }
+.subject-category-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; padding: 8px 4px 2px 15px; border-left: 3px solid var(--green); }
+.subject-category-heading h2 { margin: 2px 0 0; color: var(--green-dark); font-size: 21px; letter-spacing: -.035em; }
+.subject-category-heading > p { max-width: 430px; margin: 0; color: var(--muted); font-size: 10px; line-height: 1.5; text-align: right; }
 .subject-card { padding: 22px; }
 .subject-heading { display: flex; justify-content: space-between; gap: 22px; align-items: start; }
 .subject-heading h2 { margin: 0; font-size: 23px; font-weight: 720; letter-spacing: -.035em; }
@@ -304,6 +319,9 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .topic-select-copy small { color: var(--muted); font-size: 10px; line-height: 1.5; }
 .topic-select-copy em { align-self: end; color: var(--green); font-size: 9px; font-style: normal; font-weight: 700; }
 .subject-selection-note { margin: 14px 0 0; color: var(--muted); font-size: 10px; }
+.library-empty-state { padding: 34px 22px; border: 1px dashed var(--line); border-radius: 14px; background: var(--surface-soft); text-align: center; }
+.library-empty-state h2 { margin: 0; font-size: 19px; }
+.library-empty-state p { margin: 7px 0 14px; color: var(--muted); font-size: 11px; }
 .selection-panel { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; padding: 22px; scrollbar-width: thin; }
 .selection-panel h2 { margin: 0; font-size: 23px; font-weight: 720; letter-spacing: -.035em; }
 .selection-panel > p:not(.eyebrow) { margin: 8px 0 16px; color: var(--muted); font-size: 12px; line-height: 1.6; }
@@ -498,6 +516,9 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
   .metric-card { min-height: 120px; }.metric-card > strong { margin-top: 14px; }
   .section-heading { flex-direction: column; }.topic-row { grid-template-columns: 100px minmax(60px, 1fr) 34px; }
   .topic-selection-grid { grid-template-columns: 1fr; }
+  .library-search, .subject-category-heading { align-items: stretch; flex-direction: column; gap: 12px; }
+  .library-search-control { width: 100%; }
+  .subject-category-heading > p { max-width: none; text-align: left; }
   .subject-heading { flex-direction: column; gap: 8px; }
   .quiz-card, .results-card { padding: 22px 16px; }
   .quiz-topline > div { display: grid; }

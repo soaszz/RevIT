@@ -9,18 +9,21 @@ import {
   topics,
 } from "../content/reviewerContent";
 import { buildFlashcardDeck, shuffleFlashcards, type Flashcard } from "../lib/flashcards";
+import { buildSubjectSections, filterSubjectsBySearch } from "../lib/reviewerLibrary";
 import styles from "./Flashcards.module.css";
+import LibrarySearch from "./LibrarySearch";
 
 function isTypingTarget(target: EventTarget | null) {
   if (!(target instanceof HTMLElement)) return false;
   return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
 }
 
-export default function Flashcards() {
+export default function Flashcards({ isNuRevit }: { isNuRevit: boolean }) {
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [deck, setDeck] = useState<Flashcard[]>([]);
   const [cardIndex, setCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [subjectSearch, setSubjectSearch] = useState("");
 
   const topicQuestionCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -33,6 +36,14 @@ export default function Flashcards() {
   const availableCards = useMemo(
     () => selectedTopicIds.reduce((total, topicId) => total + (topicQuestionCounts.get(topicId) ?? 0), 0),
     [selectedTopicIds, topicQuestionCounts],
+  );
+  const visibleSubjects = useMemo(
+    () => filterSubjectsBySearch(subjects, topics, subjectSearch),
+    [subjectSearch],
+  );
+  const subjectSections = useMemo(
+    () => buildSubjectSections(visibleSubjects, isNuRevit),
+    [isNuRevit, visibleSubjects],
   );
 
   const currentCard = deck[cardIndex];
@@ -185,50 +196,73 @@ export default function Flashcards() {
 
   return (
     <div className="library-shell">
+      <LibrarySearch
+        id="flashcard-library-search"
+        value={subjectSearch}
+        resultCount={visibleSubjects.length}
+        onChange={setSubjectSearch}
+      />
       <div className="library-layout">
         <div className="subject-list">
-          {subjects.map((subject) => {
-            const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
-            const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
-            const subjectFullySelected = subjectTopics.length > 0 && subjectSelected === subjectTopics.length;
-            const subjectCardCount = subjectTopics.reduce(
-              (total, topic) => total + (topicQuestionCounts.get(topic.id) ?? 0),
-              0,
-            );
+          {subjectSections.map((section) => (
+            <div className="subject-category" key={section.id}>
+              {section.title && (
+                <div className="subject-category-heading">
+                  <div><p className="eyebrow">NU Revit collection</p><h2>{section.title}</h2></div>
+                  {section.description && <p>{section.description}</p>}
+                </div>
+              )}
+              {section.subjects.map((subject) => {
+                const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
+                const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
+                const subjectFullySelected = subjectTopics.length > 0 && subjectSelected === subjectTopics.length;
+                const subjectCardCount = subjectTopics.reduce(
+                  (total, topic) => total + (topicQuestionCounts.get(topic.id) ?? 0),
+                  0,
+                );
 
-            return (
-              <section className="subject-card" key={subject.id}>
-                <div className="subject-heading">
-                  <div>
-                    <p className="eyebrow">{subjectCardCount} flashcards</p>
-                    <h2>{subject.name}</h2>
-                    <p>{subject.description}</p>
-                  </div>
-                  <button className="text-button" type="button" onClick={() => toggleSubject(subject.id)}>
-                    {subjectFullySelected ? "Unselect subject" : "Select subject"}
-                  </button>
-                </div>
-                <div className="topic-selection-grid">
-                  {subjectTopics.map((topic) => {
-                    const count = topicQuestionCounts.get(topic.id) ?? 0;
-                    const selected = selectedTopicIds.includes(topic.id);
-                    return (
-                      <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
-                        <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                        <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                        <span className="topic-select-copy">
-                          <strong>{topic.name}</strong>
-                          <small>{topic.description}</small>
-                          <em>{count} card{count === 1 ? "" : "s"}</em>
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-                <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
-              </section>
-            );
-          })}
+                return (
+                  <section className="subject-card" key={subject.id}>
+                    <div className="subject-heading">
+                      <div>
+                        <p className="eyebrow">{subjectCardCount} flashcards</p>
+                        <h2>{subject.name}</h2>
+                        <p>{subject.description}</p>
+                      </div>
+                      <button className="text-button" type="button" onClick={() => toggleSubject(subject.id)}>
+                        {subjectFullySelected ? "Unselect subject" : "Select subject"}
+                      </button>
+                    </div>
+                    <div className="topic-selection-grid">
+                      {subjectTopics.map((topic) => {
+                        const count = topicQuestionCounts.get(topic.id) ?? 0;
+                        const selected = selectedTopicIds.includes(topic.id);
+                        return (
+                          <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                            <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                            <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                            <span className="topic-select-copy">
+                              <strong>{topic.name}</strong>
+                              <small>{topic.description}</small>
+                              <em>{count} card{count === 1 ? "" : "s"}</em>
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                    <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                  </section>
+                );
+              })}
+            </div>
+          ))}
+          {!visibleSubjects.length && (
+            <div className="library-empty-state">
+              <h2>No subjects found</h2>
+              <p>Try another subject or topic name.</p>
+              <button className="text-button" type="button" onClick={() => setSubjectSearch("")}>Clear search</button>
+            </div>
+          )}
         </div>
 
         <aside className="selection-panel">
