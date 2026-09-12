@@ -17,6 +17,8 @@
 /.next/
 /.vinext/
 /out/
+/next-env.d.ts
+*.tsbuildinfo
 
 # misc
 .DS_Store
@@ -34,7 +36,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# Local environment files may contain credentials. Keep only the credential-free template.
 .env*
 !.env.example
 

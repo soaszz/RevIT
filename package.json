@@ -11,6 +11,8 @@
     "start": "next start",
     "test": "npm run build && tsx --test tests/*.test.ts && node --test tests/reviewer-content.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "security:secrets": "node scripts/check-secrets.mjs",
+    "security:audit": "npm run security:secrets && npm audit --omit=dev",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
