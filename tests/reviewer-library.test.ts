@@ -44,7 +44,7 @@ test("library search matches subject and topic metadata", () => {
   assert.equal(filterSubjectsBySearch(subjects, topics, "").length, subjects.length);
 });
 
-test("MCQ and flashcard libraries both expose the shared search and NU grouping", async () => {
+test("MCQ and flashcard libraries expose shared category choices and search", async () => {
   const [app, flashcards, search] = await Promise.all([
     readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/components/Flashcards.tsx", import.meta.url), "utf8"),
@@ -57,4 +57,8 @@ test("MCQ and flashcard libraries both expose the shared search and NU grouping"
   assert.match(flashcards, /buildSubjectSections\(visibleSubjects, isNuRevit\)/);
   assert.match(search, /type="search"/);
   assert.match(search, /Search subjects and topics/);
+  assert.match(search, /All Subjects/);
+  assert.match(search, /MTAP 1/);
+  assert.match(search, /Other Majors/);
+  assert.match(search, /Search Parasitology, Hematology 1, Clinical Chemistry 1, and etc\./);
 });
