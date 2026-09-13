@@ -2,6 +2,7 @@ import type { Subject, Topic } from "../content/reviewerContent";
 
 export const MTAP_1_CATEGORY = "MTAP 1" as const;
 export const OTHER_MAJORS_CATEGORY = "Other Majors" as const;
+export const ALL_MAJORS_CATEGORY = "All Majors" as const;
 
 export type SubjectSection = {
   id: string;
@@ -31,7 +32,12 @@ export function filterSubjectsBySearch(
 
 export function buildSubjectSections(visibleSubjects: Subject[], isNuRevit: boolean): SubjectSection[] {
   if (!isNuRevit) {
-    return [{ id: "all-subjects", title: null, description: null, subjects: visibleSubjects }];
+    return [{
+      id: "all-majors",
+      title: ALL_MAJORS_CATEGORY,
+      description: "Every available Medical Technology major in one collection.",
+      subjects: visibleSubjects,
+    }];
   }
 
   const mtapOneSubjects = visibleSubjects.filter((subject) => subject.category === MTAP_1_CATEGORY);

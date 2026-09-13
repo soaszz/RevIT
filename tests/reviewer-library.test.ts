@@ -4,11 +4,13 @@ import test from "node:test";
 import { subjects, topics } from "../app/content/reviewerContent";
 import { buildSubjectSections, filterSubjectsBySearch } from "../app/lib/reviewerLibrary";
 
-test("standard RevIT keeps every subject in one flat collection", () => {
+test("standard RevIT keeps every subject in one All Majors collection", () => {
   const sections = buildSubjectSections(subjects, false);
 
   assert.equal(sections.length, 1);
-  assert.equal(sections[0].title, null);
+  assert.equal(sections[0].id, "all-majors");
+  assert.equal(sections[0].title, "All Majors");
+  assert.doesNotMatch(sections[0].description ?? "", /MTAP/i);
   assert.deepEqual(sections[0].subjects.map((subject) => subject.id), subjects.map((subject) => subject.id));
 });
 
@@ -63,10 +65,15 @@ test("MCQ and flashcard libraries expose shared category choices and search", as
   ]);
 
   assert.match(app, /id="mcq-library-search"/);
+  assert.match(app, /isNuRevit=\{preferences\.mtap_features_enabled\}/);
   assert.match(app, /<Flashcards isNuRevit=\{preferences\.mtap_features_enabled\}/);
   assert.match(flashcards, /id="flashcard-library-search"/);
+  assert.match(flashcards, /isNuRevit=\{isNuRevit\}/);
   assert.match(flashcards, /buildSubjectSections\(visibleSubjects, isNuRevit\)/);
   assert.match(search, /type="search"/);
+  assert.match(search, /STANDARD_CATEGORY_CHOICES/);
+  assert.match(search, /All Majors/);
+  assert.match(search, /!isNuRevit && selectedNuCategory/);
   assert.match(search, /Search subjects and topics/);
   assert.match(search, /All Subjects/);
   assert.match(search, /MTAP 1/);

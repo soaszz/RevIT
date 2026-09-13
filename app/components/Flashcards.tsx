@@ -198,6 +198,7 @@ export default function Flashcards({ isNuRevit }: { isNuRevit: boolean }) {
     <div className="library-shell">
       <LibrarySearch
         id="flashcard-library-search"
+        isNuRevit={isNuRevit}
         value={subjectSearch}
         resultCount={visibleSubjects.length}
         onChange={setSubjectSearch}
@@ -208,7 +209,7 @@ export default function Flashcards({ isNuRevit }: { isNuRevit: boolean }) {
             <div className="subject-category" key={section.id}>
               {section.title && (
                 <div className="subject-category-heading">
-                  <div><p className="eyebrow">NU Revit collection</p><h2>{section.title}</h2></div>
+                  <div><p className="eyebrow">{isNuRevit ? "NU RevIT collection" : "Standard RevIT collection"}</p><h2>{section.title}</h2></div>
                   {section.description && <p>{section.description}</p>}
                 </div>
               )}

@@ -1,18 +1,33 @@
+import { useEffect } from "react";
+
 type LibrarySearchProps = {
   id: string;
+  isNuRevit: boolean;
   value: string;
   resultCount: number;
   onChange: (value: string) => void;
 };
 
-const CATEGORY_CHOICES = [
+const NU_CATEGORY_CHOICES = [
   { label: "All Subjects", value: "" },
   { label: "MTAP 1", value: "MTAP 1" },
   { label: "Other Majors", value: "Other Majors" },
 ] as const;
 
-export default function LibrarySearch({ id, value, resultCount, onChange }: LibrarySearchProps) {
+const STANDARD_CATEGORY_CHOICES = [
+  { label: "All Majors", value: "" },
+] as const;
+
+export default function LibrarySearch({ id, isNuRevit, value, resultCount, onChange }: LibrarySearchProps) {
   const hasSearch = value.trim().length > 0;
+  const categoryChoices = isNuRevit ? NU_CATEGORY_CHOICES : STANDARD_CATEGORY_CHOICES;
+
+  useEffect(() => {
+    const selectedNuCategory = NU_CATEGORY_CHOICES.some(
+      (choice) => choice.value.length > 0 && choice.value === value.trim(),
+    );
+    if (!isNuRevit && selectedNuCategory) onChange("");
+  }, [isNuRevit, onChange, value]);
 
   return (
     <div className="library-search" role="search">
@@ -21,7 +36,7 @@ export default function LibrarySearch({ id, value, resultCount, onChange }: Libr
         <span>{hasSearch ? `${resultCount} subject${resultCount === 1 ? "" : "s"} found` : "Find a subject or topic in the library"}</span>
       </div>
       <div className="library-category-filter" role="group" aria-label="Filter review library by category">
-        {CATEGORY_CHOICES.map((choice) => (
+        {categoryChoices.map((choice) => (
           <button
             className={value.trim() === choice.value ? "active" : ""}
             type="button"

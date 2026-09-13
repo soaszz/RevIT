@@ -1714,6 +1714,7 @@ useEffect(() => {
               <>
                 <LibrarySearch
                   id="mcq-library-search"
+                  isNuRevit={preferences.mtap_features_enabled}
                   value={subjectSearch}
                   resultCount={visibleSubjects.length}
                   onChange={setSubjectSearch}
@@ -1724,7 +1725,7 @@ useEffect(() => {
                       <div className="subject-category" key={section.id}>
                         {section.title && (
                           <div className="subject-category-heading">
-                            <div><p className="eyebrow">NU Revit collection</p><h2>{section.title}</h2></div>
+                            <div><p className="eyebrow">{preferences.mtap_features_enabled ? "NU RevIT collection" : "Standard RevIT collection"}</p><h2>{section.title}</h2></div>
                             {section.description && <p>{section.description}</p>}
                           </div>
                         )}
