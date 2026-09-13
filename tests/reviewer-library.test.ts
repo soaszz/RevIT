@@ -25,7 +25,13 @@ test("NU RevIT groups subjects under MTAP 1 and Other Majors", () => {
     "bacteriology",
     "aubf",
   ]);
-  assert.deepEqual(otherMajors.subjects.map((subject) => subject.id), ["parasitology", "mycology-and-virology"]);
+  assert.deepEqual(otherMajors.subjects.map((subject) => subject.id), [
+    "parasitology",
+    "mycology-and-virology",
+    "immunohematology",
+    "immunology",
+    "hematology-2",
+  ]);
   assert.ok(mtapOne.subjects.every((subject) => subject.category === "MTAP 1"));
   assert.ok(otherMajors.subjects.every((subject) => subject.category === "Other Majors"));
 });
@@ -34,6 +40,9 @@ test("library search matches subject and topic metadata", () => {
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "parasitology").map((subject) => subject.id), ["parasitology"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "malaria").map((subject) => subject.id), ["parasitology"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "yeasts").map((subject) => subject.id), ["mycology-and-virology"]);
+  assert.deepEqual(filterSubjectsBySearch(subjects, topics, "hemostasis").map((subject) => subject.id), ["hematology-2"]);
+  assert.deepEqual(filterSubjectsBySearch(subjects, topics, "hypersensitivity").map((subject) => subject.id), ["immunology"]);
+  assert.deepEqual(filterSubjectsBySearch(subjects, topics, "blood group").map((subject) => subject.id), ["immunohematology"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "blood gases").map((subject) => subject.id), ["clinical-chemistry"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "MTAP 1").map((subject) => subject.id), [
     "clinical-chemistry",

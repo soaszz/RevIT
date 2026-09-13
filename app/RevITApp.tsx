@@ -1662,7 +1662,7 @@ useEffect(() => {
                 </div>
                 <p>{weakestTopic
                   ? `This is currently your lowest-performing practiced topic across ${weakestTopic.attempts} attempt${weakestTopic.attempts === 1 ? "" : "s"}. A focused session will keep it from being hidden by stronger areas.`
-                  : "Select any combination of Clinical Chemistry, Hematology, Bacteriology, AUBF, Parasitology, and Mycology and Virology topics. RevIT preserves topic attribution in mixed reviews."}</p>
+                  : "Select any combination of Clinical Chemistry, Hematology, Hematology 2, Bacteriology, AUBF, Immunology, Immunohematology, Parasitology, and Mycology and Virology topics. RevIT preserves topic attribution in mixed reviews."}</p>
                 <div className="focus-actions">
                   <button className="primary-button" type="button" onClick={() => openView("library")}>{weakestTopic ? "Build focused review" : "Open review library"}</button>
                   <button className="text-button" type="button" onClick={() => openView("progress")}>View progress</button>
@@ -1687,8 +1687,8 @@ useEffect(() => {
               <div className="source-summary-card">
                 <span className="ai-mark">PDF</span>
                 <p className="eyebrow">Supplied sources</p>
-                <h2>Six official PDF reviewers mapped</h2>
-                <p>Clinical Chemistry, Hematology, Bacteriology, AUBF, Parasitology, and Mycology and Virology now power scoring, rationales, and page-level source references.</p>
+                <h2>Nine official PDF reviewers mapped</h2>
+                <p>Clinical Chemistry, Hematology, Hematology 2, Bacteriology, AUBF, Immunology, Immunohematology, Parasitology, and Mycology and Virology now power scoring, rationales, and page-level source references.</p>
                 {subjects.map((subject) => (
                   <div className="source-stat" key={subject.id}>
                     <span>{subject.name}</span>

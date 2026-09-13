@@ -2,29 +2,38 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("ships the validated six-subject MCQ library with keyed rationales", async () => {
+test("ships the validated nine-subject MCQ library with keyed rationales", async () => {
   const raw = await readFile(new URL("../app/content/reviewerContent.json", import.meta.url), "utf8");
   const content = JSON.parse(raw);
   const topicIds = new Set(content.topics.map((topic) => topic.id));
   const ids = new Set(content.questions.map((question) => question.id));
   const bySubject = Object.groupBy(content.questions, (question) => question.subjectId);
 
-  assert.equal(content.subjects.length, 6);
-  assert.equal(content.topics.length, 36);
-  assert.equal(content.questions.length, 1375);
+  assert.equal(content.subjects.length, 9);
+  assert.equal(content.topics.length, 60);
+  assert.equal(content.questions.length, 1544);
   assert.equal(bySubject["clinical-chemistry"].length, 570);
   assert.equal(bySubject.hematology.length, 166);
   assert.equal(bySubject.bacteriology.length, 298);
   assert.equal(bySubject.aubf.length, 210);
   assert.equal(bySubject.parasitology.length, 69);
   assert.equal(bySubject["mycology-and-virology"].length, 62);
+  assert.equal(bySubject.immunohematology.length, 55);
+  assert.equal(bySubject.immunology.length, 54);
+  assert.equal(bySubject["hematology-2"].length, 60);
   assert.equal(content.subjects.find((subject) => subject.id === "parasitology")?.category, "Other Majors");
   assert.equal(content.subjects.find((subject) => subject.id === "mycology-and-virology")?.category, "Other Majors");
+  assert.equal(content.subjects.find((subject) => subject.id === "immunohematology")?.category, "Other Majors");
+  assert.equal(content.subjects.find((subject) => subject.id === "immunology")?.category, "Other Majors");
+  assert.equal(content.subjects.find((subject) => subject.id === "hematology-2")?.category, "Other Majors");
   assert.equal(bySubject.parasitology[0].correctAnswer, 1);
   assert.match(bySubject.parasitology.at(-1).explanation, /larger volume of blood/i);
   assert.equal(bySubject["mycology-and-virology"][0].correctAnswer, 3);
   assert.equal(bySubject["mycology-and-virology"][5].correctAnswer, 1);
   assert.match(bySubject["mycology-and-virology"].at(-1).explanation, /severe or fatal disease during pregnancy/i);
+  assert.equal(bySubject.immunohematology[0].officialAnswer, "Phenotype");
+  assert.match(bySubject.immunology.at(-1).explanation, /complex fluorescence pattern/i);
+  assert.equal(bySubject["hematology-2"].at(-1).officialAnswer, "Lupus anticoagulant");
   assert.equal(ids.size, content.questions.length);
 
   for (const question of content.questions) {

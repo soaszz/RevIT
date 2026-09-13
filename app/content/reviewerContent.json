@@ -83,6 +83,54 @@
         "mycology-and-virology-8-10-2"
       ],
       "category": "Other Majors"
+    },
+    {
+      "id": "immunohematology",
+      "name": "Immunohematology",
+      "description": "Blood-group genetics, ABO and Rh systems, antibody testing, compatibility, transfusion practice, HDFN, donor testing, and serologic problem-solving.",
+      "topicIds": [
+        "immunohematology-4-1",
+        "immunohematology-4-2",
+        "immunohematology-4-3",
+        "immunohematology-4-4",
+        "immunohematology-4-5",
+        "immunohematology-4-6",
+        "immunohematology-4-7",
+        "immunohematology-4-8",
+        "immunohematology-4-9",
+        "immunohematology-4-10",
+        "immunohematology-4-11"
+      ],
+      "category": "Other Majors"
+    },
+    {
+      "id": "immunology",
+      "name": "Immunology",
+      "description": "Immune principles, serologic procedures, infectious and autoimmune diseases, hypersensitivity, cellular testing, tumor markers, transplantation, and problem-solving.",
+      "topicIds": [
+        "immunology-3-1",
+        "immunology-3-2",
+        "immunology-3-3",
+        "immunology-3-4",
+        "immunology-3-5",
+        "immunology-3-6",
+        "immunology-3-7",
+        "immunology-3-8"
+      ],
+      "category": "Other Majors"
+    },
+    {
+      "id": "hematology-2",
+      "name": "Hematology 2",
+      "description": "Hemostasis and thrombosis, coagulation and fibrinolysis, platelet and vascular disorders, coagulation defects, inhibitors, anticoagulants, and problem-solving.",
+      "topicIds": [
+        "hematology-2-1",
+        "hematology-2-2",
+        "hematology-2-3",
+        "hematology-2-4",
+        "hematology-2-5"
+      ],
+      "category": "Other Majors"
     }
   ],
   "topics": [
@@ -550,6 +598,318 @@
         {
           "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
           "pageRange": "10-13, 17-18",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-1",
+      "subjectId": "immunohematology",
+      "name": "Genetics and Immunology of Blood Groups",
+      "description": "Phenotypes, dosage, inheritance, codominance, Bombay phenotype, and population genetics.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "2, 13",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-2",
+      "subjectId": "immunohematology",
+      "name": "ABO Blood Group System",
+      "description": "ABO subgroups, H-antigen expression, acquired B, Bombay phenotype, and ABO discrepancies.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "2-3, 13",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-3",
+      "subjectId": "immunohematology",
+      "name": "Rh Blood Group System",
+      "description": "Rh classification, weak D testing, antigen-negative selection, and unusual Rh phenotypes.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "3-4, 13",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-4",
+      "subjectId": "immunohematology",
+      "name": "Testing for Antibodies",
+      "description": "Antibody neutralization, thermal behavior, specificity, dosage, and identification rules.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "4-5, 13-14",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-5",
+      "subjectId": "immunohematology",
+      "name": "Compatibility Testing",
+      "description": "Emergency release, antibody screens, crossmatches, donor-unit incompatibility, and immediate-spin testing.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "5-6, 14",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-6",
+      "subjectId": "immunohematology",
+      "name": "Transfusion Reactions",
+      "description": "Reaction workups, delayed hemolysis, TRALI, febrile reactions, and circulatory overload.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "6-7, 14",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-7",
+      "subjectId": "immunohematology",
+      "name": "Blood Components",
+      "description": "RBC dosing and storage, granulocytes, platelets, irradiation, and component selection.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "7-8, 14",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-8",
+      "subjectId": "immunohematology",
+      "name": "Donors",
+      "description": "Donor eligibility, plateletpheresis criteria, vital signs, medications, and component restrictions.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "8-9, 15",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-9",
+      "subjectId": "immunohematology",
+      "name": "Hemolytic Disease of the Fetus and Newborn",
+      "description": "Passive anti-D, neonatal DAT findings, cord testing, compatible blood, and maternal antibody reduction.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "9-10, 15",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-10",
+      "subjectId": "immunohematology",
+      "name": "Serological Testing of Blood Products",
+      "description": "Nucleic-acid testing, viral targets, hepatitis markers, donor assays, and drug interference.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "10-11, 15",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunohematology-4-11",
+      "subjectId": "immunohematology",
+      "name": "Immunohematology Problem-Solving",
+      "description": "Secretor studies, mixed-field reactions, reverse-grouping interference, dosage, and anti-i investigation.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "11-12, 15-16",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunology-3-1",
+      "subjectId": "immunology",
+      "name": "Basic Principles of Immunology",
+      "description": "Adaptive immunity, lymphoid organs, lymphocyte development, MHC, complement, and immunoglobulin classes.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "2-3, 11",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunology-3-2",
+      "subjectId": "immunology",
+      "name": "Immunologic Procedures",
+      "description": "Affinity and avidity, precipitation, ELISA, electrophoresis, complement fixation, and flow-cytometry gating.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "3-4, 11-12",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunology-3-3",
+      "subjectId": "immunology",
+      "name": "Infectious Diseases",
+      "description": "Syphilis, HIV testing, hepatitis B markers, EBV serology, and monitoring antiviral therapy.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "4-5, 12",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunology-3-4",
+      "subjectId": "immunology",
+      "name": "Autoimmune Diseases",
+      "description": "Immune tolerance, ANA patterns, disease-associated autoantibodies, rheumatoid arthritis, thyroid disease, and celiac genetics.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "5-6, 12-13",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunology-3-5",
+      "subjectId": "immunology",
+      "name": "Hypersensitivity",
+      "description": "Types I through IV hypersensitivity, immune complexes, tuberculin reactions, DAT testing, and IgA-associated reactions.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "6-7, 13",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunology-3-6",
+      "subjectId": "immunology",
+      "name": "Immunoglobulins, Complement, and Cellular Testing",
+      "description": "Immune-deficiency screening, quantitative immunoglobulins, monoclonal proteins, T-cell enumeration, complement, and phagocyte testing.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "7-8, 13-14",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunology-3-7",
+      "subjectId": "immunology",
+      "name": "Tumor Testing and Transplantation",
+      "description": "Tumor-marker interpretation, acute rejection, autologous transplantation, and molecular HLA typing.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "8-9, 14",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "immunology-3-8",
+      "subjectId": "immunology",
+      "name": "Immunology Problem-Solving",
+      "description": "Serial dilutions, antiphospholipid interference, inflammation, immunodeficiency, and resolving complex antibody patterns.",
+      "sourcePdfs": [
+        {
+          "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+          "pageRange": "9-10, 14-15",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "hematology-2-1",
+      "subjectId": "hematology-2",
+      "name": "Coagulation and Fibrinolytic Systems, Reagents, and Methods",
+      "description": "Coagulation pathways, specimen collection, PT and APTT, vitamin K, D-dimer, and fibrinolysis.",
+      "sourcePdfs": [
+        {
+          "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+          "pageRange": "2-3, 13",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "hematology-2-2",
+      "subjectId": "hematology-2",
+      "name": "Platelet and Vascular Disorders",
+      "description": "TTP and HUS, platelet function, von Willebrand disease, inherited platelet disorders, and thrombocytopenia.",
+      "sourcePdfs": [
+        {
+          "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+          "pageRange": "4-5, 14",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "hematology-2-3",
+      "subjectId": "hematology-2",
+      "name": "Coagulation System Disorders",
+      "description": "Factor deficiencies, coagulation-test patterns, mixing and factor assays, DIC, hemophilia, and von Willebrand disease.",
+      "sourcePdfs": [
+        {
+          "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+          "pageRange": "6-7, 15",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "hematology-2-4",
+      "subjectId": "hematology-2",
+      "name": "Inhibitors, Thrombotic Disorders, and Anticoagulant Drugs",
+      "description": "Heparin and antithrombin, mixing studies, lupus anticoagulant, warfarin, protein C, HIT, and thrombophilia.",
+      "sourcePdfs": [
+        {
+          "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+          "pageRange": "7-10, 15-16",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "hematology-2-5",
+      "subjectId": "hematology-2",
+      "name": "Hemostasis Problem-Solving",
+      "description": "Clinical bleeding and thrombosis cases, component selection, inhibitors, preanalytical error, heparin resistance, HIT, and lupus anticoagulant.",
+      "sourcePdfs": [
+        {
+          "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+          "pageRange": "10-12, 16-17",
           "kind": "Original supplied MCQ reviewer"
         }
       ]
@@ -26809,12 +27169,12 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "RBCs are lysed during or before staining",
-    "explanation": "Thick films require lysis of RBCs, allowing a larger volume of blood to be screened sensitively for parasites.",
-    "source": {
-      "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
-      "page": 13,
-      "kind": "Original supplied MCQ reviewer"
-    }
+      "explanation": "Thick films require lysis of RBCs, allowing a larger volume of blood to be screened sensitively for parasites.",
+      "source": {
+        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      }
     },
     {
       "id": "mycology-and-virology-8-9-1-001",
@@ -28053,6 +28413,3386 @@
       "source": {
         "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
         "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-1-001",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-1",
+      "prompt": "A blood bank reports a patient as group A after testing the antigens expressed on the red cells. What type of information is being determined?",
+      "choices": [
+        "Genotype",
+        "Phenotype",
+        "DNA sequence",
+        "Chromosome count"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Phenotype",
+      "explanation": "Routine serologic blood grouping demonstrates the observable antigen expression of the red cells, which is the phenotype.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-1-002",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-1",
+      "prompt": "An antibody reacts 4+ with cells carrying two copies of an antigen but only 2+ with cells carrying one copy. Which phenomenon best explains the difference?",
+      "choices": [
+        "Dosage",
+        "Chimerism",
+        "Linkage equilibrium",
+        "Recessive inheritance"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Dosage",
+      "explanation": "Dosage describes stronger antibody reactivity with homozygous antigen expression than with heterozygous expression.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-1-003",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-1",
+      "prompt": "Which inheritance pattern best describes the simultaneous expression of A and B antigens in an AB individual?",
+      "choices": [
+        "Complete dominance",
+        "Recessive inheritance",
+        "Codominance",
+        "Sex-linked recessiveness"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Codominance",
+      "explanation": "ABO A and B alleles are codominant, so both antigens are expressed when both alleles are inherited.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-1-004",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-1",
+      "prompt": "Which genotype is required for expression of the classic Bombay phenotype?",
+      "choices": [
+        "HH",
+        "Hh",
+        "hh",
+        "Either HH or Hh"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "hh",
+      "explanation": "The Bombay phenotype lacks H substance and is associated with the hh genotype.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-1-005",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-1",
+      "prompt": "In the Hardy-Weinberg expression p^2 + 2pq + q^2, which term represents heterozygotes?",
+      "choices": [
+        "p^2",
+        "2pq",
+        "q^2",
+        "p + q"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "2pq",
+      "explanation": "The heterozygous population is represented by 2pq; p^2 and q^2 represent the two homozygous populations.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-2-006",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-2",
+      "prompt": "Which finding can distinguish some A2 individuals from A1 individuals?",
+      "choices": [
+        "A2 cells never react with anti-A",
+        "A2 individuals may produce anti-A1",
+        "A1 individuals routinely produce anti-A2",
+        "A1 cells lack H antigen"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "A2 individuals may produce anti-A1",
+      "explanation": "Some A2 individuals can form anti-A1, whereas an A1 individual would not normally make antibody against A1 on their own cells.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-2-007",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-2",
+      "prompt": "A patient appears group O on forward typing, but the serum agglutinates ordinary group O reagent cells. The patient cells also fail to react with anti-H lectin. Which phenotype is most likely?",
+      "choices": [
+        "A2",
+        "Acquired B",
+        "Bombay",
+        "Weak D"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Bombay",
+      "explanation": "Bombay cells lack H antigen and the serum contains anti-H, making ordinary group O red cells incompatible.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-2-008",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-2",
+      "prompt": "Which ABO phenotype generally has the smallest amount of residual H antigen on its red cells?",
+      "choices": [
+        "O",
+        "A2",
+        "A1",
+        "A1B"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "A1B",
+      "explanation": "A1B cells convert much of the available H substance into A and B structures, leaving relatively little H.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-2-009",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-2",
+      "prompt": "Forward typing gives anti-A 4+ and anti-B 1+, while reverse typing behaves like group A. What should be considered?",
+      "choices": [
+        "Acquired B phenomenon",
+        "Bombay phenotype",
+        "Rhnull phenotype",
+        "Anti-D interference"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Acquired B phenomenon",
+      "explanation": "A weak unexpected anti-B reaction in an otherwise group A pattern can occur with acquired B antigen.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-2-010",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-2",
+      "prompt": "All forward and reverse ABO reactions, including the autocontrol, are positive. Which problem should be investigated first?",
+      "choices": [
+        "Cold autoagglutination",
+        "Complete absence of ABO antigens",
+        "Bombay phenotype",
+        "Loss of all ABO antibodies"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cold autoagglutination",
+      "explanation": "Panreactivity involving the autocontrol is consistent with a cold autoantibody; warm washing and adsorption may be needed to resolve the type.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-3-011",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-3",
+      "prompt": "A person lacks D antigen but expresses c and e. How is the person classified for routine Rh status?",
+      "choices": [
+        "Rh positive",
+        "Rh negative",
+        "Rhnull",
+        "Weak D positive"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Rh negative",
+      "explanation": "Routine Rh-positive versus Rh-negative classification depends on the presence or absence of D antigen, not on c or e.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-3-012",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-3",
+      "prompt": "Why should weak D testing generally not be interpreted on red cells with a positive DAT?",
+      "choices": [
+        "The cells may already be coated with IgG and produce misleading AHG reactivity",
+        "D antigen is destroyed by DAT reagents",
+        "Complement removes D antigen",
+        "Weak D can only be tested at room temperature"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "The cells may already be coated with IgG and produce misleading AHG reactivity",
+      "explanation": "Weak D testing includes an antiglobulin phase. Preexisting coating of patient cells can cause a positive reaction unrelated to D antigen.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-3-013",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-3",
+      "prompt": "A recipient has clinically significant anti-c. Which donor phenotype is acceptable with respect to c?",
+      "choices": [
+        "A unit that expresses c strongly",
+        "A unit lacking c antigen",
+        "Any D-negative unit",
+        "Any C-negative unit"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "A unit lacking c antigen",
+      "explanation": "Patients with alloanti-c should receive red cells that lack the corresponding c antigen.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-3-014",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-3",
+      "prompt": "Which Rh phenotype is associated with unusually strong D expression because other major Rh antigens are absent?",
+      "choices": [
+        "Rhnull",
+        "D--/D--",
+        "dce/dce",
+        "DCe/dce"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "D--/D--",
+      "explanation": "D--/D-- cells can show enhanced D expression because precursor availability is not shared with C/c or E/e expression.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-3-015",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-3",
+      "prompt": "Which combination is required for classic serologic weak D testing?",
+      "choices": [
+        "Room temperature plus immediate spin",
+        "37 C incubation plus IAT",
+        "4 C incubation plus DAT",
+        "Enzyme treatment only"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "37 C incubation plus IAT",
+      "explanation": "Weak D detection uses warm incubation followed by the indirect antiglobulin test to demonstrate weakly expressed D.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-4-016",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-4",
+      "prompt": "A Lewis antibody is obscuring a clinically important antibody in a patient sample. Which approach can selectively remove anti-Lea activity?",
+      "choices": [
+        "Neutralization with appropriate saliva",
+        "Heating serum to 56 C",
+        "Treating cells with DTT only",
+        "Adding anti-human globulin before incubation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Neutralization with appropriate saliva",
+      "explanation": "Lewis substances in suitable saliva can neutralize Lewis antibodies and help uncover additional clinically significant specificities.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-4-017",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-4",
+      "prompt": "A suspected Donath-Landsteiner antibody binds red cells in the cold and produces hemolysis after warming. What type of behavior is this?",
+      "choices": [
+        "Biphasic hemolysis",
+        "Rouleaux formation",
+        "Warm panagglutination",
+        "Dosage"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Biphasic hemolysis",
+      "explanation": "The Donath-Landsteiner antibody characteristically binds at cold temperature and causes complement-mediated hemolysis after warming to 37 C.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-4-018",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-4",
+      "prompt": "An antibody reacts with essentially all adult screening cells but is weak or negative with cord cells. Which specificity is suggested?",
+      "choices": [
+        "Anti-I",
+        "Anti-i",
+        "Anti-K",
+        "Anti-Fya"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Anti-I",
+      "explanation": "Adult red cells are rich in I antigen, whereas cord cells predominantly express i antigen, so anti-I reacts poorly with cord cells.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-4-019",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-4",
+      "prompt": "What does satisfying the 3+3 rule support during antibody identification?",
+      "choices": [
+        "Approximately 95% confidence in the proposed specificity",
+        "Proof that the antibody is IgM",
+        "Exclusion of all dosage effects",
+        "Confirmation of a positive DAT"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Approximately 95% confidence in the proposed specificity",
+      "explanation": "The 3+3 rule uses reactive antigen-positive cells and nonreactive antigen-negative cells to support antibody identification at about 95% confidence.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-4-020",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-4",
+      "prompt": "A patient has a documented history of anti-Jka, but today the antibody screen is negative. What is the safest transfusion approach?",
+      "choices": [
+        "Ignore the historical antibody",
+        "Select Jka-negative compatible units",
+        "Use only group O units regardless of Jka",
+        "Repeat testing only after transfusion"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Select Jka-negative compatible units",
+      "explanation": "Kidd antibodies may fall below detectable levels. A known historical anti-Jka must still be honored with antigen-negative blood.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-5-021",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-5",
+      "prompt": "During a life-threatening emergency, uncrossmatched O-negative RBCs are released before a patient sample can be obtained. What should happen once a sample becomes available?",
+      "choices": [
+        "No further testing is needed",
+        "Compatibility testing should be completed as soon as possible",
+        "Only donor plasma should be tested",
+        "The emergency units must automatically be discarded"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Compatibility testing should be completed as soon as possible",
+      "explanation": "Emergency release does not eliminate the need for compatibility testing. Testing should proceed when a patient specimen becomes available.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-5-022",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-5",
+      "prompt": "All three antibody screening cells react at IAT, but the autocontrol is negative. Which explanation is most plausible?",
+      "choices": [
+        "Warm autoantibody",
+        "High-frequency alloantibody or multiple alloantibodies",
+        "Rouleaux only",
+        "ABO subgroup only"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "High-frequency alloantibody or multiple alloantibodies",
+      "explanation": "Panreactivity with reagent cells plus a negative autocontrol points away from an autoantibody and toward alloantibody reactivity.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-5-023",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-5",
+      "prompt": "What specimens are combined in a minor crossmatch?",
+      "choices": [
+        "Recipient plasma with donor RBCs",
+        "Recipient RBCs with donor plasma",
+        "Donor RBCs with donor plasma",
+        "Recipient RBCs with recipient plasma"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Recipient RBCs with donor plasma",
+      "explanation": "The minor crossmatch tests recipient red cells against donor serum or plasma.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-5-024",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-5",
+      "prompt": "Six donor units are tested. Five are compatible, one is incompatible, and the patient antibody screen is negative. What should be considered for the incompatible unit?",
+      "choices": [
+        "A positive DAT on the donor cells",
+        "A high-frequency patient alloantibody",
+        "A universal warm autoantibody",
+        "An ABO discrepancy affecting every unit"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "A positive DAT on the donor cells",
+      "explanation": "An isolated incompatible donor with a negative screen can result from antibody or complement already coating that donor unit.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-5-025",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-5",
+      "prompt": "When may an immediate-spin crossmatch be used according to the chapter?",
+      "choices": [
+        "Whenever the patient is Rh positive",
+        "When the current screen is negative and there is no antibody history",
+        "Only during massive transfusion",
+        "Only for group O recipients"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "When the current screen is negative and there is no antibody history",
+      "explanation": "The abbreviated immediate-spin approach is appropriate when there is no history of clinically significant antibodies and the current antibody screen is negative.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-6-026",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-6",
+      "prompt": "After a suspected transfusion reaction, the technologist gathers the unit, specimens, and records. What is the next priority?",
+      "choices": [
+        "Perform an antibody panel immediately",
+        "Check for clerical or identification errors",
+        "Measure donor hematocrit",
+        "Repeat infectious disease testing on the donor"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Check for clerical or identification errors",
+      "explanation": "Clerical and identification errors are an important cause of serious transfusion reactions and should be checked early in the investigation.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-6-027",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-6",
+      "prompt": "A hemolytic reaction occurs about a week after transfusion. Which mechanism best fits?",
+      "choices": [
+        "Delayed immune response from a previously formed alloantibody",
+        "Immediate ABO mismatch only",
+        "Simple volume overload",
+        "Nonimmune mechanical hemolysis during collection"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Delayed immune response from a previously formed alloantibody",
+      "explanation": "A delayed hemolytic transfusion reaction can follow an anamnestic rise in antibodies such as Kidd antibodies several days after exposure.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-6-028",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-6",
+      "prompt": "Which antibody type is commonly associated with TRALI in the chapter?",
+      "choices": [
+        "Anti-IgA",
+        "Antileukocyte antibody",
+        "Anti-A1",
+        "Anti-H"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Antileukocyte antibody",
+      "explanation": "TRALI is associated with antibodies directed against leukocyte antigens, including HLA or neutrophil antigens.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-6-029",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-6",
+      "prompt": "A patient develops a temperature increase greater than 1 C during transfusion without evidence of hemolysis. Which reaction is most consistent?",
+      "choices": [
+        "Febrile nonhemolytic transfusion reaction",
+        "Acute hemolytic reaction",
+        "Anaphylactic reaction",
+        "Delayed hemolytic reaction"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Febrile nonhemolytic transfusion reaction",
+      "explanation": "A transfusion-associated fever rise of more than 1 C without another explanation is characteristic of a febrile nonhemolytic reaction.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-6-030",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-6",
+      "prompt": "A patient develops tachycardia and marked hypertension after receiving a substantial RBC volume, with a negative DAT and little temperature change. Which reaction is most likely?",
+      "choices": [
+        "Volume overload",
+        "TRALI",
+        "Acute hemolysis",
+        "Delayed hemolysis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Volume overload",
+      "explanation": "The hemodynamic pattern and transfused volume support transfusion-associated circulatory overload rather than immune hemolysis.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-7-031",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-7",
+      "prompt": "A patient has hemoglobin of 6 g/dL and the goal is approximately 12 g/dL. Using the chapter rule of thumb, about how many RBC units may be needed?",
+      "choices": [
+        "2",
+        "3",
+        "6",
+        "10"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "6",
+      "explanation": "One RBC unit typically raises hemoglobin by roughly 1 to 1.5 g/dL, so an increase of about 6 g/dL may require approximately six units.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-7-032",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-7",
+      "prompt": "A red cell unit has remained outside controlled 1-6 C storage for more than 30 minutes and is returned to the blood bank. What is the concern?",
+      "choices": [
+        "The unit may no longer meet return-to-inventory requirements",
+        "The unit becomes Rh positive",
+        "The plasma becomes type AB",
+        "The leukocytes are completely removed"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "The unit may no longer meet return-to-inventory requirements",
+      "explanation": "The chapter applies a 30-minute limit to RBC units kept outside appropriate storage conditions before return to inventory.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-7-033",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-7",
+      "prompt": "Which component is emphasized for a patient with chronic granulomatous disease who cannot effectively control severe bacterial infection?",
+      "choices": [
+        "Cryoprecipitate",
+        "Granulocyte concentrate",
+        "FFP",
+        "Washed platelets"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Granulocyte concentrate",
+      "explanation": "Granulocyte concentrates may provide short-term support when phagocytic function is severely impaired.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-7-034",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-7",
+      "prompt": "What storage condition is characteristic of standard platelets?",
+      "choices": [
+        "Frozen below -18 C",
+        "1-6 C without movement",
+        "20-24 C with continuous agitation",
+        "37 C in an incubator"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "20-24 C with continuous agitation",
+      "explanation": "Standard platelets are stored at room-temperature range with continuous agitation to preserve function.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-7-035",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-7",
+      "prompt": "Why are cellular blood products irradiated for selected high-risk recipients?",
+      "choices": [
+        "To prevent donor lymphocytes from proliferating",
+        "To destroy ABO antigens",
+        "To remove all plasma proteins",
+        "To increase platelet count"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "To prevent donor lymphocytes from proliferating",
+      "explanation": "Irradiation prevents transfusion-associated graft-versus-host disease by disabling the proliferative capacity of donor lymphocytes.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-8-036",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-8",
+      "prompt": "A healthy donor received a hepatitis B vaccine recently and has no symptoms. According to the chapter, what is the donation status?",
+      "choices": [
+        "Automatically permanently deferred",
+        "No deferral solely because of the vaccine if symptom-free",
+        "Deferred for 12 months",
+        "Eligible only for plasma"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "No deferral solely because of the vaccine if symptom-free",
+      "explanation": "The chapter states that a symptom-free donor does not require a deferral simply because of hepatitis B vaccination.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-8-037",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-8",
+      "prompt": "Which plateletpheresis finding would make a frequent platelet donor unacceptable?",
+      "choices": [
+        "Platelet count 75 x 10^9/L",
+        "Aspirin taken 7 days ago",
+        "Platelet donation 4 days ago",
+        "Plasma loss of 800 mL one week ago"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Platelet count 75 x 10^9/L",
+      "explanation": "The chapter gives a minimum platelet count above 150 x 10^9/L for frequent platelet donors; 75 x 10^9/L is too low.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-8-038",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-8",
+      "prompt": "A highly trained endurance athlete has a resting pulse of 45 beats/min but is otherwise healthy. What does the chapter indicate?",
+      "choices": [
+        "The donor may still be acceptable",
+        "The donor is permanently deferred",
+        "Only plasma may be collected",
+        "The donor must receive atropine first"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "The donor may still be acceptable",
+      "explanation": "Athletes can have physiologic bradycardia and may remain eligible when the low pulse reflects conditioning rather than illness.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-8-039",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-8",
+      "prompt": "Which blood pressure result would cause rejection under the chapter criteria?",
+      "choices": [
+        "110/70 mm Hg",
+        "130/80 mm Hg",
+        "170/95 mm Hg",
+        "160/110 mm Hg"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "160/110 mm Hg",
+      "explanation": "The chapter lists a diastolic upper limit of 100 mm Hg, so a diastolic pressure of 110 mm Hg is unacceptable.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-8-040",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-8",
+      "prompt": "A whole-blood donor is taking clopidogrel. Which component is specifically affected by the medication?",
+      "choices": [
+        "Platelets",
+        "RBCs",
+        "Cryoprecipitate",
+        "Albumin"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Platelets",
+      "explanation": "Clopidogrel impairs platelet function, so platelet products should not be collected for transfusion from that donor under the chapter guidance.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-9-041",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-9",
+      "prompt": "Why can an Rh-negative pregnant patient have a positive antibody screen without having formed immune anti-D?",
+      "choices": [
+        "Passive anti-D may be present after Rh immune globulin",
+        "Rh-negative people naturally make anti-D",
+        "Fetal cells always cause anti-K",
+        "Pregnancy destroys D antigen"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Passive anti-D may be present after Rh immune globulin",
+      "explanation": "Rh immune globulin can produce detectable passive anti-D and is a common reason for a positive screen in an Rh-negative pregnant patient.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-9-042",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-9",
+      "prompt": "An O-negative mother delivers a B-positive infant in her first pregnancy. The infant is mildly jaundiced and DAT positive. Which maternal antibody can cross the placenta and coat the infant cells?",
+      "choices": [
+        "IgG anti-A,B",
+        "IgM anti-H only",
+        "IgM anti-M only",
+        "Anti-I that remains strictly cold reactive"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "IgG anti-A,B",
+      "explanation": "The chapter identifies maternal IgG anti-A,B as a possible cause of a positive neonatal DAT in this setting.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-9-043",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-9",
+      "prompt": "Why is a routine antibody screen generally not performed on cord blood?",
+      "choices": [
+        "Neonates do not produce their own significant antibodies at birth",
+        "Cord cells lack all blood group antigens",
+        "Maternal antibodies cannot cross the placenta",
+        "Cord serum always causes rouleaux"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Neonates do not produce their own significant antibodies at birth",
+      "explanation": "Antibodies found in a newborn are maternally derived; the chapter notes that babies do not begin producing their own antibodies until later infancy.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-9-044",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-9",
+      "prompt": "An AB-positive infant has HDFN caused by anti-D. Which RBC choice can avoid D antigen while remaining ABO compatible?",
+      "choices": [
+        "AB-negative or O-negative RBCs",
+        "AB-positive only",
+        "B-positive only",
+        "A-positive only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "AB-negative or O-negative RBCs",
+      "explanation": "AB-negative or O-negative red cells lack D and are ABO compatible choices for an AB infant in the scenario described.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-9-045",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-9",
+      "prompt": "Maternal anti-E titers continue to rise and fetal distress begins before delivery is appropriate. Which intervention in the chapter can temporarily reduce maternal antibody levels?",
+      "choices": [
+        "Plasmapheresis",
+        "Rh immune globulin for anti-E",
+        "Plateletpheresis",
+        "Saline replacement"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Plasmapheresis",
+      "explanation": "Plasmapheresis can lower circulating maternal anti-E temporarily while fetal maturity and disease severity are assessed.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-10-046",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-10",
+      "prompt": "A pooled NAT screen for donor HIV RNA is reactive. What is the next step described in the chapter?",
+      "choices": [
+        "Test the individual donor samples from that pool",
+        "Release all units because NAT is only screening",
+        "Perform ABO typing only",
+        "Repeat the same pool after one year"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Test the individual donor samples from that pool",
+      "explanation": "Reactive NAT pools require resolution by testing individual donor samples to identify the reactive donation.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-10-047",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-10",
+      "prompt": "Which group of viruses is listed in the chapter as targets of donor nucleic acid testing?",
+      "choices": [
+        "HIV, HCV, HBV, Zika, and West Nile virus",
+        "CMV and EBV only",
+        "HTLV only",
+        "Influenza and RSV"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "HIV, HCV, HBV, Zika, and West Nile virus",
+      "explanation": "The chapter lists NAT for HIV, HCV, HBV, Zika, and West Nile virus.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-10-048",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-10",
+      "prompt": "Which hepatitis B marker is identified as an early marker of infection in the chapter?",
+      "choices": [
+        "HBsAg",
+        "Anti-HBs",
+        "Anti-HBc IgG only",
+        "Anti-HBs plus anti-HBc IgG"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "HBsAg",
+      "explanation": "The chapter identifies hepatitis B surface antigen as the first listed marker to appear in HBV infection.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-10-049",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-10",
+      "prompt": "Which donor test is NOT listed as universally required in the chapter?",
+      "choices": [
+        "Anti-CMV",
+        "HBsAg",
+        "HIV testing",
+        "Anti-HTLV I/II"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Anti-CMV",
+      "explanation": "CMV antibody testing is not required for every donor unit, though it may be used for selected high-risk recipients.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-10-050",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-10",
+      "prompt": "A patient receiving daratumumab has panreactivity with reagent RBCs. What explains this interference?",
+      "choices": [
+        "CD38 is present on reagent red cells as well as myeloma cells",
+        "The drug converts group O cells to group A",
+        "The drug removes all Rh antigens",
+        "The drug creates anti-H"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "CD38 is present on reagent red cells as well as myeloma cells",
+      "explanation": "Daratumumab targets CD38, which is also expressed on red cells, producing broad serologic reactivity that can mimic a warm autoantibody pattern.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-11-051",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-11",
+      "prompt": "Forward typing is group A, and a saliva neutralization study neutralizes anti-A and anti-H but not anti-B. How should the secretor result be interpreted?",
+      "choices": [
+        "Group A secretor pattern",
+        "Group B secretor pattern",
+        "Group A nonsecretor pattern",
+        "Bombay nonsecretor pattern"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Group A secretor pattern",
+      "explanation": "Neutralization of anti-A and anti-H indicates soluble A and H substances in saliva, supporting a group A secretor.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-11-052",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-11",
+      "prompt": "A forward type shows mixed-field reactivity with anti-A, while reverse grouping is weakly inconsistent. The patient has not been recently transfused. What is the best general strategy?",
+      "choices": [
+        "Perform expanded ABO discrepancy testing with anti-A,B, anti-H, additional reagent cells, and an autocontrol",
+        "Report group AB immediately",
+        "Ignore mixed-field reactions",
+        "Perform Rh typing only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Perform expanded ABO discrepancy testing with anti-A,B, anti-H, additional reagent cells, and an autocontrol",
+      "explanation": "The chapter recommends a structured discrepancy workup rather than assigning an ABO type before the conflicting reactions are explained.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-11-053",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-11",
+      "prompt": "An unexpected anti-M interferes with reverse grouping. Which principle can help resolve the ABO type?",
+      "choices": [
+        "Use methods that minimize cold-reactive anti-M interference",
+        "Incubate only at 37 C with no controls and report immediately",
+        "Add M-positive cells to strengthen the discrepancy",
+        "Assume the patient is group O"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Use methods that minimize cold-reactive anti-M interference",
+      "explanation": "Anti-M is often cold reactive. Techniques that reduce or remove its cold reactivity can clarify the expected reverse-grouping reactions.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-11-054",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-11",
+      "prompt": "A suspected anti-Jka is weak and shows dosage. Which approach would be LEAST useful for confirming the specificity?",
+      "choices": [
+        "AET-treated cells",
+        "Homozygous Jka-positive selected cells",
+        "Enzyme-treated cells",
+        "Longer incubation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "AET-treated cells",
+      "explanation": "The chapter notes that AET treatment denatures Kell antigens but does not specifically enhance or clarify Kidd antibodies, while homozygous cells, enzymes, and longer incubation can help detect anti-Jka.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunohematology-4-11-055",
+      "subjectId": "immunohematology",
+      "topicId": "immunohematology-4-11",
+      "prompt": "A cold antibody reacts with nearly all adult cells, including the autocontrol, but its strength varies. Which additional cells are especially useful to investigate anti-I?",
+      "choices": [
+        "Cord blood cells",
+        "Only K-positive cells",
+        "Only D-negative cells",
+        "Enzyme-treated platelets"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cord blood cells",
+      "explanation": "Cord red cells predominantly express i rather than I antigen, so anti-I should react weakly or not at all and can be distinguished from other cold-reactive patterns.",
+      "source": {
+        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-1-001",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-1",
+      "prompt": "After a previously unexposed patient encounters a specific antigen, which substance represents a targeted adaptive immune product?",
+      "choices": [
+        "Complement protein",
+        "Lysozyme",
+        "Immunoglobulin",
+        "Normal commensal flora"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Immunoglobulin",
+      "explanation": "Immunoglobulins are antigen-specific products of adaptive immunity. Complement and lysozyme participate mainly in nonspecific defense mechanisms.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-1-002",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-1",
+      "prompt": "Which pair serves as the primary lymphoid organs responsible for lymphocyte development and maturation?",
+      "choices": [
+        "Spleen and lymph nodes",
+        "Bone marrow and thymus",
+        "Peyer patches and spleen",
+        "MALT and thoracic duct"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Bone marrow and thymus",
+      "explanation": "Hematopoietic cells arise in bone marrow, while T lymphocytes undergo maturation and selection in the thymus.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-1-003",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-1",
+      "prompt": "A mature B lymphocyte binds its specific antigen and becomes activated. Which cells can arise from this activated clone?",
+      "choices": [
+        "Plasma cells and memory B cells",
+        "Only neutrophils",
+        "Cytotoxic T cells and NK cells",
+        "Macrophages and dendritic cells"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Plasma cells and memory B cells",
+      "explanation": "Activated B cells differentiate into antibody-secreting plasma cells and long-lived memory B cells.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-1-004",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-1",
+      "prompt": "Which surface marker most specifically identifies a mature T lymphocyte?",
+      "choices": [
+        "CD3",
+        "CD19",
+        "CD56",
+        "CD14"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "CD3",
+      "explanation": "CD3 is characteristically associated with mature T cells and forms part of the T-cell receptor complex.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-1-005",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-1",
+      "prompt": "A CD8-positive T cell recognizes a virally infected cell. The foreign antigen is normally presented with which molecule?",
+      "choices": [
+        "MHC class I",
+        "MHC class II",
+        "IgM",
+        "C3"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "MHC class I",
+      "explanation": "Cytotoxic CD8 T cells recognize antigen presented by MHC class I molecules, which are expressed on most nucleated cells.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-1-006",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-1",
+      "prompt": "Which complement component participates in both the classical and alternative pathways?",
+      "choices": [
+        "C1",
+        "C4",
+        "C3",
+        "Factor D"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "C3",
+      "explanation": "C3 is a central component shared by both pathways and contributes to downstream complement activation.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-1-007",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-1",
+      "prompt": "Which antibody class is usually produced first during a primary immune response?",
+      "choices": [
+        "IgA",
+        "IgE",
+        "IgG",
+        "IgM"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "IgM",
+      "explanation": "IgM typically appears first after initial antigen exposure; IgG becomes more prominent in the secondary response.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-1-008",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-1",
+      "prompt": "Which immunoglobulin class normally provides passive humoral protection to the fetus by crossing the placenta?",
+      "choices": [
+        "IgG",
+        "IgM",
+        "IgA",
+        "IgE"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "IgG",
+      "explanation": "IgG crosses the placenta through Fc receptor-mediated transport and provides temporary neonatal protection.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-2-009",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-2",
+      "prompt": "The strength of binding between one antibody combining site and one antigenic epitope is called:",
+      "choices": [
+        "Avidity",
+        "Affinity",
+        "Valency",
+        "Specificity"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Affinity",
+      "explanation": "Affinity describes the strength of a single antigen-antibody interaction; avidity reflects the combined strength of multiple interactions.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-2-010",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-2",
+      "prompt": "A precipitation assay is unexpectedly negative in a specimen containing an extremely high antibody concentration. Which phenomenon should be suspected?",
+      "choices": [
+        "Postzone",
+        "Prozone",
+        "Hemolysis",
+        "Cross-reactivity"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Prozone",
+      "explanation": "In the prozone, antibody excess prevents optimal lattice formation and may produce a false-negative result.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-2-011",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-2",
+      "prompt": "During an indirect ELISA, the technologist fails to remove unbound enzyme-labeled antibody adequately. What is the likely effect?",
+      "choices": [
+        "Falsely low signal",
+        "Falsely high signal",
+        "No change",
+        "Loss of antigen specificity only"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Falsely high signal",
+      "explanation": "Residual enzyme conjugate can react with substrate even though it is not specifically bound, increasing the measured signal.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-2-012",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-2",
+      "prompt": "An ELISA specimen produces absorbance above the highest calibrator. What is the most appropriate next step?",
+      "choices": [
+        "Estimate beyond the curve",
+        "Report the highest standard",
+        "Dilute the specimen and repeat",
+        "Use less substrate"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Dilute the specimen and repeat",
+      "explanation": "A result above the validated calibration range should generally be diluted and reassayed so it falls within the reportable range.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-2-013",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-2",
+      "prompt": "Serum protein electrophoresis shows a narrow suspicious band. Which test is most useful to identify its heavy- and light-chain type?",
+      "choices": [
+        "Immunofixation electrophoresis",
+        "CBC",
+        "Direct antiglobulin test",
+        "Complement fixation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Immunofixation electrophoresis",
+      "explanation": "IFE confirms monoclonality and identifies the immunoglobulin heavy- and light-chain classes.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-2-014",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-2",
+      "prompt": "In a complement fixation assay, what does visible hemolysis in the indicator system signify?",
+      "choices": [
+        "Positive test",
+        "Negative test",
+        "Prozone",
+        "Antibody excess"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Negative test",
+      "explanation": "If patient antibody did not fix complement, complement remains available to lyse the indicator red cells; therefore hemolysis represents a negative result.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-2-015",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-2",
+      "prompt": "What is the main purpose of gating during flow cytometry?",
+      "choices": [
+        "Select the cell population to analyze",
+        "Increase antibody affinity",
+        "Lyse mature cells",
+        "Remove fluorescence"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Select the cell population to analyze",
+      "explanation": "Gating isolates a population based on scatter or fluorescence characteristics so the intended cells are counted and characterized.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-3-016",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-3",
+      "prompt": "A reactive RPR is followed by a nonreactive treponemal-specific test. Which interpretation best fits this pattern?",
+      "choices": [
+        "Confirmed active syphilis",
+        "Biological false-positive nontreponemal test",
+        "Tertiary syphilis",
+        "Successfully treated syphilis"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Biological false-positive nontreponemal test",
+      "explanation": "RPR is a nontreponemal assay and may react in conditions unrelated to syphilis. A negative treponemal test supports a biological false positive.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-3-017",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-3",
+      "prompt": "Fourth-generation HIV screening assays shorten the diagnostic window because they detect antibodies plus which viral marker?",
+      "choices": [
+        "Reverse transcriptase",
+        "p24 antigen",
+        "Proviral DNA only",
+        "gp120 antigen only"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "p24 antigen",
+      "explanation": "Fourth-generation assays detect HIV antibodies and p24 antigen, allowing infection to be detected before antibodies are fully developed.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-3-018",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-3",
+      "prompt": "An HIV screening assay is repeatedly reactive, the HIV-1/2 differentiation assay is negative, and qualitative HIV RNA is positive. What does this pattern most strongly suggest?",
+      "choices": [
+        "Early HIV infection before detectable antibody",
+        "No HIV infection",
+        "Past resolved infection",
+        "Laboratory contamination is proven"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Early HIV infection before detectable antibody",
+      "explanation": "Positive viral RNA with a negative differentiation antibody assay can occur during early infection before seroconversion.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-3-019",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-3",
+      "prompt": "Which laboratory method is preferred for diagnosing HIV infection in an infant born to an HIV-positive mother?",
+      "choices": [
+        "Maternal antibody titer",
+        "HIV nucleic acid testing",
+        "Rapid IgG antibody test",
+        "CD4:CD8 ratio alone"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "HIV nucleic acid testing",
+      "explanation": "Maternal IgG can persist in the infant and confound antibody testing. Nucleic acid testing directly detects viral material.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-3-020",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-3",
+      "prompt": "Which hepatitis B marker usually appears earliest during acute infection?",
+      "choices": [
+        "Anti-HBs",
+        "HBsAg",
+        "Anti-HBe",
+        "IgG anti-HBc"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "HBsAg",
+      "explanation": "HBsAg is an early marker of HBV infection and generally becomes detectable before protective anti-HBs develops.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-3-021",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-3",
+      "prompt": "During the HBV core-window period, which antibody is especially useful for demonstrating recent infection?",
+      "choices": [
+        "IgM anti-HBc",
+        "Anti-HBs",
+        "Anti-HBe only",
+        "IgG anti-HBs"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "IgM anti-HBc",
+      "explanation": "During the window, HBsAg and anti-HBs may both be absent. IgM anti-HBc remains an important marker of acute infection.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-3-022",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-3",
+      "prompt": "A patient has both IgM and IgG antibodies to EBV viral capsid antigen. Which interpretation is most consistent?",
+      "choices": [
+        "Current or recent EBV infection",
+        "Remote infection only",
+        "No prior exposure",
+        "Immunization response"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Current or recent EBV infection",
+      "explanation": "IgM to VCA supports recent infection, while VCA IgG appears during infection and can persist afterward.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-3-023",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-3",
+      "prompt": "When monitoring response to antiretroviral therapy, which measurement changes most directly with viral replication?",
+      "choices": [
+        "HIV viral load",
+        "RPR titer",
+        "Total IgG",
+        "Absolute neutrophil count"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "HIV viral load",
+      "explanation": "Viral load responds relatively quickly to effective or failing therapy and directly reflects the amount of circulating HIV RNA.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-4-024",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-4",
+      "prompt": "Which concept best defines autoimmunity?",
+      "choices": [
+        "Failure to recognize foreign antigen",
+        "Loss of tolerance to self-antigens",
+        "Complete absence of B cells",
+        "Excessive complement synthesis"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Loss of tolerance to self-antigens",
+      "explanation": "Autoimmunity results when immune tolerance to self is lost, allowing immune responses against the body's own antigens.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-4-025",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-4",
+      "prompt": "A high-titer anti-Smith antibody most strongly supports which diagnosis?",
+      "choices": [
+        "Systemic lupus erythematosus",
+        "Rheumatoid arthritis",
+        "Systemic sclerosis",
+        "Autoimmune hepatitis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Systemic lupus erythematosus",
+      "explanation": "Anti-Sm is strongly associated with SLE and is considered a highly specific serologic marker.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-4-026",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-4",
+      "prompt": "Which ANA fluorescence pattern most often suggests antibodies to extractable nuclear antigens such as Sm, RNP, SSA, or SSB?",
+      "choices": [
+        "Speckled",
+        "Centromere only",
+        "Peripheral only",
+        "No nuclear staining"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Speckled",
+      "explanation": "A speckled ANA pattern commonly reflects antibodies directed against extractable nuclear antigens.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-4-027",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-4",
+      "prompt": "Rheumatoid factor most commonly consists of IgM directed against which portion of IgG?",
+      "choices": [
+        "Fc region",
+        "Fab region",
+        "Light-chain variable region",
+        "Hinge peptide only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Fc region",
+      "explanation": "Classic rheumatoid factor is usually IgM that recognizes determinants in the Fc portion of IgG.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-4-028",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-4",
+      "prompt": "A patient has inflammatory joint disease but repeated rheumatoid factor tests are negative. Which additional antibody test may support rheumatoid arthritis?",
+      "choices": [
+        "Anti-CCP",
+        "Anti-HBs",
+        "Anti-mitochondrial antibody",
+        "Anti-IgA"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Anti-CCP",
+      "explanation": "Anti-CCP is an important serologic criterion for RA and can be positive even when rheumatoid factor is negative.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-4-029",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-4",
+      "prompt": "Which autoantibody is associated with both Graves disease and Hashimoto thyroiditis?",
+      "choices": [
+        "Anti-thyroid peroxidase",
+        "Anti-Sm",
+        "Anti-CCP",
+        "Anti-dsDNA only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Anti-thyroid peroxidase",
+      "explanation": "Thyroid peroxidase antibodies can occur in autoimmune hyperthyroidism and autoimmune hypothyroidism.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-4-030",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-4",
+      "prompt": "A patient has clinical features of celiac disease but negative tissue transglutaminase and antigliadin antibodies. Which genetic test can provide useful supportive information?",
+      "choices": [
+        "HLA-DQ2/DQ8 typing",
+        "HLA-B27 only",
+        "HLA-A2 typing",
+        "ABO genotyping"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "HLA-DQ2/DQ8 typing",
+      "explanation": "Celiac disease is strongly associated with HLA-DQ2 and/or DQ8. Their presence is supportive, though not diagnostic by itself.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-5-031",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-5",
+      "prompt": "Seasonal allergen exposure cross-links IgE already bound to mast cells, leading to histamine release. Which hypersensitivity type is this?",
+      "choices": [
+        "Type I",
+        "Type II",
+        "Type III",
+        "Type IV"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Type I",
+      "explanation": "Type I hypersensitivity is immediate and IgE mediated, with mast-cell degranulation after allergen cross-linking.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-5-032",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-5",
+      "prompt": "An incompatible ABO transfusion causes antibody-mediated destruction of donor red cells. This is an example of:",
+      "choices": [
+        "Type I",
+        "Type II",
+        "Type III",
+        "Type IV"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Type II",
+      "explanation": "Type II hypersensitivity involves antibodies directed against antigens on cells or tissues, resulting in cytotoxic injury.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-5-033",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-5",
+      "prompt": "Immune complexes deposit in tissue and activate complement, producing inflammation. Which hypersensitivity category applies?",
+      "choices": [
+        "Type I",
+        "Type II",
+        "Type III",
+        "Type IV"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Type III",
+      "explanation": "Type III reactions result from deposition of soluble antigen-antibody complexes followed by complement-driven inflammation.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-5-034",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-5",
+      "prompt": "A tuberculin skin test reaches maximal induration roughly 48-72 hours after exposure. Which cells chiefly mediate this response?",
+      "choices": [
+        "T lymphocytes and macrophages",
+        "IgE-coated mast cells",
+        "B cells and IgM",
+        "Eosinophils only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "T lymphocytes and macrophages",
+      "explanation": "The tuberculin reaction is a delayed, type IV response driven by sensitized T cells and recruited macrophages.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-5-035",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-5",
+      "prompt": "Which test detects immunoglobulin or complement already coating a patient's red cells in vivo?",
+      "choices": [
+        "Direct antiglobulin test",
+        "Indirect antiglobulin test",
+        "ELISA for total IgE",
+        "Serum protein electrophoresis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Direct antiglobulin test",
+      "explanation": "The DAT detects antibody and/or complement bound to RBCs inside the patient.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-5-036",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-5",
+      "prompt": "A plasma transfusion triggers severe anaphylaxis in a patient with selective IgA deficiency. Which antibody may be responsible?",
+      "choices": [
+        "Anti-IgA",
+        "Anti-HBs",
+        "Anti-CCP",
+        "Anti-C3"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Anti-IgA",
+      "explanation": "IgA-deficient patients can become sensitized to IgA and may develop anti-IgA capable of causing severe reactions after plasma exposure.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-6-037",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-6",
+      "prompt": "A young child has recurrent bacterial, fungal, and viral infections. Which initial laboratory study is most appropriate when immune dysfunction is suspected?",
+      "choices": [
+        "CBC with differential",
+        "Bone marrow biopsy first",
+        "ANA titer",
+        "Tumor marker panel"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "CBC with differential",
+      "explanation": "A CBC and differential provide a practical first screen for abnormal leukocyte numbers or morphology before specialized immune testing.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-6-038",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-6",
+      "prompt": "A patient repeatedly reacts to plasma-containing products. Which measurement is particularly useful when selective IgA deficiency is suspected?",
+      "choices": [
+        "Quantitative immunoglobulin levels",
+        "PSA",
+        "Troponin",
+        "RPR"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Quantitative immunoglobulin levels",
+      "explanation": "Quantitative immunoglobulin testing can demonstrate markedly reduced or absent IgA and help explain anti-IgA-associated transfusion reactions.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-6-039",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-6",
+      "prompt": "Which disorder classically produces a monoclonal IgM spike?",
+      "choices": [
+        "Waldenstrom macroglobulinemia",
+        "DiGeorge syndrome",
+        "C3 deficiency",
+        "Chronic granulomatous disease"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Waldenstrom macroglobulinemia",
+      "explanation": "Waldenstrom macroglobulinemia is a lymphoplasmacytic malignancy characterized by secretion of monoclonal IgM.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-6-040",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-6",
+      "prompt": "Which technique is best suited to enumerate mature T-cell subsets in suspected DiGeorge syndrome?",
+      "choices": [
+        "Flow cytometry",
+        "RPR",
+        "Ouchterlony diffusion",
+        "Complement fixation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Flow cytometry",
+      "explanation": "Flow cytometry can count and characterize T-cell populations using CD markers, making it useful in thymic/T-cell deficiency.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-6-041",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-6",
+      "prompt": "What does a CH50 assay assess?",
+      "choices": [
+        "Functional activity of the classical complement pathway",
+        "Total IgE concentration",
+        "T-cell proliferation only",
+        "Alternative pathway alone"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Functional activity of the classical complement pathway",
+      "explanation": "CH50 measures the serum complement activity required to lyse a defined proportion of antibody-sensitized red cells and reflects classical pathway function.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-6-042",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-6",
+      "prompt": "Which tests are commonly used to evaluate the phagocyte respiratory burst in chronic granulomatous disease?",
+      "choices": [
+        "DHR or NBT",
+        "ANA or anti-dsDNA",
+        "SPE or IFE",
+        "RPR or TP-PA"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "DHR or NBT",
+      "explanation": "DHR and the older NBT assay assess oxidative burst activity, which is defective in chronic granulomatous disease.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-7-043",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-7",
+      "prompt": "A colorectal cancer patient has a normal CEA after treatment, followed months later by a sustained increase. What is the most appropriate use of this finding?",
+      "choices": [
+        "Monitor for possible recurrence",
+        "Establish the original diagnosis by itself",
+        "Determine ABO type",
+        "Diagnose autoimmune disease"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Monitor for possible recurrence",
+      "explanation": "CEA lacks adequate specificity and sensitivity as a stand-alone diagnostic test, but serial measurements can help monitor treated colorectal cancer for recurrence.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-7-044",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-7",
+      "prompt": "A patient with known ovarian carcinoma has low CA-125 despite documented recurrent disease. What is the best explanation?",
+      "choices": [
+        "A single tumor marker may lack sufficient sensitivity",
+        "CA-125 can never be used in ovarian cancer",
+        "The recurrence must be benign",
+        "The biopsy must be incorrect"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "A single tumor marker may lack sufficient sensitivity",
+      "explanation": "Tumor markers are imperfect. A low CA-125 cannot by itself exclude recurrent ovarian cancer.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-7-045",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-7",
+      "prompt": "Why can serum hCG testing be appropriate in a male patient?",
+      "choices": [
+        "Some testicular tumors produce hCG",
+        "All adult men normally have pregnancy-level hCG",
+        "hCG identifies prostate-specific antigen",
+        "It measures HLA compatibility"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Some testicular tumors produce hCG",
+      "explanation": "Certain testicular tumors secrete hCG, including free beta subunit, so hCG can function as a tumor marker in men.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-7-046",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-7",
+      "prompt": "In transplantation, acute rejection occurring about a week after graft placement is primarily associated with which immune effector?",
+      "choices": [
+        "T cells",
+        "IgE only",
+        "Platelets",
+        "Erythrocytes"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "T cells",
+      "explanation": "Acute rejection is predominantly a cell-mediated response in which T lymphocytes attack graft tissue.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-7-047",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-7",
+      "prompt": "What is a major clinical advantage of reinfusing a patient's own hematopoietic stem cells?",
+      "choices": [
+        "Avoidance of graft-versus-host disease",
+        "Creation of stronger alloantibodies",
+        "Requirement for more HLA matching",
+        "Guaranteed prevention of malignancy recurrence"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Avoidance of graft-versus-host disease",
+      "explanation": "Autologous cells originate from the patient, so they do not mount an allogeneic graft-versus-host attack.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-7-048",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-7",
+      "prompt": "Which molecular approach is widely applicable to HLA typing?",
+      "choices": [
+        "PCR-based testing",
+        "Urine dipstick",
+        "RPR",
+        "Direct antiglobulin testing"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "PCR-based testing",
+      "explanation": "HLA genes can be characterized by molecular methods, and PCR-based techniques are commonly used for tissue typing.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-8-049",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-8",
+      "prompt": "Which sequence fails to maintain a constant dilution factor?",
+      "choices": [
+        "1:4, 1:8, 1:16",
+        "1:5, 1:15, 1:45",
+        "1:2, 1:6, 1:12",
+        "1:3, 1:9, 1:27"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "1:2, 1:6, 1:12",
+      "explanation": "The first step from 1:2 to 1:6 is threefold, but 1:6 to 1:12 is only twofold. A consistent threefold series would continue to 1:18.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-8-050",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-8",
+      "prompt": "A patient has a reactive RPR, negative treponemal test, and high anticardiolipin antibody. Which coagulation result may also be abnormal because of lupus anticoagulant activity?",
+      "choices": [
+        "APTT",
+        "Bleeding time only",
+        "Platelet count necessarily zero",
+        "Fibrinogen necessarily absent"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "APTT",
+      "explanation": "Antiphospholipid antibodies may interfere with phospholipid-dependent coagulation assays, commonly prolonging the APTT in vitro.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-8-051",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-8",
+      "prompt": "Within the first few days of acute inflammation, which combination is most expected to increase?",
+      "choices": [
+        "Neutrophils, macrophages, complement, fibrinogen, and C-reactive protein",
+        "Only memory B cells and IgG",
+        "Only eosinophils and IgE",
+        "Plasma cells and anti-ENA antibodies"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Neutrophils, macrophages, complement, fibrinogen, and C-reactive protein",
+      "explanation": "Early inflammation prominently involves phagocytes, complement, and acute-phase proteins such as fibrinogen and CRP.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-8-052",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-8",
+      "prompt": "An 18-month-old boy has recurrent severe bacterial infections and suspected Bruton tyrosine kinase deficiency. Which finding is most expected?",
+      "choices": [
+        "Markedly reduced IgG, IgA, and IgM",
+        "Markedly increased all immunoglobulins",
+        "Isolated loss of CD8 cells only",
+        "Normal B-cell maturation with excess plasma cells"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Markedly reduced IgG, IgA, and IgM",
+      "explanation": "Bruton agammaglobulinemia prevents normal B-cell maturation, producing profound deficiency of multiple immunoglobulin classes.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-8-053",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-8",
+      "prompt": "A patient develops anaphylaxis after several units of plasma and has a history of recurrent respiratory and gastrointestinal infections. Which laboratory investigation best addresses a possible underlying cause?",
+      "choices": [
+        "Quantitative immunoglobulin measurement",
+        "PSA measurement",
+        "HLA-B27 typing",
+        "Cold agglutinin titer only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Quantitative immunoglobulin measurement",
+      "explanation": "Recurrent mucosal infections plus anaphylaxis to plasma raises concern for IgA deficiency with anti-IgA; measuring immunoglobulins helps evaluate this possibility.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "immunology-3-8-054",
+      "subjectId": "immunology",
+      "topicId": "immunology-3-8",
+      "prompt": "A mixed ANA fluorescence pattern cannot be separated by serial dilution in a patient with overlapping connective-tissue disease features. Which strategy is most useful for defining individual antibody specificities?",
+      "choices": [
+        "Specific antigen assays such as ELISA or multiplex testing",
+        "Repeat ABO typing",
+        "Measure viral load",
+        "Perform a DAT"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Specific antigen assays such as ELISA or multiplex testing",
+      "explanation": "Specific antigen assays can distinguish individual autoantibodies when a complex fluorescence pattern cannot be resolved by dilution.",
+      "source": {
+        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-001",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "A vascular injury exposes a membrane-associated protein that binds factor VII/VIIa and begins physiologic coagulation. Which protein is responsible?",
+      "choices": [
+        "Thrombomodulin",
+        "Tissue factor",
+        "Protein S",
+        "Plasminogen"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Tissue factor",
+      "explanation": "Tissue factor is exposed after vascular injury and binds factor VII/VIIa. The resulting complex helps activate factors IX and X, initiating thrombin generation.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-002",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "A patient has an isolated deficiency of factor XII. Which laboratory finding is most consistent with this defect?",
+      "choices": [
+        "Shortened PT",
+        "Prolonged APTT",
+        "Prolonged thrombin time",
+        "Low platelet count"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Prolonged APTT",
+      "explanation": "Factor XII participates in the contact pathway measured by the APTT in vitro. Its deficiency can markedly prolong the APTT even though it does not usually produce a bleeding tendency.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-003",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "Which anticoagulant is preferred when collecting blood for routine PT and APTT testing?",
+      "choices": [
+        "EDTA",
+        "Heparin",
+        "3.2% sodium citrate",
+        "Sodium fluoride"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "3.2% sodium citrate",
+      "explanation": "Sodium citrate reversibly binds calcium and preserves coagulation factors well enough for routine clot-based testing.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-004",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "A coagulation tube should normally contain what approximate ratio of blood to citrate anticoagulant?",
+      "choices": [
+        "4:1",
+        "5:1",
+        "9:1",
+        "10:1"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "9:1",
+      "explanation": "Routine coagulation specimens require approximately nine parts blood to one part citrate. Incorrect filling changes the effective citrate concentration and can distort clotting times.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-005",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "Both PT and APTT are prolonged in a patient with an isolated factor X deficiency. Why?",
+      "choices": [
+        "Factor X belongs only to the intrinsic pathway",
+        "Factor X belongs to the common pathway",
+        "Factor X activates platelets directly",
+        "Factor X is required only for fibrinolysis"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factor X belongs to the common pathway",
+      "explanation": "Factor X is part of the common pathway evaluated by both PT and APTT, so a significant deficiency can prolong both assays.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-006",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "A patient is suspected of having factor XIII deficiency despite normal PT and APTT results. Why can these screening tests remain normal?",
+      "choices": [
+        "Factor XIII functions after fibrin formation",
+        "Factor XIII acts only on platelets",
+        "Factor XIII is measured only by PT",
+        "Factor XIII is not involved in hemostasis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Factor XIII functions after fibrin formation",
+      "explanation": "Factor XIII stabilizes an already formed fibrin clot by cross-linking fibrin. PT and APTT measure events leading to initial fibrin formation, so they do not assess factor XIII.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-007",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "Which statement best describes the role of vitamin K in coagulation?",
+      "choices": [
+        "It directly converts fibrinogen to fibrin",
+        "It supports carboxylation of several coagulation proteins",
+        "It activates plasmin",
+        "It inhibits platelet adhesion"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "It supports carboxylation of several coagulation proteins",
+      "explanation": "Vitamin K is needed for gamma-carboxylation of vitamin K-dependent proteins, including factors II, VII, IX, and X.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-008",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "What does a D-dimer assay specifically provide evidence of?",
+      "choices": [
+        "Breakdown of cross-linked fibrin",
+        "Platelet destruction",
+        "Isolated fibrinogen synthesis",
+        "Factor VIII activation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Breakdown of cross-linked fibrin",
+      "explanation": "D-dimer is produced when plasmin degrades fibrin that has been cross-linked by factor XIIIa, making it a marker of clot formation followed by fibrinolysis.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-009",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "Which laboratory test primarily evaluates the intrinsic and common coagulation pathways?",
+      "choices": [
+        "PT",
+        "APTT",
+        "Bleeding time",
+        "Platelet count"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "APTT",
+      "explanation": "The APTT assesses factors of the intrinsic pathway, including XII, XI, IX, and VIII, plus the common pathway factors.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-010",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "Why can a severely underfilled blue-top tube produce falsely prolonged coagulation results?",
+      "choices": [
+        "Too little platelet phospholipid remains",
+        "Excess citrate relative to plasma binds reagent calcium",
+        "The specimen becomes hemolyzed automatically",
+        "Factor XIII is activated prematurely"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Excess citrate relative to plasma binds reagent calcium",
+      "explanation": "Underfilling leaves too much citrate relative to plasma. During testing, excess citrate can bind added calcium and artifactually prolong clotting times.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-011",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "Which endogenous molecule converts plasminogen toward the fibrinolytic pathway?",
+      "choices": [
+        "Tissue plasminogen activator",
+        "Factor XIIIa",
+        "Protein S",
+        "Thromboplastin"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Tissue plasminogen activator",
+      "explanation": "Tissue plasminogen activator is produced by the body and promotes conversion of plasminogen to plasmin.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-1-012",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-1",
+      "prompt": "Which protein is the major physiologic inhibitor of free plasmin?",
+      "choices": [
+        "Protein C",
+        "Antithrombin",
+        "Alpha-2 antiplasmin",
+        "Factor V"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Alpha-2 antiplasmin",
+      "explanation": "Alpha-2 antiplasmin rapidly binds and inhibits free plasmin, limiting excessive fibrinolysis.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-013",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "A patient has thrombocytopenia, microangiopathic hemolytic anemia, neurologic abnormalities, and normal PT and APTT. Which disorder is most likely?",
+      "choices": [
+        "DIC",
+        "TTP",
+        "Hemophilia A",
+        "von Willebrand disease"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "TTP",
+      "explanation": "TTP is characterized by platelet consumption in microvascular thrombi and MAHA. Unlike DIC, routine PT and APTT are generally normal.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-014",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Aspirin reduces platelet aggregation primarily by inhibiting which enzyme?",
+      "choices": [
+        "Cyclooxygenase",
+        "Plasmin",
+        "Thrombin",
+        "ADAMTS13"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cyclooxygenase",
+      "explanation": "Aspirin irreversibly inhibits platelet cyclooxygenase, decreasing thromboxane A2 production and thereby reducing platelet aggregation.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-015",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Normal platelet adhesion requires interaction between von Willebrand factor and which platelet receptor?",
+      "choices": [
+        "GPIIb/IIIa",
+        "GPIb",
+        "P2Y12",
+        "PAR-1"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "GPIb",
+      "explanation": "GPIb serves as an important platelet receptor for VWF and is essential for platelet adhesion at sites of vascular injury.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-016",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "A patient with classic von Willebrand disease would most likely have which finding?",
+      "choices": [
+        "Marked thrombocytopenia",
+        "Normal platelet count",
+        "Absent fibrinogen",
+        "Prolonged PT only"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Normal platelet count",
+      "explanation": "Platelet number is generally normal in von Willebrand disease. The disorder primarily affects VWF-mediated adhesion and can also reduce factor VIII activity.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-017",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Which combination is most characteristic of Bernard-Soulier syndrome?",
+      "choices": [
+        "Small platelets and thrombocytosis",
+        "Giant platelets and thrombocytopenia",
+        "Normal platelets and factor VIII deficiency",
+        "Isolated prolonged PT"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Giant platelets and thrombocytopenia",
+      "explanation": "Bernard-Soulier syndrome results from a GPIb-related adhesion defect and classically features giant platelets with thrombocytopenia.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-018",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Platelets from a patient aggregate normally with collagen, ADP, and epinephrine but respond poorly to ristocetin. Which disorder should be considered?",
+      "choices": [
+        "Glanzmann thrombasthenia",
+        "Bernard-Soulier syndrome",
+        "Factor IX deficiency",
+        "DIC"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Bernard-Soulier syndrome",
+      "explanation": "Ristocetin-dependent agglutination requires the VWF-GPIb interaction. Bernard-Soulier syndrome lacks functional GPIb and therefore shows an abnormal ristocetin response.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-019",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Which platelet aggregation pattern is most consistent with Glanzmann thrombasthenia?",
+      "choices": [
+        "Normal ristocetin response with poor responses to ADP, collagen, and epinephrine",
+        "Poor ristocetin response only",
+        "Normal responses to all agonists",
+        "Absent response only to thrombin"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Normal ristocetin response with poor responses to ADP, collagen, and epinephrine",
+      "explanation": "Glanzmann thrombasthenia is caused by a GPIIb/IIIa defect. Ristocetin-dependent adhesion remains intact, while aggregation to several other agonists is impaired.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-020",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "A child develops abrupt petechiae and severe thrombocytopenia several weeks after a viral illness. PT and APTT are normal. Which diagnosis fits best?",
+      "choices": [
+        "Acute immune thrombocytopenia",
+        "DIC",
+        "Hemophilia B",
+        "Factor XIII deficiency"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Acute immune thrombocytopenia",
+      "explanation": "Acute immune thrombocytopenia commonly follows viral infection in children and presents with isolated thrombocytopenia and mucocutaneous bleeding.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-021",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Which organism is classically associated with hemolytic uremic syndrome in children?",
+      "choices": [
+        "Staphylococcus aureus",
+        "Escherichia coli O157:H7",
+        "Treponema pallidum",
+        "Clostridium difficile"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Escherichia coli O157:H7",
+      "explanation": "HUS is strongly associated with Shiga toxin-producing E. coli, particularly O157:H7, and may cause thrombocytopenia, MAHA, and renal injury.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-022",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Storage pool disorders primarily involve abnormalities of which platelet structure?",
+      "choices": [
+        "Granules",
+        "Nucleus",
+        "GPIb only",
+        "Fibrin strands"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Granules",
+      "explanation": "Storage pool deficiencies are platelet granule disorders, often involving reduced dense-granule contents and impaired secretion.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-023",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Acquired TTP is commonly associated with antibodies that impair which protein?",
+      "choices": [
+        "ADAMTS13",
+        "Factor VIII",
+        "GPIIb/IIIa",
+        "Protein C"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "ADAMTS13",
+      "explanation": "Acquired TTP commonly results from autoantibodies against ADAMTS13, allowing unusually large VWF multimers to persist and promote platelet-rich microthrombi.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-2-024",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-2",
+      "prompt": "Which endothelial product normally inhibits platelet aggregation?",
+      "choices": [
+        "Thromboxane A2",
+        "Prostacyclin",
+        "Fibrinogen",
+        "Factor Xa"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Prostacyclin",
+      "explanation": "Prostacyclin released by endothelium inhibits platelet aggregation, opposing the proaggregatory effect of thromboxane A2.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-025",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "A patient has a normal PT, prolonged APTT, normal platelet count, and normal platelet function. Which disorder is most compatible with these findings?",
+      "choices": [
+        "Hemophilia A",
+        "Bernard-Soulier syndrome",
+        "DIC",
+        "Glanzmann thrombasthenia"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Hemophilia A",
+      "explanation": "Hemophilia A is factor VIII deficiency. Because factor VIII belongs to the intrinsic pathway, APTT is prolonged while PT and platelet studies remain normal.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-026",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "A patient has prolonged PT and APTT but a normal thrombin time. Which isolated factor deficiency is a strong possibility?",
+      "choices": [
+        "Factor VIII",
+        "Factor IX",
+        "Factor X",
+        "Factor XIII"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Factor X",
+      "explanation": "Factor X is part of the common pathway, so its deficiency can prolong both PT and APTT. Thrombin time evaluates conversion of fibrinogen to fibrin and may remain normal.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-027",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "A prolonged PT normalizes after parenteral vitamin K administration. Which clinical problem could explain the original abnormality?",
+      "choices": [
+        "Obstructive jaundice causing impaired vitamin K absorption",
+        "Hemophilia A",
+        "Bernard-Soulier syndrome",
+        "Factor XIII deficiency"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Obstructive jaundice causing impaired vitamin K absorption",
+      "explanation": "Vitamin K is fat soluble and requires bile for intestinal absorption. Obstructive jaundice can therefore produce vitamin K deficiency and impaired synthesis of functional vitamin K-dependent factors.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-028",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "In a factor assay, patient plasma is combined with plasma specifically lacking factor VIII. What is this approach designed to determine?",
+      "choices": [
+        "Platelet count",
+        "Factor VIII activity",
+        "Fibrin degradation",
+        "VWF antigen only"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factor VIII activity",
+      "explanation": "Specific factor assays measure the patient's ability to correct plasma deficient in the factor being tested. Factor VIII-deficient plasma is therefore used to assess factor VIII activity.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-029",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "A patient has prolonged PT and APTT, thrombocytopenia, and evidence of systemic coagulation activation. Which diagnosis is most likely?",
+      "choices": [
+        "DIC",
+        "Hemophilia A",
+        "ITP",
+        "Factor XII deficiency"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "DIC",
+      "explanation": "DIC consumes platelets and coagulation factors during widespread thrombin and fibrin generation, often prolonging both PT and APTT.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-030",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "Which clinical condition can predispose a patient to DIC?",
+      "choices": [
+        "Adenocarcinoma",
+        "Isolated ITP",
+        "Bernard-Soulier syndrome",
+        "Hemophilia B"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Adenocarcinoma",
+      "explanation": "Some malignancies, including adenocarcinomas, can release procoagulant substances and trigger disseminated coagulation.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-031",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "Why can factor XII deficiency produce a very prolonged APTT without a typical bleeding history?",
+      "choices": [
+        "Factor XII is important for the in-vitro contact pathway but is not required for normal physiologic hemostasis",
+        "Factor XII affects only platelets",
+        "Factor XII deficiency raises fibrinogen",
+        "Factor XII activates vitamin K"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Factor XII is important for the in-vitro contact pathway but is not required for normal physiologic hemostasis",
+      "explanation": "Factor XII strongly affects contact activation in laboratory APTT testing, yet physiologic clotting can proceed through tissue factor-dependent mechanisms.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-032",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "A patient has normal PT, prolonged APTT, and abnormal ristocetin-dependent platelet testing. Which disorder best explains the combination?",
+      "choices": [
+        "von Willebrand disease",
+        "Factor IX deficiency",
+        "Factor VII deficiency",
+        "Afibrinogenemia"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "von Willebrand disease",
+      "explanation": "VWF supports platelet adhesion and carries factor VIII. VWF deficiency can therefore cause an abnormal ristocetin response and a prolonged APTT from reduced factor VIII.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-033",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "Which manifestation is especially characteristic of severe hemophilia A?",
+      "choices": [
+        "Hemarthrosis",
+        "Thrombocytosis",
+        "Isolated petechiae",
+        "Shortened APTT"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Hemarthrosis",
+      "explanation": "Severe factor VIII deficiency can cause spontaneous deep-tissue bleeding, particularly recurrent bleeding into joints.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-034",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "A patient has poor wound healing and significant bleeding despite normal PT and APTT. Which deficiency should be investigated?",
+      "choices": [
+        "Factor VII",
+        "Factor VIII",
+        "Factor XIII",
+        "Factor X"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Factor XIII",
+      "explanation": "Factor XIII stabilizes fibrin after the initial clot forms. Its deficiency can cause delayed bleeding and poor wound healing while routine PT and APTT remain normal.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-3-035",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-3",
+      "prompt": "Which form of von Willebrand disease is the most common?",
+      "choices": [
+        "Type 1",
+        "Type 2A",
+        "Type 2B",
+        "Type 3"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Type 1",
+      "explanation": "Type 1 is the most common form and generally reflects a partial quantitative deficiency of VWF.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-036",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "What is the key relationship between heparin and antithrombin?",
+      "choices": [
+        "Heparin destroys antithrombin",
+        "Antithrombin acts as an important heparin cofactor",
+        "Heparin converts antithrombin into fibrinogen",
+        "They act only on platelets"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Antithrombin acts as an important heparin cofactor",
+      "explanation": "Antithrombin is a major physiologic anticoagulant, and heparin greatly enhances its inhibitory activity against several activated coagulation enzymes.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-037",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "A prolonged APTT fails to correct after mixing patient plasma 1:1 with normal plasma. What does this finding suggest?",
+      "choices": [
+        "A coagulation factor deficiency",
+        "A circulating inhibitor",
+        "Thrombocytosis",
+        "Isolated fibrinogen excess"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "A circulating inhibitor",
+      "explanation": "Normal plasma supplies missing factors and typically corrects a factor deficiency. Failure to correct suggests that an inhibitor remains active in the mixture.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-038",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Lupus anticoagulant primarily interferes with what type of laboratory assay?",
+      "choices": [
+        "Phospholipid-dependent coagulation assays",
+        "Platelet counts",
+        "Hemoglobin assays",
+        "Fibrinogen immunoassays only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Phospholipid-dependent coagulation assays",
+      "explanation": "Lupus anticoagulants target phospholipid-associated reactions and can prolong phospholipid-dependent clotting tests such as APTT and DRVVT.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-039",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Which test is commonly used to screen for lupus anticoagulant?",
+      "choices": [
+        "D-dimer",
+        "Dilute Russell viper venom test",
+        "Platelet count",
+        "Thrombin time only"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Dilute Russell viper venom test",
+      "explanation": "DRVVT is phospholipid dependent and is commonly used as part of lupus anticoagulant evaluation.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-040",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Warfarin therapy is routinely monitored using which standardized value?",
+      "choices": [
+        "INR",
+        "Bleeding time",
+        "D-dimer",
+        "Platelet closure time"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "INR",
+      "explanation": "The INR standardizes PT results across thromboplastin reagents and is the routine laboratory measure used to monitor warfarin.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-041",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Activated protein C, with protein S as a cofactor, limits coagulation mainly by inactivating which cofactors?",
+      "choices": [
+        "Va and VIIIa",
+        "IXa and Xa",
+        "VIIa and XIa",
+        "I and XIIIa"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Va and VIIIa",
+      "explanation": "Activated protein C downregulates coagulation by proteolytically inactivating factors Va and VIIIa, with protein S enhancing this action.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-042",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Activated protein C resistance is most commonly associated with which inherited abnormality?",
+      "choices": [
+        "Factor V Leiden",
+        "Hemophilia A",
+        "Factor XIII deficiency",
+        "Bernard-Soulier syndrome"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Factor V Leiden",
+      "explanation": "Factor V Leiden makes factor Va relatively resistant to inactivation by activated protein C, increasing thrombotic risk.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-043",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Which drug blocks the platelet P2Y12 ADP receptor?",
+      "choices": [
+        "Warfarin",
+        "Prasugrel",
+        "Heparin",
+        "Urokinase"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Prasugrel",
+      "explanation": "Prasugrel is a P2Y12 inhibitor and reduces ADP-mediated platelet aggregation. Clopidogrel acts through the same receptor.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-044",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Which assay can be used to monitor heparin by measuring its antithrombin-dependent inhibition of factor Xa?",
+      "choices": [
+        "INR",
+        "Chromogenic anti-factor Xa assay",
+        "Bleeding time",
+        "D-dimer"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Chromogenic anti-factor Xa assay",
+      "explanation": "The anti-factor Xa assay estimates heparin activity through inhibition of a known amount of factor Xa in an antithrombin-dependent system.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-045",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "A patient taking heparin develops a major platelet-count fall and new thrombosis. What mechanism best explains HIT?",
+      "choices": [
+        "Antibody against a heparin-PF4 complex",
+        "Direct vitamin K inhibition",
+        "Autoantibody against factor VIII",
+        "Loss of VWF"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Antibody against a heparin-PF4 complex",
+      "explanation": "Immune HIT results from antibodies against complexes of heparin and platelet factor 4. These immune complexes activate platelets and can cause both thrombocytopenia and thrombosis.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-046",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Which anticoagulant is appropriate for a patient with HIT who requires continued anticoagulation?",
+      "choices": [
+        "Additional unfractionated heparin",
+        "Argatroban",
+        "Aspirin alone",
+        "Vitamin K"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Argatroban",
+      "explanation": "Argatroban directly inhibits thrombin and can be used when heparin must be stopped because of HIT.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-047",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Which test quantifies a factor VIII inhibitor?",
+      "choices": [
+        "Bethesda assay",
+        "DRVVT",
+        "D-dimer",
+        "PFA closure time"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Bethesda assay",
+      "explanation": "The Bethesda assay measures the inhibitory effect of patient plasma on factor VIII activity and reports the inhibitor titer.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-048",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "Why does factor V Leiden increase the risk of thrombosis?",
+      "choices": [
+        "Factor Va resists normal inactivation by activated protein C",
+        "Factor V cannot be activated",
+        "Protein C is overproduced",
+        "Fibrinogen is absent"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Factor Va resists normal inactivation by activated protein C",
+      "explanation": "The mutation makes activated factor V resistant to cleavage by activated protein C, allowing procoagulant activity to persist longer.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-4-049",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-4",
+      "prompt": "A patient taking aspirin has normal platelet count and PT. Which test is most likely to show the drug's effect?",
+      "choices": [
+        "Platelet aggregation study",
+        "Factor VIII assay",
+        "PT",
+        "Fibrinogen antigen"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Platelet aggregation study",
+      "explanation": "Aspirin affects platelet function rather than platelet number or routine coagulation pathways, so platelet aggregation testing can demonstrate its effect.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-050",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A 4-year-old develops petechiae and epistaxis after a recent viral infection. PT and APTT are normal, but the platelet count is 20 x 10^9/L. What is the most likely diagnosis?",
+      "choices": [
+        "DIC",
+        "Acute ITP",
+        "Hemophilia A",
+        "TTP"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Acute ITP",
+      "explanation": "A recent viral illness followed by abrupt isolated thrombocytopenia and mucocutaneous bleeding in a child strongly supports acute immune thrombocytopenia.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-051",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A teenager has lifelong bruising and postoperative bleeding. PT is normal, APTT is prolonged, platelet count is normal, ristocetin testing is abnormal, and VWF studies are decreased. What is the most likely diagnosis?",
+      "choices": [
+        "Hemophilia B",
+        "von Willebrand disease",
+        "Glanzmann thrombasthenia",
+        "DIC"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "von Willebrand disease",
+      "explanation": "The combination of mucocutaneous bleeding, reduced VWF measurements, abnormal ristocetin response, and reduced factor VIII-related activity is characteristic of von Willebrand disease.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-052",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A severely bleeding patient has very low fibrinogen. Which blood component is especially useful for concentrated fibrinogen replacement?",
+      "choices": [
+        "Cryoprecipitate",
+        "Washed RBCs",
+        "Platelets only",
+        "Albumin"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cryoprecipitate",
+      "explanation": "Cryoprecipitate is rich in fibrinogen and is useful when substantial fibrinogen replacement is required.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-053",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "Five days after starting heparin, a postoperative patient develops leg thrombosis. Which routine measurement is especially important when evaluating possible HIT?",
+      "choices": [
+        "Platelet count",
+        "Reticulocyte count",
+        "ESR",
+        "Factor VIII activity"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Platelet count",
+      "explanation": "HIT should be suspected when thrombosis occurs with a substantial platelet-count decline during heparin exposure.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-054",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A postpartum patient has a prolonged APTT that corrects immediately in a mixing study but becomes prolonged after two hours at 37 C. What is the most likely explanation?",
+      "choices": [
+        "Time-dependent factor VIII inhibitor",
+        "Factor VII deficiency",
+        "Lupus anticoagulant with immediate inhibition",
+        "Thrombocytosis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Time-dependent factor VIII inhibitor",
+      "explanation": "Factor VIII inhibitors may show time- and temperature-dependent inhibition. Immediate correction followed by loss of correction after incubation is a classic clue.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-055",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A patient with liver disease has a markedly prolonged PT and a very high INR before an invasive biopsy. What is the safest general interpretation?",
+      "choices": [
+        "The abnormal coagulation result should be addressed before proceeding",
+        "PT does not matter in liver disease",
+        "Proceed because platelet function is sufficient",
+        "Give heparin before biopsy"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "The abnormal coagulation result should be addressed before proceeding",
+      "explanation": "A markedly abnormal PT/INR signals increased procedural bleeding risk. The coagulation abnormality should be evaluated and managed before an invasive procedure.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-056",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A previously normal PT and APTT suddenly become prolonged in a preoperative sample from a patient who is not receiving anticoagulants. What should the laboratory check first?",
+      "choices": [
+        "The specimen for a clot or collection problem",
+        "HLA type",
+        "Serum IgG",
+        "Bone marrow morphology"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "The specimen for a clot or collection problem",
+      "explanation": "Preanalytical problems can consume coagulation factors and produce unexpected results. Inspecting the specimen for clotting is an appropriate first troubleshooting step.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-057",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A PT specimen was refrigerated for longer than recommended and now gives a shorter-than-expected PT. What preanalytical effect can explain this?",
+      "choices": [
+        "Cold activation of factor VII",
+        "Loss of factor XIII",
+        "Platelet clumping",
+        "Increased citrate concentration from evaporation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Cold activation of factor VII",
+      "explanation": "Prolonged refrigeration can cause cold activation of factor VII and artifactually shorten PT.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-058",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A patient receiving heparin shows little expected anticoagulant response. Deficiency of which physiologic protein can cause heparin resistance?",
+      "choices": [
+        "Antithrombin",
+        "Protein S only",
+        "VWF",
+        "Factor XIII"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Antithrombin",
+      "explanation": "Heparin depends heavily on antithrombin for its anticoagulant effect. Antithrombin deficiency can therefore produce a poor response to heparin.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-059",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A patient on heparin has a platelet count that falls from 350 x 10^9/L to 90 x 10^9/L and develops a new leg clot. An initial platelet aggregation assay for HIT is negative. Which conclusion is most appropriate?",
+      "choices": [
+        "The negative assay alone does not safely exclude HIT",
+        "Heparin should automatically be increased",
+        "Warfarin should immediately replace heparin without further assessment",
+        "The platelet fall is insignificant"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "The negative assay alone does not safely exclude HIT",
+      "explanation": "A major platelet decline plus new thrombosis during heparin exposure creates strong clinical concern for HIT. A single insensitive or negative platelet aggregation result should not override a convincing clinical picture.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "hematology-2-5-060",
+      "subjectId": "hematology-2",
+      "topicId": "hematology-2-5",
+      "prompt": "A patient has thrombosis, prolonged APTT, no bleeding history, and a mixing study that remains prolonged. Excess phospholipid corrects the abnormality. What is the most likely cause?",
+      "choices": [
+        "Lupus anticoagulant",
+        "Factor VIII deficiency",
+        "Hemophilia B",
+        "Afibrinogenemia"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Lupus anticoagulant",
+      "explanation": "Failure to correct on mixing suggests an inhibitor, while correction with excess phospholipid supports a phospholipid-dependent inhibitor such as lupus anticoagulant.",
+      "source": {
+        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
     }
