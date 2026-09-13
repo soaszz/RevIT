@@ -7,7 +7,7 @@ RevIT is a study and review platform for Medical Technology students. It brings 
 - **Practice with MCQs:** Answer reviewer questions by subject and topic, check the correct answer, and learn from educational explanations.
 - **Study with Deck Cards:** Turn reviewer content into focused flashcard decks, choose the topics you need, and shuffle cards for repeated practice.
 - **Find content quickly:** Search the subject libraries in both NU RevIT and Standard RevIT.
-- **Review major subjects:** Study Clinical Chemistry, Hematology, Hematology 2, Bacteriology, Analysis of Urine and Other Body Fluids, Immunology, Immunohematology, Parasitology, and Mycology and Virology, with more subjects supported as the library grows.
+- **Review major subjects:** Study Clinical Chemistry, Hematology, Hematology 2, Bacteriology, Analysis of Urine and Other Body Fluids, Immunology, Immunohematology, Laboratory Operations, Parasitology, and Mycology and Virology, with more subjects supported as the library grows.
 - **Strengthen weak areas:** See which subjects and topics need more attention and use that insight to guide your next review session.
 - **Plan study sessions:** Create study plans, organize activities by date and time, add them to the RevIT calendar, and keep upcoming exams visible.
 - **Track progress:** Monitor answered questions, accuracy, study activity, streaks, XP, levels, and achievements.
@@ -18,7 +18,7 @@ RevIT is a study and review platform for Medical Technology students. It brings 
 
 ## NU RevIT and Standard RevIT
 
-**NU RevIT** includes MTAP-focused features such as Grades. Clinical Chemistry, Hematology, Bacteriology, and AUBF are grouped under **MTAP 1**, while Parasitology, Mycology and Virology, Immunohematology, Immunology, and Hematology 2 are grouped under **Other Majors** in both the MCQ and Deck Card libraries.
+**NU RevIT** includes MTAP-focused features such as Grades. Clinical Chemistry, Hematology, Bacteriology, and AUBF are grouped under **MTAP 1**, while Parasitology, Mycology and Virology, Immunohematology, Immunology, Hematology 2, and Laboratory Operations are grouped under **Other Majors** in both the MCQ and Deck Card libraries.
 
 **Standard RevIT** keeps every available subject visible in one searchable MCQ and Deck Card library. Learners can switch modes without losing their existing study data.
 

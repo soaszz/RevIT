@@ -31,6 +31,7 @@ test("NU RevIT groups subjects under MTAP 1 and Other Majors", () => {
     "immunohematology",
     "immunology",
     "hematology-2",
+    "laboratory-operations",
   ]);
   assert.ok(mtapOne.subjects.every((subject) => subject.category === "MTAP 1"));
   assert.ok(otherMajors.subjects.every((subject) => subject.category === "Other Majors"));
@@ -43,6 +44,7 @@ test("library search matches subject and topic metadata", () => {
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "hemostasis").map((subject) => subject.id), ["hematology-2"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "hypersensitivity").map((subject) => subject.id), ["immunology"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "blood group").map((subject) => subject.id), ["immunohematology"]);
+  assert.deepEqual(filterSubjectsBySearch(subjects, topics, "CUSUM").map((subject) => subject.id), ["laboratory-operations"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "blood gases").map((subject) => subject.id), ["clinical-chemistry"]);
   assert.deepEqual(filterSubjectsBySearch(subjects, topics, "MTAP 1").map((subject) => subject.id), [
     "clinical-chemistry",

@@ -131,6 +131,20 @@
         "hematology-2-5"
       ],
       "category": "Other Majors"
+    },
+    {
+      "id": "laboratory-operations",
+      "name": "Laboratory Operations",
+      "description": "Laboratory calculations, quality control, statistics, method evaluation, quality systems, tables, and graph-based data interpretation.",
+      "topicIds": [
+        "laboratory-operations-1",
+        "laboratory-operations-2",
+        "laboratory-operations-3",
+        "laboratory-operations-4",
+        "laboratory-operations-5",
+        "laboratory-operations-6"
+      ],
+      "category": "Other Majors"
     }
   ],
   "topics": [
@@ -910,6 +924,84 @@
         {
           "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
           "pageRange": "10-12, 16-17",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "laboratory-operations-1",
+      "subjectId": "laboratory-operations",
+      "name": "Laboratory Calculations",
+      "description": "Percent solutions, dilutions, pH and buffers, photometric calculations, serum blanks, and enzyme activity units.",
+      "sourcePdfs": [
+        {
+          "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+          "pageRange": "2-3, 16",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "laboratory-operations-2",
+      "subjectId": "laboratory-operations",
+      "name": "Quality Control and Westgard Rules",
+      "description": "Precision, Gaussian limits, Westgard multirules, trends, shifts, Levey-Jennings charts, Youden plots, and CUSUM.",
+      "sourcePdfs": [
+        {
+          "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+          "pageRange": "3-5, 16-17",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "laboratory-operations-3",
+      "subjectId": "laboratory-operations",
+      "name": "Statistics and Method Evaluation",
+      "description": "Tests of means and variances, bias, constant and proportional error, sensitivity, specificity, reference intervals, and SDI.",
+      "sourcePdfs": [
+        {
+          "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+          "pageRange": "5-6, 17",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "laboratory-operations-4",
+      "subjectId": "laboratory-operations",
+      "name": "Quality Systems and Laboratory Practice",
+      "description": "Delta checks, Six Sigma, reagent-lot comparison, individualized quality control plans, and sigma calculation.",
+      "sourcePdfs": [
+        {
+          "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+          "pageRange": "7, 17-18",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "laboratory-operations-5",
+      "subjectId": "laboratory-operations",
+      "name": "Table-Based Data Interpretation",
+      "description": "Relative precision, method bias, diagnostic performance, and instrument comparison from compact laboratory tables.",
+      "sourcePdfs": [
+        {
+          "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+          "pageRange": "8-9, 18",
+          "kind": "Original supplied MCQ reviewer"
+        }
+      ]
+    },
+    {
+      "id": "laboratory-operations-6",
+      "subjectId": "laboratory-operations",
+      "name": "Graph and Graphic Interpretation",
+      "description": "Normal distributions, Levey-Jennings and Westgard patterns, CUSUM, Youden plots, bias and regression plots, and ROC curves.",
+      "sourcePdfs": [
+        {
+          "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+          "pageRange": "10-15, 18",
           "kind": "Original supplied MCQ reviewer"
         }
       ]
@@ -31793,6 +31885,986 @@
       "source": {
         "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
         "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-001",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "A 4% w/v solution is needed in a final volume of 300 mL. How much solute is required?",
+      "choices": [
+        "4 g",
+        "8 g",
+        "12 g",
+        "16 g"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "12 g",
+      "explanation": "A 4% w/v solution contains 4 g per 100 mL, so 4 g / 100 mL x 300 mL = 12 g.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-002",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "A laboratory prepares 750 mL of a 16% v/v solution. What volume of liquid solute is required?",
+      "choices": [
+        "12 mL",
+        "60 mL",
+        "120 mL",
+        "160 mL"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "120 mL",
+      "explanation": "A 16% v/v solution contains 16 mL per 100 mL, so 16 mL / 100 mL x 750 mL = 120 mL.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-003",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "Which equation is used to dilute a concentrated stock solution?",
+      "choices": [
+        "C1V1 = C2V2",
+        "CV = mean / SD",
+        "F = mean / variance",
+        "pH = pKa - log(salt/acid)"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "C1V1 = C2V2",
+      "explanation": "C1V1 = C2V2 conserves the amount of solute during dilution.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-004",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "A strong acid has [H+] = 2.0 x 10^-4 M. Its pH is closest to which value?",
+      "choices": [
+        "2.30",
+        "3.70",
+        "4.70",
+        "10.30"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "3.70",
+      "explanation": "Using pH = -log[H+], -log(2.0 x 10^-4) is approximately 3.70.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-005",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "A solution has a pOH of 5.2 at 25 C. What is its pH?",
+      "choices": [
+        "5.2",
+        "7.0",
+        "8.8",
+        "14.0"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "8.8",
+      "explanation": "At 25 C, pH + pOH = 14, so pH = 14 - 5.2 = 8.8.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-006",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "Which equation is appropriate for a weak-acid/conjugate-base buffer?",
+      "choices": [
+        "Henderson-Hasselbalch equation",
+        "F test",
+        "Westgard equation",
+        "Beer ratio only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Henderson-Hasselbalch equation",
+      "explanation": "The Henderson-Hasselbalch equation relates pH, pKa, and the ratio of conjugate base to weak acid.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-007",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "A patient absorbance is 0.72 and a 240 mg/dL standard reads 0.96. What is the patient concentration?",
+      "choices": [
+        "120 mg/dL",
+        "180 mg/dL",
+        "240 mg/dL",
+        "320 mg/dL"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "180 mg/dL",
+      "explanation": "The concentration is calculated as 0.72 / 0.96 x 240 mg/dL = 180 mg/dL.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-008",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "What should be done with a measured serum-blank absorbance before calculating a patient concentration?",
+      "choices": [
+        "Subtract it from the patient absorbance",
+        "Add it to the patient absorbance",
+        "Ignore the standard absorbance",
+        "Double it"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Subtract it from the patient absorbance",
+      "explanation": "The serum blank contribution is subtracted from the patient absorbance before the concentration is calculated.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-1-009",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-1",
+      "prompt": "One international unit of enzyme activity corresponds to which quantity?",
+      "choices": [
+        "1 micromole of substrate consumed or product formed per minute",
+        "1 mole per second",
+        "1 mg/L of enzyme",
+        "1 absorbance unit per hour"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "1 micromole of substrate consumed or product formed per minute",
+      "explanation": "One international unit is the enzyme activity that consumes 1 micromole of substrate or forms 1 micromole of product per minute under defined conditions.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-010",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "Which statistic best compares relative precision at different analyte concentrations?",
+      "choices": [
+        "Coefficient of variation (CV)",
+        "Bias",
+        "Sensitivity",
+        "Intercept"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Coefficient of variation (CV)",
+      "explanation": "The coefficient of variation expresses the standard deviation relative to the mean, allowing precision to be compared across concentrations.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-011",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "Approximately what percentage of Gaussian quality-control values fall within +/-2 SD of the mean?",
+      "choices": [
+        "68%",
+        "90%",
+        "95%",
+        "99.7%"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "95%",
+      "explanation": "Approximately 95.4% of values in a Gaussian distribution lie within +/-2 standard deviations of the mean.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-012",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "A single control result exceeds +/-2 SD. Which Westgard warning rule is triggered?",
+      "choices": [
+        "1_2s",
+        "2_2s",
+        "R_4s",
+        "4_1s"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "1_2s",
+      "explanation": "The 1_2s warning rule is triggered by one control result outside 2 SD.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-013",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "Two consecutive control results exceed the same +2 SD boundary. Which Westgard rule is violated?",
+      "choices": [
+        "1_3s",
+        "2_2s",
+        "R_4s",
+        "10x"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "2_2s",
+      "explanation": "The 2_2s rule is violated by two consecutive results beyond the same 2 SD limit and indicates systematic error.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-014",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "One control result exceeds +3 SD. Which Westgard rule applies?",
+      "choices": [
+        "1_3s",
+        "R_4s",
+        "4_1s",
+        "F"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "1_3s",
+      "explanation": "A single result beyond 3 SD violates the 1_3s rule.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-015",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "Four consecutive control results exceed the same 1 SD boundary. Which Westgard rule is implicated?",
+      "choices": [
+        "4_1s",
+        "R_4s",
+        "1_3s",
+        "1_2s"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "4_1s",
+      "explanation": "The 4_1s rule detects systematic error when four consecutive results exceed the same 1 SD limit.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-016",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "A progressive rise over several quality-control runs is called what?",
+      "choices": [
+        "Trend",
+        "Shift",
+        "Random spike",
+        "Reference interval"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trend",
+      "explanation": "A trend is a steady directional change across successive control results.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-017",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "Several consecutive quality-control values remain on the same side of the mean after a system change. What pattern is this?",
+      "choices": [
+        "Shift",
+        "Random error",
+        "Normal scatter",
+        "R_4s event"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Shift",
+      "explanation": "A persistent displacement of control results to one side of the mean is a shift.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-018",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "Which chart is the standard sequential display of quality-control values around the mean and SD limits?",
+      "choices": [
+        "Levey-Jennings chart",
+        "ROC curve",
+        "Bias plot",
+        "Regression plot"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Levey-Jennings chart",
+      "explanation": "A Levey-Jennings chart displays sequential quality-control results around the mean and standard-deviation limits.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-019",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "Which plot is used for interlaboratory comparison of two control levels?",
+      "choices": [
+        "Tonks-Youden plot",
+        "ROC curve",
+        "Histogram",
+        "Bias plot"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Tonks-Youden plot",
+      "explanation": "A Tonks-Youden plot compares results for two control levels and helps distinguish systematic from random differences among laboratories.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-2-020",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-2",
+      "prompt": "Which method accumulates small quality-control deviations to detect early systematic movement?",
+      "choices": [
+        "CUSUM",
+        "F test",
+        "Reference interval",
+        "Sensitivity"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "CUSUM",
+      "explanation": "CUSUM accumulates successive deviations and is sensitive to small, persistent changes.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-021",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "Which statistical test compares two means?",
+      "choices": [
+        "Student t test",
+        "F test",
+        "ROC analysis",
+        "Coefficient of variation"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Student t test",
+      "explanation": "Student's t test is used to assess a difference between two means.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-022",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "Which statistical test compares variances?",
+      "choices": [
+        "F test",
+        "Student t test",
+        "Standard deviation index",
+        "Sensitivity"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "F test",
+      "explanation": "The F statistic is a ratio of variances and is used to compare them.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-023",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "A candidate method has a mean of 206 and the reference method has a mean of 200. What is the candidate method's bias?",
+      "choices": [
+        "+6",
+        "-6",
+        "+3",
+        "0"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "+6",
+      "explanation": "Bias is candidate minus reference, so 206 - 200 = +6.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-024",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "What type of analytical error increases as analyte concentration increases?",
+      "choices": [
+        "Proportional error",
+        "Constant error",
+        "Random error only",
+        "Delta error"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Proportional error",
+      "explanation": "Proportional error changes in magnitude with analyte concentration.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-025",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "In a method-comparison regression, an intercept different from zero estimates which type of error?",
+      "choices": [
+        "Constant error",
+        "Proportional error",
+        "Prevalence",
+        "Precision"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Constant error",
+      "explanation": "The regression intercept estimates constant error.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-026",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "In a method-comparison regression, a slope different from 1 estimates which type of error?",
+      "choices": [
+        "Proportional error",
+        "Constant error",
+        "Sensitivity",
+        "Random error"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Proportional error",
+      "explanation": "A regression slope different from 1 estimates proportional error.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-027",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "Which formula defines diagnostic specificity?",
+      "choices": [
+        "TN / (TN + FP)",
+        "TP / (TP + FN)",
+        "TP / (TP + FP)",
+        "TN / (TN + FN)"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "TN / (TN + FP)",
+      "explanation": "Specificity is the fraction of disease-free people who test negative: TN / (TN + FP).",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-028",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "Which formula defines diagnostic sensitivity?",
+      "choices": [
+        "TP / (TP + FN)",
+        "TN / (TN + FP)",
+        "TP / (TP + FP)",
+        "FP / (TN + FP)"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "TP / (TP + FN)",
+      "explanation": "Sensitivity is the fraction of people with disease who test positive: TP / (TP + FN).",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-029",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "When directly establishing a nonparametric reference interval, what minimum number of reference individuals does the source recommend?",
+      "choices": [
+        "20",
+        "40",
+        "60",
+        "120"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "120",
+      "explanation": "At least 120 healthy reference individuals are recommended for direct nonparametric reference-interval estimation.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-3-030",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-3",
+      "prompt": "Which statistic compares a laboratory mean with its peer-group mean in standard-deviation units?",
+      "choices": [
+        "Standard deviation index (SDI)",
+        "Coefficient of variation",
+        "F statistic",
+        "Positive predictive value"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Standard deviation index (SDI)",
+      "explanation": "The standard deviation index expresses the laboratory-to-peer difference in standard-deviation units.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-4-031",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-4",
+      "prompt": "Which tool can reveal possible specimen misidentification from an unexpectedly large change in a patient's serial results?",
+      "choices": [
+        "Delta check",
+        "CUSUM",
+        "ROC curve",
+        "Youden plot"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Delta check",
+      "explanation": "A delta check compares a patient's current and previous results and can flag an unexpectedly large change.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-4-032",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-4",
+      "prompt": "Which quality framework expresses analytical defects per million opportunities?",
+      "choices": [
+        "Six Sigma",
+        "Beer law",
+        "Henderson-Hasselbalch equation",
+        "Student t test"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Six Sigma",
+      "explanation": "Six Sigma describes process performance in terms of defect frequency, including defects per million opportunities.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-4-033",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-4",
+      "prompt": "A new reagent lot is introduced. Which action best matches recommended laboratory practice?",
+      "choices": [
+        "Compare the new and current lots using controls and patient samples",
+        "Perform no quality control",
+        "Use one patient sample only",
+        "Change the reference interval automatically"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Compare the new and current lots using controls and patient samples",
+      "explanation": "A reagent-lot change should be validated by comparing new and current lots with controls and representative patient samples.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-4-034",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-4",
+      "prompt": "An individualized quality control plan (IQCP) risk assessment includes the likelihood of error and which other factor?",
+      "choices": [
+        "Severity of harm",
+        "Reagent cost",
+        "Number of work shifts",
+        "Disease prevalence only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Severity of harm",
+      "explanation": "IQCP risk assessment considers both the likelihood of an error and the severity of the resulting patient harm.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-4-035",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-4",
+      "prompt": "If total allowable error is 12, bias is 2, and SD is 2, what is the sigma metric?",
+      "choices": [
+        "2",
+        "4",
+        "5",
+        "7"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "5",
+      "explanation": "Sigma = (TEa - bias) / SD = (12 - 2) / 2 = 5.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-5-036",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-5",
+      "prompt": "Four assays have these mean and SD values: A, 2.5 and 0.30; B, 4.0 and 0.20; C, 100 and 2.0; D, 140 and 2.8. Which assay has the poorest relative precision?",
+      "choices": [
+        "Assay A",
+        "Assay B",
+        "Assay C",
+        "Assay D"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Assay A",
+      "explanation": "The coefficients of variation are 12%, 5%, 2%, and 2%, respectively, so assay A has the poorest relative precision.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-5-037",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-5",
+      "prompt": "A reference method has mean 235 and SD 3.8, while a candidate method has mean 246 and SD 3.4. Which method shows positive bias relative to the other?",
+      "choices": [
+        "Reference method",
+        "Candidate method",
+        "Neither method",
+        "Cannot be determined"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Candidate method",
+      "explanation": "The candidate method's bias relative to the reference is 246 - 235 = +11.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-5-038",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-5",
+      "prompt": "A diagnostic table shows 42 true positives, 8 false positives, 6 false negatives, and 44 true negatives. What is the test sensitivity?",
+      "choices": [
+        "84%",
+        "87.5%",
+        "88%",
+        "92%"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "87.5%",
+      "explanation": "Sensitivity = TP / (TP + FN) = 42 / (42 + 6) = 87.5%.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-5-039",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-5",
+      "prompt": "A diagnostic table shows 42 true positives, 8 false positives, 6 false negatives, and 44 true negatives. What is the test specificity?",
+      "choices": [
+        "80%",
+        "84.6%",
+        "88%",
+        "91.7%"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "84.6%",
+      "explanation": "Specificity = TN / (TN + FP) = 44 / (44 + 8) = 84.6%.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-5-040",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-5",
+      "prompt": "Osmometer A has a mean of 280 and SD of 3.1; osmometer B has a mean of 294 and SD of 2.8. Which instrument has the lower coefficient of variation?",
+      "choices": [
+        "Osmometer A",
+        "Osmometer B",
+        "They are equal",
+        "Cannot be determined"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Osmometer B",
+      "explanation": "Osmometer A has a CV of about 1.11%, while B has a CV of about 0.95%, so B has better relative precision.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 9,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-041",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "In a normal distribution, about how many quality-control results lie outside +/-2 SD by chance?",
+      "choices": [
+        "5%",
+        "32%",
+        "0.3%",
+        "50%"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "5%",
+      "explanation": "Approximately 95.4% of values lie within +/-2 SD, leaving roughly 5% outside those limits.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-042",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "On a Levey-Jennings chart, both control levels rise progressively from near the mean to above +2 SD over days 4 through 9. What pattern is evident?",
+      "choices": [
+        "Trend",
+        "Random scatter",
+        "No change",
+        "R_4s only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Trend",
+      "explanation": "A progressive directional rise across successive runs is a trend.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-043",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "On a later section of a Levey-Jennings chart, multiple consecutive control points remain below the mean. What pattern is evident?",
+      "choices": [
+        "Shift",
+        "R_4s only",
+        "No problem",
+        "Positive trend"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Shift",
+      "explanation": "Sustained control values on one side of the mean indicate a shift.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-044",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "At days 6, 7, 11, and 15, the plotted QC1/QC2 values are approximately -0.5/-2.5, +2.5/+0.3, +0.4/+2.1, and +2.5/-2.5 SD, respectively. Which day most clearly violates the R_4s rule?",
+      "choices": [
+        "Day 6",
+        "Day 7",
+        "Day 11",
+        "Day 15"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Day 15",
+      "explanation": "On day 15, one control is above +2 SD and the other is below -2 SD, producing a range greater than 4 SD.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-045",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "A CUSUM chart climbs persistently from near zero to about 3 cumulative deviations over 20 runs. What does the positive slope suggest?",
+      "choices": [
+        "A small sustained systematic movement",
+        "Perfect random balance",
+        "One isolated R_4s event",
+        "A reference-interval error"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "A small sustained systematic movement",
+      "explanation": "Accumulated positive deviations indicate a small persistent shift or trend.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-046",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "A point lies in the upper-right quadrant of a Tonks-Youden plot. What does this suggest?",
+      "choices": [
+        "Both control levels are positively biased",
+        "Only random error is present",
+        "One control is high and the other is low",
+        "Neither control level is biased"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Both control levels are positively biased",
+      "explanation": "In the upper-right quadrant, both control levels exceed their peer means, supporting positive systematic bias.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-047",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "In a bias plot, the candidate-minus-reference values become progressively more negative as the reference concentration rises. How should the pattern be interpreted?",
+      "choices": [
+        "Increasing negative proportional bias",
+        "Constant positive bias",
+        "No bias",
+        "Random error only"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Increasing negative proportional bias",
+      "explanation": "Bias that becomes more negative as concentration increases indicates negative proportional bias.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-048",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "A method-comparison regression line begins near zero but falls increasingly below the identity line as concentration rises. What is the main disagreement?",
+      "choices": [
+        "Proportional error",
+        "Large constant error only",
+        "No systematic error",
+        "Specificity failure"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Proportional error",
+      "explanation": "A slope below 1 with little intercept difference indicates proportional underestimation.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 14,
+        "kind": "Original supplied MCQ reviewer"
+      }
+    },
+    {
+      "id": "laboratory-operations-6-049",
+      "subjectId": "laboratory-operations",
+      "topicId": "laboratory-operations-6",
+      "prompt": "On an ROC curve, candidate cutoffs 2.6, 3.2, 3.6, and 5.2 have approximate (1 - specificity, sensitivity) coordinates of (0.05, 0.51), (0.10, 0.66), (0.17, 0.72), and (0.68, 0.75). Which cutoff is nearest the desirable upper-left region among these choices?",
+      "choices": [
+        "2.6",
+        "3.2",
+        "3.6",
+        "5.2"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "3.6",
+      "explanation": "Among these options, 3.6 provides the best balance of relatively high sensitivity and relatively few false positives.",
+      "source": {
+        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "page": 14,
         "kind": "Original supplied MCQ reviewer"
       }
     }
