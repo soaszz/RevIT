@@ -38,6 +38,18 @@ test("ships the validated ten-subject MCQ library with keyed rationales", async 
   assert.equal(bySubject["hematology-2"].at(-1).officialAnswer, "Lupus anticoagulant");
   assert.equal(bySubject["laboratory-operations"][0].officialAnswer, "12 g");
   assert.match(bySubject["laboratory-operations"].at(-1).explanation, /best balance/i);
+  const laboratoryTables = bySubject["laboratory-operations"].filter((question) => question.stimulus?.kind === "table");
+  const laboratoryFigures = bySubject["laboratory-operations"].filter((question) => question.stimulus?.kind === "image");
+  assert.equal(laboratoryTables.length, 5);
+  assert.equal(laboratoryFigures.length, 9);
+  assert.deepEqual(laboratoryTables[0].stimulus.columns, ["Analyte", "Mean", "SD"]);
+  assert.equal(laboratoryTables[0].stimulus.rows.length, 4);
+  assert.equal(new Set(laboratoryFigures.map((question) => question.stimulus.src)).size, 8);
+  for (const question of laboratoryFigures) {
+    assert.match(question.stimulus.src, /^\/reviewer-assets\/laboratory-operations\/.+\.png$/);
+    const figure = await readFile(new URL(`../public${question.stimulus.src}`, import.meta.url));
+    assert.ok(figure.length > 0);
+  }
   assert.equal(ids.size, content.questions.length);
 
   for (const question of content.questions) {
@@ -55,6 +67,7 @@ test("ships the validated ten-subject MCQ library with keyed rationales", async 
 
 test("randomizes displayed choices per review session and labels the PDF rationale", async () => {
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const stimulus = await readFile(new URL("../app/components/QuestionStimulus.tsx", import.meta.url), "utf8");
 
   assert.match(app, /sessionChoiceOrders/);
   assert.match(app, /shuffled\(\[0, 1, 2, 3\]\)/);
@@ -62,6 +75,9 @@ test("randomizes displayed choices per review session and labels the PDF rationa
   assert.match(app, />Rationale</);
   assert.match(app, /chooseAdaptiveQuestion/);
   assert.match(app, /We’ll bring this concept back later/);
+  assert.match(app, /<QuestionStimulus stimulus=\{currentQuestion\.stimulus\}/);
+  assert.match(stimulus, /<table className=\{styles\.table\}>/);
+  assert.match(stimulus, /<Image/);
 });
 
 test("waits for cloud question history before recording dependent progression", async () => {

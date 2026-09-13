@@ -22,6 +22,22 @@ export type Topic = {
   sourcePdfs: SourcePdf[];
 };
 
+export type QuestionStimulus =
+  | {
+      kind: "table";
+      caption: string;
+      columns: string[];
+      rows: string[][];
+    }
+  | {
+      kind: "image";
+      src: string;
+      alt: string;
+      width: number;
+      height: number;
+      caption?: string;
+    };
+
 export type ReviewerQuestion = {
   id: string;
   subjectId: string;
@@ -29,6 +45,7 @@ export type ReviewerQuestion = {
   subtopic?: string;
   difficulty?: "Easy" | "Medium" | "Hard";
   prompt: string;
+  stimulus?: QuestionStimulus;
   choices: string[];
   correctAnswer: number;
   officialAnswer: string;

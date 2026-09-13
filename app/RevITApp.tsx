@@ -15,6 +15,7 @@ import LibrarySearch from "./components/LibrarySearch";
 import MtapOnboarding from "./components/MtapOnboarding";
 import MtapPreferenceControl from "./components/MtapPreferenceControl";
 import Onboarding from "./components/Onboarding";
+import QuestionStimulus from "./components/QuestionStimulus";
 import QuestionTimer from "./components/QuestionTimer";
 import ReviewModeSwitch, { type ReviewLibraryMode } from "./components/ReviewModeSwitch";
 import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
@@ -1829,6 +1830,7 @@ useEffect(() => {
                     />
                   )}
                 </div>
+                <QuestionStimulus stimulus={currentQuestion.stimulus} />
                 <div className="choice-list">
                   {currentChoiceOrder.map((choiceIndex, displayIndex) => {
                     const choice = currentQuestion.choices[choiceIndex];

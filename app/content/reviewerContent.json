@@ -32592,7 +32592,22 @@
       "id": "laboratory-operations-5-036",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-5",
-      "prompt": "Four assays have these mean and SD values: A, 2.5 and 0.30; B, 4.0 and 0.20; C, 100 and 2.0; D, 140 and 2.8. Which assay has the poorest relative precision?",
+      "prompt": "Use the table. Which assay has the poorest relative precision?",
+      "stimulus": {
+        "kind": "table",
+        "caption": "Assay precision data",
+        "columns": [
+          "Analyte",
+          "Mean",
+          "SD"
+        ],
+        "rows": [
+          ["A", "2.5", "0.30"],
+          ["B", "4.0", "0.20"],
+          ["C", "100", "2.0"],
+          ["D", "140", "2.8"]
+        ]
+      },
       "choices": [
         "Assay A",
         "Assay B",
@@ -32612,7 +32627,20 @@
       "id": "laboratory-operations-5-037",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-5",
-      "prompt": "A reference method has mean 235 and SD 3.8, while a candidate method has mean 246 and SD 3.4. Which method shows positive bias relative to the other?",
+      "prompt": "Use the method table. Which method shows positive bias?",
+      "stimulus": {
+        "kind": "table",
+        "caption": "Method comparison data",
+        "columns": [
+          "Method",
+          "Mean",
+          "SD"
+        ],
+        "rows": [
+          ["Reference", "235", "3.8"],
+          ["Candidate", "246", "3.4"]
+        ]
+      },
       "choices": [
         "Reference method",
         "Candidate method",
@@ -32632,7 +32660,20 @@
       "id": "laboratory-operations-5-038",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-5",
-      "prompt": "A diagnostic table shows 42 true positives, 8 false positives, 6 false negatives, and 44 true negatives. What is the test sensitivity?",
+      "prompt": "Use the diagnostic table. What is the test sensitivity?",
+      "stimulus": {
+        "kind": "table",
+        "caption": "Diagnostic classification data",
+        "columns": [
+          "Result",
+          "Disease +",
+          "Disease -"
+        ],
+        "rows": [
+          ["Test +", "42", "8"],
+          ["Test -", "6", "44"]
+        ]
+      },
       "choices": [
         "84%",
         "87.5%",
@@ -32652,7 +32693,20 @@
       "id": "laboratory-operations-5-039",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-5",
-      "prompt": "A diagnostic table shows 42 true positives, 8 false positives, 6 false negatives, and 44 true negatives. What is the test specificity?",
+      "prompt": "Use the diagnostic table. What is the test specificity?",
+      "stimulus": {
+        "kind": "table",
+        "caption": "Diagnostic classification data",
+        "columns": [
+          "Result",
+          "Disease +",
+          "Disease -"
+        ],
+        "rows": [
+          ["Test +", "42", "8"],
+          ["Test -", "6", "44"]
+        ]
+      },
       "choices": [
         "80%",
         "84.6%",
@@ -32672,7 +32726,20 @@
       "id": "laboratory-operations-5-040",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-5",
-      "prompt": "Osmometer A has a mean of 280 and SD of 3.1; osmometer B has a mean of 294 and SD of 2.8. Which instrument has the lower coefficient of variation?",
+      "prompt": "Use the instrument table. Which osmometer has the lower coefficient of variation?",
+      "stimulus": {
+        "kind": "table",
+        "caption": "Osmometer precision data",
+        "columns": [
+          "Instrument",
+          "Mean",
+          "SD"
+        ],
+        "rows": [
+          ["A", "280", "3.1"],
+          ["B", "294", "2.8"]
+        ]
+      },
       "choices": [
         "Osmometer A",
         "Osmometer B",
@@ -32692,7 +32759,14 @@
       "id": "laboratory-operations-6-041",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "In a normal distribution, about how many quality-control results lie outside +/-2 SD by chance?",
+      "prompt": "Using this normal-distribution graphic, about how many quality-control results lie outside +/-2 SD by chance?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/normal-distribution.png",
+        "alt": "Bell-shaped normal distribution centered at the mean with vertical markers from -3 SD to +3 SD.",
+        "width": 910,
+        "height": 540
+      },
       "choices": [
         "5%",
         "32%",
@@ -32712,7 +32786,14 @@
       "id": "laboratory-operations-6-042",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "On a Levey-Jennings chart, both control levels rise progressively from near the mean to above +2 SD over days 4 through 9. What pattern is evident?",
+      "prompt": "What pattern is evident around days 4-9 in this Levey-Jennings chart?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/levey-jennings.png",
+        "alt": "Levey-Jennings chart for two control levels over 20 days, rising through day 9 and then remaining below the mean after day 12.",
+        "width": 950,
+        "height": 510
+      },
       "choices": [
         "Trend",
         "Random scatter",
@@ -32732,7 +32813,14 @@
       "id": "laboratory-operations-6-043",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "On a later section of a Levey-Jennings chart, multiple consecutive control points remain below the mean. What pattern is evident?",
+      "prompt": "What later pattern is evident when multiple points remain below the mean in this Levey-Jennings chart?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/levey-jennings.png",
+        "alt": "Levey-Jennings chart for two control levels over 20 days, rising through day 9 and then remaining below the mean after day 12.",
+        "width": 950,
+        "height": 510
+      },
       "choices": [
         "Shift",
         "R_4s only",
@@ -32752,7 +32840,14 @@
       "id": "laboratory-operations-6-044",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "At days 6, 7, 11, and 15, the plotted QC1/QC2 values are approximately -0.5/-2.5, +2.5/+0.3, +0.4/+2.1, and +2.5/-2.5 SD, respectively. Which day most clearly violates the R_4s rule?",
+      "prompt": "Which day in this two-level quality-control chart most clearly violates the R_4s rule?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/westgard-r4s.png",
+        "alt": "Two-level Westgard chart across days 1-16, including wide separation between QC1 and QC2 on day 15.",
+        "width": 950,
+        "height": 520
+      },
       "choices": [
         "Day 6",
         "Day 7",
@@ -32772,7 +32867,14 @@
       "id": "laboratory-operations-6-045",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "A CUSUM chart climbs persistently from near zero to about 3 cumulative deviations over 20 runs. What does the positive slope suggest?",
+      "prompt": "What does the persistent positive slope in this CUSUM chart suggest?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/cusum.png",
+        "alt": "CUSUM chart with cumulative deviation rising persistently from near zero to approximately 3 across 20 runs.",
+        "width": 950,
+        "height": 500
+      },
       "choices": [
         "A small sustained systematic movement",
         "Perfect random balance",
@@ -32792,7 +32894,14 @@
       "id": "laboratory-operations-6-046",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "A point lies in the upper-right quadrant of a Tonks-Youden plot. What does this suggest?",
+      "prompt": "A point in the upper-right quadrant of this Tonks-Youden plot suggests what?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/tonks-youden.png",
+        "alt": "Tonks-Youden scatter plot of Level 1 mean versus Level 2 mean with reference lines crossing at 100.",
+        "width": 820,
+        "height": 760
+      },
       "choices": [
         "Both control levels are positively biased",
         "Only random error is present",
@@ -32812,7 +32921,14 @@
       "id": "laboratory-operations-6-047",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "In a bias plot, the candidate-minus-reference values become progressively more negative as the reference concentration rises. How should the pattern be interpreted?",
+      "prompt": "How should this bias plot be interpreted?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/bias-plot.png",
+        "alt": "Bias plot whose candidate-minus-reference values become progressively more negative as reference concentration rises.",
+        "width": 910,
+        "height": 530
+      },
       "choices": [
         "Increasing negative proportional bias",
         "Constant positive bias",
@@ -32832,7 +32948,14 @@
       "id": "laboratory-operations-6-048",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "A method-comparison regression line begins near zero but falls increasingly below the identity line as concentration rises. What is the main disagreement?",
+      "prompt": "What is the main disagreement in this regression plot?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/regression.png",
+        "alt": "Method-comparison regression plot of candidate versus reference results with a near-zero intercept and a slope below 1.",
+        "width": 810,
+        "height": 750
+      },
       "choices": [
         "Proportional error",
         "Large constant error only",
@@ -32852,7 +32975,14 @@
       "id": "laboratory-operations-6-049",
       "subjectId": "laboratory-operations",
       "topicId": "laboratory-operations-6",
-      "prompt": "On an ROC curve, candidate cutoffs 2.6, 3.2, 3.6, and 5.2 have approximate (1 - specificity, sensitivity) coordinates of (0.05, 0.51), (0.10, 0.66), (0.17, 0.72), and (0.68, 0.75). Which cutoff is nearest the desirable upper-left region among these choices?",
+      "prompt": "Which labeled cutoff in this ROC curve is nearest the desirable upper-left region among the choices?",
+      "stimulus": {
+        "kind": "image",
+        "src": "/reviewer-assets/laboratory-operations/roc-curve.png",
+        "alt": "ROC curve plotting sensitivity against 1 - specificity with labeled cutoffs from 2.6 through 5.2.",
+        "width": 820,
+        "height": 810
+      },
       "choices": [
         "2.6",
         "3.2",
