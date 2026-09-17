@@ -1686,10 +1686,10 @@ useEffect(() => {
 
             <aside className="overview-aside">
               <div className="source-summary-card">
-                <span className="ai-mark">PDF</span>
-                <p className="eyebrow">Supplied sources</p>
-                <h2>Ten official PDF reviewers mapped</h2>
-                <p>Clinical Chemistry, Hematology, Hematology 2, Bacteriology, AUBF, Immunology, Immunohematology, Laboratory Operations, Parasitology, and Mycology and Virology now power scoring, rationales, and page-level source references.</p>
+                <span className="ai-mark">MCQ</span>
+                <p className="eyebrow">Question Bank</p>
+                <h2>{questions.length} total questions available</h2>
+                <p>Comprehensive scoring, detailed rationales, and verified source references across all subjects.</p>
                 {subjects.map((subject) => (
                   <div className="source-stat" key={subject.id}>
                     <span>{subject.name}</span>
@@ -1700,7 +1700,7 @@ useEffect(() => {
               <div className="ai-peek-card">
                 <span className="ai-mark">AI</span>
                 <h2>Ask for a clearer explanation</h2>
-                <p>Groq study support stays separate from the local official reviewer bank and never changes scoring answers.</p>
+                <p>Groq study support provides on-demand concepts and guidance while keeping scoring answers strictly unchanged.</p>
                 <button className="primary-button" type="button" onClick={() => openView("assistant")}>Open RevIT AI</button>
               </div>
             </aside>

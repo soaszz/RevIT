@@ -81,7 +81,7 @@ function PasswordField({
   );
 }
 
-export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { next?: string; turnstileSiteKey: string }) {
+export default function AuthPanel({ next = "/overview", turnstileSiteKey, disableCaptcha = false }: { next?: string; turnstileSiteKey: string; disableCaptcha?: boolean }) {
   const router = useRouter();
   const turnstileRef = useRef<TurnstileChallengeHandle>(null);
   const [mode, setMode] = useState<Mode>("login");
@@ -115,6 +115,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   }
 
   function requireCaptcha() {
+    if (disableCaptcha) return "skipped";
     if (captchaToken) return captchaToken;
     showStatus("Please complete the security check.");
     return null;
@@ -152,7 +153,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
     router.refresh();
   }
 
-  async function register(token: string) {
+  async function register(token: string | null) {
     const supabase = createClient();
     const cleanEmail = email.trim().toLowerCase();
     const cleanUsername = username.trim().toLowerCase();
@@ -168,7 +169,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
     if (availabilityError) throw availabilityError;
     if (!availability) throw new AuthInputError("That username is already taken.");
 
-    const { data, error } = await supabase.auth.signUp({
+    const signUpOptions = {
       email: cleanEmail,
       password,
       options: {
@@ -178,9 +179,13 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
           privacy_version: CURRENT_PRIVACY_VERSION,
         },
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/overview`,
-        captchaToken: token,
       },
-    });
+    } as any;
+    if (token) {
+      signUpOptions.options.captchaToken = token;
+    }
+
+    const { data, error } = await supabase.auth.signUp(signUpOptions);
     if (error) throw error;
 
     if (data.session) {
@@ -208,19 +213,22 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const token = requireCaptcha();
-    if (!token) return;
+    if (!disableCaptcha && !token) return;
     setPending(true);
     showStatus("");
     try {
       if (mode === "register") {
-        await register(token);
+        await register(disableCaptcha ? null : token);
         return;
       }
-      const { error } = await createClient().auth.signInWithPassword({
+      const authOptions = {
         email: email.trim(),
         password,
-        options: { captchaToken: token },
-      });
+      } as any;
+      if (!disableCaptcha && token) {
+        authOptions.options = { captchaToken: token };
+      }
+      const { error } = await createClient().auth.signInWithPassword(authOptions);
       if (error) throw error;
       await completeLogin();
     } catch (error) {
@@ -296,16 +304,18 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
           <div id="signup-consent-copy"><label htmlFor="signup-legal-consent">I have read and agree to the</label> <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</div>
         </div>
       )}
-      <TurnstileChallenge
-        key={mode}
-        ref={turnstileRef}
-        siteKey={turnstileSiteKey}
-        action={mode}
-        onTokenChange={setCaptchaToken}
-        onUnavailable={() => showStatus("The security check could not load. Please try again.")}
-      />
+      {!disableCaptcha && (
+        <TurnstileChallenge
+          key={mode}
+          ref={turnstileRef}
+          siteKey={turnstileSiteKey}
+          action={mode}
+          onTokenChange={setCaptchaToken}
+          onUnavailable={() => showStatus("The security check could not load. Please try again.")}
+        />
+      )}
       {status && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{status}</p>}
-      <button className="primary-button wide auth-submit" type="submit" disabled={pending || !turnstileSiteKey || (mode === "register" && !legalConsent)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
+      <button className="primary-button wide auth-submit" type="submit" disabled={pending || (!disableCaptcha && !turnstileSiteKey) || (mode === "register" && !legalConsent)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
       {mode === "login" && <a className="auth-link" href="/auth/forgot">Forgot your password?</a>}
       <AuthFooter />
     </form>
