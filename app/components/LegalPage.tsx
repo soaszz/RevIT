@@ -33,12 +33,10 @@ export default function LegalPage({
       <article className="legal-document">
         <div className="legal-title-block">
           <p className="eyebrow">RevIT legal</p>
-          <span className="legal-draft-badge">Draft — not legal advice</span>
           <h1>{title}</h1>
           <p>{summary}</p>
           <dl className="legal-meta">
             <div><dt>Effective date</dt><dd>{LEGAL_EFFECTIVE_DATE}</dd></div>
-            <div><dt>Status</dt><dd>Draft for professional review</dd></div>
           </dl>
         </div>
 

@@ -3,13 +3,13 @@ import LegalPage, { type LegalSection } from "../components/LegalPage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Draft Privacy Policy for the RevIT Medical Technology review platform.",
+  description: "Privacy Policy for the RevIT Medical Technology review platform.",
 };
 
 const sections: LegalSection[] = [
   {
-    title: "Scope and Status",
-    content: <p>This draft Privacy Policy describes the information the current RevIT code stores or processes. It is not legal advice and should be reviewed by qualified counsel before production publication. RevIT is an educational study platform, not a clinical records system.</p>,
+    title: "Scope",
+    content: <p>This Privacy Policy describes the information RevIT stores or processes. RevIT is an educational study platform, not a clinical records system.</p>,
   },
   {
     title: "Account and Profile Information",
@@ -53,7 +53,7 @@ const sections: LegalSection[] = [
   },
   {
     title: "Retention and Deletion",
-    content: <><p>The inspected codebase retains cloud records until they are changed or deleted through implemented features, removed by the operator, or deleted through account-cascade behavior. Deleting an authentication user is configured to cascade to related profile and user-owned database records. The current interface includes deletion for selected items such as AI chats and exam entries, but it does not include a self-service delete-account workflow.</p><p>Clearing browser site data removes local-only information from that browser but does not delete cloud records. Contact details for production account or data-deletion requests must be configured before publication.</p></>,
+    content: <><p>RevIT retains cloud records until they are changed or deleted through implemented features, removed by the operator, or deleted through account-cascade behavior. Deleting an authentication user is configured to cascade to related profile and user-owned database records. The interface includes deletion for selected items such as AI chats and exam entries, but it does not include a self-service delete-account workflow.</p><p>Clearing browser site data removes local-only information from that browser but does not delete cloud records. If you need to delete your account or data, please contact us.</p></>,
   },
   {
     title: "Security and Its Limits",
@@ -69,14 +69,14 @@ const sections: LegalSection[] = [
   },
   {
     title: "Contact",
-    content: <p>A production privacy contact has not yet been configured in the codebase. Before publication, the RevIT operator should add a monitored email address or support channel for privacy, access, correction, and deletion requests and any legally required operator identity.</p>,
+    content: <p>If you have questions about your privacy, access, correction, or deletion requests, please contact us.</p>,
   },
   {
     title: "Effective Date",
-    content: <p>This draft is effective September 6, 2026. Material service or data-practice changes should be reflected in a new centralized privacy version and presented to users for review.</p>,
+    content: <p>Effective as of September 6, 2026. Material service or data-practice changes will be reflected in a new privacy version and presented to users for review.</p>,
   },
 ];
 
 export default function PrivacyPage() {
-  return <LegalPage title="Privacy Policy" summary="This draft policy describes the account, study, preference, AI, and voluntary-support information processed by the current RevIT codebase." sections={sections} />;
+  return <LegalPage title="Privacy Policy" summary="This policy describes the account, study, preference, AI, and voluntary-support information processed by the current RevIT codebase." sections={sections} />;
 }

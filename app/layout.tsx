@@ -1,7 +1,18 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import { DM_Sans, Geist_Mono } from "next/font/google";
 import "katex/dist/katex.min.css";
 import "./globals.css";
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
@@ -35,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
-    <html lang="en" data-theme="light" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning className={`${dmSans.variable} ${geistMono.variable}`}>
       <head>
         <script
           nonce={nonce}

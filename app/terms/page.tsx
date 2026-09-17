@@ -3,13 +3,13 @@ import LegalPage, { type LegalSection } from "../components/LegalPage";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "Draft Terms of Service for the RevIT Medical Technology review platform.",
+  description: "Terms of Service for the RevIT Medical Technology review platform.",
 };
 
 const sections: LegalSection[] = [
   {
     title: "Acceptance of Terms",
-    content: <p>These draft Terms of Service govern access to and use of RevIT. By creating an account, accepting these terms, or using the service, you agree to follow them. If you do not agree, do not use authenticated RevIT features; you may sign out without deleting your account or existing data.</p>,
+    content: <p>These Terms of Service govern access to and use of RevIT. By creating an account, accepting these terms, or using the service, you agree to follow them. If you do not agree, do not use authenticated RevIT features; you may sign out without deleting your account or existing data.</p>,
   },
   {
     title: "Eligibility",
@@ -77,14 +77,14 @@ const sections: LegalSection[] = [
   },
   {
     title: "Contact",
-    content: <p>A production contact address has not yet been configured in the codebase. Before publication, the RevIT operator should replace this statement with the monitored email address or support channel for legal and account questions.</p>,
+    content: <p>If you have questions about these Terms, please contact us.</p>,
   },
   {
     title: "Effective Date",
-    content: <p>This draft is effective September 6, 2026. It should be reviewed and adapted by qualified legal counsel before production publication, including the governing-law, contact, jurisdiction, and operator-identity details appropriate to RevIT.</p>,
+    content: <p>Effective as of September 6, 2026.</p>,
   },
 ];
 
 export default function TermsPage() {
-  return <LegalPage title="Terms of Service" summary="These draft terms explain the rules for using RevIT and the limits of its educational services." sections={sections} />;
+  return <LegalPage title="Terms of Service" summary="These terms explain the rules for using RevIT and the limits of its educational services." sections={sections} />;
 }

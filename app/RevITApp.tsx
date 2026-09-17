@@ -1858,7 +1858,6 @@ useEffect(() => {
                     <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
                     <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
                     {selectedChoice !== currentQuestion.correctAnswer && <p className="reinforcement-note">We’ll bring this concept back later.</p>}
-                    <small>Source: {currentQuestion.source.fileName}, page {currentQuestion.source.page}</small>
                   </div>
                 )}
                 <div className="quiz-actions">

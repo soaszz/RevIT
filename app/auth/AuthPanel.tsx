@@ -1,7 +1,7 @@
 "use client";
 
 import type { Factor } from "@supabase/supabase-js";
-import { type FormEvent, useRef, useState } from "react";
+import { type FormEvent, useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PublicThemeToggle from "../components/PublicThemeToggle";
 import TurnstileChallenge, { type TurnstileChallengeHandle } from "../components/auth/TurnstileChallenge";
@@ -97,6 +97,46 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
   const [mfaFactorId, setMfaFactorId] = useState("");
   const [mfaCode, setMfaCode] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
+  const [lockoutRemaining, setLockoutRemaining] = useState(0);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("revit-login-attempts");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.until && Date.now() < parsed.until) {
+          setLockoutUntil(parsed.until);
+          setFailedAttempts(parsed.attempts);
+        } else if (parsed.attempts && !parsed.until) {
+          setFailedAttempts(parsed.attempts);
+        } else {
+          localStorage.removeItem("revit-login-attempts");
+        }
+      } catch {}
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!lockoutUntil) return;
+    const update = () => {
+      const remaining = Math.max(0, Math.ceil((lockoutUntil - Date.now()) / 60000));
+      if (remaining > 0) {
+        setLockoutRemaining(remaining);
+      } else {
+        setLockoutUntil(null);
+        setFailedAttempts(0);
+        setLockoutRemaining(0);
+        localStorage.removeItem("revit-login-attempts");
+        showStatus("");
+      }
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [lockoutUntil]);
 
   function showStatus(message = "", type: StatusType = "error") {
     setStatus(message);
@@ -212,6 +252,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (mode === "login" && lockoutUntil && Date.now() < lockoutUntil) return;
     const token = requireCaptcha();
     if (!disableCaptcha && !token) return;
     setPending(true);
@@ -230,14 +271,28 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
       }
       const { error } = await createClient().auth.signInWithPassword(authOptions);
       if (error) throw error;
+
+      setFailedAttempts(0);
+      setLockoutUntil(null);
+      localStorage.removeItem("revit-login-attempts");
+
       await completeLogin();
     } catch (error) {
-      showStatus(getErrorMessage(
-        error,
-        mode === "login"
-          ? "Email or password is incorrect, or sign-in could not be completed."
-          : "Account creation could not be completed. Please try again.",
-      ));
+      if (mode === "login") {
+        const attempts = failedAttempts + 1;
+        setFailedAttempts(attempts);
+        if (attempts >= 3) {
+          const until = Date.now() + 300000;
+          setLockoutUntil(until);
+          localStorage.setItem("revit-login-attempts", JSON.stringify({ attempts, until }));
+          setStatusType("error");
+        } else {
+          localStorage.setItem("revit-login-attempts", JSON.stringify({ attempts }));
+          showStatus(getErrorMessage(error, "Email or password is incorrect, or sign-in could not be completed."));
+        }
+      } else {
+        showStatus(getErrorMessage(error, "Account creation could not be completed. Please try again."));
+      }
       resetCaptcha();
     } finally {
       setPending(false);
@@ -314,8 +369,8 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
           onUnavailable={() => showStatus("The security check could not load. Please try again.")}
         />
       )}
-      {status && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{status}</p>}
-      <button className="primary-button wide auth-submit" type="submit" disabled={pending || (!disableCaptcha && !turnstileSiteKey) || (mode === "register" && !legalConsent)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
+      {(status || (mode === "login" && lockoutUntil)) && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{mode === "login" && lockoutUntil ? `Too many failed attempts. Try again in ${lockoutRemaining} minute${lockoutRemaining > 1 ? "s" : ""}.` : status}</p>}
+      <button className="primary-button wide auth-submit" type="submit" disabled={pending || (!disableCaptcha && !turnstileSiteKey) || (mode === "register" && !legalConsent) || (mode === "login" && lockoutUntil !== null)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
       {mode === "login" && <a className="auth-link" href="/auth/forgot">Forgot your password?</a>}
       <AuthFooter />
     </form>
