@@ -7,6 +7,7 @@ import PublicThemeToggle from "../components/PublicThemeToggle";
 import TurnstileChallenge, { type TurnstileChallengeHandle } from "../components/auth/TurnstileChallenge";
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "../lib/legal";
 import { createClient } from "../lib/supabase/client";
+import PasswordField from "../components/auth/PasswordField";
 
 type Mode = "login" | "register";
 type StatusType = "error" | "success" | "info";
@@ -26,58 +27,6 @@ function AuthFooter() {
       <div><a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a><a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a></div>
       <p>© {new Date().getFullYear()} RevIT · Review It Thoroughly.</p>
     </footer>
-  );
-}
-
-function PasswordField({
-  id,
-  label,
-  value,
-  onChange,
-  autoComplete,
-}: {
-  id: string;
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  autoComplete: "current-password" | "new-password";
-}) {
-  const [visible, setVisible] = useState(false);
-
-  return (
-    <div className="auth-field">
-      <label htmlFor={id}>{label}</label>
-      <div className="password-input-wrap">
-        <input
-          id={id}
-          type={visible ? "text" : "password"}
-          autoComplete={autoComplete}
-          placeholder="At least 8 characters"
-          minLength={8}
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          required
-        />
-        <button
-          className="password-reveal"
-          type="button"
-          aria-label={`Hold to show ${label.toLowerCase()}`}
-          aria-pressed={visible}
-          onPointerDown={() => setVisible(true)}
-          onPointerUp={() => setVisible(false)}
-          onPointerLeave={() => setVisible(false)}
-          onPointerCancel={() => setVisible(false)}
-          onKeyDown={(event) => {
-            if (event.key === " " || event.key === "Enter") setVisible(true);
-          }}
-          onKeyUp={() => setVisible(false)}
-          onBlur={() => setVisible(false)}
-          onContextMenu={(event) => event.preventDefault()}
-        >
-          {visible ? "Showing" : "Hold to show"}
-        </button>
-      </div>
-    </div>
   );
 }
 

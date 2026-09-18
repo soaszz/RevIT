@@ -3,6 +3,7 @@
 import { type FormEvent, useState } from "react";
 import { createClient } from "../../lib/supabase/client";
 import PublicThemeToggle from "../../components/PublicThemeToggle";
+import PasswordField from "../../components/auth/PasswordField";
 
 export default function ResetPanel() {
   const [password, setPassword] = useState("");
@@ -27,8 +28,8 @@ export default function ResetPanel() {
       </div>
       {!complete && (
         <div className="auth-fields">
-          <label className="auth-field"><span>New password</span><input type="password" autoComplete="new-password" placeholder="At least 8 characters" minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} required /></label>
-          <label className="auth-field"><span>Confirm password</span><input type="password" autoComplete="new-password" placeholder="Match new password" value={confirm} onChange={(event) => setConfirm(event.target.value)} required /></label>
+          <PasswordField id="new-password" label="New password" value={password} onChange={setPassword} autoComplete="new-password" placeholder="At least 8 characters" />
+          <PasswordField id="confirm-password" label="Confirm password" value={confirm} onChange={setConfirm} autoComplete="new-password" placeholder="Match new password" />
         </div>
       )}
       {status && <p className={`form-status ${complete ? "success" : ""}`} role="status">{status}</p>}
