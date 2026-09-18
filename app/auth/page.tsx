@@ -26,11 +26,11 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
             <p>Study across Medical Technology subjects and prepare for MTAP and board exams. Practice structured reviewer questions, identify areas that need more attention, plan your studies, and track your progress in one place.</p>
           </div>
           <ul className="auth-benefits" aria-label="RevIT features">
-            <li><span>01</span><div><strong>Structured Reviewer Practice</strong><p>Practice organized Medical Technology questions by subject and topic.</p></div></li>
-            <li><span>02</span><div><strong>Performance &amp; Weakness Analytics</strong><p>Track accuracy, identify weaker areas, and focus future review sessions.</p></div></li>
-            <li><span>03</span><div><strong>Study Planning</strong><p>Organize study schedules, exams, events, and review sessions.</p></div></li>
-            <li><span>04</span><div><strong>Progress &amp; Achievement Tracking</strong><p>Track study activity, streaks, XP, levels, achievements, and long-term progress.</p></div></li>
-            <li><span>05</span><div><strong>Focused MedTech AI Support</strong><p>Get educational explanations while official reviewer answers remain separate from AI-generated content.</p></div></li>
+            <li><span className="auth-bullet"></span><div><strong>Structured Reviewer Practice</strong><p>Practice organized Medical Technology questions by subject and topic.</p></div></li>
+            <li><span className="auth-bullet"></span><div><strong>Performance &amp; Weakness Analytics</strong><p>Track accuracy, identify weaker areas, and focus future review sessions.</p></div></li>
+            <li><span className="auth-bullet"></span><div><strong>Study Planning</strong><p>Organize study schedules, exams, events, and review sessions.</p></div></li>
+            <li><span className="auth-bullet"></span><div><strong>Progress &amp; Achievement Tracking</strong><p>Track study activity, streaks, XP, levels, achievements, and long-term progress.</p></div></li>
+            <li><span className="auth-bullet"></span><div><strong>Focused MedTech AI Support</strong><p>Get educational explanations while official reviewer answers remain separate from AI-generated content.</p></div></li>
           </ul>
         </aside>
         {isSupabaseConfigured()
