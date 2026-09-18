@@ -106,7 +106,7 @@ export default function Onboarding({
                 <div style={{ display: 'grid', gap: '16px' }}>
                   <label className="profile-name-field">
                     <span>First name</span>
-                    <input autoComplete="given-name" maxLength={40} value={firstName} onChange={(event) => setFirstName(event.target.value)} required placeholder="Jane Doe" autoFocus />
+                    <input autoComplete="given-name" maxLength={40} value={firstName} onChange={(event) => setFirstName(event.target.value)} required placeholder="Anne Claire" autoFocus />
                   </label>
                   <label className="profile-name-field">
                     <span>Username</span>
