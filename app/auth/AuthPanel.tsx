@@ -82,6 +82,7 @@ function PasswordField({
 }
 
 export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { next?: string; turnstileSiteKey: string }) {
+  const disableCaptcha = process.env.NEXT_PUBLIC_DISABLE_CAPTCHA === "true";
   const router = useRouter();
   const turnstileRef = useRef<TurnstileChallengeHandle>(null);
   const [mode, setMode] = useState<Mode>("login");
@@ -166,6 +167,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   }
 
   function requireCaptcha() {
+    if (disableCaptcha) return "disabled_bypass";
     if (captchaToken) return captchaToken;
     showStatus("Please complete the security check.");
     return null;
@@ -231,7 +233,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/overview`,
       },
     } as any;
-    if (token) {
+    if (token && token !== "disabled_bypass") {
       signUpOptions.options.captchaToken = token;
     }
 
@@ -275,8 +277,11 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
       const authOptions = {
         email: email.trim(),
         password,
-        options: { captchaToken: token }
+        options: {}
       } as any;
+      if (token && token !== "disabled_bypass") {
+        authOptions.options.captchaToken = token;
+      }
       const { error } = await createClient().auth.signInWithPassword(authOptions);
       if (error) throw error;
 
@@ -367,6 +372,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
           <div id="signup-consent-copy"><label htmlFor="signup-legal-consent">I have read and agree to the</label> <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</div>
         </div>
       )}
+      {!disableCaptcha && (
       <TurnstileChallenge
         key={mode}
         ref={turnstileRef}
@@ -375,8 +381,9 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         onTokenChange={setCaptchaToken}
         onUnavailable={() => showStatus("The security check could not load. Please try again.")}
       />
+      )}
       {(status || (mode === "login" && lockoutUntil)) && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{mode === "login" && lockoutUntil ? `Too many failed attempts. Try again in ${lockoutRemaining} minute${lockoutRemaining > 1 ? "s" : ""}.` : status}</p>}
-      <button className="primary-button wide auth-submit" type="submit" disabled={pending || !turnstileSiteKey || (mode === "register" && !legalConsent) || (mode === "login" && lockoutUntil !== null)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
+      <button className="primary-button wide auth-submit" type="submit" disabled={pending || (!disableCaptcha && !turnstileSiteKey) || (mode === "register" && !legalConsent) || (mode === "login" && lockoutUntil !== null)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
       {mode === "login" && <a className="auth-link" href="/auth/forgot">Forgot your password?</a>}
       <AuthFooter />
     </form>

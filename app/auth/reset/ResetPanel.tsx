@@ -2,6 +2,7 @@
 
 import { type FormEvent, useState } from "react";
 import { createClient } from "../../lib/supabase/client";
+import PublicThemeToggle from "../../components/PublicThemeToggle";
 
 export default function ResetPanel() {
   const [password, setPassword] = useState("");
@@ -19,8 +20,17 @@ export default function ResetPanel() {
   }
   return (
     <form className="auth-card" onSubmit={submit}>
-      <span className="brand-mark auth-brand">R</span><p className="eyebrow">Secure password</p><h1>Choose a new password.</h1>
-      {!complete && <><label><span>New password</span><input type="password" autoComplete="new-password" minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} required /></label><label><span>Confirm password</span><input type="password" autoComplete="new-password" value={confirm} onChange={(event) => setConfirm(event.target.value)} required /></label></>}
+      <PublicThemeToggle className="auth-theme-toggle" />
+      <div className="auth-heading">
+        <p className="eyebrow">Secure password</p>
+        <h1>Choose a new password.</h1>
+      </div>
+      {!complete && (
+        <div className="auth-fields">
+          <label className="auth-field"><span>New password</span><input type="password" autoComplete="new-password" placeholder="At least 8 characters" minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} required /></label>
+          <label className="auth-field"><span>Confirm password</span><input type="password" autoComplete="new-password" placeholder="Match new password" value={confirm} onChange={(event) => setConfirm(event.target.value)} required /></label>
+        </div>
+      )}
       {status && <p className={`form-status ${complete ? "success" : ""}`} role="status">{status}</p>}
       {complete ? <a className="primary-button auth-button-link" href="/auth">Return to sign in</a> : <button className="primary-button wide" type="submit">Update password</button>}
     </form>

@@ -13,6 +13,7 @@ type FeedbackModalProps = {
 };
 
 export default function FeedbackModal({ profile, email, turnstileSiteKey, onClose }: FeedbackModalProps) {
+  const disableCaptcha = process.env.NEXT_PUBLIC_DISABLE_CAPTCHA === "true";
   const turnstileRef = useRef<TurnstileChallengeHandle>(null);
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -31,7 +32,7 @@ export default function FeedbackModal({ profile, email, turnstileSiteKey, onClos
       return;
     }
 
-    if (turnstileSiteKey && !captchaToken) {
+    if (!disableCaptcha && turnstileSiteKey && !captchaToken) {
       setError("Please complete the security check.");
       return;
     }
@@ -130,7 +131,7 @@ export default function FeedbackModal({ profile, email, turnstileSiteKey, onClos
                 />
               </label>
 
-              {turnstileSiteKey && (
+              {(!disableCaptcha && turnstileSiteKey) && (
                 <TurnstileChallenge
                   ref={turnstileRef}
                   siteKey={turnstileSiteKey}
@@ -144,7 +145,7 @@ export default function FeedbackModal({ profile, email, turnstileSiteKey, onClos
 
               <div style={{ display: "flex", justifyContent: "flex-end", gap: "12px", marginTop: "8px" }}>
                 <button type="button" className="text-button" onClick={onClose} disabled={submitting}>Cancel</button>
-                <button type="submit" className="primary-button" disabled={submitting || !message.trim() || message.length > MAX_CHARS || (!!turnstileSiteKey && !captchaToken)} style={{ padding: "10px 20px" }}>
+                <button type="submit" className="primary-button" disabled={submitting || !message.trim() || message.length > MAX_CHARS || (!disableCaptcha && !!turnstileSiteKey && !captchaToken)} style={{ padding: "10px 20px" }}>
                   {submitting ? "Sending..." : "Submit Feedback"}
                 </button>
               </div>
