@@ -105,7 +105,7 @@ export default function FeedbackModal({ profile, email, turnstileSiteKey, onClos
           <>
             <h2 style={{ fontSize: "20px", color: "var(--ink)", margin: "0 0 6px" }}>Send Feedback</h2>
             <p style={{ color: "var(--muted)", fontSize: "13px", margin: "0 0 24px", lineHeight: "1.5" }}>
-              Have a suggestion, found a bug, or want to request a feature? Let us know what you think.
+              Have a suggestion, found a bug, or want to request a feature? Let us know what you think. Alternatively, you can email <a href="mailto:revithoroughly@gmail.com" style={{ color: "var(--brand)", textDecoration: "none" }}>revithoroughly@gmail.com</a>.
             </p>
 
             <form onSubmit={handleSubmit} style={{ display: "grid", gap: "16px" }}>
