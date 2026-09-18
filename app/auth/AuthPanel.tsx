@@ -81,7 +81,7 @@ function PasswordField({
   );
 }
 
-export default function AuthPanel({ next = "/overview", turnstileSiteKey, disableCaptcha = false }: { next?: string; turnstileSiteKey: string; disableCaptcha?: boolean }) {
+export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { next?: string; turnstileSiteKey: string }) {
   const router = useRouter();
   const turnstileRef = useRef<TurnstileChallengeHandle>(null);
   const [mode, setMode] = useState<Mode>("login");
@@ -101,6 +101,17 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
   const [lockoutRemaining, setLockoutRemaining] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.search.includes("clear_session=true")) {
+      createClient().auth.signOut({ scope: "local" }).catch(() => {});
+      localStorage.removeItem("revit-remember-until");
+      localStorage.removeItem("revit-session-policy");
+      sessionStorage.removeItem("revit-session-only");
+      window.history.replaceState({}, document.title, window.location.pathname);
+      showStatus("Your session has expired. Please sign in again.", "info");
+    }
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem("revit-login-attempts");
@@ -155,7 +166,6 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
   }
 
   function requireCaptcha() {
-    if (disableCaptcha) return "skipped";
     if (captchaToken) return captchaToken;
     showStatus("Please complete the security check.");
     return null;
@@ -193,7 +203,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
     router.refresh();
   }
 
-  async function register(token: string | null) {
+  async function register(token: string) {
     const supabase = createClient();
     const cleanEmail = email.trim().toLowerCase();
     const cleanUsername = username.trim().toLowerCase();
@@ -254,21 +264,19 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
     event.preventDefault();
     if (mode === "login" && lockoutUntil && Date.now() < lockoutUntil) return;
     const token = requireCaptcha();
-    if (!disableCaptcha && !token) return;
+    if (!token) return;
     setPending(true);
     showStatus("");
     try {
       if (mode === "register") {
-        await register(disableCaptcha ? null : token);
+        await register(token);
         return;
       }
       const authOptions = {
         email: email.trim(),
         password,
+        options: { captchaToken: token }
       } as any;
-      if (!disableCaptcha && token) {
-        authOptions.options = { captchaToken: token };
-      }
       const { error } = await createClient().auth.signInWithPassword(authOptions);
       if (error) throw error;
 
@@ -359,18 +367,16 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, disabl
           <div id="signup-consent-copy"><label htmlFor="signup-legal-consent">I have read and agree to the</label> <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</div>
         </div>
       )}
-      {!disableCaptcha && (
-        <TurnstileChallenge
-          key={mode}
-          ref={turnstileRef}
-          siteKey={turnstileSiteKey}
-          action={mode}
-          onTokenChange={setCaptchaToken}
-          onUnavailable={() => showStatus("The security check could not load. Please try again.")}
-        />
-      )}
+      <TurnstileChallenge
+        key={mode}
+        ref={turnstileRef}
+        siteKey={turnstileSiteKey}
+        action={mode}
+        onTokenChange={setCaptchaToken}
+        onUnavailable={() => showStatus("The security check could not load. Please try again.")}
+      />
       {(status || (mode === "login" && lockoutUntil)) && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{mode === "login" && lockoutUntil ? `Too many failed attempts. Try again in ${lockoutRemaining} minute${lockoutRemaining > 1 ? "s" : ""}.` : status}</p>}
-      <button className="primary-button wide auth-submit" type="submit" disabled={pending || (!disableCaptcha && !turnstileSiteKey) || (mode === "register" && !legalConsent) || (mode === "login" && lockoutUntil !== null)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
+      <button className="primary-button wide auth-submit" type="submit" disabled={pending || !turnstileSiteKey || (mode === "register" && !legalConsent) || (mode === "login" && lockoutUntil !== null)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
       {mode === "login" && <a className="auth-link" href="/auth/forgot">Forgot your password?</a>}
       <AuthFooter />
     </form>

@@ -15,10 +15,11 @@ export default function ForgotPanel({ turnstileSiteKey }: { turnstileSiteKey: st
     event.preventDefault();
     if (!captchaToken) return setStatus("Please complete the security check.");
     setPending(true); setStatus("");
-    const { error } = await createClient().auth.resetPasswordForEmail(email.trim(), {
+    const options: any = {
       redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset`,
-      captchaToken,
-    });
+      captchaToken: captchaToken
+    };
+    const { error } = await createClient().auth.resetPasswordForEmail(email.trim(), options);
     if (error) {
       setStatus("The recovery request could not be completed. Please try again.");
       turnstileRef.current?.reset();

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import AccountSettings from "./components/AccountSettings";
 import AchievementModal, { XpProgress } from "./components/AchievementModal";
 import AiMarkdown from "./components/AiMarkdown";
+import FeedbackModal from "./components/FeedbackModal";
 import Flashcards from "./components/Flashcards";
 import GradesPage from "./components/GradesPage";
 import LeaderboardPage from "./components/LeaderboardPage";
@@ -56,7 +57,7 @@ import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAna
 import { createClient } from "./lib/supabase/client";
 import { hasCurrentLegalConsent } from "./lib/legal";
 import { canAccessFeature } from "./lib/features";
-import { buildSubjectSections, filterSubjectsBySearch } from "./lib/reviewerLibrary";
+import { ALL_MAJORS_CATEGORY, buildSubjectSections, filterSubjectsBySearch, MTAP_1_CATEGORY, OTHER_MAJORS_CATEGORY } from "./lib/reviewerLibrary";
 import { LOCAL_PREFERENCES_STORAGE_KEY, normalizeUserPreferences, withMtapFeaturePreference } from "./lib/userPreferences";
 import {
   emptyProgression,
@@ -299,11 +300,12 @@ function activityAfterEvent(current: DailyActivity[], activityDate: string, inpu
 
 export type InitialUser = { id: string; email: string; username?: string };
 
-export default function RevITApp({ initialUser = null, cloudEnabled = false }: { initialUser?: InitialUser | null; cloudEnabled?: boolean }) {
+export default function RevITApp({ initialUser = null, cloudEnabled = false, turnstileSiteKey }: { initialUser?: InitialUser | null; cloudEnabled?: boolean; turnstileSiteKey?: string }) {
   const router = useRouter();
   const [activeView, setActiveView] = useState<View>("overview");
   const [libraryMode, setLibraryMode] = useState<ReviewLibraryMode>("mcqs");
   const [subjectSearch, setSubjectSearch] = useState("");
+  const [progressSearch, setProgressSearch] = useState("");
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [storageReady, setStorageReady] = useState(false);
@@ -341,6 +343,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false }: {
   const [profile, setProfile] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileDraft, setProfileDraft] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [profileError, setProfileError] = useState("");
   const [cloudProfile, setCloudProfile] = useState<Profile | null>(null);
   const [grades, setGrades] = useState<GradeRecord[]>([]);
@@ -842,6 +845,11 @@ useEffect(() => {
   const visibleSubjects = useMemo(
     () => filterSubjectsBySearch(subjects, topics, subjectSearch),
     [subjectSearch],
+  );
+
+  const visibleProgressSubjects = useMemo(
+    () => filterSubjectsBySearch(subjects, topics, progressSearch),
+    [progressSearch, subjects, topics],
   );
   const subjectSections = useMemo(
     () => buildSubjectSections(visibleSubjects, preferences.mtap_features_enabled),
@@ -1588,6 +1596,20 @@ useEffect(() => {
           <span className="sidebar-support-copy"><strong>Support RevIT</strong><span>Help support continued development</span></span>
           <span className="sidebar-support-arrow" aria-hidden="true">›</span>
         </Link>
+        <button
+          onClick={() => setFeedbackOpen(true)}
+          title="Send Feedback"
+          style={{
+            display: "flex", alignItems: "center", gap: "10px", marginTop: "12px",
+            padding: "8px 12px", background: "transparent", border: "1px solid #29443e",
+            borderRadius: "10px", color: "#a9c0ba", fontSize: "11px", fontWeight: "600",
+            cursor: "pointer", transition: "all 0.15s ease",
+            ...(sidebarCollapsed ? { justifyContent: "center", width: "52px", margin: "12px auto 0" } : {})
+          }}
+        >
+          <span aria-hidden="true" style={{ fontSize: "14px" }}>✉</span>
+          {!sidebarCollapsed && <span>Send Feedback</span>}
+        </button>
         <div className="profile-card">
           <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
             <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
@@ -1689,7 +1711,7 @@ useEffect(() => {
                 <span className="ai-mark">MCQ</span>
                 <p className="eyebrow">Question Bank</p>
                 <h2>{questions.length} total questions available</h2>
-                <p>Comprehensive scoring, detailed rationales, and verified source references across all subjects.</p>
+                <p style={{ marginBottom: "20px" }}>Comprehensive scoring, detailed rationales, and verified source references across all subjects.</p>
                 {subjects.map((subject) => (
                   <div className="source-stat" key={subject.id}>
                     <span>{subject.name}</span>
@@ -1877,21 +1899,46 @@ useEffect(() => {
               <article className="metric-card"><div className="metric-label"><span>Strongest topic</span><small>{strongestTopic?.attempts ?? 0} attempts</small></div><strong className="metric-name">{strongestTopic?.name ?? "Not enough data"}</strong><p>{strongestTopic ? `${strongestTopic.accuracy}% accuracy` : "Complete your first review."}</p></article>
               <article className="metric-card"><div className="metric-label"><span>Needs review</span><small>{weakestTopic?.attempts ?? 0} attempts</small></div><strong className="metric-name">{weakestTopic?.name ?? "Not enough data"}</strong><p>{weakestTopic ? `${weakestTopic.accuracy}% accuracy` : "Topic guidance appears after practice."}</p></article>
             </section>
+
+            <LibrarySearch
+              id="progress-search"
+              isNuRevit={preferences.mtap_features_enabled}
+              value={progressSearch}
+              resultCount={visibleProgressSubjects.length}
+              emptyHelperText="Find a subject or topic in your progress"
+              onChange={setProgressSearch}
+            />
+
             <div className="progress-grid">
-              {subjects.map((subject) => (
-                <section className="analytics-card" key={subject.id}>
-                  <div className="section-heading"><div><p className="eyebrow">Per-topic accuracy</p><h2>{subject.name}</h2></div><span className="source-pill">{attempts.filter((attempt) => attempt.subjectId === subject.id).length} attempts</span></div>
-                  <div className="analytics-list">
-                    {topicStats.filter((topic) => topic.subjectId === subject.id).map((topic) => (
-                      <div className="analytics-row" key={topic.id}>
-                        <div><strong>{topic.name}</strong><small>{topic.attempts ? `${topic.correct} of ${topic.attempts} correct` : "Not practiced yet"}</small></div>
-                        <div className="topic-meter"><i className={toneFor(topic.accuracy, topic.attempts)} style={{ width: `${topic.attempts ? Math.max(topic.accuracy, 4) : 0}%` }} /></div>
-                        <span>{topic.attempts ? `${topic.accuracy}%` : "—"}</span>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              ))}
+              {visibleProgressSubjects.map((subject) => {
+                const query = progressSearch.trim().toLowerCase();
+                const isCategoryMatch =
+                  progressSearch.trim() === MTAP_1_CATEGORY ||
+                  progressSearch.trim() === OTHER_MAJORS_CATEGORY ||
+                  progressSearch.trim() === ALL_MAJORS_CATEGORY;
+
+                const subjectMatches = query === "" || isCategoryMatch || subject.name.toLowerCase().includes(query) || (subject.category && subject.category.toLowerCase().includes(query));
+
+                const matchingTopics = topicStats.filter(t =>
+                  t.subjectId === subject.id &&
+                  (subjectMatches || t.name.toLowerCase().includes(query))
+                );
+
+                return (
+                  <section className="analytics-card" key={subject.id}>
+                    <div className="section-heading"><div><p className="eyebrow">Per-topic accuracy</p><h2>{subject.name}</h2></div><span className="source-pill">{attempts.filter((attempt) => attempt.subjectId === subject.id).length} attempts</span></div>
+                    <div className="analytics-list">
+                      {matchingTopics.map((topic) => (
+                        <div className="analytics-row" key={topic.id}>
+                          <div><strong>{topic.name}</strong><small>{topic.attempts ? `${topic.correct} of ${topic.attempts} correct` : "Not practiced yet"}</small></div>
+                          <div className="topic-meter"><i className={toneFor(topic.accuracy, topic.attempts)} style={{ width: `${topic.attempts ? Math.max(topic.accuracy, 4) : 0}%` }} /></div>
+                          <span>{topic.attempts ? `${topic.accuracy}%` : "—"}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
             </div>
             {!attempts.length && <div className="empty-progress"><h2>Your progress starts with one answer</h2><p>Choose any topic combination. RevIT autosaves every answer {cloudEnabled ? "to your account" : "on this device"} and updates this page immediately.</p><button className="primary-button" type="button" onClick={() => openView("library")}>Start a review</button></div>}
           </div>
@@ -2004,6 +2051,8 @@ useEffect(() => {
           <span>Level up</span><strong>You reached Level {levelUp}</strong><p>Keep improving.</p>
         </div>}
 
+        {feedbackOpen && <FeedbackModal profile={accountProfile ?? { id: initialUser?.id ?? "local", first_name: profile.name, username: profile.name, avatar_url: profile.photoDataUrl, onboarding_complete: true } as Profile} email={initialUser?.email} turnstileSiteKey={turnstileSiteKey} onClose={() => setFeedbackOpen(false)} />}
+
         {profileOpen && !cloudEnabled && (
           <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setProfileOpen(false); }}>
             <section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
@@ -2032,7 +2081,7 @@ useEffect(() => {
           </div>
         )}
         {profileOpen && cloudEnabled && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} onMtapFeaturesChange={updateMtapFeatures} />}
-        {cloudEnabled && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} />}
+        {cloudEnabled && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} onMtapChoose={updateMtapFeatures} />}
         {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>
       <ScientificCalculator />

@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 export default async function AuthPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   const params = await searchParams;
   const turnstileSiteKey = process.env.VITE_TURNSTILE_SITE_KEY ?? "";
-  const disableCaptcha = process.env.NEXT_PUBLIC_DISABLE_CAPTCHA === "true";
   return (
     <main className="auth-shell">
       <div className="auth-layout">
@@ -35,7 +34,7 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
           </ul>
         </aside>
         {isSupabaseConfigured()
-          ? <AuthPanel next={params.next} turnstileSiteKey={turnstileSiteKey} disableCaptcha={disableCaptcha} />
+          ? <AuthPanel next={params.next} turnstileSiteKey={turnstileSiteKey} />
           : <section className="auth-card"><div className="auth-heading"><p className="eyebrow">Setup required</p><h1>Welcome to RevIT.</h1><p>Connect Supabase to enable secure learner accounts and synced study progress.</p></div><p className="form-status info">Add the public Supabase URL and publishable key to your environment. Local reviewer mode remains available.</p><a className="primary-button auth-button-link" href="/overview">Continue locally</a></section>}
       </div>
     </main>

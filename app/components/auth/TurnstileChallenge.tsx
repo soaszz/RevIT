@@ -9,7 +9,7 @@ export type TurnstileChallengeHandle = {
 
 type Props = {
   siteKey: string;
-  action: "login" | "register" | "recovery";
+  action: "login" | "register" | "recovery" | "feedback";
   onTokenChange: (token: string | null) => void;
   onUnavailable?: () => void;
 };

@@ -45,7 +45,7 @@ export async function updateSession(request: NextRequest, security: {
     target.searchParams.set("next", pathname === "/" ? "/overview" : pathname);
     return secure(NextResponse.redirect(target));
   }
-  if (signedIn && pathname === "/auth") {
+  if (signedIn && pathname === "/auth" && request.nextUrl.searchParams.get("clear_session") !== "true") {
     const target = request.nextUrl.clone();
     target.pathname = "/overview";
     target.search = "";
