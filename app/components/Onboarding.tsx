@@ -149,7 +149,7 @@ export default function Onboarding({
 
             <div className="mtap-onboarding-note" style={{ padding: "16px" }}>
               <strong style={{ fontSize: "13px" }}>What changes when you enable MTAP features?</strong>
-              <ul style={{ margin: "10px 0 0 16px", padding: 0, fontSize: "12px", color: "var(--muted)", lineHeight: 1.6 }}>
+              <ul style={{ margin: "10px 0 0", padding: "0 0 0 20px", listStyleType: "disc", fontSize: "12px", color: "var(--muted)", lineHeight: 1.6 }}>
                  <li>Unlocks the dedicated <strong>Grades tab</strong> for score tracking.</li>
                  <li>Groups subjects organically under <strong>MTAP 1</strong> and <strong>Other Majors</strong>.</li>
               </ul>
