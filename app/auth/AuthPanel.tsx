@@ -232,7 +232,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         authOptions.options.captchaToken = token;
       }
       const { error } = await createClient().auth.signInWithPassword(authOptions);
-      if (error) throw error;
+      if (error) { console.error("Login failed:", error); throw error; }
 
       setFailedAttempts(0);
       setLockoutUntil(null);

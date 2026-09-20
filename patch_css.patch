@@ -1,0 +1,6 @@
+--- app/globals.css
++++ app/globals.css
+@@ -909,3 +909,2 @@
+   .auth-benefits li, .auth-benefits li:last-child { grid-column: auto; padding: 9px 0; }
+-  .auth-benefits p { display: none; }
+   .auth-card { padding: 29px 20px 34px; }

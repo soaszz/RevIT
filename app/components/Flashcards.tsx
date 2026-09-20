@@ -18,7 +18,7 @@ function isTypingTarget(target: EventTarget | null) {
   return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
 }
 
-export default function Flashcards({ isNuRevit }: { isNuRevit: boolean }) {
+export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConfirm }: { isNuRevit: boolean; onReviewingChange?: (reviewing: boolean) => void; onRequestConfirm?: (title: string, message: string, confirmLabel: string, action: () => void) => void }) {
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [deck, setDeck] = useState<Flashcard[]>([]);
   const [cardIndex, setCardIndex] = useState(0);
@@ -48,6 +48,10 @@ export default function Flashcards({ isNuRevit }: { isNuRevit: boolean }) {
 
   const currentCard = deck[cardIndex];
   const reviewing = deck.length > 0;
+
+  useEffect(() => {
+    onReviewingChange?.(reviewing);
+  }, [reviewing, onReviewingChange]);
 
   useEffect(() => {
     if (!reviewing) return;
@@ -97,9 +101,18 @@ export default function Flashcards({ isNuRevit }: { isNuRevit: boolean }) {
   }
 
   function changeTopics() {
-    setDeck([]);
-    setCardIndex(0);
-    setFlipped(false);
+    const msg = "Are you sure you want to end this review session? Your current progress will be lost.";
+    const action = () => {
+      setDeck([]);
+      setCardIndex(0);
+      setFlipped(false);
+    };
+    if (onRequestConfirm) {
+      onRequestConfirm("End review session?", msg, "End session", action);
+    } else {
+      if (!window.confirm(msg)) return;
+      action();
+    }
   }
 
   function moveCard(offset: -1 | 1) {
@@ -130,7 +143,7 @@ export default function Flashcards({ isNuRevit }: { isNuRevit: boolean }) {
           </div>
           <div className={styles.toolbarActions}>
             <button className="text-button" type="button" onClick={shuffleDeck}>Shuffle</button>
-            <button className="text-button quiet" type="button" onClick={changeTopics}>Change topics</button>
+            <button className="text-button quiet" type="button" onClick={changeTopics}>Exit session</button>
           </div>
         </div>
 

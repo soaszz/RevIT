@@ -22,6 +22,7 @@ import ReviewModeSwitch, { type ReviewLibraryMode } from "./components/ReviewMod
 import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
 import RevITLoadingScreen from "./components/RevITLoadingScreen";
 import ScientificCalculator from "./components/ScientificCalculator";
+import CustomConfirm from "./components/CustomConfirm";
 import StudyCalendar from "./components/StudyCalendar";
 import StudyPlanner, { TodayStudyPlan } from "./components/StudyPlanner";
 import WeaknessDashboard from "./components/WeaknessDashboard";
@@ -304,6 +305,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const router = useRouter();
   const [activeView, setActiveView] = useState<View>("overview");
   const [libraryMode, setLibraryMode] = useState<ReviewLibraryMode>("mcqs");
+  const [isFlashcardReviewing, setIsFlashcardReviewing] = useState(false);
   const [subjectSearch, setSubjectSearch] = useState("");
   const [progressSearch, setProgressSearch] = useState("");
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
@@ -365,6 +367,14 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const [isInitializing, setIsInitializing] = useState(true);
   const [sessionPolicyReady, setSessionPolicyReady] = useState(!cloudEnabled);
   const [themeReady, setThemeReady] = useState(false);
+  const [confirmConfig, setConfirmConfig] = useState<{isOpen: boolean, action?: () => void, title?: string, message?: string, confirmLabel?: string}>({ isOpen: false });
+
+  function requestConfirm(title: string, message: string, confirmLabel: string, onConfirm: () => void) {
+    setConfirmConfig({ isOpen: true, title, message, confirmLabel, action: () => {
+      onConfirm();
+      setConfirmConfig({ isOpen: false });
+    }});
+  }
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const attemptMigrationStarted = useRef(false);
   const answerLockedRef = useRef(false);
@@ -974,7 +984,12 @@ useEffect(() => {
     beginAdaptiveSession(poolIds, targetCount, "adaptive", timerConfig);
   }
 
-  function leaveSession() {
+  function leaveSession(force?: boolean | import("react").MouseEvent) {
+    const shouldForce = force === true;
+    if (!shouldForce && !sessionComplete && sessionQuestionIds.length > 0) {
+      requestConfirm("End review session?", "Are you sure you want to end this review session? Your current progress will be lost.", "End session", () => leaveSession(true));
+      return false;
+    }
     answerLockedRef.current = true;
     setSessionPoolIds([]);
     setSessionTargetCount(0);
@@ -989,6 +1004,7 @@ useEffect(() => {
     setAnswerRevealed(false);
     setTimedOut(false);
     setActiveTimer(TIMER_DISABLED);
+    return true;
   }
 
   function changeLibraryMode(mode: ReviewLibraryMode) {
@@ -1212,11 +1228,24 @@ useEffect(() => {
     setAnswerRevealed(false);
   }
 
- function openView(view: View) {
-  setActiveView(view);
-  window.history.pushState(null, "", `/${view}`);
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
+  function openView(view: View) {
+    if (view !== "library" && activeView === "library") {
+      const isReviewing = (libraryMode === "mcqs" && sessionQuestionIds.length > 0) || (libraryMode === "flashcards" && isFlashcardReviewing);
+      if (isReviewing) {
+        requestConfirm("End review session?", "Are you sure you want to end this review session? Your current progress will be lost.", "End session", () => {
+          if (libraryMode === "mcqs" && sessionQuestionIds.length > 0) leaveSession(true);
+          setActiveView(view);
+          window.history.pushState(null, "", `/${view}`);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        return;
+      }
+      if (libraryMode === "mcqs" && sessionQuestionIds.length > 0) leaveSession(true);
+    }
+    setActiveView(view);
+    window.history.pushState(null, "", `/${view}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   function openStudyPlanner(planId?: string) {
     if (planId) setSelectedStudyPlanId(planId);
@@ -1342,25 +1371,26 @@ useEffect(() => {
 
   async function removeAiChat(chat: AiChat) {
     if (!cloudEnabled || !initialUser || pending || chatActionPending) return;
-    if (!window.confirm(`Delete “${chat.title}”? This conversation cannot be recovered.`)) return;
-
-    setChatActionPending(true);
-    setChatError("");
-    try {
-      await deleteAiChat(createClient(), initialUser.id, chat.id);
-      const remaining = aiChats.filter((item) => item.id !== chat.id);
-      setAiChats(remaining);
-      if (activeChatId === chat.id) {
-        const nextChatId = remaining[0]?.id ?? null;
-        setMessages([]);
-        setLoadedChatId(null);
-        setActiveChatId(nextChatId);
+    
+    requestConfirm("Delete conversation?", `Delete “${chat.title}”? This conversation cannot be recovered.`, "Delete", async () => {
+      setChatActionPending(true);
+      setChatError("");
+      try {
+        await deleteAiChat(createClient(), initialUser.id, chat.id);
+        const remaining = aiChats.filter((item) => item.id !== chat.id);
+        setAiChats(remaining);
+        if (activeChatId === chat.id) {
+          const nextChatId = remaining[0]?.id ?? null;
+          setMessages([]);
+          setLoadedChatId(null);
+          setActiveChatId(nextChatId);
+        }
+      } catch {
+        setChatError("The conversation could not be deleted. Please try again.");
+      } finally {
+        setChatActionPending(false);
       }
-    } catch {
-      setChatError("The conversation could not be deleted. Please try again.");
-    } finally {
-      setChatActionPending(false);
-    }
+    });
   }
 
   async function ask(question: string) {
@@ -1551,6 +1581,7 @@ useEffect(() => {
   const activeAiChat = aiChats.find((chat) => chat.id === activeChatId) ?? null;
   const chatBusy = pending || chatActionPending || chatMessagesLoading;
   const currentLevel = levelProgress(progression.totalXp);
+  const isReviewSessionActive = (libraryMode === "mcqs" && sessionQuestionIds.length > 0) || (libraryMode === "flashcards" && isFlashcardReviewing);
 
   return (
     <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
@@ -1643,7 +1674,7 @@ useEffect(() => {
             </button>}
             {activeView === "overview" && <span className="streak-badge"><strong>{streak.current}</strong><span>day streak<small>{streak.longest} longest · {streak.activeDays} active</small></span></span>}
             {activeView === "overview" && <button className="primary-button" type="button" onClick={() => openView("library")}>Choose topics</button>}
-            {activeView === "library" && <ReviewModeSwitch mode={libraryMode} onChange={changeLibraryMode} />}
+            {activeView === "library" && !isReviewSessionActive && <ReviewModeSwitch mode={libraryMode} onChange={changeLibraryMode} />}
           </div>
         </div>
 
@@ -1730,7 +1761,7 @@ useEffect(() => {
         )}
 
         {activeView === "library" && (libraryMode === "flashcards" ? (
-          <Flashcards isNuRevit={preferences.mtap_features_enabled} />
+          <Flashcards isNuRevit={preferences.mtap_features_enabled} onReviewingChange={setIsFlashcardReviewing} onRequestConfirm={requestConfirm} />
         ) : (
           <div className="library-shell">
             {sessionQuestionIds.length === 0 ? (
@@ -2085,6 +2116,14 @@ useEffect(() => {
         {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>
       <ScientificCalculator />
+          <CustomConfirm
+        isOpen={confirmConfig.isOpen}
+        title={confirmConfig.title ?? ""}
+        message={confirmConfig.message ?? ""}
+        confirmLabel={confirmConfig.confirmLabel}
+        onConfirm={confirmConfig.action ?? (() => {})}
+        onCancel={() => setConfirmConfig({ isOpen: false })}
+      />
     </main>
   );
 }

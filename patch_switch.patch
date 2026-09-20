@@ -1,0 +1,45 @@
+--- app/components/ReviewSessionPreferences.module.css
++++ app/components/ReviewSessionPreferences.module.css
+@@ -71,11 +71,8 @@
+ .switch {
+   position: relative;
+-  display: grid;
+-  grid-template-columns: auto 17px;
+-  align-items: center;
+-  gap: 5px;
+-  min-width: 51px;
+-  min-height: 28px;
++  display: block;
++  width: 51px;
++  height: 28px;
+   border: 1px solid var(--line);
+   border-radius: 999px;
+-  padding: 4px 5px 4px 8px;
++  padding: 0;
+   background: var(--surface-soft);
+@@ -98,2 +95,5 @@
+ .switchLabel {
++  position: absolute;
++  top: 9px;
++  right: 8px;
+   font-size: 7px;
+@@ -104,2 +104,11 @@
+ 
++.switchEnabled .switchLabel {
++  right: auto;
++  left: 8px;
++}
++
+ .switchThumb {
++  position: absolute;
++  top: 4px;
++  left: 5px;
+   width: 17px;
+@@ -109,2 +118,3 @@
+   box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
++  transition: transform .25s cubic-bezier(0.4, 0, 0.2, 1), background-color .18s ease;
+ }
+@@ -113,2 +123,3 @@
+   background: var(--green);
++  transform: translateX(22px);
+ }

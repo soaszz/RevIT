@@ -1,0 +1,8 @@
+--- globals.css
++++ globals.css
+@@ -826,3 +827,3 @@
+ .grade-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; padding: 22px 24px; border-top: 1px solid var(--line); }
+-.grade-summary-grid > div { display: grid; }
+-.grade-summary-grid > div > span { color: var(--muted); font-size: 11px; }
++.grade-summary-grid > div { display: grid; align-content: start; }
++.grade-summary-grid > div > span { color: var(--muted); font-size: 11px; font-weight: 800; }
