@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -306,6 +306,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const [activeView, setActiveView] = useState<View>("overview");
   const [libraryMode, setLibraryMode] = useState<ReviewLibraryMode>("mcqs");
   const [isFlashcardReviewing, setIsFlashcardReviewing] = useState(false);
+  const [activeFlashcardTopics, setActiveFlashcardTopics] = useState<string[]>([]);
   const [subjectSearch, setSubjectSearch] = useState("");
   const [progressSearch, setProgressSearch] = useState("");
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
@@ -814,6 +815,11 @@ useEffect(() => {
     return () => window.clearTimeout(timeout);
   }, [levelUp]);
 
+  const handleFlashcardReviewingChange = useCallback((reviewing: boolean, topics?: string[]) => {
+    setIsFlashcardReviewing(reviewing);
+    setActiveFlashcardTopics(topics ?? []);
+  }, []);
+
   const selectedQuestions = useMemo(
     () => questions.filter((question) => selectedTopicIds.includes(question.topicId)),
     [selectedTopicIds],
@@ -1254,7 +1260,6 @@ useEffect(() => {
 
   function openNavigationView(view: View) {
     openView(view);
-    setSidebarCollapsed(true);
   }
 
   function openProfileEditor() {
@@ -1582,6 +1587,9 @@ useEffect(() => {
   const chatBusy = pending || chatActionPending || chatMessagesLoading;
   const currentLevel = levelProgress(progression.totalXp);
   const isReviewSessionActive = (libraryMode === "mcqs" && sessionQuestionIds.length > 0) || (libraryMode === "flashcards" && isFlashcardReviewing);
+  const currentSessionTopicIds = libraryMode === "mcqs" ? selectedTopicIds : activeFlashcardTopics;
+  const currentSessionTopicNames = currentSessionTopicIds.map((id) => topicById.get(id)?.name).filter((name): name is string => Boolean(name));
+  const currentSessionSubjects = Array.from(new Set(currentSessionTopicIds.map((id) => topicById.get(id)?.subjectId).filter((id): id is string => Boolean(id)).map((id) => subjectById.get(id)?.name).filter((name): name is string => Boolean(name))));
 
   return (
     <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
@@ -1635,7 +1643,7 @@ useEffect(() => {
             padding: "8px 12px", background: "transparent", border: "1px solid #29443e",
             borderRadius: "10px", color: "#a9c0ba", fontSize: "11px", fontWeight: "600",
             cursor: "pointer", transition: "all 0.15s ease",
-            ...(sidebarCollapsed ? { justifyContent: "center", width: "52px", margin: "12px auto 0" } : {})
+            ...(sidebarCollapsed ? { justifyContent: "center", width: "52px", marginRight: "auto", marginBottom: "0", marginLeft: "auto" } : {})
           }}
         >
           <span aria-hidden="true" style={{ fontSize: "14px" }}>✉</span>
@@ -1668,13 +1676,23 @@ useEffect(() => {
             <h1 className={activeView === "overview" ? "overview-greeting" : undefined}>{heading.title}</h1>
             <p>{heading.description}</p>
           </div>
-          <div className="heading-actions">
+          <div className="heading-actions" style={isReviewSessionActive ? { flex: 1, justifyContent: "flex-end", flexWrap: "wrap", minWidth: 0 } : undefined}>
             {activeView === "overview" && <button className="home-level-card" type="button" onClick={() => setAchievementsOpen(true)} aria-label="Open achievements">
               <span>Level {currentLevel.level}</span><strong>{currentLevel.title}</strong><XpProgress totalXp={progression.totalXp} compact />
             </button>}
             {activeView === "overview" && <span className="streak-badge"><strong>{streak.current}</strong><span>day streak<small>{streak.longest} longest · {streak.activeDays} active</small></span></span>}
             {activeView === "overview" && <button className="primary-button" type="button" onClick={() => openView("library")}>Choose topics</button>}
             {activeView === "library" && !isReviewSessionActive && <ReviewModeSwitch mode={libraryMode} onChange={changeLibraryMode} />}
+            {activeView === "library" && isReviewSessionActive && currentSessionTopicNames.length > 0 && (
+              <div style={{ textAlign: "right", marginLeft: "auto", maxWidth: "340px", minWidth: 0 }}>
+                <div style={{ color: "var(--green)", fontWeight: 700, fontSize: "14px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {currentSessionSubjects.join(", ")}
+                </div>
+                <div style={{ color: "var(--muted)", fontSize: "12px", marginTop: "4px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {currentSessionTopicNames.join(", ")}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1761,7 +1779,7 @@ useEffect(() => {
         )}
 
         {activeView === "library" && (libraryMode === "flashcards" ? (
-          <Flashcards isNuRevit={preferences.mtap_features_enabled} onReviewingChange={setIsFlashcardReviewing} onRequestConfirm={requestConfirm} />
+          <Flashcards isNuRevit={preferences.mtap_features_enabled} onReviewingChange={handleFlashcardReviewingChange} onRequestConfirm={requestConfirm} />
         ) : (
           <div className="library-shell">
             {sessionQuestionIds.length === 0 ? (
@@ -1865,7 +1883,7 @@ useEffect(() => {
               <section className="quiz-card">
                 <div className="quiz-topline">
                   <div><span>{sessionRequiresFullCoverage ? `Question ${sessionIndex + 1} · ${sessionUniqueQuestionCount} of ${sessionPoolIds.length} concepts` : `Question ${sessionIndex + 1} of ${sessionTargetCount}`}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
-                  <button className="text-button quiet" type="button" onClick={leaveSession}>Exit session</button>
+                  <button className="secondary-button" type="button" onClick={leaveSession}>Exit session</button>
                 </div>
                 <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
                 <div className="quiz-question-heading">

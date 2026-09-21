@@ -18,7 +18,7 @@ function isTypingTarget(target: EventTarget | null) {
   return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
 }
 
-export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConfirm }: { isNuRevit: boolean; onReviewingChange?: (reviewing: boolean) => void; onRequestConfirm?: (title: string, message: string, confirmLabel: string, action: () => void) => void }) {
+export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConfirm }: { isNuRevit: boolean; onReviewingChange?: (reviewing: boolean, topics?: string[]) => void; onRequestConfirm?: (title: string, message: string, confirmLabel: string, action: () => void) => void }) {
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [deck, setDeck] = useState<Flashcard[]>([]);
   const [cardIndex, setCardIndex] = useState(0);
@@ -50,8 +50,8 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
   const reviewing = deck.length > 0;
 
   useEffect(() => {
-    onReviewingChange?.(reviewing);
-  }, [reviewing, onReviewingChange]);
+    onReviewingChange?.(reviewing, reviewing ? selectedTopicIds : []);
+  }, [reviewing, selectedTopicIds, onReviewingChange]);
 
   useEffect(() => {
     if (!reviewing) return;
@@ -143,7 +143,7 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
           </div>
           <div className={styles.toolbarActions}>
             <button className="text-button" type="button" onClick={shuffleDeck}>Shuffle</button>
-            <button className="text-button quiet" type="button" onClick={changeTopics}>Exit session</button>
+            <button className="secondary-button" type="button" onClick={changeTopics}>Exit session</button>
           </div>
         </div>
 

@@ -163,7 +163,6 @@ test("QnA setup stays accessible and the professional navigation can collapse", 
   assert.doesNotMatch(app, /sidebar-current-view/);
   assert.match(app, /aria-expanded=\{!sidebarCollapsed\}/);
   assert.match(app, /sidebarCollapsed \? "☰" : "«"/);
-  assert.match(app, /function openNavigationView[\s\S]*setSidebarCollapsed\(true\)/);
   assert.doesNotMatch(app, /sidebar-toggle-label/);
   assert.match(app, /<option value="30">30 questions<\/option>/);
   assert.match(app, /<option value="40">40 questions<\/option>/);

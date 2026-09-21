@@ -78,5 +78,5 @@ test("MCQ and flashcard libraries expose shared category choices and search", as
   assert.match(search, /All Subjects/);
   assert.match(search, /MTAP 1/);
   assert.match(search, /Other Majors/);
-  assert.match(search, /Search subjects or topics...\./);
+  assert.match(search, /Search subjects or topics\.\.\./);
 });
