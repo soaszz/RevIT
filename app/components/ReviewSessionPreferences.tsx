@@ -7,10 +7,8 @@ import styles from "./ReviewSessionPreferences.module.css";
 type ReviewSessionPreferencesProps = {
   timerEnabled: boolean;
   timerDuration: ReviewTimerDuration;
-  soundEffectsEnabled: boolean;
   onTimerEnabledChange: (enabled: boolean) => void;
   onTimerDurationChange: (duration: ReviewTimerDuration) => void;
-  onSoundEffectsEnabledChange: (enabled: boolean) => void;
 };
 
 function ClockIcon() {
@@ -18,15 +16,6 @@ function ClockIcon() {
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <circle cx="12" cy="12" r="8.5" />
       <path d="M12 7.5v5l3.2 1.8" />
-    </svg>
-  );
-}
-
-function SoundIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M5 10v4h3l4 3.5v-11L8 10H5Z" />
-      <path d="M15.5 9a4 4 0 0 1 0 6M17.8 6.7a7.2 7.2 0 0 1 0 10.6" />
     </svg>
   );
 }
@@ -50,15 +39,12 @@ function PreferenceSwitch({ checked, label, onChange }: { checked: boolean; labe
 export default function ReviewSessionPreferences({
   timerEnabled,
   timerDuration,
-  soundEffectsEnabled,
   onTimerEnabledChange,
   onTimerDurationChange,
-  onSoundEffectsEnabledChange,
 }: ReviewSessionPreferencesProps) {
   const [mobileExpanded, setMobileExpanded] = useState(false);
   const preferencesId = useId();
   const timerSummary = timerEnabled ? `${timerDuration}-second timer` : "Timer off";
-  const soundSummary = soundEffectsEnabled ? "sound on" : "sound off";
 
   return (
     <section className={styles.panel} aria-label="Review session preferences">
@@ -71,8 +57,8 @@ export default function ReviewSessionPreferences({
       >
         <span className={styles.icon}><ClockIcon /></span>
         <span className={styles.copy}>
-          <strong>Question timer &amp; sound effects</strong>
-          <small>{timerSummary} · {soundSummary}</small>
+          <strong>Question timer</strong>
+          <small>{timerSummary}</small>
         </span>
         <span className={`${styles.chevron} ${mobileExpanded ? styles.chevronExpanded : ""}`} aria-hidden="true">⌄</span>
       </button>
@@ -118,17 +104,6 @@ export default function ReviewSessionPreferences({
             </label>
           </div>
         </fieldset>
-
-        <div className={styles.divider} />
-
-        <div className={styles.preferenceHeader}>
-          <span className={styles.icon}><SoundIcon /></span>
-          <span className={styles.copy}>
-            <strong>Sound effects</strong>
-            <small>Soft tones for answers and timeouts.</small>
-          </span>
-          <PreferenceSwitch checked={soundEffectsEnabled} label="Enable review sound effects" onChange={onSoundEffectsEnabledChange} />
-        </div>
       </div>
     </section>
   );

@@ -23,18 +23,19 @@ test("flashcards resolve the indexed answer as clean text", () => {
   }), "A. castellanii");
 });
 
-test("flashcard presentation data cannot expose choices or source metadata", () => {
+test("flashcard presentation data includes choices without exposing source metadata", () => {
   const card = toFlashcard(questions[0]);
   assert.deepEqual(Object.keys(card).sort(), [
     "answer",
+    "choices",
     "explanation",
     "id",
     "prompt",
     "subjectId",
     "topicId",
   ]);
-  assert.equal(card.answer, questions[0].choices[questions[0].correctAnswer]);
-  assert.ok(!("choices" in card));
+  assert.equal(card.answer, resolveFlashcardAnswer(questions[0]));
+  assert.deepEqual(card.choices, questions[0].choices);
   assert.ok(!("source" in card));
 });
 

@@ -17,11 +17,10 @@ export default function ForgotPanel({ turnstileSiteKey }: { turnstileSiteKey: st
     event.preventDefault();
     if (!disableCaptcha && !captchaToken) return setStatus("Please complete the security check.");
     setPending(true); setStatus("");
-    const options: any = {
-      redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset`
-    };
-    if (!disableCaptcha && captchaToken) options.captchaToken = captchaToken;
-    const { error } = await createClient().auth.resetPasswordForEmail(email.trim(), options);
+    const { error } = await createClient().auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset`,
+      captchaToken: !disableCaptcha && captchaToken ? captchaToken : undefined,
+    });
     if (error) {
       setStatus(`Request failed: ${error.message}`);
       turnstileRef.current?.reset();

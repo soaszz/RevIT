@@ -73,11 +73,12 @@ function CurrentPosition({ position, metric, period, onOpenSettings }: {
   );
 }
 
-export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjects, onOpenSettings }: {
+export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjects, onOpenSettings, onToggleOptIn }: {
   cloudEnabled: boolean;
   leaderboardOptIn: boolean;
   subjects: Subject[];
   onOpenSettings: () => void;
+  onToggleOptIn?: (enabled: boolean) => Promise<void> | void;
 }) {
   const [period, setPeriod] = useState<LeaderboardPeriod>("weekly");
   const [metric, setMetric] = useState<LeaderboardMetric>("questions");
@@ -152,6 +153,22 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
             <button type="button" className={subjectId === null ? styles.activeScope : ""} aria-pressed={subjectId === null} onClick={() => selectSubject(null)}>Overall</button>
             {subjects.map((subject) => <button type="button" key={subject.id} className={subjectId === subject.id ? styles.activeScope : ""} aria-pressed={subjectId === subject.id} onClick={() => selectSubject(subject.id)}>{subject.name}</button>)}
           </div>
+        </div>
+        <div className={styles.optInChoiceRow}>
+          <div className={styles.optInChoiceInfo}>
+            <span className={styles.optInChoiceEyebrow}>Public Participation</span>
+            <strong>Appear in leaderboards</strong>
+            <p>{leaderboardOptIn ? "Your rank, display name, and avatar appear in public rankings." : "You are currently hidden from public rankings. Your stats remain private."}</p>
+          </div>
+          <button
+            type="button"
+            className={`${styles.optInChoiceBtn} ${leaderboardOptIn ? styles.optInChoiceBtnActive : ""}`}
+            aria-pressed={leaderboardOptIn}
+            onClick={() => onToggleOptIn?.(!leaderboardOptIn)}
+          >
+            <span className={styles.optInChoiceIcon} aria-hidden="true">{leaderboardOptIn ? "✓" : "○"}</span>
+            <span>{leaderboardOptIn ? "Appearing in leaderboards" : "Appear in leaderboards"}</span>
+          </button>
         </div>
         <p className={styles.timezoneNote}>Daily and weekly boundaries use {timezone}; weeks begin Monday.</p>
       </section>

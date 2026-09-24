@@ -5,6 +5,7 @@ export type Flashcard = {
   subjectId: string;
   topicId: string;
   prompt: string;
+  choices: string[];
   answer: string;
   explanation: string;
 };
@@ -31,6 +32,7 @@ export function toFlashcard(question: FlashcardQuestion): Flashcard {
     subjectId: question.subjectId,
     topicId: question.topicId,
     prompt: question.prompt,
+    choices: question.choices,
     answer: resolveFlashcardAnswer(question),
     explanation: question.explanation,
   };

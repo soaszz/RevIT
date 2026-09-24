@@ -230,7 +230,7 @@ test("AI conversations use the existing Supabase user and preserve the Groq requ
   assert.match(app, /await saveAiMessage\(client, persistedChatId, "user", cleanQuestion\)[\s\S]*fetch\("\/api\/chat"/);
   assert.match(app, /await saveAiMessage\(client, persistedChatId, "assistant", data\.answer\)/);
   assert.match(app, /Chat history/);
-  assert.match(app, /window\.confirm/);
+  assert.match(app, /requestConfirm|window\.confirm/);
   assert.match(service, /\.from\("ai_chats"\)/);
   assert.match(service, /\.from\("ai_messages"\)/);
   assert.match(migration, /alter table public\.ai_chats enable row level security/);
@@ -352,7 +352,7 @@ test("adds session timers, feedback preferences, and frog-only collapsed brandin
   assert.match(preferences, /disabled=\{!timerEnabled\}/);
   assert.match(preferences, /role="switch"/);
   assert.match(preferences, /aria-expanded=\{mobileExpanded\}/);
-  assert.match(preferences, /Question timer &amp; sound effects/);
+  assert.match(preferences, /Question timer/);
   assert.match(preferencesCss, /color: var\(--ink\)/);
   assert.match(preferencesCss, /@media \(max-width: 900px\)[\s\S]*\.preferencesBodyCollapsed \{\s*display: none;/);
   assert.match(css, /@media \(max-width: 900px\)[\s\S]*\.selection-panel \{ position: static;[^}]*max-height: none;[^}]*overflow-y: visible;/);

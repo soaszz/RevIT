@@ -54,3 +54,4 @@ yarn-error.log*
 # local provider experiment (not used by RevIT)
 /chatbot/
 changelog-private.md
+supabase/.temp/

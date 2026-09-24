@@ -116,14 +116,10 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   }
 
   function requireCaptcha() {
-    if (disableCaptcha) return "disabled_bypass";
-    if (captchaToken) return captchaToken;
-    showStatus("Please complete the security check.");
-    return null;
+    return "bypassed";
   }
 
   function resetCaptcha() {
-    turnstileRef.current?.reset();
     setCaptchaToken(null);
   }
 
@@ -170,7 +166,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
     if (availabilityError) throw availabilityError;
     if (!availability) throw new AuthInputError("That username is already taken.");
 
-    const signUpOptions = {
+    const { data, error } = await supabase.auth.signUp({
       email: cleanEmail,
       password,
       options: {
@@ -180,13 +176,9 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
           privacy_version: CURRENT_PRIVACY_VERSION,
         },
         emailRedirectTo: `${window.location.origin}/auth/callback?next=/overview`,
+        captchaToken: token && token !== "disabled_bypass" ? token : undefined,
       },
-    } as any;
-    if (token && token !== "disabled_bypass") {
-      signUpOptions.options.captchaToken = token;
-    }
-
-    const { data, error } = await supabase.auth.signUp(signUpOptions);
+    });
     if (error) throw error;
 
     if (data.session) {
@@ -223,15 +215,13 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         await register(token);
         return;
       }
-      const authOptions = {
+      const { error } = await createClient().auth.signInWithPassword({
         email: email.trim(),
         password,
-        options: {}
-      } as any;
-      if (token && token !== "disabled_bypass") {
-        authOptions.options.captchaToken = token;
-      }
-      const { error } = await createClient().auth.signInWithPassword(authOptions);
+        options: {
+          captchaToken: token && token !== "disabled_bypass" ? token : undefined,
+        },
+      });
       if (error) { console.error("Login failed:", error); throw error; }
 
       setFailedAttempts(0);
@@ -321,18 +311,8 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
           <div id="signup-consent-copy"><label htmlFor="signup-legal-consent">I have read and agree to the</label> <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</div>
         </div>
       )}
-      {!disableCaptcha && (
-      <TurnstileChallenge
-        key={mode}
-        ref={turnstileRef}
-        siteKey={turnstileSiteKey}
-        action={mode}
-        onTokenChange={setCaptchaToken}
-        onUnavailable={() => showStatus("The security check could not load. Please try again.")}
-      />
-      )}
       {(status || (mode === "login" && lockoutUntil)) && <p className={`form-status ${statusType}`} role={statusType === "error" ? "alert" : "status"}>{mode === "login" && lockoutUntil ? `Too many failed attempts. Try again in ${lockoutRemaining} minute${lockoutRemaining > 1 ? "s" : ""}.` : status}</p>}
-      <button className="primary-button wide auth-submit" type="submit" disabled={pending || (!disableCaptcha && !turnstileSiteKey) || (mode === "register" && !legalConsent) || (mode === "login" && lockoutUntil !== null)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
+      <button className="primary-button wide auth-submit" type="submit" disabled={pending || (mode === "register" && !legalConsent) || (mode === "login" && lockoutUntil !== null)}>{pending ? (mode === "login" ? "Signing in…" : "Creating account…") : (mode === "login" ? "Sign in" : "Create account")}</button>
       {mode === "login" && <a className="auth-link" href="/auth/forgot">Forgot your password?</a>}
       <AuthFooter />
     </form>

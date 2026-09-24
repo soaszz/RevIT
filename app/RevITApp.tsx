@@ -26,6 +26,8 @@ import CustomConfirm from "./components/CustomConfirm";
 import StudyCalendar from "./components/StudyCalendar";
 import StudyPlanner, { TodayStudyPlan } from "./components/StudyPlanner";
 import WeaknessDashboard from "./components/WeaknessDashboard";
+import SiteNotificationTrigger from "./components/SiteNotificationTrigger";
+import SiteUpdatesModal, { useSiteNotifications } from "./components/SiteUpdatesModal";
 import {
   deleteExam as deleteCloudExam,
   flushActivityQueue,
@@ -56,6 +58,7 @@ import { type ReviewTimerDuration } from "./lib/reviewTimer";
 import { playReviewSound, unlockReviewSounds } from "./lib/reviewSounds";
 import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
 import { createClient } from "./lib/supabase/client";
+import { useOnlinePresence } from "./lib/useOnlinePresence";
 import { hasCurrentLegalConsent } from "./lib/legal";
 import { canAccessFeature } from "./lib/features";
 import { ALL_MAJORS_CATEGORY, buildSubjectSections, filterSubjectsBySearch, MTAP_1_CATEGORY, OTHER_MAJORS_CATEGORY } from "./lib/reviewerLibrary";
@@ -308,6 +311,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const [isFlashcardReviewing, setIsFlashcardReviewing] = useState(false);
   const [activeFlashcardTopics, setActiveFlashcardTopics] = useState<string[]>([]);
   const [subjectSearch, setSubjectSearch] = useState("");
+  const [expandedSubjectIds, setExpandedSubjectIds] = useState<string[]>([]);
   const [progressSearch, setProgressSearch] = useState("");
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [attempts, setAttempts] = useState<Attempt[]>([]);
@@ -347,6 +351,9 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const [profileDraft, setProfileDraft] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileOpen, setProfileOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [updatesModalOpen, setUpdatesModalOpen] = useState(false);
+  const onlineLearnerCount = useOnlinePresence(initialUser?.id);
+  const { readIds, unreadCount, markAllRead, toggleRead, hasNewForPopup, dismissPopup } = useSiteNotifications();
   const [profileError, setProfileError] = useState("");
   const [cloudProfile, setCloudProfile] = useState<Profile | null>(null);
   const [grades, setGrades] = useState<GradeRecord[]>([]);
@@ -809,6 +816,13 @@ useEffect(() => {
     return () => window.cancelAnimationFrame(frame);
   }, [cloudEnabled, cloudLoading, progressionReady, sessionPolicyReady, storageReady, studyPlansReady, themeReady]);
 
+
+  // Auto-open updates modal once per login when new updates exist
+  useEffect(() => {
+    if (isInitializing || !hasNewForPopup) return;
+    setUpdatesModalOpen(true);
+  }, [isInitializing, hasNewForPopup]);
+
   useEffect(() => {
     if (levelUp === null) return;
     const timeout = window.setTimeout(() => setLevelUp(null), 6000);
@@ -917,6 +931,14 @@ useEffect(() => {
     setSelectedTopicIds((current) => subjectTopicIds.every((id) => current.includes(id))
       ? current.filter((id) => !subjectTopicIds.includes(id))
       : [...new Set([...current, ...subjectTopicIds])]);
+  }
+
+  function toggleSubjectExpanded(subjectId: string) {
+    setExpandedSubjectIds((current) =>
+      current.includes(subjectId)
+        ? current.filter((id) => id !== subjectId)
+        : [...current, subjectId],
+    );
   }
 
   function selectAllWrongAnswers() {
@@ -1300,6 +1322,25 @@ useEffect(() => {
     }
   }
 
+  async function updateLeaderboardOptIn(enabled: boolean) {
+    const previousPreferences = preferences;
+    const nextPreferences = { ...preferences, leaderboard_opt_in: enabled };
+    setPreferences(nextPreferences);
+
+    try {
+      if (cloudEnabled && initialUser) {
+        const saved = await savePreferences(createClient(), initialUser.id, nextPreferences);
+        setPreferences(normalizeUserPreferences(saved, nextPreferences.timezone));
+        return;
+      }
+
+      localStorage.setItem(LOCAL_PREFERENCES_STORAGE_KEY, JSON.stringify(nextPreferences));
+    } catch (error) {
+      setPreferences(previousPreferences);
+      throw error;
+    }
+  }
+
   async function chooseProfilePhoto(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -1662,12 +1703,39 @@ useEffect(() => {
       </aside>
 
       <section className="workspace">
+        {/* Desktop upper-right notification & updates button - overview/home screen only */}
+        {activeView === "overview" && (
+          <div className="site-notification-desktop-wrap">
+            <div
+              className="online-presence-pill"
+              title={`${onlineLearnerCount} future RMT/s reviewing right now!`}
+              aria-label={`${onlineLearnerCount} future RMT/s reviewing`}
+            >
+              <span className="online-presence-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              </span>
+              <span className="online-presence-beacon" aria-hidden="true" />
+              <span className="online-presence-copy">
+                <strong>{onlineLearnerCount}</strong> future RMT/s reviewing
+              </span>
+            </div>
+            <SiteNotificationTrigger
+              unreadCount={unreadCount}
+              onClick={() => setUpdatesModalOpen(true)}
+            />
+          </div>
+        )}
         <header className="mobile-header">
           <div className="mobile-brand-stack">
             <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home"><RevITLogo /></button>
             <span className="mobile-current-view"><i aria-hidden="true"><Image src={activeNavItem.icon} alt="" width={15} height={15} /></i>{activeNavItem.label}</span>
           </div>
-          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => { if (event.target.value === "support") router.push("/support"); else openView(event.target.value as View); }}>{availableNavItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}<option value="support">Support RevIT (optional)</option></select></label><button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
+          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => { if (event.target.value === "support") router.push("/support"); else openView(event.target.value as View); }}>{availableNavItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}<option value="support">Support RevIT (optional)</option></select></label>{activeView === "overview" && <span className="mobile-online-presence" title={`${onlineLearnerCount} future RMT/s reviewing right now!`}><span className="online-presence-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg></span><span className="online-presence-beacon" aria-hidden="true" /><strong>{onlineLearnerCount}</strong></span>}{activeView === "overview" && <SiteNotificationTrigger className="mobile-header-notification" size="compact" unreadCount={unreadCount} onClick={() => setUpdatesModalOpen(true)} />}<button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
         </header>
 
         <div className="page-heading">
@@ -1805,26 +1873,87 @@ useEffect(() => {
                           const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
                           const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
                           const subjectFullySelected = subjectTopics.length > 0 && subjectSelected === subjectTopics.length;
+                          const isExpanded = expandedSubjectIds.includes(subject.id);
+                          const subjectQuestionCount = questions.filter((question) => question.subjectId === subject.id).length;
                           return (
-                            <section className="subject-card" key={subject.id}>
-                              <div className="subject-heading">
-                                <div><p className="eyebrow">{questions.filter((question) => question.subjectId === subject.id).length} official MCQs</p><h2>{subject.name}</h2><p>{subject.description}</p></div>
-                                <button className="text-button" type="button" onClick={() => toggleSubject(subject.id)}>{subjectFullySelected ? "Unselect subject" : "Select subject"}</button>
+                            <section className={`subject-card ${isExpanded ? "is-expanded" : ""}`} key={subject.id}>
+                              <div
+                                className="subject-heading subject-heading-clickable"
+                                onClick={() => toggleSubjectExpanded(subject.id)}
+                                role="button"
+                                tabIndex={0}
+                                aria-expanded={isExpanded}
+                                aria-controls={`mcq-subject-topics-${subject.id}`}
+                                onKeyDown={(event) => {
+                                  if (event.key === "Enter" || event.key === " ") {
+                                    event.preventDefault();
+                                    toggleSubjectExpanded(subject.id);
+                                  }
+                                }}
+                              >
+                                <div className="subject-heading-info">
+                                  <div className="subject-heading-meta">
+                                    <span className="eyebrow">{subjectQuestionCount} official MCQs · {subjectTopics.length} topic{subjectTopics.length === 1 ? "" : "s"}</span>
+                                    {subjectSelected > 0 && (
+                                      <span className={`subject-status-badge ${subjectFullySelected ? "fully-selected" : "partially-selected"}`}>
+                                        {subjectFullySelected ? "All selected" : `${subjectSelected}/${subjectTopics.length} selected`}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <h2>{subject.name}</h2>
+                                  <p>{subject.description}</p>
+                                </div>
+                                <div className="subject-heading-actions">
+                                  <button
+                                    className="text-button"
+                                    type="button"
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      toggleSubject(subject.id);
+                                    }}
+                                  >
+                                    {subjectFullySelected ? "Unselect subject" : "Select subject"}
+                                  </button>
+                                  <button
+                                    className="subject-expand-toggle"
+                                    type="button"
+                                    aria-label={isExpanded ? `Hide topics for ${subject.name}` : `Show topics for ${subject.name}`}
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+                                      toggleSubjectExpanded(subject.id);
+                                    }}
+                                  >
+                                    <span className="subject-expand-label">{isExpanded ? "Hide topics" : "Show topics"}</span>
+                                    <svg className="subject-expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                      <polyline points="6 9 12 15 18 9" />
+                                    </svg>
+                                  </button>
+                                </div>
                               </div>
-                              <div className="topic-selection-grid">
-                                {subjectTopics.map((topic) => {
-                                  const count = questions.filter((question) => question.topicId === topic.id).length;
-                                  const selected = selectedTopicIds.includes(topic.id);
-                                  return (
-                                    <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
-                                      <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                      <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                                      <span className="topic-select-copy"><strong>{topic.name}</strong><small>{topic.description}</small><em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em></span>
-                                    </label>
-                                  );
-                                })}
+                              <div
+                                id={`mcq-subject-topics-${subject.id}`}
+                                className={`subject-topics-collapse ${isExpanded ? "expanded" : ""}`}
+                                aria-hidden={!isExpanded}
+                              >
+                                <div className="subject-topics-content">
+                                  <div className="subject-topics-inner">
+                                    <div className="topic-selection-grid">
+                                      {subjectTopics.map((topic) => {
+                                        const count = questions.filter((question) => question.topicId === topic.id).length;
+                                        const selected = selectedTopicIds.includes(topic.id);
+                                        return (
+                                          <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                            <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                            <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                            <span className="topic-select-copy"><strong>{topic.name}</strong><small>{topic.description}</small><em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em></span>
+                                          </label>
+                                        );
+                                      })}
+                                    </div>
+                                    <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                                  </div>
+                                </div>
                               </div>
-                              <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
                             </section>
                           );
                         })}
@@ -1867,10 +1996,8 @@ useEffect(() => {
                     <ReviewSessionPreferences
                       timerEnabled={timerEnabled}
                       timerDuration={timerDuration}
-                      soundEffectsEnabled={soundEffectsEnabled}
                       onTimerEnabledChange={setTimerEnabled}
                       onTimerDurationChange={setTimerDuration}
-                      onSoundEffectsEnabledChange={setSoundEffectsEnabled}
                     />
                     <button className="primary-button wide" type="button" onClick={startSession} disabled={!sessionQuestions.length}>Start review</button>
                     {selectedTopicNames.length > 0 && <div className="selected-tags">{selectedTopicNames.map((name) => <span key={name}>{name}</span>)}</div>}
@@ -1993,7 +2120,15 @@ useEffect(() => {
           </div>
         )}
 
-        {activeView === "leaderboards" && <LeaderboardPage cloudEnabled={cloudEnabled} leaderboardOptIn={preferences.leaderboard_opt_in} subjects={subjects} onOpenSettings={openProfileEditor} />}
+        {activeView === "leaderboards" && (
+          <LeaderboardPage
+            cloudEnabled={cloudEnabled}
+            leaderboardOptIn={preferences.leaderboard_opt_in}
+            subjects={subjects}
+            onOpenSettings={openProfileEditor}
+            onToggleOptIn={updateLeaderboardOptIn}
+          />
+        )}
 
         {activeView === "weakness" && (
           <WeaknessDashboard
@@ -2134,6 +2269,13 @@ useEffect(() => {
         {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>
       <ScientificCalculator />
+      <SiteUpdatesModal
+        isOpen={updatesModalOpen}
+        onClose={() => { setUpdatesModalOpen(false); dismissPopup(); }}
+        readIds={readIds}
+        onMarkAllRead={markAllRead}
+        onToggleRead={toggleRead}
+      />
           <CustomConfirm
         isOpen={confirmConfig.isOpen}
         title={confirmConfig.title ?? ""}

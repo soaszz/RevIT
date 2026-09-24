@@ -6,6 +6,12 @@
       "sourceType": "github",
       "skillPath": "skills/brag/SKILL.md",
       "computedHash": "fbab8e80d994e7d1852fafcb916a1a45ce4becda84aa92cab3666f02012caf41"
+    },
+    "caveman": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "skillPath": "skills/caveman/SKILL.md",
+      "computedHash": "e9192d111aa44ea90bd214d5aa2b4f640195b0717faedd881e4b3927da9d88e2"
     }
   }
 }

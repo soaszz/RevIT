@@ -57,10 +57,148 @@
 .unavailable { min-height: 420px; display: grid; justify-items: center; align-content: center; padding: 30px; text-align: center; }
 .unavailable > span { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px; background: var(--green-soft); color: var(--green-dark); font-size: 24px; }
 .unavailable h2 { margin: 16px 0 0; font-size: 22px; }.unavailable p { max-width: 480px; margin: 8px 0 18px; color: var(--muted); font-size: 10px; line-height: 1.6; }
+.optInChoiceRow {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-soft);
+}
+.optInChoiceInfo {
+  min-width: 0;
+}
+.optInChoiceEyebrow {
+  display: block;
+  color: var(--green);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.optInChoiceInfo strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--ink);
+}
+.optInChoiceInfo p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
+.optInChoiceBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.optInChoiceBtn:hover {
+  border-color: color-mix(in srgb, var(--green) 50%, var(--line));
+  background: var(--surface-tint);
+  color: var(--green-dark);
+}
+.optInChoiceBtnActive {
+  background: var(--green-soft);
+  border-color: color-mix(in srgb, var(--green) 45%, var(--line));
+  color: var(--green-dark);
+}
+.optInChoiceIcon {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--input);
+  font-size: 10px;
+  font-weight: 800;
+}
+.optInChoiceBtnActive .optInChoiceIcon {
+  background: var(--green);
+  color: var(--accent-ink);
+}
+
+.positionOptInBlock {
+  margin-top: 14px;
+}
+.positionOptInBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--green) 45%, var(--line));
+  border-radius: 9px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: all .2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.positionOptInBtn:hover {
+  filter: brightness(1.05);
+}
+.positionOptInActive {
+  background: var(--surface-soft);
+  border-color: var(--line);
+  color: var(--ink);
+}
+.positionOptInActive:hover {
+  border-color: color-mix(in srgb, var(--green) 40%, var(--line));
+  color: var(--green-dark);
+}
+.privacyBannerActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.optInActionBtn {
+  border: 1px solid color-mix(in srgb, var(--green) 50%, var(--line));
+  border-radius: 9px;
+  padding: 9px 13px;
+  background: var(--green);
+  color: var(--accent-ink) !important;
+  font-size: 10px;
+  font-weight: 760;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.secondarySettingsBtn {
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 9px 12px;
+  background: var(--surface-soft);
+  color: var(--muted) !important;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
 @media (max-width: 1050px) { .grid { grid-template-columns: 1fr; }.positionCard { position: static; grid-row: 1; } }
 @media (max-width: 640px) {
-  .controlCard { grid-template-columns: 1fr; padding: 15px; }.scopeGroup, .timezoneNote { grid-column: auto; }
-  .privacyBanner { align-items: flex-start; flex-direction: column; }.privacyBanner button { width: 100%; }
+  .controlCard { grid-template-columns: 1fr; padding: 15px; }.scopeGroup, .timezoneNote, .optInChoiceRow { grid-column: auto; }
+  .optInChoiceRow { flex-direction: column; align-items: stretch; }
+  .optInChoiceBtn { justify-content: center; }
+  .privacyBanner { align-items: flex-start; flex-direction: column; }
+  .privacyBannerActions { width: 100%; flex-direction: column; }
+  .privacyBannerActions button { width: 100%; text-align: center; }
   .boardHeading { align-items: flex-start; padding-inline: 16px; }.boardHeading h2 { font-size: 17px; }
   .row { grid-template-columns: 38px 34px minmax(0, 1fr) auto; gap: 8px; padding-inline: 14px; }.avatar { width: 32px; height: 32px; }.value { font-size: 10px; }
 }

@@ -24,6 +24,7 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
   const [cardIndex, setCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [subjectSearch, setSubjectSearch] = useState("");
+  const [expandedSubjectIds, setExpandedSubjectIds] = useState<string[]>([]);
 
   const topicQuestionCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -90,6 +91,14 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
     setSelectedTopicIds((current) => allSelected
       ? current.filter((id) => !subjectTopicIds.includes(id))
       : [...new Set([...current, ...subjectTopicIds])]);
+  }
+
+  function toggleSubjectExpanded(subjectId: string) {
+    setExpandedSubjectIds((current) =>
+      current.includes(subjectId)
+        ? current.filter((id) => id !== subjectId)
+        : [...current, subjectId],
+    );
   }
 
   function startReviewing() {
@@ -165,6 +174,20 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
             </div>
             <div className={styles.questionArea}>
               <h2>{currentCard.prompt}</h2>
+              {currentCard.choices && currentCard.choices.length > 0 && (
+                <div className={styles.horizontalChoices} role="list" aria-label="Question choices">
+                  {currentCard.choices.map((choice, index) => {
+                    const cleanChoice = choice.trim().replace(/^[A-D](?:[.):])\s+/, "");
+                    const choiceLetter = String.fromCharCode(65 + index);
+                    return (
+                      <div className={styles.horizontalChoiceItem} key={index} role="listitem">
+                        <span className={styles.choiceLetter}>{choiceLetter}</span>
+                        <span className={styles.choiceText}>{cleanChoice}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <button className={`${styles.flipControl} primary-button`} type="button" tabIndex={flipped ? -1 : 0} onClick={toggleCard}>
               Flip card
@@ -230,41 +253,95 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                 const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
                 const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
                 const subjectFullySelected = subjectTopics.length > 0 && subjectSelected === subjectTopics.length;
+                const isExpanded = expandedSubjectIds.includes(subject.id);
                 const subjectCardCount = subjectTopics.reduce(
                   (total, topic) => total + (topicQuestionCounts.get(topic.id) ?? 0),
                   0,
                 );
 
                 return (
-                  <section className="subject-card" key={subject.id}>
-                    <div className="subject-heading">
-                      <div>
-                        <p className="eyebrow">{subjectCardCount} flashcards</p>
+                  <section className={`subject-card ${isExpanded ? "is-expanded" : ""}`} key={subject.id}>
+                    <div
+                      className="subject-heading subject-heading-clickable"
+                      onClick={() => toggleSubjectExpanded(subject.id)}
+                      role="button"
+                      tabIndex={0}
+                      aria-expanded={isExpanded}
+                      aria-controls={`flashcard-subject-topics-${subject.id}`}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter" || event.key === " ") {
+                          event.preventDefault();
+                          toggleSubjectExpanded(subject.id);
+                        }
+                      }}
+                    >
+                      <div className="subject-heading-info">
+                        <div className="subject-heading-meta">
+                          <span className="eyebrow">{subjectCardCount} flashcards · {subjectTopics.length} topic{subjectTopics.length === 1 ? "" : "s"}</span>
+                          {subjectSelected > 0 && (
+                            <span className={`subject-status-badge ${subjectFullySelected ? "fully-selected" : "partially-selected"}`}>
+                              {subjectFullySelected ? "All selected" : `${subjectSelected}/${subjectTopics.length} selected`}
+                            </span>
+                          )}
+                        </div>
                         <h2>{subject.name}</h2>
                         <p>{subject.description}</p>
                       </div>
-                      <button className="text-button" type="button" onClick={() => toggleSubject(subject.id)}>
-                        {subjectFullySelected ? "Unselect subject" : "Select subject"}
-                      </button>
+                      <div className="subject-heading-actions">
+                        <button
+                          className="text-button"
+                          type="button"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleSubject(subject.id);
+                          }}
+                        >
+                          {subjectFullySelected ? "Unselect subject" : "Select subject"}
+                        </button>
+                        <button
+                          className="subject-expand-toggle"
+                          type="button"
+                          aria-label={isExpanded ? `Hide topics for ${subject.name}` : `Show topics for ${subject.name}`}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            toggleSubjectExpanded(subject.id);
+                          }}
+                        >
+                          <span className="subject-expand-label">{isExpanded ? "Hide topics" : "Show topics"}</span>
+                          <svg className="subject-expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
-                    <div className="topic-selection-grid">
-                      {subjectTopics.map((topic) => {
-                        const count = topicQuestionCounts.get(topic.id) ?? 0;
-                        const selected = selectedTopicIds.includes(topic.id);
-                        return (
-                          <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
-                            <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                            <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                            <span className="topic-select-copy">
-                              <strong>{topic.name}</strong>
-                              <small>{topic.description}</small>
-                              <em>{count} card{count === 1 ? "" : "s"}</em>
-                            </span>
-                          </label>
-                        );
-                      })}
+                    <div
+                      id={`flashcard-subject-topics-${subject.id}`}
+                      className={`subject-topics-collapse ${isExpanded ? "expanded" : ""}`}
+                      aria-hidden={!isExpanded}
+                    >
+                      <div className="subject-topics-content">
+                        <div className="subject-topics-inner">
+                          <div className="topic-selection-grid">
+                            {subjectTopics.map((topic) => {
+                              const count = topicQuestionCounts.get(topic.id) ?? 0;
+                              const selected = selectedTopicIds.includes(topic.id);
+                              return (
+                                <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                  <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                  <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                  <span className="topic-select-copy">
+                                    <strong>{topic.name}</strong>
+                                    <small>{topic.description}</small>
+                                    <em>{count} card{count === 1 ? "" : "s"}</em>
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </div>
+                          <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                        </div>
+                      </div>
                     </div>
-                    <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
                   </section>
                 );
               })}

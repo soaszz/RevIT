@@ -133,10 +133,12 @@
 .questionArea {
   position: relative;
   z-index: 2;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   flex: 1 1 auto;
-  place-items: center;
-  padding: clamp(44px, 9vh, 90px) 0;
+  padding: clamp(24px, 4vh, 48px) 0;
   text-align: center;
   pointer-events: none;
 }
@@ -144,11 +146,70 @@
 .questionArea h2 {
   max-width: 760px;
   margin: 0;
-  font-size: clamp(23px, 3.3vw, 34px);
+  font-size: clamp(20px, 2.8vw, 30px);
   font-weight: 680;
   line-height: 1.38;
   letter-spacing: -.035em;
   overflow-wrap: anywhere;
+}
+
+.horizontalChoices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  max-width: 780px;
+  margin-top: clamp(16px, 3vh, 26px);
+}
+
+.horizontalChoiceItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1 1 calc(50% - 10px);
+  min-width: 160px;
+  max-width: calc(50% - 5px);
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-size: 13px;
+  text-align: left;
+  line-height: 1.35;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.03);
+}
+
+.choiceLetter {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--input);
+  border: 1px solid var(--line);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.choiceText {
+  flex: 1 1 auto;
+  font-weight: 550;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 600px) {
+  .horizontalChoices {
+    flex-direction: column;
+  }
+  .horizontalChoiceItem {
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
 }
 
 .flipControl {
