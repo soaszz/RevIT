@@ -287,7 +287,7 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                         <h2>{subject.name}</h2>
                         <p>{subject.description}</p>
                       </div>
-                      <div className="subject-heading-actions">
+                      <div className="subject-heading-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                         <button
                           className="text-button"
                           type="button"
@@ -306,9 +306,42 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                             event.stopPropagation();
                             toggleSubjectExpanded(subject.id);
                           }}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            padding: "7px 13px",
+                            borderRadius: "9px",
+                            border: "1px solid var(--line)",
+                            background: isExpanded ? "var(--green-soft)" : "var(--surface-soft)",
+                            color: isExpanded ? "var(--green-dark)" : "var(--ink)",
+                            fontSize: "11px",
+                            fontWeight: 650,
+                            cursor: "pointer",
+                            whiteSpace: "nowrap"
+                          }}
                         >
-                          <span className="subject-expand-label">{isExpanded ? "Hide topics" : "Show topics"}</span>
-                          <svg className="subject-expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <span className="subject-expand-label" style={{ fontSize: "11px", fontWeight: 650 }}>
+                            {isExpanded ? "Hide topics" : "Show topics"}
+                          </span>
+                          <svg
+                            className="subject-expand-icon"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            aria-hidden="true"
+                            style={{
+                              flexShrink: 0,
+                              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                              transition: "transform 0.22s ease",
+                              color: isExpanded ? "var(--green)" : "var(--muted)"
+                            }}
+                          >
                             <polyline points="6 9 12 15 18 9" />
                           </svg>
                         </button>
@@ -317,6 +350,7 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                     <div
                       id={`flashcard-subject-topics-${subject.id}`}
                       className={`subject-topics-collapse ${isExpanded ? "expanded" : ""}`}
+                      style={!isExpanded ? { display: "none" } : undefined}
                       aria-hidden={!isExpanded}
                     >
                       <div className="subject-topics-content">

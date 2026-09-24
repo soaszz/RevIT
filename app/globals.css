@@ -435,10 +435,15 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .subject-topics-collapse {
   display: grid;
   grid-template-rows: 0fr;
+  overflow: hidden;
   transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1), visibility 320ms;
   visibility: hidden;
 }
+.subject-topics-collapse:not(.expanded) {
+  display: none;
+}
 .subject-topics-collapse.expanded {
+  display: grid;
   grid-template-rows: 1fr;
   visibility: visible;
   transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1), visibility 0s;

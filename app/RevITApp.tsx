@@ -1705,13 +1705,54 @@ useEffect(() => {
       <section className="workspace">
         {/* Desktop upper-right notification & updates button - overview/home screen only */}
         {activeView === "overview" && (
-          <div className="site-notification-desktop-wrap">
+          <div
+            className="site-notification-desktop-wrap"
+            style={{
+              position: "fixed",
+              top: "20px",
+              right: "clamp(20px, 3.5vw, 48px)",
+              zIndex: 47,
+              display: "flex",
+              alignItems: "center",
+              gap: "10px"
+            }}
+          >
             <div
               className="online-presence-pill"
               title={`${onlineLearnerCount} future RMT/s reviewing right now!`}
               aria-label={`${onlineLearnerCount} future RMT/s reviewing`}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                height: "38px",
+                padding: "0 14px 0 8px",
+                border: "1px solid var(--line)",
+                borderRadius: "99px",
+                background: "var(--paper)",
+                boxShadow: "var(--shadow)",
+                color: "var(--muted)",
+                fontSize: "11px",
+                fontWeight: 650,
+                whiteSpace: "nowrap",
+                cursor: "default",
+                userSelect: "none"
+              }}
             >
-              <span className="online-presence-icon" aria-hidden="true">
+              <span
+                className="online-presence-icon"
+                aria-hidden="true"
+                style={{
+                  display: "grid",
+                  placeItems: "center",
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "50%",
+                  background: "var(--green-soft)",
+                  color: "var(--green)",
+                  flexShrink: 0
+                }}
+              >
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
@@ -1719,9 +1760,21 @@ useEffect(() => {
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
               </span>
-              <span className="online-presence-beacon" aria-hidden="true" />
+              <span
+                className="online-presence-beacon"
+                aria-hidden="true"
+                style={{
+                  position: "relative",
+                  width: "6px",
+                  height: "6px",
+                  marginLeft: "-2px",
+                  borderRadius: "50%",
+                  background: "var(--green)",
+                  flexShrink: 0
+                }}
+              />
               <span className="online-presence-copy">
-                <strong>{onlineLearnerCount}</strong> future RMT/s reviewing
+                <strong style={{ color: "var(--green)", fontWeight: 800, marginRight: "3px" }}>{onlineLearnerCount}</strong> future RMT/s reviewing
               </span>
             </div>
             <SiteNotificationTrigger
@@ -1903,7 +1956,7 @@ useEffect(() => {
                                   <h2>{subject.name}</h2>
                                   <p>{subject.description}</p>
                                 </div>
-                                <div className="subject-heading-actions">
+                                <div className="subject-heading-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
                                   <button
                                     className="text-button"
                                     type="button"
@@ -1922,9 +1975,42 @@ useEffect(() => {
                                       event.stopPropagation();
                                       toggleSubjectExpanded(subject.id);
                                     }}
+                                    style={{
+                                      display: "inline-flex",
+                                      alignItems: "center",
+                                      gap: "6px",
+                                      padding: "7px 13px",
+                                      borderRadius: "9px",
+                                      border: "1px solid var(--line)",
+                                      background: isExpanded ? "var(--green-soft)" : "var(--surface-soft)",
+                                      color: isExpanded ? "var(--green-dark)" : "var(--ink)",
+                                      fontSize: "11px",
+                                      fontWeight: 650,
+                                      cursor: "pointer",
+                                      whiteSpace: "nowrap"
+                                    }}
                                   >
-                                    <span className="subject-expand-label">{isExpanded ? "Hide topics" : "Show topics"}</span>
-                                    <svg className="subject-expand-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                    <span className="subject-expand-label" style={{ fontSize: "11px", fontWeight: 650 }}>
+                                      {isExpanded ? "Hide topics" : "Show topics"}
+                                    </span>
+                                    <svg
+                                      className="subject-expand-icon"
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2.5"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      aria-hidden="true"
+                                      style={{
+                                        flexShrink: 0,
+                                        transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                                        transition: "transform 0.22s ease",
+                                        color: isExpanded ? "var(--green)" : "var(--muted)"
+                                      }}
+                                    >
                                       <polyline points="6 9 12 15 18 9" />
                                     </svg>
                                   </button>
@@ -1933,6 +2019,7 @@ useEffect(() => {
                               <div
                                 id={`mcq-subject-topics-${subject.id}`}
                                 className={`subject-topics-collapse ${isExpanded ? "expanded" : ""}`}
+                                style={!isExpanded ? { display: "none" } : undefined}
                                 aria-hidden={!isExpanded}
                               >
                                 <div className="subject-topics-content">
