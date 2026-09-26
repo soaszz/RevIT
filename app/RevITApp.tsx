@@ -158,7 +158,7 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     description: "Review accuracy by subject and topic to identify stronger areas and priorities for further study.",
   },
   leaderboards: {
-    eyebrow: "Optional community rankings",
+    eyebrow: "Community rankings",
     title: "Leaderboards",
     description: "Compare eligible question activity, first-attempt accuracy, and study XP without exposing private attempt history.",
   },
@@ -955,6 +955,10 @@ useEffect(() => {
     () => buildSubjectSections(visibleSubjects, preferences.mtap_features_enabled),
     [preferences.mtap_features_enabled, visibleSubjects],
   );
+
+  const overviewSubjects = useMemo(() => {
+    return getUnifiedSubjects("all", subjects, topics);
+  }, []);
 
   const progressAttempts = useMemo(() => {
     if (progressBook === "all") return attempts;
@@ -2105,10 +2109,33 @@ useEffect(() => {
                   <div className="meter"><span style={{ width: `${overallAccuracy}%` }} /></div>
                   <p>{attempts.length ? `${overallCorrect} of ${attempts.length} answers correct` : "Complete a review to establish your baseline."}</p>
                 </article>
-                <article className="metric-card">
-                  <div className="metric-label"><span>Official questions</span><small>Current library</small></div>
-                  <strong>{questions.length}</strong>
-                  <p>{subjects.length} subjects across {topics.length} selectable topics</p>
+                <article
+                  className="metric-card interactive"
+                  onClick={() => openView("weakness")}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      openView("weakness");
+                    }
+                  }}
+                  title="Open Weakness Analytics to review missed questions"
+                >
+                  <div className="metric-label">
+                    <span>Mistake bank</span>
+                    <small style={wrongQuestionIds.size > 0 ? { color: "var(--amber)" } : undefined}>
+                      {wrongQuestionIds.size > 0 ? "Needs review" : attempts.length ? "All clear" : "Not started"}
+                    </small>
+                  </div>
+                  <strong>{wrongQuestionIds.size}</strong>
+                  <p>
+                    {wrongQuestionIds.size > 0
+                      ? `${wrongQuestionIds.size} question${wrongQuestionIds.size === 1 ? "" : "s"} to reinforce · Tap to review`
+                      : attempts.length > 0
+                        ? "0 missed questions · Excellent accuracy!"
+                        : "Incorrect answers will appear here for targeted review."}
+                  </p>
                 </article>
                 <article className="metric-card">
                   <div className="metric-label"><span>Topics practiced</span><small>{cloudEnabled ? "Cloud synced" : "On this device"}</small></div>
@@ -2151,16 +2178,38 @@ useEffect(() => {
 
             <aside className="overview-aside">
               <div className="source-summary-card">
-                <span className="ai-mark">MCQ</span>
-                <p className="eyebrow">Question Bank</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
+                  <span className="mcq-mark" aria-hidden="true">MCQ</span>
+                  <p className="eyebrow" style={{ margin: 0 }}>Question Bank</p>
+                </div>
                 <h2>{questions.length} total questions available</h2>
                 <p style={{ marginBottom: "20px" }}>Comprehensive scoring, detailed rationales, and verified source references across all subjects.</p>
-                {subjects.map((subject) => (
-                  <div className="source-stat" key={subject.id}>
-                    <span>{subject.name}</span>
-                    <strong>{questions.filter((question) => question.subjectId === subject.id).length} MCQs</strong>
-                  </div>
-                ))}
+                {overviewSubjects.map((subject) => {
+                  const subjectQuestionCount = questions.filter(
+                    (q) => subject.sourceSubjectIds?.includes(q.subjectId) || (subject.topicIds && subject.topicIds.includes(q.topicId))
+                  ).length;
+                  return (
+                    <div className="source-stat" key={subject.id} style={{ alignItems: "center" }}>
+                      <span>{subject.name}</span>
+                      <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+                        {subject.books && subject.books.length > 0 && (
+                          <div style={{ display: "inline-flex", gap: "4px", alignItems: "center" }}>
+                            {subject.books.map((b) => (
+                              <span
+                                key={b}
+                                className={`topic-book-badge topic-book-${b.toLowerCase()}`}
+                                style={getBookBadgeStyle(b, { fontSize: "8px", padding: "1px 5px", margin: 0 })}
+                              >
+                                {b}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <strong>{subjectQuestionCount} MCQs</strong>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               <div className="ai-peek-card">
                 <span className="ai-mark">AI</span>

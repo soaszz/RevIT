@@ -100,6 +100,7 @@ button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-
 .sidebar { position: sticky; z-index: 20; top: 0; height: 100vh; padding: 24px 18px 20px; background: var(--sidebar); color: #fff; display: flex; flex-direction: column; }
 .brand { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 760; letter-spacing: -.03em; }
 .brand-mark, .ai-mark { flex: 0 0 auto; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 10px; background: var(--badge-bg); color: var(--badge-ink); font-size: 13px; font-weight: 800; }
+.mcq-mark { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 34px; border-radius: 7px; background: var(--badge-bg); color: var(--badge-ink); border: 1.5px solid color-mix(in srgb, var(--green) 38%, transparent); font-size: 9px; font-weight: 850; letter-spacing: 0.03em; line-height: 1; user-select: none; }
 .brand-logo { position: relative; display: block; flex: 0 0 auto; overflow: hidden; }
 .brand-logo-full { width: 128px; height: 32px; }
 .brand-logo-full img { position: absolute; top: -21px; left: 0; width: 128px; height: 71px; max-width: none; }
@@ -173,6 +174,8 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .summary-grid { display: grid; grid-template-columns: 1.1fr .9fr .9fr; gap: 14px; }
 .metric-card, .focus-card, .topic-card, .assistant-card { border: 1px solid var(--line); background: var(--paper); box-shadow: var(--shadow); }
 .metric-card { min-height: 142px; padding: 18px; border-radius: 14px; }
+.metric-card.interactive { cursor: pointer; transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease; }
+.metric-card.interactive:hover { border-color: color-mix(in srgb, var(--green) 60%, var(--line)); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
 .accent-card { border-color: color-mix(in srgb, var(--green) 35%, var(--line)); background: linear-gradient(145deg, var(--paper) 30%, var(--surface-tint)); }
 .metric-label { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 11px; }
 .metric-label span { font-weight: 800; }
