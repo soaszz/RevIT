@@ -9,24 +9,22 @@ test("ships the validated ten-subject MCQ library with keyed rationales", async 
   const ids = new Set(content.questions.map((question) => question.id));
   const bySubject = Object.groupBy(content.questions, (question) => question.subjectId);
 
-  assert.equal(content.subjects.length, 10);
+  assert.equal(content.subjects.length, 9);
   assert.equal(content.topics.length, 66);
   assert.equal(content.questions.length, 1593);
   assert.equal(bySubject["clinical-chemistry"].length, 570);
-  assert.equal(bySubject.hematology.length, 166);
+  assert.equal(bySubject.hematology.length, 226);
   assert.equal(bySubject.bacteriology.length, 298);
   assert.equal(bySubject.aubf.length, 210);
   assert.equal(bySubject.parasitology.length, 69);
   assert.equal(bySubject["mycology-and-virology"].length, 62);
   assert.equal(bySubject.immunohematology.length, 55);
   assert.equal(bySubject.immunology.length, 54);
-  assert.equal(bySubject["hematology-2"].length, 60);
   assert.equal(bySubject["laboratory-operations"].length, 49);
   assert.equal(content.subjects.find((subject) => subject.id === "parasitology")?.category, "Other Majors");
   assert.equal(content.subjects.find((subject) => subject.id === "mycology-and-virology")?.category, "Other Majors");
   assert.equal(content.subjects.find((subject) => subject.id === "immunohematology")?.category, "Other Majors");
   assert.equal(content.subjects.find((subject) => subject.id === "immunology")?.category, "Other Majors");
-  assert.equal(content.subjects.find((subject) => subject.id === "hematology-2")?.category, "Other Majors");
   assert.equal(content.subjects.find((subject) => subject.id === "laboratory-operations")?.category, "Other Majors");
   assert.equal(bySubject.parasitology[0].correctAnswer, 1);
   assert.match(bySubject.parasitology.at(-1).explanation, /larger volume of blood/i);
@@ -35,7 +33,7 @@ test("ships the validated ten-subject MCQ library with keyed rationales", async 
   assert.match(bySubject["mycology-and-virology"].at(-1).explanation, /severe or fatal disease during pregnancy/i);
   assert.equal(bySubject.immunohematology[0].officialAnswer, "Phenotype");
   assert.match(bySubject.immunology.at(-1).explanation, /complex fluorescence pattern/i);
-  assert.equal(bySubject["hematology-2"].at(-1).officialAnswer, "Lupus anticoagulant");
+  assert.equal(bySubject.hematology.at(-1).officialAnswer, "Lupus anticoagulant");
   assert.equal(bySubject["laboratory-operations"][0].officialAnswer, "12 g");
   assert.match(bySubject["laboratory-operations"].at(-1).explanation, /best balance/i);
   const laboratoryTables = bySubject["laboratory-operations"].filter((question) => question.stimulus?.kind === "table");
@@ -296,7 +294,7 @@ test("provides a responsive floating scientific calculator with undo and redo", 
   assert.match(css, /\.calculator-navigation/);
   assert.match(css, /\.calculator-resize-handle/);
   assert.match(calculator, /aria-describedby="calculator-resize-instructions"/);
-  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-resize-handle \{ width: 40px; height: 40px;/);
+  assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-resize-handle \{ width: 28px; height: 28px;/);
   assert.doesNotMatch(css, /\.calculator-resize-note, \.calculator-resize-handle \{ display: none; \}/);
   assert.match(css, /@media \(max-width: 620px\)[\s\S]*\.calculator-panel/);
   assert.match(css, /\[data-theme="dark"\] \.calculator-panel/);

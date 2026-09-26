@@ -6,7 +6,7 @@ import { createClient } from "../../lib/supabase/client";
 import PublicThemeToggle from "../../components/PublicThemeToggle";
 
 export default function ForgotPanel({ turnstileSiteKey }: { turnstileSiteKey: string }) {
-  const disableCaptcha = process.env.NEXT_PUBLIC_DISABLE_CAPTCHA === "true";
+  const disableCaptcha = false;
   const turnstileRef = useRef<TurnstileChallengeHandle>(null);
   const [email, setEmail] = useState("");
   const [pending, setPending] = useState(false);

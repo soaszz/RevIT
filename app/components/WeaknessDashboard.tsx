@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { questionById, subjectById, subjects, topics } from "../content/reviewerContent";
+import { questionById, subjectById, subjects, topics, type ReviewerBook } from "../content/reviewerContent";
 import type { QuestionAttempt } from "../lib/domain";
 import {
   buildAccuracyHistory,
@@ -71,6 +71,7 @@ export default function WeaknessDashboard({
   onPractice,
   onViewMistakes,
 }: WeaknessDashboardProps) {
+  const [bookFilter, setBookFilter] = useState<ReviewerBook | "all">("all");
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [sortMode, setSortMode] = useState<SortMode>("weakest");
@@ -87,6 +88,7 @@ export default function WeaknessDashboard({
         topicName: topic.name,
         subjectId: topic.subjectId,
         subjectName: subjectById.get(topic.subjectId)?.name ?? "Uncategorized",
+        book: topic.book,
       },
     ));
     const legacyGroups = new Map<string, QuestionAttempt[]>();
@@ -100,7 +102,12 @@ export default function WeaknessDashboard({
     return [...builtIn, ...uncategorized];
   }, [attempts]);
 
-  const reliable = topicMasteries.filter((topic) => topic.status !== "insufficient");
+  const bookMasteries = useMemo(() => {
+    if (bookFilter === "all") return topicMasteries;
+    return topicMasteries.filter((topic) => topic.book === bookFilter);
+  }, [bookFilter, topicMasteries]);
+
+  const reliable = bookMasteries.filter((topic) => topic.status !== "insufficient");
   const overallMastery = reliable.length
     ? Math.round(reliable.reduce((sum, topic) => sum + (topic.mastery ?? 0) * topic.uniqueQuestions, 0)
       / reliable.reduce((sum, topic) => sum + topic.uniqueQuestions, 0))
@@ -108,19 +115,25 @@ export default function WeaknessDashboard({
   const weakTopics = reliable.filter((topic) => topic.status === "weak");
   const improvingTopics = reliable.filter((topic) => topic.trend.direction === "up");
   const weekAgo = referenceNow - 7 * 24 * 60 * 60 * 1000;
-  const questionsThisWeek = attempts.filter((attempt) => new Date(attempt.timestamp).getTime() >= weekAgo).length;
+  const validTopicIds = useMemo(() => new Set(bookMasteries.map((t) => t.topicId)), [bookMasteries]);
+  const questionsThisWeek = attempts.filter((attempt) => validTopicIds.has(attempt.topicId) && new Date(attempt.timestamp).getTime() >= weekAgo).length;
   const developingTopics = reliable.filter((topic) => topic.status === "developing");
   const recommendedMinutes = weakTopics.length
     ? Math.min(30, 15 + Math.max(0, weakTopics.length - 1) * 5)
     : developingTopics.length ? 10 : reliable.length ? 5 : 0;
   const weakestReliable = [...reliable].sort((a, b) => (a.mastery ?? 101) - (b.mastery ?? 101))[0];
 
+  const availableSubjects = useMemo(() => {
+    if (bookFilter === "all") return subjects;
+    return subjects.filter((s) => s.book === bookFilter);
+  }, [bookFilter]);
+
   const filteredTopics = useMemo(() => {
     const needle = search.trim().toLowerCase();
-    const matching = topicMasteries.filter((topic) => (
+    const matching = bookMasteries.filter((topic) => (
       (subjectFilter === "all" || topic.subjectId === subjectFilter)
       && (statusFilter === "all" || topic.status === statusFilter)
-      && (!needle || `${topic.topicName} ${topic.subjectName}`.toLowerCase().includes(needle))
+      && (!needle || `${topic.topicName} ${topic.subjectName} ${topic.book ?? ""}`.toLowerCase().includes(needle))
     ));
     return matching.sort((a, b) => {
       if (sortMode === "strongest") return (b.mastery ?? -1) - (a.mastery ?? -1) || b.uniqueQuestions - a.uniqueQuestions;
@@ -128,7 +141,7 @@ export default function WeaknessDashboard({
       if (sortMode === "least-recent") return (a.lastReviewedAt ?? "").localeCompare(b.lastReviewedAt ?? "");
       return (a.mastery ?? 101) - (b.mastery ?? 101) || b.uniqueQuestions - a.uniqueQuestions;
     });
-  }, [search, sortMode, statusFilter, subjectFilter, topicMasteries]);
+  }, [bookMasteries, search, sortMode, statusFilter, subjectFilter]);
 
   const selectedTopic = topicMasteries.find((topic) => topic.topicId === selectedTopicId) ?? null;
   const selectedAttempts = selectedTopic
@@ -179,30 +192,68 @@ export default function WeaknessDashboard({
 
       <section className="weakness-list-card">
         <div className="weakness-list-heading">
-          <div><p className="eyebrow">Topic mastery</p><h2>Ranked learning priorities</h2><p>Scores use unique questions and delayed retention, not raw retry totals.</p></div>
+          <div>
+            <p className="eyebrow">Topic mastery</p>
+            <h2>Ranked learning priorities</h2>
+            <p>Scores use unique questions and delayed retention, not raw retry totals.</p>
+          </div>
           <label className="weakness-search"><span className="sr-only">Search topics</span><input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search a topic" /></label>
         </div>
 
         <div className="weakness-controls">
-          <label><span>Subject</span><select value={subjectFilter} onChange={(event) => setSubjectFilter(event.target.value)}><option value="all">All subjects</option>{subjects.map((subject) => <option value={subject.id} key={subject.id}>{subject.name}</option>)}</select></label>
+          <label>
+            <span>Book Edition</span>
+            <select
+              value={bookFilter}
+              onChange={(event) => {
+                setBookFilter(event.target.value as ReviewerBook | "all");
+                setSubjectFilter("all");
+              }}
+            >
+              <option value="all">All Books (Combined)</option>
+              <option value="Harr">Harr</option>
+              <option value="Ciulla">Ciulla</option>
+            </select>
+          </label>
+          <label><span>Subject</span><select value={subjectFilter} onChange={(event) => setSubjectFilter(event.target.value)}><option value="all">All subjects</option>{availableSubjects.map((subject) => <option value={subject.id} key={subject.id}>{subject.name}{bookFilter === "all" && subject.book ? ` (${subject.book})` : ""}</option>)}</select></label>
           <label><span>Sort</span><select value={sortMode} onChange={(event) => setSortMode(event.target.value as SortMode)}><option value="weakest">Weakest first</option><option value="strongest">Strongest first</option><option value="recent">Recently reviewed</option><option value="least-recent">Least recently reviewed</option></select></label>
         </div>
 
         <div className="weakness-tabs" role="tablist" aria-label="Mastery status filter">
           {(["all", "weak", "developing", "strong", "insufficient"] as StatusFilter[]).map((status) => (
             <button type="button" role="tab" aria-selected={statusFilter === status} className={statusFilter === status ? "active" : ""} onClick={() => setStatusFilter(status)} key={status}>
-              {status === "all" ? "All" : statusLabels[status]} <span>{status === "all" ? topicMasteries.length : topicMasteries.filter((topic) => topic.status === status).length}</span>
+              {status === "all" ? "All" : statusLabels[status]} <span>{status === "all" ? bookMasteries.length : bookMasteries.filter((topic) => topic.status === status).length}</span>
             </button>
           ))}
         </div>
 
         <div className="weakness-table-wrap">
           <table className="weakness-table">
-            <thead><tr><th>Subject &amp; topic</th><th>Mastery</th><th>Trend</th><th>Questions</th><th>Last reviewed</th><th>Recommended action</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Subject &amp; topic <span className="weakness-th-hint">(Click title for details)</span></th>
+                <th>Book edition</th>
+                <th>Mastery</th>
+                <th>Trend</th>
+                <th>Questions</th>
+                <th>Last reviewed</th>
+                <th>Recommended action</th>
+              </tr>
+            </thead>
             <tbody>
               {filteredTopics.map((topic) => (
                 <tr key={topic.topicId}>
-                  <td><button className="topic-detail-link" type="button" onClick={() => setSelectedTopicId(topic.topicId)}><small>{topic.subjectName}</small><strong>{topic.topicName}</strong></button></td>
+                  <td>
+                    <button className="topic-detail-link" type="button" onClick={() => setSelectedTopicId(topic.topicId)} title={`Click to view detailed analytics for ${topic.topicName}`}>
+                      <small>{topic.subjectName}</small>
+                      <strong>{topic.topicName}</strong>
+                    </button>
+                  </td>
+                  <td>
+                    <span className={`weakness-book-pill weakness-book-${(topic.book ?? "default").toLowerCase()}`}>
+                      {topic.book ?? "—"}
+                    </span>
+                  </td>
                   <td><span className={`mastery-badge status-${topic.status}`}><i aria-hidden="true" />{topic.mastery === null ? "—" : `${topic.mastery}%`} · {statusLabels[topic.status]}</span></td>
                   <td><span className={`trend-label trend-${topic.trend.direction}`}>{trendText(topic)}</span></td>
                   <td>{topic.uniqueQuestions} unique</td>
@@ -220,7 +271,7 @@ export default function WeaknessDashboard({
         <div className="weakness-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedTopicId(null); }}>
           <section className="weakness-detail" role="dialog" aria-modal="true" aria-labelledby="weakness-detail-title">
             <div className="weakness-detail-header">
-              <div><p className="eyebrow">{selectedTopic.subjectName}</p><h2 id="weakness-detail-title">{selectedTopic.topicName}</h2><span className={`mastery-badge status-${selectedTopic.status}`}><i aria-hidden="true" />{metric(selectedTopic.mastery)} · {statusLabels[selectedTopic.status]}</span></div>
+              <div><p className="eyebrow">{selectedTopic.subjectName}{selectedTopic.book ? ` · ${selectedTopic.book} Edition` : ""}</p><h2 id="weakness-detail-title">{selectedTopic.topicName}</h2><span className={`mastery-badge status-${selectedTopic.status}`}><i aria-hidden="true" />{metric(selectedTopic.mastery)} · {statusLabels[selectedTopic.status]}</span></div>
               <button className="modal-close" type="button" onClick={() => setSelectedTopicId(null)} aria-label="Close topic details">×</button>
             </div>
 
@@ -242,7 +293,6 @@ export default function WeaknessDashboard({
             <div className="weakness-actions">
               <button className="primary-button" type="button" onClick={() => onReviewWithAi(selectedTopic)}>Review with AI</button>
               <button className="secondary-button" type="button" onClick={() => onPractice(selectedTopic)}>Practice 10 Questions</button>
-              <button className="secondary-button" type="button" disabled title="Flashcards are coming soon">Create Flashcards <small>Coming soon</small></button>
               <button className="text-button" type="button" disabled={!selectedMistakes} onClick={() => onViewMistakes(selectedTopic)}>View Mistakes{selectedMistakes ? ` (${selectedMistakes})` : ""}</button>
             </div>
           </section>

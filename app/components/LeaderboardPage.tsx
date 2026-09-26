@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import type { Subject } from "../content/reviewerContent";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { ReviewerBook, Subject } from "../content/reviewerContent";
 import {
   accuracyRequirementMessage,
   formatLeaderboardMetric,
@@ -73,13 +73,17 @@ function CurrentPosition({ position, metric, period, onOpenSettings }: {
   );
 }
 
-export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjects, onOpenSettings, onToggleOptIn }: {
+import type { QuestionAttempt } from "../lib/domain";
+
+export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjects, attempts, onOpenSettings, onToggleOptIn }: {
   cloudEnabled: boolean;
   leaderboardOptIn: boolean;
   subjects: Subject[];
+  attempts?: QuestionAttempt[];
   onOpenSettings: () => void;
   onToggleOptIn?: (enabled: boolean) => Promise<void> | void;
 }) {
+  const [selectedBook, setSelectedBook] = useState<ReviewerBook | "all">("all");
   const [period, setPeriod] = useState<LeaderboardPeriod>("weekly");
   const [metric, setMetric] = useState<LeaderboardMetric>("questions");
   const [subjectId, setSubjectId] = useState<string | null>(null);
@@ -95,6 +99,11 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
   const selectSubject = (value: string | null) => { setSubjectId(value); setOffset(0); };
   const retry = useCallback(() => setReloadKey((current) => current + 1), []);
 
+  const availableSubjects = useMemo(() => {
+    if (selectedBook === "all") return subjects;
+    return subjects.filter((subject) => subject.book === selectedBook);
+  }, [selectedBook, subjects]);
+
   useEffect(() => {
     if (!cloudEnabled) return;
     let cancelled = false;
@@ -102,7 +111,15 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
       setLoading(true);
       setError("");
       try {
-        const result = await loadLeaderboard(createClient(), { period, metric, subjectId, limit: PAGE_SIZE, offset });
+        const result = await loadLeaderboard(createClient(), {
+          period,
+          metric,
+          subjectId,
+          book: selectedBook,
+          limit: PAGE_SIZE,
+          offset,
+          attempts,
+        });
         if (cancelled) return;
         setRows(result.rows);
         setPosition(result.currentPosition);
@@ -114,7 +131,7 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
     }
     void load();
     return () => { cancelled = true; };
-  }, [cloudEnabled, leaderboardOptIn, metric, offset, period, reloadKey, subjectId]);
+  }, [attempts, cloudEnabled, leaderboardOptIn, metric, offset, period, reloadKey, selectedBook, subjectId]);
 
   const selectedSubject = subjects.find((subject) => subject.id === subjectId) ?? null;
   const timezone = position?.periodTimezone ?? rows[0]?.periodTimezone ?? "Asia/Manila";
@@ -136,6 +153,47 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
     <div className={styles.page}>
       <section className={styles.controlCard} aria-label="Leaderboard filters">
         <div className={styles.filterGroup}>
+          <span>Book edition</span>
+          <div className={styles.segmented} role="group" aria-label="Leaderboard book edition">
+            <button
+              type="button"
+              className={selectedBook === "all" ? styles.active : ""}
+              aria-pressed={selectedBook === "all"}
+              onClick={() => {
+                setSelectedBook("all");
+                setSubjectId(null);
+                setOffset(0);
+              }}
+            >
+              All Books
+            </button>
+            <button
+              type="button"
+              className={selectedBook === "Harr" ? styles.active : ""}
+              aria-pressed={selectedBook === "Harr"}
+              onClick={() => {
+                setSelectedBook("Harr");
+                setSubjectId(null);
+                setOffset(0);
+              }}
+            >
+              Harr
+            </button>
+            <button
+              type="button"
+              className={selectedBook === "Ciulla" ? styles.active : ""}
+              aria-pressed={selectedBook === "Ciulla"}
+              onClick={() => {
+                setSelectedBook("Ciulla");
+                setSubjectId(null);
+                setOffset(0);
+              }}
+            >
+              Ciulla
+            </button>
+          </div>
+        </div>
+        <div className={styles.filterGroup}>
           <span>Time period</span>
           <div className={styles.segmented} role="group" aria-label="Leaderboard time period">
             {LEADERBOARD_PERIODS.map((option) => <button type="button" key={option.id} className={period === option.id ? styles.active : ""} aria-pressed={period === option.id} onClick={() => selectPeriod(option.id)}>{option.label}</button>)}
@@ -151,7 +209,17 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
           <span>Subject scope</span>
           <div className={styles.scopes} role="group" aria-label="Leaderboard subject">
             <button type="button" className={subjectId === null ? styles.activeScope : ""} aria-pressed={subjectId === null} onClick={() => selectSubject(null)}>Overall</button>
-            {subjects.map((subject) => <button type="button" key={subject.id} className={subjectId === subject.id ? styles.activeScope : ""} aria-pressed={subjectId === subject.id} onClick={() => selectSubject(subject.id)}>{subject.name}</button>)}
+            {availableSubjects.map((subject) => (
+              <button
+                type="button"
+                key={subject.id}
+                className={subjectId === subject.id ? styles.activeScope : ""}
+                aria-pressed={subjectId === subject.id}
+                onClick={() => selectSubject(subject.id)}
+              >
+                {subject.name}{selectedBook === "all" && subject.book ? ` (${subject.book})` : ""}
+              </button>
+            ))}
           </div>
         </div>
         <div className={styles.optInChoiceRow}>
@@ -183,7 +251,7 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
       <div className={styles.grid}>
         <section className={styles.boardCard} aria-labelledby="leaderboard-list-title" aria-busy={loading}>
           <div className={styles.boardHeading}>
-            <div><p>{selectedSubject?.name ?? "Overall"} · {periodLabel(period)}</p><h2 id="leaderboard-list-title">{metricHeading(metric)}</h2></div>
+            <div><p>{selectedSubject ? `${selectedSubject.name}${selectedBook === "all" && selectedSubject.book ? ` (${selectedSubject.book})` : ""}` : "Overall"} · {selectedBook === "all" ? "All Books" : `${selectedBook} Edition`} · {periodLabel(period)}</p><h2 id="leaderboard-list-title">{metricHeading(metric)}</h2></div>
             <span>{offset === 0 ? "Top 50" : `Ranks ${rangeStart}–${Math.max(rangeStart, rangeEnd)}`}</span>
           </div>
 

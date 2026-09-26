@@ -1,4 +1,4 @@
-import type { ReviewerQuestion } from "../content/reviewerContent";
+import type { ReviewerBook, ReviewerQuestion } from "../content/reviewerContent";
 
 export type Flashcard = {
   id: string;
@@ -8,11 +8,12 @@ export type Flashcard = {
   choices: string[];
   answer: string;
   explanation: string;
+  book?: ReviewerBook;
 };
 
 type FlashcardQuestion = Pick<
   ReviewerQuestion,
-  "id" | "subjectId" | "topicId" | "prompt" | "choices" | "correctAnswer" | "officialAnswer" | "explanation"
+  "id" | "subjectId" | "topicId" | "prompt" | "choices" | "correctAnswer" | "officialAnswer" | "explanation" | "book"
 >;
 
 function cleanAnswerLabel(answer: string) {
@@ -35,6 +36,7 @@ export function toFlashcard(question: FlashcardQuestion): Flashcard {
     choices: question.choices,
     answer: resolveFlashcardAnswer(question),
     explanation: question.explanation,
+    book: question.book,
   };
 }
 

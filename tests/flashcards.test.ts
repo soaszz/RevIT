@@ -27,6 +27,7 @@ test("flashcard presentation data includes choices without exposing source metad
   const card = toFlashcard(questions[0]);
   assert.deepEqual(Object.keys(card).sort(), [
     "answer",
+    "book",
     "choices",
     "explanation",
     "id",

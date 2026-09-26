@@ -23,6 +23,7 @@ import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
 import RevITLoadingScreen from "./components/RevITLoadingScreen";
 import ScientificCalculator from "./components/ScientificCalculator";
 import CustomConfirm from "./components/CustomConfirm";
+import ResumeSessionModal, { type SavedRecentSession } from "./components/ResumeSessionModal";
 import StudyCalendar from "./components/StudyCalendar";
 import StudyPlanner, { TodayStudyPlan } from "./components/StudyPlanner";
 import WeaknessDashboard from "./components/WeaknessDashboard";
@@ -61,7 +62,7 @@ import { createClient } from "./lib/supabase/client";
 import { useOnlinePresence } from "./lib/useOnlinePresence";
 import { hasCurrentLegalConsent } from "./lib/legal";
 import { canAccessFeature } from "./lib/features";
-import { ALL_MAJORS_CATEGORY, buildSubjectSections, filterSubjectsBySearch, MTAP_1_CATEGORY, OTHER_MAJORS_CATEGORY } from "./lib/reviewerLibrary";
+import { ALL_MAJORS_CATEGORY, buildSubjectSections, filterSubjectsBySearch, getUnifiedSubjects, MTAP_1_CATEGORY, OTHER_MAJORS_CATEGORY, type UnifiedSubject } from "./lib/reviewerLibrary";
 import { LOCAL_PREFERENCES_STORAGE_KEY, normalizeUserPreferences, withMtapFeaturePreference } from "./lib/userPreferences";
 import {
   emptyProgression,
@@ -93,6 +94,7 @@ import {
   subjects,
   topicById,
   topics,
+  type ReviewerBook,
 } from "./content/reviewerContent";
 
 type View = "overview" | "library" | "progress" | "leaderboards" | "weakness" | "planner" | "grades" | "assistant";
@@ -117,6 +119,7 @@ type LearnerProfile = {
 const DEFAULT_PROFILE: LearnerProfile = { name: "Student", photoDataUrl: "" };
 const TIMER_DISABLED: ReviewTimerConfig = { enabled: false, duration: 60 };
 const SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects";
+const RECENT_SESSION_STORAGE_KEY = "revit_recent_session_v1";
 
 const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Overview", icon: "/icons/home.svg" },
@@ -312,8 +315,18 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const [activeFlashcardTopics, setActiveFlashcardTopics] = useState<string[]>([]);
   const [subjectSearch, setSubjectSearch] = useState("");
   const [expandedSubjectIds, setExpandedSubjectIds] = useState<string[]>([]);
+  const [expandedBookEditionKeys, setExpandedBookEditionKeys] = useState<string[]>([]);
   const [progressSearch, setProgressSearch] = useState("");
+  const [progressBook, setProgressBook] = useState<ReviewerBook | "all">("all");
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [selectedBook, setSelectedBook] = useState<ReviewerBook | "all">(() => {
+    if (typeof window === "undefined") return "Harr";
+    try {
+      const saved = localStorage.getItem("revit-selected-book-v1");
+      if (saved === "Harr" || saved === "Ciulla" || saved === "all") return saved;
+    } catch {}
+    return "Harr";
+  });
   const [attempts, setAttempts] = useState<Attempt[]>([]);
   const [storageReady, setStorageReady] = useState(false);
   const [sessionSize, setSessionSize] = useState("10");
@@ -376,6 +389,8 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const [sessionPolicyReady, setSessionPolicyReady] = useState(!cloudEnabled);
   const [themeReady, setThemeReady] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState<{isOpen: boolean, action?: () => void, title?: string, message?: string, confirmLabel?: string}>({ isOpen: false });
+  const [recentSession, setRecentSession] = useState<SavedRecentSession | null>(null);
+  const [resumeModalOpen, setResumeModalOpen] = useState(false);
 
   function requestConfirm(title: string, message: string, confirmLabel: string, onConfirm: () => void) {
     setConfirmConfig({ isOpen: true, title, message, confirmLabel, action: () => {
@@ -523,6 +538,20 @@ useEffect(() => {
       }
     } catch {
       // Invalid local data should not block a study session.
+    }
+    try {
+      const savedRecent = localStorage.getItem(RECENT_SESSION_STORAGE_KEY);
+      if (savedRecent) {
+        const parsed = JSON.parse(savedRecent) as SavedRecentSession;
+        if (parsed && Array.isArray(parsed.questionIds) && parsed.questionIds.length > 0 && parsed.index < parsed.questionIds.length) {
+          setRecentSession(parsed);
+          setResumeModalOpen(true);
+        } else {
+          localStorage.removeItem(RECENT_SESSION_STORAGE_KEY);
+        }
+      }
+    } catch {
+      // Corrupt recent session should not block app
     }
     setReinforcementReady(true);
     setStorageReady(true);
@@ -860,10 +889,19 @@ useEffect(() => {
     return new Set([...latestAttempts.values()].filter((attempt) => !attempt.correct).map((attempt) => attempt.questionId));
   }, [attempts]);
 
-  const wrongTopicIds = useMemo(
-    () => [...new Set(questions.filter((question) => wrongQuestionIds.has(question.id)).map((question) => question.topicId))],
-    [wrongQuestionIds],
-  );
+  const currentBookSubjects = useMemo(() => {
+    return getUnifiedSubjects(selectedBook, subjects, topics);
+  }, [selectedBook]);
+
+  const currentBookTopics = useMemo(() => {
+    if (selectedBook === "all") return topics;
+    return topics.filter((topic) => topic.book === selectedBook);
+  }, [selectedBook]);
+
+  const wrongTopicIds = useMemo(() => {
+    const activeTopicIds = new Set(currentBookTopics.map((topic) => topic.id));
+    return [...new Set(questions.filter((question) => wrongQuestionIds.has(question.id) && activeTopicIds.has(question.topicId)).map((question) => question.topicId))];
+  }, [currentBookTopics, wrongQuestionIds]);
 
   const sessionQuestions = useMemo(
     () => wrongAnswersOnly
@@ -873,18 +911,51 @@ useEffect(() => {
   );
 
   const visibleSubjects = useMemo(
-    () => filterSubjectsBySearch(subjects, topics, subjectSearch),
-    [subjectSearch],
+    () => filterSubjectsBySearch(currentBookSubjects, currentBookTopics, subjectSearch),
+    [currentBookSubjects, currentBookTopics, subjectSearch],
   );
 
+  const progressSubjects = useMemo(() => {
+    return getUnifiedSubjects(progressBook, subjects, topics);
+  }, [progressBook]);
+
+  const progressTopics = useMemo(() => {
+    if (progressBook === "all") return topics;
+    return topics.filter((t) => t.book === progressBook);
+  }, [progressBook]);
+
   const visibleProgressSubjects = useMemo(
-    () => filterSubjectsBySearch(subjects, topics, progressSearch),
-    [progressSearch, subjects, topics],
+    () => filterSubjectsBySearch(progressSubjects, progressTopics, progressSearch),
+    [progressSubjects, progressTopics, progressSearch],
   );
+
   const subjectSections = useMemo(
     () => buildSubjectSections(visibleSubjects, preferences.mtap_features_enabled),
     [preferences.mtap_features_enabled, visibleSubjects],
   );
+
+  const progressAttempts = useMemo(() => {
+    if (progressBook === "all") return attempts;
+    const validTopicIds = new Set(progressTopics.map((t) => t.id));
+    return attempts.filter((a) => validTopicIds.has(a.topicId));
+  }, [attempts, progressBook, progressTopics]);
+
+  const progressTopicStats = useMemo(() => progressTopics.map((topic) => {
+    const topicAttempts = progressAttempts.filter((attempt) => attempt.topicId === topic.id);
+    const correct = topicAttempts.filter((attempt) => attempt.correct).length;
+    return {
+      ...topic,
+      attempts: topicAttempts.length,
+      correct,
+      accuracy: percent(correct, topicAttempts.length),
+    };
+  }), [progressAttempts, progressTopics]);
+
+  const progressOverallCorrect = progressAttempts.filter((attempt) => attempt.correct).length;
+  const progressOverallAccuracy = percent(progressOverallCorrect, progressAttempts.length);
+  const progressPracticedTopics = progressTopicStats.filter((topic) => topic.attempts > 0);
+  const progressStrongestTopic = [...progressPracticedTopics].sort((a, b) => b.accuracy - a.accuracy || b.attempts - a.attempts)[0];
+  const progressWeakestTopic = [...progressPracticedTopics].sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts)[0];
 
   const topicStats = useMemo(() => topics.map((topic) => {
     const topicAttempts = attempts.filter((attempt) => attempt.topicId === topic.id);
@@ -926,8 +997,8 @@ useEffect(() => {
       : [...current, topicId]);
   }
 
-  function toggleSubject(subjectId: string) {
-    const subjectTopicIds = topics.filter((topic) => topic.subjectId === subjectId).map((topic) => topic.id);
+  function toggleSubject(subjectId: string, topicIdsOverride?: string[]) {
+    const subjectTopicIds = topicIdsOverride ?? topics.filter((topic) => topic.subjectId === subjectId).map((topic) => topic.id);
     setSelectedTopicIds((current) => subjectTopicIds.every((id) => current.includes(id))
       ? current.filter((id) => !subjectTopicIds.includes(id))
       : [...new Set([...current, ...subjectTopicIds])]);
@@ -939,6 +1010,25 @@ useEffect(() => {
         ? current.filter((id) => id !== subjectId)
         : [...current, subjectId],
     );
+  }
+
+  function toggleBookEditionExpanded(subjectId: string, book: ReviewerBook) {
+    const key = `${subjectId}:${book}`;
+    setExpandedBookEditionKeys((current) =>
+      current.includes(key)
+        ? current.filter((id) => id !== key)
+        : [...current, key],
+    );
+  }
+
+  function handleBookChange(newBook: ReviewerBook | "all") {
+    setSelectedBook(newBook);
+    try {
+      localStorage.setItem("revit-selected-book-v1", newBook);
+    } catch {}
+    const newBookTopics = newBook === "all" ? topics : topics.filter((t) => t.book === newBook);
+    const validIds = new Set(newBookTopics.map((t) => t.id));
+    setSelectedTopicIds((current) => current.filter((id) => validIds.has(id)));
   }
 
   function selectAllWrongAnswers() {
@@ -954,6 +1044,7 @@ useEffect(() => {
   ) {
     const firstQuestionId = chooseAdaptiveQuestion(poolIds, reinforcementLevels, [], Math.random, questionPerformance);
     if (!firstQuestionId) return;
+    clearRecentSession();
     answerLockedRef.current = false;
     if (soundEffectsEnabled) void unlockReviewSounds();
     setSessionPoolIds(poolIds);
@@ -979,6 +1070,7 @@ useEffect(() => {
   ) {
     const strictQuestionIds = shuffled(poolIds).slice(0, Math.min(limit, poolIds.length));
     if (!strictQuestionIds.length) return;
+    clearRecentSession();
     answerLockedRef.current = false;
     if (soundEffectsEnabled) void unlockReviewSounds();
     setSessionPoolIds(strictQuestionIds);
@@ -1012,12 +1104,133 @@ useEffect(() => {
     beginAdaptiveSession(poolIds, targetCount, "adaptive", timerConfig);
   }
 
+  function clearRecentSession() {
+    try {
+      localStorage.removeItem(RECENT_SESSION_STORAGE_KEY);
+    } catch {}
+    setRecentSession(null);
+  }
+
+  function timeoutSession() {
+    if (!currentQuestion || sessionQuestionIds.length === 0) return;
+
+    const currentTopic = topicById.get(currentQuestion.topicId);
+    const currentSubject = subjectById.get(currentQuestion.subjectId);
+
+    const saved: SavedRecentSession = {
+      id: sessionId ?? crypto.randomUUID(),
+      poolIds: sessionPoolIds,
+      targetCount: sessionTargetCount,
+      questionIds: sessionQuestionIds,
+      choiceOrders: sessionChoiceOrders,
+      strictWrongOnly: sessionStrictWrongOnly,
+      sessionMode,
+      index: sessionIndex,
+      attempts: sessionAttempts,
+      activeTimer,
+      selectedTopicIds,
+      wrongAnswersOnly,
+      book: selectedBook,
+      pausedAt: new Date().toISOString(),
+      primaryTopicName: currentTopic?.name || "Review Session",
+      subjectName: currentSubject?.name || "Review Library",
+    };
+
+    try {
+      localStorage.setItem(RECENT_SESSION_STORAGE_KEY, JSON.stringify(saved));
+      setRecentSession(saved);
+    } catch {}
+
+    answerLockedRef.current = true;
+    setSessionPoolIds([]);
+    setSessionTargetCount(0);
+    setSessionQuestionIds([]);
+    setSessionChoiceOrders({});
+    setSessionStrictWrongOnly(false);
+    setSessionMode("reviewer");
+    setSessionId(null);
+    setSessionIndex(0);
+    setSessionAttempts([]);
+    setSelectedChoice(null);
+    setAnswerRevealed(false);
+    setTimedOut(false);
+    setActiveTimer(TIMER_DISABLED);
+  }
+
+  function continueRecentSession() {
+    const sessionToResume = recentSession;
+    if (!sessionToResume) return;
+
+    setLibraryMode("mcqs");
+    if (sessionToResume.selectedTopicIds) {
+      setSelectedTopicIds(sessionToResume.selectedTopicIds);
+    }
+    if (sessionToResume.wrongAnswersOnly !== undefined) {
+      setWrongAnswersOnly(sessionToResume.wrongAnswersOnly);
+    }
+    if (sessionToResume.book) {
+      setSelectedBook(sessionToResume.book);
+    }
+
+    setSessionId(sessionToResume.id);
+    setSessionPoolIds(sessionToResume.poolIds);
+    setSessionTargetCount(sessionToResume.targetCount);
+    setSessionQuestionIds(sessionToResume.questionIds);
+    setSessionChoiceOrders(sessionToResume.choiceOrders);
+    setSessionStrictWrongOnly(sessionToResume.strictWrongOnly);
+    setSessionMode(sessionToResume.sessionMode);
+    setSessionIndex(sessionToResume.index);
+    setSessionAttempts(sessionToResume.attempts);
+    setSelectedChoice(null);
+    setAnswerRevealed(false);
+    setTimedOut(false);
+    setActiveTimer(sessionToResume.activeTimer || TIMER_DISABLED);
+    answerLockedRef.current = false;
+
+    setResumeModalOpen(false);
+    setActiveView("library");
+    window.history.pushState(null, "", "/library");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function discardRecentSession() {
+    clearRecentSession();
+    setResumeModalOpen(false);
+  }
+
   function leaveSession(force?: boolean | import("react").MouseEvent) {
     const shouldForce = force === true;
     if (!shouldForce && !sessionComplete && sessionQuestionIds.length > 0) {
-      requestConfirm("End review session?", "Are you sure you want to end this review session? Your current progress will be lost.", "End session", () => leaveSession(true));
+      if (sessionAttempts.length > 0) {
+        requestConfirm(
+          "Exit review session?",
+          "Your answered questions are saved. Would you like to exit early and view your results?",
+          "Yes, view results",
+          () => {
+            clearRecentSession();
+            if (sessionId) {
+              void recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
+            }
+            const answeredIds = sessionQuestionIds.slice(0, sessionAttempts.length);
+            setSessionQuestionIds(answeredIds.length > 0 ? answeredIds : sessionQuestionIds.slice(0, 1));
+            setSessionIndex(sessionAttempts.length);
+            setSelectedChoice(null);
+            setAnswerRevealed(false);
+            setTimedOut(false);
+            setActiveTimer(TIMER_DISABLED);
+          },
+        );
+      } else {
+        requestConfirm(
+          "Exit review session?",
+          "Are you sure you want to exit? You have not answered any questions yet.",
+          "Exit session",
+          () => leaveSession(true),
+        );
+      }
       return false;
     }
+    clearRecentSession();
     answerLockedRef.current = true;
     setSessionPoolIds([]);
     setSessionTargetCount(0);
@@ -1260,7 +1473,7 @@ useEffect(() => {
     if (view !== "library" && activeView === "library") {
       const isReviewing = (libraryMode === "mcqs" && sessionQuestionIds.length > 0) || (libraryMode === "flashcards" && isFlashcardReviewing);
       if (isReviewing) {
-        requestConfirm("End review session?", "Are you sure you want to end this review session? Your current progress will be lost.", "End session", () => {
+        requestConfirm("Leave review session?", "Your answered questions are saved. Are you sure you want to leave this session?", "Leave session", () => {
           if (libraryMode === "mcqs" && sessionQuestionIds.length > 0) leaveSession(true);
           setActiveView(view);
           window.history.pushState(null, "", `/${view}`);
@@ -1495,11 +1708,29 @@ useEffect(() => {
     setMessages(nextMessages);
 
     try {
+      const outboundMessages: { role: "user" | "assistant"; content: string }[] = [];
+      for (let i = nextMessages.length - 1; i >= 0; i--) {
+        const msg = nextMessages[i];
+        if (msg.role !== "user" && msg.role !== "assistant") continue;
+        const clean = msg.content.trim();
+        if (!clean) continue;
+        if (outboundMessages.length === 0) {
+          if (msg.role === "user") outboundMessages.unshift({ role: "user", content: clean });
+        } else {
+          const expected = outboundMessages[0].role === "user" ? "assistant" : "user";
+          if (msg.role === expected) outboundMessages.unshift({ role: msg.role, content: clean });
+        }
+        if (outboundMessages.length >= 11) break;
+      }
+      while (outboundMessages.length > 0 && outboundMessages[0].role !== "user") {
+        outboundMessages.shift();
+      }
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: nextMessages.slice(-12).map(({ role, content }) => ({ role, content })),
+          messages: outboundMessages.length > 0 ? outboundMessages : [{ role: "user", content: cleanQuestion }],
         }),
       });
       let data: {
@@ -1803,7 +2034,27 @@ useEffect(() => {
             </button>}
             {activeView === "overview" && <span className="streak-badge"><strong>{streak.current}</strong><span>day streak<small>{streak.longest} longest · {streak.activeDays} active</small></span></span>}
             {activeView === "overview" && <button className="primary-button" type="button" onClick={() => openView("library")}>Choose topics</button>}
-            {activeView === "library" && !isReviewSessionActive && <ReviewModeSwitch mode={libraryMode} onChange={changeLibraryMode} />}
+            {activeView === "library" && !isReviewSessionActive && (
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                <ReviewModeSwitch mode={libraryMode} onChange={changeLibraryMode} />
+                {recentSession && (
+                  <button
+                    className="continue-recent-session-button"
+                    type="button"
+                    onClick={continueRecentSession}
+                    title={`Continue ${recentSession.primaryTopicName} (${recentSession.index + 1}/${recentSession.targetCount})`}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                    <span>Continue recent session</span>
+                    <span className="continue-session-badge">
+                      {recentSession.index + 1}/{recentSession.targetCount}
+                    </span>
+                  </button>
+                )}
+              </div>
+            )}
             {activeView === "library" && isReviewSessionActive && currentSessionTopicNames.length > 0 && (
               <div style={{ textAlign: "right", marginLeft: "auto", maxWidth: "340px", minWidth: 0 }}>
                 <div style={{ color: "var(--green)", fontWeight: 700, fontSize: "14px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
@@ -1900,7 +2151,13 @@ useEffect(() => {
         )}
 
         {activeView === "library" && (libraryMode === "flashcards" ? (
-          <Flashcards isNuRevit={preferences.mtap_features_enabled} onReviewingChange={handleFlashcardReviewingChange} onRequestConfirm={requestConfirm} />
+          <Flashcards
+            isNuRevit={preferences.mtap_features_enabled}
+            selectedBook={selectedBook}
+            onSelectBook={handleBookChange}
+            onReviewingChange={handleFlashcardReviewingChange}
+            onRequestConfirm={requestConfirm}
+          />
         ) : (
           <div className="library-shell">
             {sessionQuestionIds.length === 0 ? (
@@ -1922,12 +2179,19 @@ useEffect(() => {
                             {section.description && <p>{section.description}</p>}
                           </div>
                         )}
-                        {section.subjects.map((subject) => {
-                          const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
+                        {section.subjects.map((subject: UnifiedSubject) => {
+                          const unifiedSubj = subject;
+                          const subjectTopics = currentBookTopics.filter((topic) =>
+                            subject.topicIds ? subject.topicIds.includes(topic.id) : topic.subjectId === subject.id
+                          );
+                          const subjectTopicIds = subjectTopics.map((topic) => topic.id);
                           const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
                           const subjectFullySelected = subjectTopics.length > 0 && subjectSelected === subjectTopics.length;
                           const isExpanded = expandedSubjectIds.includes(subject.id);
-                          const subjectQuestionCount = questions.filter((question) => question.subjectId === subject.id).length;
+                          const subjectQuestionCount = questions.filter((question) => subjectTopicIds.includes(question.topicId)).length;
+                          const bookLabel = unifiedSubj.books && unifiedSubj.books.length > 0
+                            ? unifiedSubj.books.join(", ")
+                            : (subject.book ?? "Harr");
                           return (
                             <section className={`subject-card ${isExpanded ? "is-expanded" : ""}`} key={subject.id}>
                               <div
@@ -1946,7 +2210,7 @@ useEffect(() => {
                               >
                                 <div className="subject-heading-info">
                                   <div className="subject-heading-meta">
-                                    <span className="eyebrow">{subjectQuestionCount} official MCQs · {subjectTopics.length} topic{subjectTopics.length === 1 ? "" : "s"}</span>
+                                    <span className="eyebrow">{subjectQuestionCount} official MCQs · {subjectTopics.length} topic{subjectTopics.length === 1 ? "" : "s"} · {bookLabel}</span>
                                     {subjectSelected > 0 && (
                                       <span className={`subject-status-badge ${subjectFullySelected ? "fully-selected" : "partially-selected"}`}>
                                         {subjectFullySelected ? "All selected" : `${subjectSelected}/${subjectTopics.length} selected`}
@@ -1962,7 +2226,7 @@ useEffect(() => {
                                     type="button"
                                     onClick={(event) => {
                                       event.stopPropagation();
-                                      toggleSubject(subject.id);
+                                      toggleSubject(subject.id, subjectTopicIds);
                                     }}
                                   >
                                     {subjectFullySelected ? "Unselect subject" : "Select subject"}
@@ -2024,20 +2288,198 @@ useEffect(() => {
                               >
                                 <div className="subject-topics-content">
                                   <div className="subject-topics-inner">
-                                    <div className="topic-selection-grid">
-                                      {subjectTopics.map((topic) => {
-                                        const count = questions.filter((question) => question.topicId === topic.id).length;
-                                        const selected = selectedTopicIds.includes(topic.id);
-                                        return (
-                                          <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
-                                            <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                            <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                                            <span className="topic-select-copy"><strong>{topic.name}</strong><small>{topic.description}</small><em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em></span>
-                                          </label>
-                                        );
-                                      })}
-                                    </div>
-                                    <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                                    {selectedBook === "all" ? (
+                                      <div className="subject-book-groups">
+                                        {(["Harr", "Ciulla"] as const).map((bookName) => {
+                                          const bookTopics = subjectTopics.filter((t) => t.book === bookName);
+                                          if (!bookTopics.length) return null;
+                                          const bookTopicIds = bookTopics.map((t) => t.id);
+                                          const bookKey = `${subject.id}:${bookName}`;
+                                          const isBookExpanded = expandedBookEditionKeys.includes(bookKey);
+                                          const bookSelected = bookTopics.filter((t) => selectedTopicIds.includes(t.id)).length;
+                                          const bookFullySelected = bookTopics.length > 0 && bookSelected === bookTopics.length;
+                                          const bookQuestionCount = questions.filter((q) => bookTopicIds.includes(q.topicId)).length;
+
+                                          return (
+                                            <div
+                                              className={`book-edition-accordion ${isBookExpanded ? "is-expanded" : ""}`}
+                                              key={bookName}
+                                              style={{
+                                                border: "1px solid var(--line)",
+                                                borderRadius: "12px",
+                                                background: isBookExpanded ? "var(--paper)" : "var(--surface-soft)",
+                                                overflow: "hidden",
+                                                transition: "all 0.2s ease",
+                                                marginBottom: "10px",
+                                              }}
+                                            >
+                                              <div
+                                                className="book-edition-heading"
+                                                onClick={() => toggleBookEditionExpanded(subject.id, bookName)}
+                                                role="button"
+                                                tabIndex={0}
+                                                aria-expanded={isBookExpanded}
+                                                aria-controls={`mcq-book-topics-${subject.id}-${bookName}`}
+                                                onKeyDown={(event) => {
+                                                  if (event.key === "Enter" || event.key === " ") {
+                                                    event.preventDefault();
+                                                    toggleBookEditionExpanded(subject.id, bookName);
+                                                  }
+                                                }}
+                                                style={{
+                                                  display: "flex",
+                                                  alignItems: "center",
+                                                  justifyContent: "space-between",
+                                                  padding: "13px 16px",
+                                                  gap: "14px",
+                                                  cursor: "pointer",
+                                                  userSelect: "none",
+                                                  width: "100%",
+                                                  boxSizing: "border-box",
+                                                }}
+                                              >
+                                                <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0, flex: "1 1 auto", flexWrap: "wrap" }}>
+                                                  <span className="book-edition-title" style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", whiteSpace: "nowrap" }}>
+                                                    {bookName} Edition
+                                                  </span>
+                                                  <span className="book-edition-meta" style={{ fontSize: "11px", color: "var(--muted)", fontWeight: 500, whiteSpace: "nowrap" }}>
+                                                    • {bookTopics.length} topic{bookTopics.length === 1 ? "" : "s"} · {bookQuestionCount} MCQs
+                                                  </span>
+                                                  {bookSelected > 0 && (
+                                                    <span className={`subject-status-badge ${bookFullySelected ? "fully-selected" : "partially-selected"}`} style={{ fontSize: "9px", padding: "1px 7px" }}>
+                                                      {bookFullySelected ? "All selected" : `${bookSelected}/${bookTopics.length}`}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                                <div className="book-edition-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0, marginLeft: "auto" }}>
+                                                  <button
+                                                    className="text-button"
+                                                    type="button"
+                                                    onClick={(event) => {
+                                                      event.stopPropagation();
+                                                      toggleSubject(subject.id, bookTopicIds);
+                                                    }}
+                                                    style={{ fontSize: "11px", fontWeight: 650, whiteSpace: "nowrap" }}
+                                                  >
+                                                    {bookFullySelected ? `Unselect ${bookName}` : `Select ${bookName}`}
+                                                  </button>
+                                                  <span className={`topic-book-badge topic-book-${bookName.toLowerCase()}`} style={{ flexShrink: 0, margin: 0 }}>
+                                                    {bookName}
+                                                  </span>
+                                                  <button
+                                                    className="book-edition-toggle"
+                                                    type="button"
+                                                    aria-label={isBookExpanded ? `Hide ${bookName} topics` : `Show ${bookName} topics`}
+                                                    onClick={(event) => {
+                                                      event.stopPropagation();
+                                                      toggleBookEditionExpanded(subject.id, bookName);
+                                                    }}
+                                                    style={{
+                                                      display: "inline-flex",
+                                                      alignItems: "center",
+                                                      gap: "6px",
+                                                      padding: "6px 12px",
+                                                      borderRadius: "8px",
+                                                      border: "1px solid var(--line)",
+                                                      background: isBookExpanded ? "var(--green-soft)" : "var(--surface-tint)",
+                                                      color: isBookExpanded ? "var(--green-dark)" : "var(--ink)",
+                                                      fontSize: "10.5px",
+                                                      fontWeight: 650,
+                                                      cursor: "pointer",
+                                                      whiteSpace: "nowrap",
+                                                      lineHeight: 1,
+                                                      flexShrink: 0,
+                                                    }}
+                                                  >
+                                                    <span>{isBookExpanded ? "Hide topics" : "Show topics"}</span>
+                                                    <svg
+                                                      width="13"
+                                                      height="13"
+                                                      viewBox="0 0 24 24"
+                                                      fill="none"
+                                                      stroke="currentColor"
+                                                      strokeWidth="2.5"
+                                                      strokeLinecap="round"
+                                                      strokeLinejoin="round"
+                                                      aria-hidden="true"
+                                                      style={{
+                                                        flexShrink: 0,
+                                                        transform: isBookExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                                                        transition: "transform 0.22s ease",
+                                                        color: isBookExpanded ? "var(--green)" : "var(--muted)",
+                                                      }}
+                                                    >
+                                                      <polyline points="6 9 12 15 18 9" />
+                                                    </svg>
+                                                  </button>
+                                                </div>
+                                              </div>
+                                              <div
+                                                id={`mcq-book-topics-${subject.id}-${bookName}`}
+                                                className="book-edition-content"
+                                                style={!isBookExpanded ? { display: "none" } : undefined}
+                                                aria-hidden={!isBookExpanded}
+                                              >
+                                                <div className="topic-selection-grid">
+                                                  {bookTopics.map((topic) => {
+                                                    const count = questions.filter((question) => question.topicId === topic.id).length;
+                                                    const selected = selectedTopicIds.includes(topic.id);
+                                                    return (
+                                                      <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                                        <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                                        <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                                        <span className="topic-select-copy">
+                                                          <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
+                                                            <strong>{topic.name}</strong>
+                                                            {topic.book && (
+                                                              <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={{ marginLeft: "auto", flexShrink: 0 }}>
+                                                                {topic.book}
+                                                              </span>
+                                                            )}
+                                                          </div>
+                                                          <small>{topic.description}</small>
+                                                          <em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em>
+                                                        </span>
+                                                      </label>
+                                                    );
+                                                  })}
+                                                </div>
+                                                <p className="subject-selection-note">{bookSelected} of {bookTopics.length} {bookName} topics selected</p>
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                        <p className="subject-selection-note" style={{ marginTop: "6px" }}>{subjectSelected} of {subjectTopics.length} total topics selected</p>
+                                      </div>
+                                    ) : (
+                                      <>
+                                        <div className="topic-selection-grid">
+                                          {subjectTopics.map((topic) => {
+                                            const count = questions.filter((question) => question.topicId === topic.id).length;
+                                            const selected = selectedTopicIds.includes(topic.id);
+                                            return (
+                                              <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                                <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                                <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                                <span className="topic-select-copy">
+                                                  <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
+                                                    <strong>{topic.name}</strong>
+                                                    {topic.book && (
+                                                      <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={{ marginLeft: "auto", flexShrink: 0 }}>
+                                                        {topic.book}
+                                                      </span>
+                                                    )}
+                                                  </div>
+                                                  <small>{topic.description}</small>
+                                                  <em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em>
+                                                </span>
+                                              </label>
+                                            );
+                                          })}
+                                        </div>
+                                        <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                                      </>
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -2061,8 +2503,20 @@ useEffect(() => {
                     <p>{wrongAnswersOnly
                       ? `${sessionQuestions.length} wrong-answer question${sessionQuestions.length === 1 ? " is" : "s are"} available from your selection.`
                       : `${sessionQuestions.length} official questions are available from your selection.`}</p>
+                    <div style={{ marginBottom: "14px" }}>
+                      <label className="field-label" htmlFor="reviewer-book">Reviewer book</label>
+                      <select
+                        id="reviewer-book"
+                        value={selectedBook}
+                        onChange={(event) => handleBookChange(event.target.value as ReviewerBook | "all")}
+                      >
+                        <option value="Harr">Harr (999 MCQs)</option>
+                        <option value="Ciulla">Ciulla (1,884 MCQs)</option>
+                        <option value="all">All Books (2,883 MCQs)</option>
+                      </select>
+                    </div>
                     <div className="selection-controls">
-                      <button className="text-button" type="button" onClick={() => setSelectedTopicIds(topics.map((topic) => topic.id))}>Select all</button>
+                      <button className="text-button" type="button" onClick={() => setSelectedTopicIds(currentBookTopics.map((topic) => topic.id))}>Select all</button>
                       <button className="text-button" type="button" onClick={selectAllWrongAnswers} disabled={!wrongTopicIds.length}>All wrong answers</button>
                       <button className="text-button quiet" type="button" onClick={() => setSelectedTopicIds([])}>Clear all</button>
                     </div>
@@ -2097,12 +2551,34 @@ useEffect(() => {
               <section className="quiz-card">
                 <div className="quiz-topline">
                   <div><span>{sessionRequiresFullCoverage ? `Question ${sessionIndex + 1} · ${sessionUniqueQuestionCount} of ${sessionPoolIds.length} concepts` : `Question ${sessionIndex + 1} of ${sessionTargetCount}`}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
-                  <button className="secondary-button" type="button" onClick={leaveSession}>Exit session</button>
+                  <div className="quiz-topline-actions" style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+                    <button
+                      className="secondary-button timeout-button"
+                      type="button"
+                      onClick={timeoutSession}
+                      title="Pause session and navigate anywhere in RevIT"
+                      style={{ display: "inline-flex", alignItems: "center", flexDirection: "row", gap: "6px", whiteSpace: "nowrap" }}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ display: "inline-block", flexShrink: 0 }}>
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="10" y1="15" x2="10" y2="9" />
+                        <line x1="14" y1="15" x2="14" y2="9" />
+                      </svg>
+                      <span>Timeout</span>
+                    </button>
+                    <button className="secondary-button" type="button" onClick={leaveSession} style={{ whiteSpace: "nowrap" }}>Exit session</button>
+                  </div>
                 </div>
                 <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
-                <div className="quiz-question-heading">
+                <p className="question-source">{currentQuestion.book ? `${currentQuestion.book} · ` : ""}{subjectById.get(currentQuestion.subjectId)?.name}</p>
+                {currentQuestion.caseStudy && (
+                  <div className="quiz-case-study" style={{ marginBottom: "1rem", fontSize: "1.05rem", lineHeight: "1.6", color: "var(--text-main, #f1f5f9)", fontWeight: 500 }}>
+                    <p>{currentQuestion.caseStudy}</p>
+                  </div>
+                )}
+                <QuestionStimulus stimulus={currentQuestion.stimulus} />
+                <div className="quiz-question-heading" style={{ marginTop: currentQuestion.stimulus || currentQuestion.caseStudy ? "1rem" : undefined }}>
                   <div>
-                    <p className="question-source">{subjectById.get(currentQuestion.subjectId)?.name}</p>
                     <h2>{currentQuestion.prompt}</h2>
                   </div>
                   {activeTimer.enabled && (
@@ -2115,7 +2591,6 @@ useEffect(() => {
                     />
                   )}
                 </div>
-                <QuestionStimulus stimulus={currentQuestion.stimulus} />
                 <div className="choice-list">
                   {currentChoiceOrder.map((choiceIndex, displayIndex) => {
                     const choice = currentQuestion.choices[choiceIndex];
@@ -2157,10 +2632,47 @@ useEffect(() => {
 
         {activeView === "progress" && (
           <div className="progress-shell">
+            <div className="progress-book-control">
+              <span className="progress-book-label">Book edition:</span>
+              <div className="progress-book-tabs" role="group" aria-label="Progress book edition">
+                {(["all", "Harr", "Ciulla"] as const).map((b) => (
+                  <button
+                    key={b}
+                    type="button"
+                    className={progressBook === b ? "active" : ""}
+                    onClick={() => setProgressBook(b)}
+                  >
+                    {b === "all" ? "All Books (Combined)" : `${b} Edition`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <section className="summary-grid progress-summary">
-              <article className="metric-card accent-card"><div className="metric-label"><span>Practice accuracy</span><small>All topics</small></div><strong>{attempts.length ? `${overallAccuracy}%` : "—"}</strong><p>{attempts.length ? `${overallCorrect} correct answers` : "No attempts yet"}</p></article>
-              <article className="metric-card"><div className="metric-label"><span>Strongest topic</span><small>{strongestTopic?.attempts ?? 0} attempts</small></div><strong className="metric-name">{strongestTopic?.name ?? "Not enough data"}</strong><p>{strongestTopic ? `${strongestTopic.accuracy}% accuracy` : "Complete your first review."}</p></article>
-              <article className="metric-card"><div className="metric-label"><span>Needs review</span><small>{weakestTopic?.attempts ?? 0} attempts</small></div><strong className="metric-name">{weakestTopic?.name ?? "Not enough data"}</strong><p>{weakestTopic ? `${weakestTopic.accuracy}% accuracy` : "Topic guidance appears after practice."}</p></article>
+              <article className="metric-card accent-card">
+                <div className="metric-label">
+                  <span>Practice accuracy</span>
+                  <small>{progressBook === "all" ? "All books combined" : `${progressBook} Edition`}</small>
+                </div>
+                <strong>{progressAttempts.length ? `${progressOverallAccuracy}%` : "—"}</strong>
+                <p>{progressAttempts.length ? `${progressOverallCorrect} correct answers` : "No attempts yet"}</p>
+              </article>
+              <article className="metric-card">
+                <div className="metric-label">
+                  <span>Strongest topic</span>
+                  <small>{progressStrongestTopic?.attempts ?? 0} attempts</small>
+                </div>
+                <strong className="metric-name">{progressStrongestTopic?.name ?? "Not enough data"}</strong>
+                <p>{progressStrongestTopic ? `${progressStrongestTopic.accuracy}% accuracy` : "Complete your first review."}</p>
+              </article>
+              <article className="metric-card">
+                <div className="metric-label">
+                  <span>Needs review</span>
+                  <small>{progressWeakestTopic?.attempts ?? 0} attempts</small>
+                </div>
+                <strong className="metric-name">{progressWeakestTopic?.name ?? "Not enough data"}</strong>
+                <p>{progressWeakestTopic ? `${progressWeakestTopic.accuracy}% accuracy` : "Topic guidance appears after practice."}</p>
+              </article>
             </section>
 
             <LibrarySearch
@@ -2174,6 +2686,7 @@ useEffect(() => {
 
             <div className="progress-grid">
               {visibleProgressSubjects.map((subject) => {
+                const unifiedSubj = subject as UnifiedSubject;
                 const query = progressSearch.trim().toLowerCase();
                 const isCategoryMatch =
                   progressSearch.trim() === MTAP_1_CATEGORY ||
@@ -2182,18 +2695,37 @@ useEffect(() => {
 
                 const subjectMatches = query === "" || isCategoryMatch || subject.name.toLowerCase().includes(query) || (subject.category && subject.category.toLowerCase().includes(query));
 
-                const matchingTopics = topicStats.filter(t =>
-                  t.subjectId === subject.id &&
+                const subjectTopicIds = subject.topicIds ?? [];
+                const matchingTopics = progressTopicStats.filter((t) =>
+                  (subjectTopicIds.includes(t.id) || t.subjectId === subject.id) &&
                   (subjectMatches || t.name.toLowerCase().includes(query))
                 );
 
+                const subjectAttemptsCount = progressAttempts.filter((attempt) =>
+                  subjectTopicIds.includes(attempt.topicId) || attempt.subjectId === subject.id
+                ).length;
+
+                const bookLabel = progressBook === "all"
+                  ? (unifiedSubj.books && unifiedSubj.books.length > 0 ? unifiedSubj.books.join(", ") : (subject.book ?? "Harr"))
+                  : (subject.book ?? progressBook);
+
                 return (
                   <section className="analytics-card" key={subject.id}>
-                    <div className="section-heading"><div><p className="eyebrow">Per-topic accuracy</p><h2>{subject.name}</h2></div><span className="source-pill">{attempts.filter((attempt) => attempt.subjectId === subject.id).length} attempts</span></div>
+                    <div className="section-heading">
+                      <div>
+                        <p className="eyebrow">Per-topic accuracy · ({bookLabel})</p>
+                        <h2>{subject.name}</h2>
+                      </div>
+                      <span className="source-pill">{subjectAttemptsCount} attempts</span>
+                    </div>
+
                     <div className="analytics-list">
                       {matchingTopics.map((topic) => (
                         <div className="analytics-row" key={topic.id}>
-                          <div><strong>{topic.name}</strong><small>{topic.attempts ? `${topic.correct} of ${topic.attempts} correct` : "Not practiced yet"}</small></div>
+                          <div>
+                            <strong>{topic.name}</strong>
+                            <small>{topic.attempts ? `${topic.correct} of ${topic.attempts} correct` : "Not practiced yet"}</small>
+                          </div>
                           <div className="topic-meter"><i className={toneFor(topic.accuracy, topic.attempts)} style={{ width: `${topic.attempts ? Math.max(topic.accuracy, 4) : 0}%` }} /></div>
                           <span>{topic.attempts ? `${topic.accuracy}%` : "—"}</span>
                         </div>
@@ -2203,7 +2735,7 @@ useEffect(() => {
                 );
               })}
             </div>
-            {!attempts.length && <div className="empty-progress"><h2>Your progress starts with one answer</h2><p>Choose any topic combination. RevIT autosaves every answer {cloudEnabled ? "to your account" : "on this device"} and updates this page immediately.</p><button className="primary-button" type="button" onClick={() => openView("library")}>Start a review</button></div>}
+            {!progressAttempts.length && <div className="empty-progress"><h2>Your progress starts with one answer</h2><p>Choose any topic combination. RevIT autosaves every answer {cloudEnabled ? "to your account" : "on this device"} and updates this page immediately.</p><button className="primary-button" type="button" onClick={() => openView("library")}>Start a review</button></div>}
           </div>
         )}
 
@@ -2212,6 +2744,7 @@ useEffect(() => {
             cloudEnabled={cloudEnabled}
             leaderboardOptIn={preferences.leaderboard_opt_in}
             subjects={subjects}
+            attempts={attempts}
             onOpenSettings={openProfileEditor}
             onToggleOptIn={updateLeaderboardOptIn}
           />
@@ -2370,6 +2903,13 @@ useEffect(() => {
         confirmLabel={confirmConfig.confirmLabel}
         onConfirm={confirmConfig.action ?? (() => {})}
         onCancel={() => setConfirmConfig({ isOpen: false })}
+      />
+      <ResumeSessionModal
+        isOpen={resumeModalOpen}
+        session={recentSession}
+        onResume={continueRecentSession}
+        onDismiss={() => setResumeModalOpen(false)}
+        onDiscard={discardRecentSession}
       />
     </main>
   );

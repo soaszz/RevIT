@@ -1,4 +1,4 @@
-import type { ReviewerQuestion } from "../content/reviewerContent";
+import type { ReviewerBook, ReviewerQuestion } from "../content/reviewerContent";
 import type { QuestionAttempt, QuestionDifficulty } from "./domain";
 
 export const MASTERY_MINIMUM_UNIQUE_QUESTIONS = 5;
@@ -33,6 +33,7 @@ export type TopicMastery = {
   topicName: string;
   subjectId: string;
   subjectName: string;
+  book?: ReviewerBook;
   mastery: number | null;
   status: MasteryStatus;
   uniqueQuestions: number;
@@ -119,6 +120,7 @@ export function calculateTopicMastery(attempts: QuestionAttempt[], metadata?: {
   topicName: string;
   subjectId: string;
   subjectName: string;
+  book?: ReviewerBook;
 }): TopicMastery {
   const ordered = sortedAttempts(attempts);
   const latestUnique = latestByQuestion(ordered).slice(0, RECENT_UNIQUE_WINDOW);
@@ -170,6 +172,7 @@ export function calculateTopicMastery(attempts: QuestionAttempt[], metadata?: {
     topicName: metadata?.topicName ?? first?.topicName ?? "Uncategorized",
     subjectId: metadata?.subjectId ?? first?.subjectId ?? "uncategorized",
     subjectName: metadata?.subjectName ?? first?.subjectName ?? "Uncategorized",
+    book: metadata?.book,
     mastery,
     status: classifyMastery(mastery, uniqueQuestions),
     uniqueQuestions,

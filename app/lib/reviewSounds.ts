@@ -45,8 +45,8 @@ export async function playReviewSound(sound: ReviewSound) {
     if (context.state === "suspended") await context.resume();
     const now = context.currentTime + 0.01;
     if (sound === "correct") {
-      scheduleTone(context, 523.25, now, 0.14, 0.028);
-      scheduleTone(context, 659.25, now + 0.085, 0.17, 0.024);
+      scheduleTone(context, 523.25, now, 0.16, 0.18);
+      scheduleTone(context, 659.25, now + 0.085, 0.20, 0.16);
       return;
     }
     if (sound === "timeout") {

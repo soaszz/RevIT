@@ -3,14 +3,16 @@
 .controlCard { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 18px 24px; padding: 20px; }
 .filterGroup, .scopeGroup { display: grid; gap: 8px; min-width: 0; }
 .filterGroup > span, .scopeGroup > span { color: var(--muted); font-size: 9px; font-weight: 760; letter-spacing: .08em; text-transform: uppercase; }
-.segmented { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-soft); }
-.segmented button { min-height: 39px; border: 0; border-left: 1px solid var(--line); padding: 8px 12px; background: transparent; color: var(--muted); font-size: 10px; font-weight: 700; }
+.segmented { display: flex; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 3px; }
+.segmented button { flex: 1; min-height: 34px; border: 0; border-radius: 9px; padding: 6px 10px; background: transparent; color: var(--muted); font-size: 10.5px; font-weight: 700; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; }
 .segmented button:first-child { border-left: 0; }
-.segmented button:hover, .segmented button.active { background: var(--green); color: var(--accent-ink); }
+.segmented button:hover { color: var(--ink); background: color-mix(in srgb, var(--surface-tint) 60%, transparent); }
+.segmented button.active { background: var(--paper); color: var(--green); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04); }
 .scopeGroup { grid-column: 1 / -1; }
-.scopes { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 3px; scrollbar-width: thin; }
-.scopes button { flex: 0 0 auto; min-height: 34px; border: 1px solid var(--line); border-radius: 99px; padding: 7px 12px; background: var(--input); color: var(--muted); font-size: 9px; font-weight: 700; }
-.scopes button:hover, .scopes button.activeScope { border-color: color-mix(in srgb, var(--green) 60%, var(--line)); background: var(--green-soft); color: var(--green-dark); }
+.scopes { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 3px; scrollbar-width: thin; }
+.scopes button { flex: 0 0 auto; min-height: 32px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; background: var(--surface-soft); color: var(--muted); font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.18s ease; }
+.scopes button:hover { border-color: color-mix(in srgb, var(--green) 40%, var(--line)); color: var(--ink); }
+.scopes button.activeScope { border-color: var(--green); background: var(--green-soft); color: var(--green-dark); box-shadow: 0 1px 4px color-mix(in srgb, var(--green) 12%, transparent); }
 .timezoneNote { grid-column: 1 / -1; margin: -4px 0 0; color: var(--muted); font-size: 8px; }
 .privacyBanner { display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid color-mix(in srgb, var(--green) 35%, var(--line)); border-radius: 13px; padding: 13px 15px; background: var(--surface-tint); }
 .privacyBanner strong, .privacyBanner span { display: block; }

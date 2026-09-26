@@ -55,3 +55,4 @@ yarn-error.log*
 /chatbot/
 changelog-private.md
 supabase/.temp/
+/scratch/

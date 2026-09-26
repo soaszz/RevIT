@@ -13,6 +13,24 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-6-0",
+    version: "v1.6.0",
+    date: "September 26, 2026",
+    type: "major",
+    title: "Ciulla Book Addition, Unified Hematology & Calculator Enhancements",
+    summary: "Introduced the Ciulla 4th Edition question bank, unified Hematology on Harr, refined the scientific calculator for mobile and tablet screens, and improved review session management.",
+    tags: ["Books", "Ciulla", "Harr", "Calculator", "UI/UX"],
+    highlights: [
+      "Added Ciulla Book Fourth Edition with 1,884 new practice questions across 14 subjects.",
+      "Combined Hematology 1 and 2 on Harr into a single complete subject under MTAP 1.",
+      "Refined the scientific calculator with a more compact layout on mobile and tablet screens.",
+      "Fixed directional arrow keys on touchscreens and enabled tap-to-place cursor navigation on the formula display.",
+      "Added early-exit session summaries so you can end review sessions anytime without losing earned XP or answered questions.",
+      "Introduced custom confirmation prompts before exiting sessions or deleting chats to prevent accidental data loss.",
+      "Added multi-book edition filtering across MCQs, Flashcards, Progress, Leaderboards, and Weakness Analytics."
+    ]
+  },
+  {
     id: "update-v1-5-0",
     version: "v1.5.0",
     date: "September 24, 2026",

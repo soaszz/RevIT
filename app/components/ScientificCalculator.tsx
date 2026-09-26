@@ -18,8 +18,8 @@ type PanelSize = { width: number; height: number };
 const INITIAL_TIMELINE: Timeline = { past: [], present: "", future: [] };
 const OPERATORS = new Set(["+", "−", "×", "÷", "^"]);
 const PANEL_GUTTER = 8;
-const MIN_PANEL_WIDTH = 340;
-const MIN_PANEL_HEIGHT = 360;
+const MIN_PANEL_WIDTH = 290;
+const MIN_PANEL_HEIGHT = 310;
 
 function clampPanelDimension(value: number, minimum: number, maximum: number) {
   return Math.min(Math.max(value, Math.min(minimum, maximum)), maximum);
@@ -78,8 +78,8 @@ function findFractionRange(expression: string, cursorIndex: number) {
         }
       } else if (expression[index] === "," && depth === 1 && comma < 0) comma = index;
     }
-    if (comma >= 0 && cursorIndex >= numeratorStart && cursorIndex <= end) {
-      candidate = { numeratorStart, comma, denominatorStart: comma + 1, end };
+    if (cursorIndex >= numeratorStart && cursorIndex <= (end === expression.length ? end : end + 1)) {
+      candidate = { numeratorStart, comma, denominatorStart: comma >= 0 ? comma + 1 : -1, end };
     }
     searchFrom = functionStart + 5;
   }
@@ -104,6 +104,74 @@ export default function ScientificCalculator() {
   const panelRef = useRef<HTMLElement>(null);
   const dragCleanupRef = useRef<() => void>(() => undefined);
   const resizeCleanupRef = useRef<() => void>(() => undefined);
+  const lastNavTimeRef = useRef(0);
+
+  const handleNavAction = (action: () => void) => {
+    const now = Date.now();
+    if (now - lastNavTimeRef.current < 110) return;
+    lastNavTimeRef.current = now;
+    action();
+  };
+
+  const focusInputIfNeeded = () => {
+    if (typeof window !== "undefined" && !window.matchMedia("(pointer: coarse)").matches) {
+      inputRef.current?.focus({ preventScroll: true });
+    }
+  };
+
+  const handleDisplayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const displayEl = event.currentTarget;
+    const rect = displayEl.getBoundingClientRect();
+    const clickY = event.clientY - rect.top;
+    const height = rect.height;
+    const expression = timeline.present;
+
+    if (!expression) {
+      focusInputIfNeeded();
+      return;
+    }
+
+    const fraction = findFractionRange(expression, cursorIndex);
+    if (fraction && fraction.comma >= 0) {
+      if (clickY < height * 0.48) {
+        setCursorIndex(fraction.numeratorStart);
+        focusInputIfNeeded();
+        return;
+      } else if (clickY > height * 0.52) {
+        setCursorIndex(fraction.denominatorStart);
+        focusInputIfNeeded();
+        return;
+      }
+    }
+
+    const katexEl = displayEl.querySelector<HTMLElement>(".katex");
+    if (katexEl) {
+      const spanRect = katexEl.getBoundingClientRect();
+      if (event.clientX < spanRect.left) {
+        setCursorIndex(0);
+      } else if (event.clientX > spanRect.right) {
+        setCursorIndex(expression.length);
+      } else {
+        const spanRatio = (event.clientX - spanRect.left) / Math.max(1, spanRect.width);
+        const targetIndex = Math.min(Math.max(0, Math.round(spanRatio * expression.length)), expression.length);
+        setCursorIndex(targetIndex);
+      }
+    } else {
+      const ratio = Math.min(Math.max(0, (event.clientX - rect.left) / Math.max(1, rect.width)), 1);
+      setCursorIndex(Math.round(ratio * expression.length));
+    }
+    focusInputIfNeeded();
+  };
+
+  const handleResultClick = () => {
+    if (preview && !calculationError) {
+      calculate();
+      setCursorIndex(timeline.present.length);
+    } else {
+      setCursorIndex(timeline.present.length);
+    }
+    focusInputIfNeeded();
+  };
 
   const preview = useMemo(() => {
     if (!timeline.present.trim()) return null;
@@ -233,9 +301,12 @@ export default function ScientificCalculator() {
     const safeCursor = Math.min(cursorIndex, current.length);
     const beforeCursor = current.slice(0, safeCursor);
     const afterCursor = current.slice(safeCursor);
-    if (!current) commit("frac(", 5);
-    else if (OPERATORS.has(beforeCursor.slice(-1)) || beforeCursor.endsWith("(") || beforeCursor.endsWith(",")) append("frac(");
-    else commit(`frac(${beforeCursor},)${afterCursor}`, beforeCursor.length + 6);
+    if (!current) commit("frac(,)", 5);
+    else if (OPERATORS.has(beforeCursor.slice(-1)) || beforeCursor.endsWith("(") || beforeCursor.endsWith(",")) {
+      commit(`${beforeCursor}frac(,)${afterCursor}`, safeCursor + 5);
+    } else {
+      commit(`frac(${beforeCursor},)${afterCursor}`, beforeCursor.length + 6);
+    }
   };
 
   const moveCursor = (direction: "left" | "right" | "up" | "down") => {
@@ -246,27 +317,51 @@ export default function ScientificCalculator() {
       if (direction === "left") while (next > 0 && /[A-Za-z]/.test(expression[next - 1])) next -= 1;
       else while (next < expression.length && /[A-Za-z]/.test(expression[next])) next += 1;
       setCursorIndex(next);
-      inputRef.current?.focus();
+      focusInputIfNeeded();
       return;
     }
 
     const fraction = findFractionRange(expression, cursorIndex);
     if (fraction) {
-      const numeratorLength = fraction.comma - fraction.numeratorStart;
-      const denominatorLength = fraction.end - fraction.denominatorStart;
-      if (direction === "down" && cursorIndex <= fraction.comma) {
-        const offset = Math.max(0, cursorIndex - fraction.numeratorStart);
-        setCursorIndex(fraction.denominatorStart + Math.min(offset, denominatorLength));
-        return;
-      }
-      if (direction === "up" && cursorIndex >= fraction.denominatorStart) {
-        const offset = Math.max(0, cursorIndex - fraction.denominatorStart);
-        setCursorIndex(fraction.numeratorStart + Math.min(offset, numeratorLength));
+      if (fraction.comma >= 0) {
+        const numeratorLength = fraction.comma - fraction.numeratorStart;
+        const denominatorLength = fraction.end - fraction.denominatorStart;
+        if (direction === "down") {
+          if (cursorIndex <= fraction.comma) {
+            const offset = Math.max(0, cursorIndex - fraction.numeratorStart);
+            setCursorIndex(fraction.denominatorStart + Math.min(offset, denominatorLength));
+            focusInputIfNeeded();
+            return;
+          } else {
+            setCursorIndex(fraction.end < expression.length ? fraction.end + 1 : expression.length);
+            focusInputIfNeeded();
+            return;
+          }
+        }
+        if (direction === "up") {
+          if (cursorIndex >= fraction.denominatorStart) {
+            const offset = Math.max(0, cursorIndex - fraction.denominatorStart);
+            setCursorIndex(fraction.numeratorStart + Math.min(offset, numeratorLength));
+            focusInputIfNeeded();
+            return;
+          } else {
+            setCursorIndex(Math.max(0, fraction.numeratorStart - 5));
+            focusInputIfNeeded();
+            return;
+          }
+        }
+      } else if (direction === "down") {
+        const hasClosing = expression.indexOf(")", fraction.numeratorStart) >= 0;
+        const nextExpr = hasClosing
+          ? `${expression.slice(0, cursorIndex)},${expression.slice(cursorIndex)}`
+          : `${expression.slice(0, cursorIndex)},)${expression.slice(cursorIndex)}`;
+        commit(nextExpr, cursorIndex + 1);
+        focusInputIfNeeded();
         return;
       }
     }
     setCursorIndex(direction === "up" ? 0 : expression.length);
-    inputRef.current?.focus();
+    focusInputIfNeeded();
   };
 
   const deleteBeforeCursor = () => {
@@ -419,8 +514,6 @@ export default function ScientificCalculator() {
           <header className="calculator-header" onPointerDown={startDrag}>
             <div className="calculator-drag-title"><span className="calculator-grip" aria-hidden="true">⠿</span><div><span className="calculator-kicker">Natural display</span><h2 id="calculator-title">Scientific calculator</h2></div></div>
             <div className="calculator-header-actions">
-              <button type="button" onClick={undo} disabled={!timeline.past.length} aria-label="Undo calculator input" title="Undo"><HistoryIcon direction="undo" /></button>
-              <button type="button" onClick={redo} disabled={!timeline.future.length} aria-label="Redo calculator input" title="Redo"><HistoryIcon direction="redo" /></button>
               <button type="button" onClick={resetPanel} disabled={!position && !size} aria-label="Reset calculator position and size" title="Reset position and size">⌖</button>
               <button type="button" onClick={() => setOpen(false)} aria-label="Close calculator" title="Close">×</button>
             </div>
@@ -436,7 +529,20 @@ export default function ScientificCalculator() {
           </div>
 
           <div className="calculator-display">
-            <div className="calculator-natural-display" aria-hidden="true">
+            <div
+              className="calculator-natural-display"
+              aria-label="Calculator expression screen. Click to move cursor."
+              onClick={handleDisplayClick}
+              title="Click anywhere to place cursor"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  focusInputIfNeeded();
+                }
+              }}
+            >
               {naturalExpressionHtml
                 ? <span dangerouslySetInnerHTML={{ __html: naturalExpressionHtml }} />
                 : <span className="calculator-placeholder">{timeline.present || "0"}</span>}
@@ -459,19 +565,138 @@ export default function ScientificCalculator() {
               spellCheck={false}
               inputMode="text"
             />
-            <output className={calculationError ? "error" : ""} aria-live="polite">
+            <output
+              className={`calculator-output-clickable ${calculationError ? "error" : ""}`}
+              aria-live="polite"
+              onClick={handleResultClick}
+              title="Click to calculate / apply result"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleResultClick();
+                }
+              }}
+            >
               {calculationError
                 ? calculationError
                 : preview && <span dangerouslySetInnerHTML={{ __html: preview.resultHtml }} />}
             </output>
           </div>
 
-          <div className="calculator-navigation" role="group" aria-label="Expression navigation">
-            <button type="button" className="calculator-nav-up" onClick={() => moveCursor("up")} aria-label="Move cursor up">▲</button>
-            <button type="button" className="calculator-nav-left" onClick={() => moveCursor("left")} aria-label="Move cursor left">◀</button>
-            <button type="button" className="calculator-nav-center" onClick={() => { setCursorIndex(timeline.present.length); inputRef.current?.focus(); }} aria-label="Move cursor to end" title="Move to end">●</button>
-            <button type="button" className="calculator-nav-right" onClick={() => moveCursor("right")} aria-label="Move cursor right">▶</button>
-            <button type="button" className="calculator-nav-down" onClick={() => moveCursor("down")} aria-label="Move cursor down">▼</button>
+          <div className="calculator-nav-row">
+            <button
+              type="button"
+              className="calculator-nav-action"
+              onClick={undo}
+              disabled={!timeline.past.length}
+              aria-label="Undo calculator input"
+              title="Undo"
+            >
+              <HistoryIcon direction="undo" />
+            </button>
+
+            <div className="calculator-navigation" role="group" aria-label="Expression navigation">
+            <button
+              type="button"
+              className="calculator-nav-up"
+              onPointerDown={(e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                e.preventDefault();
+                handleNavAction(() => moveCursor("up"));
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavAction(() => moveCursor("up"));
+              }}
+              aria-label="Move cursor up"
+            >
+              ▲
+            </button>
+            <button
+              type="button"
+              className="calculator-nav-left"
+              onPointerDown={(e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                e.preventDefault();
+                handleNavAction(() => moveCursor("left"));
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavAction(() => moveCursor("left"));
+              }}
+              aria-label="Move cursor left"
+            >
+              ◀
+            </button>
+            <button
+              type="button"
+              className="calculator-nav-center"
+              onPointerDown={(e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                e.preventDefault();
+                handleNavAction(() => {
+                  setCursorIndex(timeline.present.length);
+                  focusInputIfNeeded();
+                });
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavAction(() => {
+                  setCursorIndex(timeline.present.length);
+                  focusInputIfNeeded();
+                });
+              }}
+              aria-label="Move cursor to end"
+              title="Move to end"
+            >
+              ●
+            </button>
+            <button
+              type="button"
+              className="calculator-nav-right"
+              onPointerDown={(e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                e.preventDefault();
+                handleNavAction(() => moveCursor("right"));
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavAction(() => moveCursor("right"));
+              }}
+              aria-label="Move cursor right"
+            >
+              ▶
+            </button>
+            <button
+              type="button"
+              className="calculator-nav-down"
+              onPointerDown={(e) => {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                e.preventDefault();
+                handleNavAction(() => moveCursor("down"));
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavAction(() => moveCursor("down"));
+              }}
+              aria-label="Move cursor down"
+            >
+              ▼
+            </button>
+            </div>
+
+            <button
+              type="button"
+              className="calculator-nav-action"
+              onClick={redo}
+              disabled={!timeline.future.length}
+              aria-label="Redo calculator input"
+              title="Redo"
+            >
+              <HistoryIcon direction="redo" />
+            </button>
           </div>
 
           <div className="calculator-keypad" aria-label="Calculator keypad">

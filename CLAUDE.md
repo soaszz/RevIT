@@ -22,3 +22,7 @@ Before pushing to remote:
 1. `npm run security:secrets` (must pass with 0 leaks)
 2. `npx tsc --noEmit` (clean typecheck)
 3. `npm test` (`next build` + all tests passing)
+
+## Execution & Output Rules
+- **No autonomous browser testing or verification:** Do NOT run browser automation, test scripts, or verification suites unless explicitly instructed with commands like "test this", "verify", or "run tests".
+- **No visual artifacts/screenshots:** Do NOT capture, render, or attach screenshots, screen recordings, or visual previews unless explicitly asked.

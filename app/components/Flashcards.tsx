@@ -7,9 +7,15 @@ import {
   subjects,
   topicById,
   topics,
+  type ReviewerBook,
 } from "../content/reviewerContent";
 import { buildFlashcardDeck, shuffleFlashcards, type Flashcard } from "../lib/flashcards";
-import { buildSubjectSections, filterSubjectsBySearch } from "../lib/reviewerLibrary";
+import {
+  buildSubjectSections,
+  filterSubjectsBySearch,
+  getUnifiedSubjects,
+  type UnifiedSubject,
+} from "../lib/reviewerLibrary";
 import styles from "./Flashcards.module.css";
 import LibrarySearch from "./LibrarySearch";
 
@@ -18,13 +24,54 @@ function isTypingTarget(target: EventTarget | null) {
   return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
 }
 
-export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConfirm }: { isNuRevit: boolean; onReviewingChange?: (reviewing: boolean, topics?: string[]) => void; onRequestConfirm?: (title: string, message: string, confirmLabel: string, action: () => void) => void }) {
+export default function Flashcards({
+  isNuRevit,
+  selectedBook: controlledBook,
+  onSelectBook,
+  onReviewingChange,
+  onRequestConfirm,
+}: {
+  isNuRevit: boolean;
+  selectedBook?: ReviewerBook | "all";
+  onSelectBook?: (book: ReviewerBook | "all") => void;
+  onReviewingChange?: (reviewing: boolean, topics?: string[]) => void;
+  onRequestConfirm?: (title: string, message: string, confirmLabel: string, action: () => void) => void;
+}) {
+  const [internalBook, setInternalBook] = useState<ReviewerBook | "all">(() => {
+    if (typeof window === "undefined") return "Harr";
+    try {
+      const saved = localStorage.getItem("revit-selected-book-v1");
+      if (saved === "Harr" || saved === "Ciulla" || saved === "all") return saved;
+    } catch {}
+    return "Harr";
+  });
+  const selectedBook = controlledBook ?? internalBook;
+
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [deck, setDeck] = useState<Flashcard[]>([]);
   const [cardIndex, setCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [subjectSearch, setSubjectSearch] = useState("");
   const [expandedSubjectIds, setExpandedSubjectIds] = useState<string[]>([]);
+  const [expandedBookEditionKeys, setExpandedBookEditionKeys] = useState<string[]>([]);
+
+  function toggleBookEditionExpanded(subjectId: string, book: ReviewerBook) {
+    const key = `${subjectId}:${book}`;
+    setExpandedBookEditionKeys((current) =>
+      current.includes(key)
+        ? current.filter((id) => id !== key)
+        : [...current, key],
+    );
+  }
+
+  const currentBookSubjects = useMemo(() => {
+    return getUnifiedSubjects(selectedBook, subjects, topics);
+  }, [selectedBook]);
+
+  const currentBookTopics = useMemo(() => {
+    if (selectedBook === "all") return topics;
+    return topics.filter((topic) => topic.book === selectedBook);
+  }, [selectedBook]);
 
   const topicQuestionCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -39,12 +86,16 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
     [selectedTopicIds, topicQuestionCounts],
   );
   const visibleSubjects = useMemo(
-    () => filterSubjectsBySearch(subjects, topics, subjectSearch),
-    [subjectSearch],
+    () => filterSubjectsBySearch(currentBookSubjects, currentBookTopics, subjectSearch),
+    [currentBookSubjects, currentBookTopics, subjectSearch],
   );
   const subjectSections = useMemo(
     () => buildSubjectSections(visibleSubjects, isNuRevit),
     [isNuRevit, visibleSubjects],
+  );
+  const selectedTopicNames = useMemo(
+    () => selectedTopicIds.map((id) => topicById.get(id)?.name).filter((name): name is string => Boolean(name)),
+    [selectedTopicIds],
   );
 
   const currentCard = deck[cardIndex];
@@ -53,6 +104,47 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
   useEffect(() => {
     onReviewingChange?.(reviewing, reviewing ? selectedTopicIds : []);
   }, [reviewing, selectedTopicIds, onReviewingChange]);
+
+  useEffect(() => {
+    const validIds = new Set((selectedBook === "all" ? topics : topics.filter((t) => t.book === selectedBook)).map((t) => t.id));
+    setSelectedTopicIds((current) => current.filter((id) => validIds.has(id)));
+  }, [selectedBook]);
+
+  function handleBookChange(newBook: ReviewerBook | "all") {
+    if (onSelectBook) {
+      onSelectBook(newBook);
+    } else {
+      setInternalBook(newBook);
+      try {
+        localStorage.setItem("revit-selected-book-v1", newBook);
+      } catch {}
+    }
+    const newBookTopics = newBook === "all" ? topics : topics.filter((t) => t.book === newBook);
+    const validIds = new Set(newBookTopics.map((t) => t.id));
+    setSelectedTopicIds((current) => current.filter((id) => validIds.has(id)));
+  }
+
+  function toggleTopic(topicId: string) {
+    setSelectedTopicIds((current) => current.includes(topicId)
+      ? current.filter((id) => id !== topicId)
+      : [...current, topicId]);
+  }
+
+  function toggleSubject(subjectId: string, topicIdsOverride?: string[]) {
+    const subjectTopicIds = topicIdsOverride ?? currentBookTopics.filter((topic) => topic.subjectId === subjectId).map((topic) => topic.id);
+    const allSelected = subjectTopicIds.every((id) => selectedTopicIds.includes(id));
+    setSelectedTopicIds((current) => allSelected
+      ? current.filter((id) => !subjectTopicIds.includes(id))
+      : [...new Set([...current, ...subjectTopicIds])]);
+  }
+
+  function toggleSubjectExpanded(subjectId: string) {
+    setExpandedSubjectIds((current) =>
+      current.includes(subjectId)
+        ? current.filter((id) => id !== subjectId)
+        : [...current, subjectId],
+    );
+  }
 
   useEffect(() => {
     if (!reviewing) return;
@@ -78,28 +170,6 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
     window.addEventListener("keydown", handleKeyboard);
     return () => window.removeEventListener("keydown", handleKeyboard);
   }, [deck.length, reviewing]);
-
-  function toggleTopic(topicId: string) {
-    setSelectedTopicIds((current) => current.includes(topicId)
-      ? current.filter((id) => id !== topicId)
-      : [...current, topicId]);
-  }
-
-  function toggleSubject(subjectId: string) {
-    const subjectTopicIds = topics.filter((topic) => topic.subjectId === subjectId).map((topic) => topic.id);
-    const allSelected = subjectTopicIds.every((id) => selectedTopicIds.includes(id));
-    setSelectedTopicIds((current) => allSelected
-      ? current.filter((id) => !subjectTopicIds.includes(id))
-      : [...new Set([...current, ...subjectTopicIds])]);
-  }
-
-  function toggleSubjectExpanded(subjectId: string) {
-    setExpandedSubjectIds((current) =>
-      current.includes(subjectId)
-        ? current.filter((id) => id !== subjectId)
-        : [...current, subjectId],
-    );
-  }
 
   function startReviewing() {
     const nextDeck = buildFlashcardDeck(questions, selectedTopicIds);
@@ -142,12 +212,13 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
   if (reviewing && currentCard) {
     const subjectName = subjectById.get(currentCard.subjectId)?.name ?? "Uncategorized";
     const topicName = topicById.get(currentCard.topicId)?.name ?? "Uncategorized";
+    const cardBook = currentCard.book ?? topicById.get(currentCard.topicId)?.book;
 
     return (
       <div className={styles.reviewerShell}>
         <div className={styles.sessionToolbar}>
           <div>
-            <p className="eyebrow">Passive review</p>
+            <p className="eyebrow">Passive review{selectedBook !== "all" ? ` · ${selectedBook}` : " · All Books"}</p>
             <strong>{deck.length} cards from {selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"}</strong>
           </div>
           <div className={styles.toolbarActions}>
@@ -167,7 +238,14 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
             />
             <div className={styles.cardTopline}>
               <div>
-                <p className={styles.subjectLabel}>{subjectName}</p>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <p className={styles.subjectLabel}>{subjectName}</p>
+                  {cardBook && (
+                    <span className={`topic-book-badge topic-book-${cardBook.toLowerCase()}`} style={{ fontSize: "9px", padding: "1px 6px", margin: 0 }}>
+                      {cardBook}
+                    </span>
+                  )}
+                </div>
                 <p className={styles.topicLabel}>{topicName}</p>
               </div>
               <span>{cardIndex + 1} / {deck.length}</span>
@@ -249,8 +327,12 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                   {section.description && <p>{section.description}</p>}
                 </div>
               )}
-              {section.subjects.map((subject) => {
-                const subjectTopics = topics.filter((topic) => topic.subjectId === subject.id);
+              {section.subjects.map((subject: UnifiedSubject) => {
+                const unifiedSubj = subject;
+                const subjectTopics = currentBookTopics.filter((topic) =>
+                  subject.topicIds ? subject.topicIds.includes(topic.id) : topic.subjectId === subject.id
+                );
+                const subjectTopicIds = subjectTopics.map((topic) => topic.id);
                 const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
                 const subjectFullySelected = subjectTopics.length > 0 && subjectSelected === subjectTopics.length;
                 const isExpanded = expandedSubjectIds.includes(subject.id);
@@ -258,6 +340,9 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                   (total, topic) => total + (topicQuestionCounts.get(topic.id) ?? 0),
                   0,
                 );
+                const bookLabel = unifiedSubj.books && unifiedSubj.books.length > 0
+                  ? unifiedSubj.books.join(", ")
+                  : (subject.book ?? "Harr");
 
                 return (
                   <section className={`subject-card ${isExpanded ? "is-expanded" : ""}`} key={subject.id}>
@@ -277,7 +362,7 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                     >
                       <div className="subject-heading-info">
                         <div className="subject-heading-meta">
-                          <span className="eyebrow">{subjectCardCount} flashcards · {subjectTopics.length} topic{subjectTopics.length === 1 ? "" : "s"}</span>
+                          <span className="eyebrow">{subjectCardCount} flashcards · {subjectTopics.length} topic{subjectTopics.length === 1 ? "" : "s"} · {bookLabel}</span>
                           {subjectSelected > 0 && (
                             <span className={`subject-status-badge ${subjectFullySelected ? "fully-selected" : "partially-selected"}`}>
                               {subjectFullySelected ? "All selected" : `${subjectSelected}/${subjectTopics.length} selected`}
@@ -293,7 +378,7 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                           type="button"
                           onClick={(event) => {
                             event.stopPropagation();
-                            toggleSubject(subject.id);
+                            toggleSubject(subject.id, subjectTopicIds);
                           }}
                         >
                           {subjectFullySelected ? "Unselect subject" : "Select subject"}
@@ -355,24 +440,201 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
                     >
                       <div className="subject-topics-content">
                         <div className="subject-topics-inner">
-                          <div className="topic-selection-grid">
-                            {subjectTopics.map((topic) => {
-                              const count = topicQuestionCounts.get(topic.id) ?? 0;
-                              const selected = selectedTopicIds.includes(topic.id);
-                              return (
-                                <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
-                                  <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                  <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                                  <span className="topic-select-copy">
-                                    <strong>{topic.name}</strong>
-                                    <small>{topic.description}</small>
-                                    <em>{count} card{count === 1 ? "" : "s"}</em>
-                                  </span>
-                                </label>
-                              );
-                            })}
-                          </div>
-                          <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                          {selectedBook === "all" ? (
+                            <div className="subject-book-groups">
+                              {(["Harr", "Ciulla"] as const).map((bookName) => {
+                                const bookTopics = subjectTopics.filter((t) => t.book === bookName);
+                                if (!bookTopics.length) return null;
+                                const bookTopicIds = bookTopics.map((t) => t.id);
+                                const bookKey = `${subject.id}:${bookName}`;
+                                const isBookExpanded = expandedBookEditionKeys.includes(bookKey);
+                                const bookSelected = bookTopics.filter((t) => selectedTopicIds.includes(t.id)).length;
+                                const bookFullySelected = bookTopics.length > 0 && bookSelected === bookTopics.length;
+                                const bookCardCount = bookTopics.reduce(
+                                  (total, topic) => total + (topicQuestionCounts.get(topic.id) ?? 0),
+                                  0,
+                                );
+
+                                return (
+                                  <div
+                                    className={`book-edition-accordion ${isBookExpanded ? "is-expanded" : ""}`}
+                                    key={bookName}
+                                    style={{
+                                      border: "1px solid var(--line)",
+                                      borderRadius: "12px",
+                                      background: isBookExpanded ? "var(--paper)" : "var(--surface-soft)",
+                                      overflow: "hidden",
+                                      transition: "all 0.2s ease",
+                                      marginBottom: "10px",
+                                    }}
+                                  >
+                                    <div
+                                      className="book-edition-heading"
+                                      onClick={() => toggleBookEditionExpanded(subject.id, bookName)}
+                                      role="button"
+                                      tabIndex={0}
+                                      aria-expanded={isBookExpanded}
+                                      aria-controls={`flashcard-book-topics-${subject.id}-${bookName}`}
+                                      onKeyDown={(event) => {
+                                        if (event.key === "Enter" || event.key === " ") {
+                                          event.preventDefault();
+                                          toggleBookEditionExpanded(subject.id, bookName);
+                                        }
+                                      }}
+                                      style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        padding: "13px 16px",
+                                        gap: "14px",
+                                        cursor: "pointer",
+                                        userSelect: "none",
+                                        width: "100%",
+                                        boxSizing: "border-box",
+                                      }}
+                                    >
+                                      <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0, flex: "1 1 auto", flexWrap: "wrap" }}>
+                                        <span className="book-edition-title" style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", whiteSpace: "nowrap" }}>
+                                          {bookName} Edition
+                                        </span>
+                                        <span className="book-edition-meta" style={{ fontSize: "11px", color: "var(--muted)", fontWeight: 500, whiteSpace: "nowrap" }}>
+                                          • {bookTopics.length} topic{bookTopics.length === 1 ? "" : "s"} · {bookCardCount} cards
+                                        </span>
+                                        {bookSelected > 0 && (
+                                          <span className={`subject-status-badge ${bookFullySelected ? "fully-selected" : "partially-selected"}`} style={{ fontSize: "9px", padding: "1px 7px" }}>
+                                            {bookFullySelected ? "All selected" : `${bookSelected}/${bookTopics.length}`}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="book-edition-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0, marginLeft: "auto" }}>
+                                        <button
+                                          className="text-button"
+                                          type="button"
+                                          onClick={(event) => {
+                                            event.stopPropagation();
+                                            toggleSubject(subject.id, bookTopicIds);
+                                          }}
+                                          style={{ fontSize: "11px", fontWeight: 650, whiteSpace: "nowrap" }}
+                                        >
+                                          {bookFullySelected ? `Unselect ${bookName}` : `Select ${bookName}`}
+                                        </button>
+                                        <span className={`topic-book-badge topic-book-${bookName.toLowerCase()}`} style={{ flexShrink: 0, margin: 0 }}>
+                                          {bookName}
+                                        </span>
+                                        <button
+                                          className="book-edition-toggle"
+                                          type="button"
+                                          aria-label={isBookExpanded ? `Hide ${bookName} topics` : `Show ${bookName} topics`}
+                                          onClick={(event) => {
+                                            event.stopPropagation();
+                                            toggleBookEditionExpanded(subject.id, bookName);
+                                          }}
+                                          style={{
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: "6px",
+                                            padding: "6px 12px",
+                                            borderRadius: "8px",
+                                            border: "1px solid var(--line)",
+                                            background: isBookExpanded ? "var(--green-soft)" : "var(--surface-tint)",
+                                            color: isBookExpanded ? "var(--green-dark)" : "var(--ink)",
+                                            fontSize: "10.5px",
+                                            fontWeight: 650,
+                                            cursor: "pointer",
+                                            whiteSpace: "nowrap",
+                                            lineHeight: 1,
+                                            flexShrink: 0,
+                                          }}
+                                        >
+                                          <span>{isBookExpanded ? "Hide topics" : "Show topics"}</span>
+                                          <svg
+                                            width="13"
+                                            height="13"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            aria-hidden="true"
+                                            style={{
+                                              flexShrink: 0,
+                                              transform: isBookExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                                              transition: "transform 0.22s ease",
+                                              color: isBookExpanded ? "var(--green)" : "var(--muted)",
+                                            }}
+                                          >
+                                            <polyline points="6 9 12 15 18 9" />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <div
+                                      id={`flashcard-book-topics-${subject.id}-${bookName}`}
+                                      className="book-edition-content"
+                                      style={!isBookExpanded ? { display: "none" } : undefined}
+                                      aria-hidden={!isBookExpanded}
+                                    >
+                                      <div className="topic-selection-grid">
+                                        {bookTopics.map((topic) => {
+                                          const count = topicQuestionCounts.get(topic.id) ?? 0;
+                                          const selected = selectedTopicIds.includes(topic.id);
+                                          return (
+                                            <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                              <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                              <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                              <span className="topic-select-copy">
+                                                <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
+                                                  <strong>{topic.name}</strong>
+                                                  {topic.book && (
+                                                    <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={{ marginLeft: "auto", flexShrink: 0 }}>
+                                                      {topic.book}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                                <small>{topic.description}</small>
+                                                <em>{count} card{count === 1 ? "" : "s"}</em>
+                                              </span>
+                                            </label>
+                                          );
+                                        })}
+                                      </div>
+                                      <p className="subject-selection-note">{bookSelected} of {bookTopics.length} {bookName} topics selected</p>
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                              <p className="subject-selection-note" style={{ marginTop: "6px" }}>{subjectSelected} of {subjectTopics.length} total topics selected</p>
+                            </div>
+                          ) : (
+                            <>
+                              <div className="topic-selection-grid">
+                                {subjectTopics.map((topic) => {
+                                  const count = topicQuestionCounts.get(topic.id) ?? 0;
+                                  const selected = selectedTopicIds.includes(topic.id);
+                                  return (
+                                    <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                      <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                      <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                      <span className="topic-select-copy">
+                                        <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
+                                          <strong>{topic.name}</strong>
+                                          {topic.book && (
+                                            <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={{ marginLeft: "auto", flexShrink: 0 }}>
+                                              {topic.book}
+                                            </span>
+                                          )}
+                                        </div>
+                                        <small>{topic.description}</small>
+                                        <em>{count} card{count === 1 ? "" : "s"}</em>
+                                      </span>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                              <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -394,13 +656,30 @@ export default function Flashcards({ isNuRevit, onReviewingChange, onRequestConf
           <p className="eyebrow">Deck setup</p>
           <h2>{selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"} selected</h2>
           <p>{availableCards} card{availableCards === 1 ? " is" : "s are"} available from your selection.</p>
+          <div style={{ marginBottom: "14px" }}>
+            <label className="field-label" htmlFor="flashcard-reviewer-book">Reviewer book</label>
+            <select
+              id="flashcard-reviewer-book"
+              value={selectedBook}
+              onChange={(event) => handleBookChange(event.target.value as ReviewerBook | "all")}
+            >
+              <option value="Harr">Harr (999 cards)</option>
+              <option value="Ciulla">Ciulla (1,884 cards)</option>
+              <option value="all">All Books (2,883 cards)</option>
+            </select>
+          </div>
           <div className="selection-controls">
-            <button className="text-button" type="button" onClick={() => setSelectedTopicIds(topics.map((topic) => topic.id))}>Select all</button>
+            <button className="text-button" type="button" onClick={() => setSelectedTopicIds(currentBookTopics.map((topic) => topic.id))}>Select all</button>
             <button className="text-button quiet" type="button" onClick={() => setSelectedTopicIds([])}>Clear all</button>
           </div>
           <button className="primary-button wide" type="button" onClick={startReviewing} disabled={!availableCards}>
             Start reviewing
           </button>
+          {selectedTopicNames.length > 0 && (
+            <div className="selected-tags">
+              {selectedTopicNames.map((name) => <span key={name}>{name}</span>)}
+            </div>
+          )}
         </aside>
       </div>
     </div>
