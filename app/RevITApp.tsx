@@ -247,6 +247,28 @@ function mergeAttempts(...sources: Attempt[][]) {
   return [...merged.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp));
 }
 
+function getBookBadgeStyle(book: "Harr" | "Ciulla" | string, extraStyle?: React.CSSProperties): React.CSSProperties {
+  const isCiulla = book.toLowerCase() === "ciulla";
+  return {
+    display: "inline-flex",
+    alignItems: "center",
+    padding: "2.5px 8px",
+    borderRadius: "6px",
+    fontSize: "8.5px",
+    fontWeight: 750,
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+    lineHeight: 1.2,
+    border: isCiulla ? "1px solid rgba(142, 214, 107, 0.52)" : "1px solid rgba(102, 208, 178, 0.52)",
+    color: isCiulla ? "#92e06b" : "#66d0b2",
+    background: isCiulla ? "rgba(142, 214, 107, 0.16)" : "rgba(102, 208, 178, 0.16)",
+    boxSizing: "border-box",
+    ...extraStyle,
+  };
+}
+
 const chatSuggestions = [
   "Why is decolorization the critical step in Gram staining?",
   "Differentiate iron deficiency anemia from anemia of chronic disease.",
@@ -2363,7 +2385,7 @@ useEffect(() => {
                                                   >
                                                     {bookFullySelected ? `Unselect ${bookName}` : `Select ${bookName}`}
                                                   </button>
-                                                  <span className={`topic-book-badge topic-book-${bookName.toLowerCase()}`} style={{ flexShrink: 0, margin: 0 }}>
+                                                  <span className={`topic-book-badge topic-book-${bookName.toLowerCase()}`} style={getBookBadgeStyle(bookName, { margin: 0 })}>
                                                     {bookName}
                                                   </span>
                                                   <button
@@ -2432,7 +2454,7 @@ useEffect(() => {
                                                           <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
                                                             <strong>{topic.name}</strong>
                                                             {topic.book && (
-                                                              <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={{ marginLeft: "auto", flexShrink: 0 }}>
+                                                              <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={getBookBadgeStyle(topic.book, { marginLeft: "auto" })}>
                                                                 {topic.book}
                                                               </span>
                                                             )}
@@ -2465,7 +2487,7 @@ useEffect(() => {
                                                   <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
                                                     <strong>{topic.name}</strong>
                                                     {topic.book && (
-                                                      <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={{ marginLeft: "auto", flexShrink: 0 }}>
+                                                      <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={getBookBadgeStyle(topic.book, { marginLeft: "auto" })}>
                                                         {topic.book}
                                                       </span>
                                                     )}

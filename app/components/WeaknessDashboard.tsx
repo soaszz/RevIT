@@ -250,7 +250,25 @@ export default function WeaknessDashboard({
                     </button>
                   </td>
                   <td>
-                    <span className={`weakness-book-pill weakness-book-${(topic.book ?? "default").toLowerCase()}`}>
+                    <span
+                      className={`weakness-book-pill weakness-book-${(topic.book ?? "default").toLowerCase()}`}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "3px 8px",
+                        borderRadius: "6px",
+                        fontSize: "8.5px",
+                        fontWeight: 750,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                        whiteSpace: "nowrap",
+                        lineHeight: 1.2,
+                        border: topic.book === "Ciulla" ? "1px solid rgba(142, 214, 107, 0.52)" : topic.book === "Harr" ? "1px solid rgba(102, 208, 178, 0.52)" : "1px solid var(--line)",
+                        color: topic.book === "Ciulla" ? "#92e06b" : topic.book === "Harr" ? "#66d0b2" : "var(--muted)",
+                        background: topic.book === "Ciulla" ? "rgba(142, 214, 107, 0.16)" : topic.book === "Harr" ? "rgba(102, 208, 178, 0.16)" : "var(--surface-soft)",
+                        boxSizing: "border-box",
+                      }}
+                    >
                       {topic.book ?? "—"}
                     </span>
                   </td>

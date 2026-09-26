@@ -479,22 +479,22 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .topic-select-copy small { color: var(--muted); font-size: 10px; line-height: 1.5; flex: 1 1 auto; }
 .topic-select-copy em { align-self: flex-start; color: var(--green); font-size: 9px; font-style: normal; font-weight: 700; margin-top: auto; }
 .topic-select-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; width: 100%; }
-.topic-book-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 6px; font-size: 8.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0; margin-left: auto; }
-.topic-book-harr { background: rgba(24, 117, 98, 0.09); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 26%, transparent); }
-.topic-book-ciulla { background: rgba(84, 138, 59, 0.11); color: #437a2a; border: 1px solid rgba(84, 138, 59, 0.28); }
-[data-theme="dark"] .topic-book-harr { background: rgba(102, 208, 178, 0.12); color: #66d0b2; border-color: rgba(102, 208, 178, 0.26); }
-[data-theme="dark"] .topic-book-ciulla { background: rgba(142, 214, 107, 0.13); color: #92e06b; border-color: rgba(142, 214, 107, 0.26); }
+.topic-book-badge { display: inline-flex; align-items: center; padding: 2.5px 8px; border-radius: 6px; font-size: 8.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0; margin-left: auto; line-height: 1.2; box-sizing: border-box; }
+.topic-book-harr { background: rgba(24, 117, 98, 0.12) !important; color: var(--green) !important; border: 1px solid rgba(24, 117, 98, 0.45) !important; }
+.topic-book-ciulla { background: rgba(84, 138, 59, 0.14) !important; color: #437a2a !important; border: 1px solid rgba(84, 138, 59, 0.45) !important; }
+[data-theme="dark"] .topic-book-harr { background: rgba(102, 208, 178, 0.16) !important; color: #66d0b2 !important; border: 1px solid rgba(102, 208, 178, 0.52) !important; }
+[data-theme="dark"] .topic-book-ciulla { background: rgba(142, 214, 107, 0.16) !important; color: #92e06b !important; border: 1px solid rgba(142, 214, 107, 0.52) !important; }
 .progress-book-control { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 20px; padding: 9px 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--paper); box-shadow: var(--shadow); flex-wrap: wrap; }
 .progress-book-label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 10px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.07em; }
 .progress-book-tabs { display: inline-flex; gap: 3px; background: var(--surface-soft); padding: 3px; border-radius: 10px; border: 1px solid var(--line); flex-wrap: wrap; }
 .progress-book-tabs button { padding: 6px 14px; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); line-height: 1.2; }
 .progress-book-tabs button:hover { color: var(--ink); background: color-mix(in srgb, var(--surface-tint) 60%, transparent); }
 .progress-book-tabs button.active { background: var(--paper); color: var(--green); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04); }
-.weakness-book-pill { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; font-size: 8.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-.weakness-book-harr { background: rgba(24, 117, 98, 0.09); color: var(--green); border: 1px solid color-mix(in srgb, var(--green) 26%, transparent); }
-.weakness-book-ciulla { background: rgba(84, 138, 59, 0.11); color: #437a2a; border: 1px solid rgba(84, 138, 59, 0.28); }
-[data-theme="dark"] .weakness-book-harr { background: rgba(102, 208, 178, 0.12); color: #66d0b2; border-color: rgba(102, 208, 178, 0.26); }
-[data-theme="dark"] .weakness-book-ciulla { background: rgba(142, 214, 107, 0.13); color: #92e06b; border-color: rgba(142, 214, 107, 0.26); }
+.weakness-book-pill { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; font-size: 8.5px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; line-height: 1.2; box-sizing: border-box; }
+.weakness-book-harr { background: rgba(24, 117, 98, 0.12) !important; color: var(--green) !important; border: 1px solid rgba(24, 117, 98, 0.45) !important; }
+.weakness-book-ciulla { background: rgba(84, 138, 59, 0.14) !important; color: #437a2a !important; border: 1px solid rgba(84, 138, 59, 0.45) !important; }
+[data-theme="dark"] .weakness-book-harr { background: rgba(102, 208, 178, 0.16) !important; color: #66d0b2 !important; border: 1px solid rgba(102, 208, 178, 0.52) !important; }
+[data-theme="dark"] .weakness-book-ciulla { background: rgba(142, 214, 107, 0.16) !important; color: #92e06b !important; border: 1px solid rgba(142, 214, 107, 0.52) !important; }
 .weakness-book-default { background: var(--surface-soft); color: var(--muted); border: 1px solid var(--line); }
 .subject-selection-note { margin: 14px 0 0; color: var(--muted); font-size: 10px; }
 .subject-book-groups { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; width: 100%; }
