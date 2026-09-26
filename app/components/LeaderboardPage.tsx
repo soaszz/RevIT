@@ -100,9 +100,15 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
   const retry = useCallback(() => setReloadKey((current) => current + 1), []);
 
   const availableSubjects = useMemo(() => {
-    if (selectedBook === "all") return subjects;
+    if (selectedBook === "all") return [];
     return subjects.filter((subject) => subject.book === selectedBook);
   }, [selectedBook, subjects]);
+
+  useEffect(() => {
+    if (selectedBook === "all" && subjectId !== null) {
+      setSubjectId(null);
+    }
+  }, [selectedBook, subjectId]);
 
   useEffect(() => {
     if (!cloudEnabled) return;
