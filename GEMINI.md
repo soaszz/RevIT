@@ -32,11 +32,12 @@
 
 ## 7. Pre-Push Verification Checklist
 Before pushing to remote:
-1. **Bring Turnstile back (Re-enable protection)**: Turnstile was disabled temporarily for local testing. Always re-enable and enforce it (`disableCaptcha = false` in `AuthPanel.tsx` and `ForgotPanel.tsx`, `NEXT_PUBLIC_DISABLE_CAPTCHA=false`) before any push. Never push with Turnstile bypassed.
-2. **Visual Parity Check with Deployed Version**: When instructed to push, verify first that UI and layout look consistent with the deployed version (no visual regressions, unintended styling changes, or layout breaks compared to production) before executing push.
-3. `npm run security:secrets` (must pass with 0 leaks)
-4. `npx tsc --noEmit` (clean typecheck)
-5. `npm test` (`next build` + all tests passing)
+1. **Always Update Updates Tab (`app/data/siteUpdates.ts`)**: Whenever instructed to push to git, ALWAYS create a new entry in `app/data/siteUpdates.ts` capturing the latest user-facing changes (plain English, clear language, new version ID). This guarantees the auto-update popup and updates tab are current before proceeding to any checks or pushing.
+2. **Bring Turnstile back (Re-enable protection)**: Turnstile was disabled temporarily for local testing. Always re-enable and enforce it (`disableCaptcha = false` in `AuthPanel.tsx` and `ForgotPanel.tsx`, `NEXT_PUBLIC_DISABLE_CAPTCHA=false`) before any push. Never push with Turnstile bypassed.
+3. **Visual Parity Check with Deployed Version**: When instructed to push, verify first that UI and layout look consistent with the deployed version (no visual regressions, unintended styling changes, or layout breaks compared to production) before executing push.
+4. `npm run security:secrets` (must pass with 0 leaks)
+5. `npx tsc --noEmit` (clean typecheck)
+6. `npm test` (`next build` + all tests passing)
 
 ## Execution & Output Rules
 - **No autonomous browser testing or verification:** Do NOT run browser automation, test scripts, or verification suites unless explicitly instructed with commands like "test this", "verify", or "run tests".

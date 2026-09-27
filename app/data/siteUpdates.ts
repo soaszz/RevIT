@@ -13,6 +13,23 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-7-0",
+    version: "v1.7.0",
+    date: "September 27, 2026",
+    type: "major",
+    title: "Swipeable Calculator, NU MOA Highlights & Grading Updates",
+    summary: "Added a swipeable scientific calculator that docks on the right side, highlighted the National University MOA grading tools, updated exam grading weights, and refreshed mobile navigation styling.",
+    tags: ["Calculator", "Grades", "NU MOA", "Mobile", "UI/UX"],
+    highlights: [
+      "Made the calculator draggable up and down along the right side so it never blocks your questions.",
+      "Added peeking mode for the calculator button that hides after 5 seconds if not used.",
+      "Highlighted National University MOA MTAP in Account Settings and Grades.",
+      "Updated grading system weights: Oral Revalida 25%, Comprehensive Exam 25%, Written Revalida 25%.",
+      "Made 'Tap to review' in Mistake Bank brighter and easier to see.",
+      "Improved mobile navigation dock and fixed header spacing."
+    ]
+  },
+  {
     id: "update-v1-6-0",
     version: "v1.6.0",
     date: "September 26, 2026",
