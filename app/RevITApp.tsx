@@ -138,7 +138,7 @@ const navItems: Array<{ id: View; label: string; icon: string }> = [
 function RevITLogo() {
   return (
     <>
-      <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
+      <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/revit-logo.png" alt="RevIT" width={1208} height={319} priority /></span>
       <span className="brand-frog" aria-hidden="true"><Image src="/revit-rounded.png" alt="" width={38} height={38} priority style={{ borderRadius: "9px", objectFit: "cover" }} /></span>
     </>
   );
@@ -2083,7 +2083,7 @@ useEffect(() => {
           </div>
         </header>
 
-        <div className="page-heading">
+        <div className={`page-heading ${isReviewSessionActive ? "session-active-heading" : ""}`}>
           <div>
             <p className="eyebrow">{heading.eyebrow}</p>
             <h1 className={activeView === "overview" ? "overview-greeting" : undefined}>{heading.title}</h1>

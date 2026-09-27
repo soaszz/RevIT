@@ -13,6 +13,21 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-7-1",
+    version: "v1.7.1",
+    date: "September 27, 2026",
+    type: "minor",
+    title: "Mobile Flashcards UI Fix & Screen Width Spacing",
+    summary: "Fixed flashcard choices on mobile so they stack top to bottom instead of overflowing horizontally, and removed unwanted side-to-side scrolling on phones.",
+    tags: ["Flashcards", "Mobile", "UI/UX"],
+    highlights: [
+      "Stacked flashcard choices vertically from top to bottom on mobile screens.",
+      "Reduced choices box height for a more compact and readable look.",
+      "Fixed mobile width and spacing to stop horizontal scrollbars and side-to-side scrolling.",
+      "Cleaned up session headers on phones to keep flashcards centered and easy to use."
+    ]
+  },
+  {
     id: "update-v1-7-0",
     version: "v1.7.0",
     date: "September 27, 2026",

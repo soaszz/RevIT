@@ -99,6 +99,8 @@ export default function ScientificCalculator() {
     moved: boolean;
   } | null>(null);
 
+  const dragOccurredRef = useRef(false);
+
   const clearHideTimer = () => {
     if (hideTimerRef.current) {
       clearTimeout(hideTimerRef.current);
@@ -120,7 +122,10 @@ export default function ScientificCalculator() {
   }, []);
 
   const handleFabClick = () => {
-    if (fabDragStateRef.current?.moved) return;
+    if (dragOccurredRef.current) {
+      dragOccurredRef.current = false;
+      return;
+    }
     if (!isRevealed) {
       setIsRevealed(true);
       startHideTimer();
@@ -143,6 +148,7 @@ export default function ScientificCalculator() {
       initialTop: rect.top,
       moved: false,
     };
+    dragOccurredRef.current = false;
     setIsFabDragging(true);
   };
 
@@ -152,6 +158,7 @@ export default function ScientificCalculator() {
     const deltaY = event.clientY - state.startY;
     if (!state.moved && Math.abs(deltaY) > 5) {
       state.moved = true;
+      dragOccurredRef.current = true;
     }
     if (state.moved) {
       const fabHeight = event.currentTarget.offsetHeight || 58;
@@ -173,16 +180,13 @@ export default function ScientificCalculator() {
       // ignore
     }
     setIsFabDragging(false);
-    if (!state.moved) {
-      handleFabClick();
-    } else {
-      if (isRevealed) {
-        startHideTimer();
-      }
+    fabDragStateRef.current = null;
+    if (dragOccurredRef.current) {
+      startHideTimer();
+      setTimeout(() => {
+        dragOccurredRef.current = false;
+      }, 80);
     }
-    setTimeout(() => {
-      fabDragStateRef.current = null;
-    }, 0);
   };
 
   const handleFabPointerCancel = (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -203,14 +207,18 @@ export default function ScientificCalculator() {
   };
 
   const handleFabMouseEnter = () => {
-    if (isRevealed && !isFabDragging) {
-      clearHideTimer();
+    if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+      if (isRevealed && !isFabDragging) {
+        clearHideTimer();
+      }
     }
   };
 
   const handleFabMouseLeave = () => {
-    if (isRevealed && !isFabDragging) {
-      startHideTimer();
+    if (typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches) {
+      if (isRevealed && !isFabDragging) {
+        startHideTimer();
+      }
     }
   };
 
@@ -326,11 +334,17 @@ export default function ScientificCalculator() {
     }
   }, [cursorIndex, timeline.present]);
 
+  const handleClose = () => {
+    setOpen(false);
+    setIsRevealed(false);
+    clearHideTimer();
+  };
+
   useEffect(() => {
     if (!open) return;
     inputRef.current?.focus();
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
@@ -642,7 +656,7 @@ export default function ScientificCalculator() {
             <div className="calculator-drag-title"><span className="calculator-grip" aria-hidden="true">⠿</span><div><span className="calculator-kicker">Natural display</span><h2 id="calculator-title">Scientific calculator</h2></div></div>
             <div className="calculator-header-actions">
               <button type="button" onClick={resetPanel} disabled={!position && !size} aria-label="Reset calculator position and size" title="Reset position and size">⌖</button>
-              <button type="button" onClick={() => setOpen(false)} aria-label="Close calculator" title="Close">×</button>
+              <button type="button" onClick={handleClose} aria-label="Close calculator" title="Close">×</button>
             </div>
           </header>
 

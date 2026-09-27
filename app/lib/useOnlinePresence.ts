@@ -26,6 +26,7 @@ export function useOnlinePresence(_userId?: string | null): number {
     }
 
     let isMounted = true;
+    let isTracked = false;
     const client = createClient();
     const presenceKey = getPresenceKey();
 
@@ -44,31 +45,59 @@ export function useOnlinePresence(_userId?: string | null): number {
       setOnlineCount(Math.max(1, distinctUsers));
     };
 
+    const trackPresence = async () => {
+      if (!isMounted || isTracked) return;
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
+      try {
+        await channel.track({
+          online_at: new Date().toISOString(),
+        });
+        isTracked = true;
+      } catch {
+        // Ignore tracking failure
+      }
+    };
+
+    const untrackPresence = async () => {
+      if (!isTracked) return;
+      try {
+        await channel.untrack();
+        isTracked = false;
+      } catch {
+        // Ignore untrack failure
+      }
+    };
+
     channel
       .on("presence", { event: "sync" }, updateCount)
       .on("presence", { event: "join" }, updateCount)
       .on("presence", { event: "leave" }, updateCount)
-      .subscribe(async (status: string) => {
+      .subscribe((status: string) => {
         if (status === "SUBSCRIBED") {
-          try {
-            await channel.track({
-              online_at: new Date().toISOString(),
-            });
-          } catch {
-            // Ignore tracking failure
-          }
+          void trackPresence();
         }
       });
 
-    const handleBeforeUnload = () => {
-      void channel.untrack();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        void trackPresence();
+      } else {
+        void untrackPresence();
+      }
     };
+
+    const handleBeforeUnload = () => {
+      void untrackPresence();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       isMounted = false;
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      void channel.untrack();
+      void untrackPresence();
       void client.removeChannel(channel);
     };
   }, []);

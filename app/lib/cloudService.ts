@@ -189,9 +189,18 @@ export async function migrateLocalQuestionAttempts(
   attempts: QuestionAttempt[],
 ) {
   const marker = `revit-question-attempts-migrated-v1:${userId}`;
-  if (localStorage.getItem(marker) === "complete") return;
-  for (const attempt of [...attempts].sort((a, b) => a.timestamp.localeCompare(b.timestamp))) {
-    await saveQuestionAttempt(client, attempt);
+  if (localStorage.getItem(marker) === "complete" || attempts.length === 0) return;
+  const unmigrated = attempts.filter((a) => !a.id.startsWith("cloud_"));
+  if (unmigrated.length === 0) {
+    localStorage.setItem(marker, "complete");
+    return;
+  }
+  for (const attempt of [...unmigrated].sort((a, b) => a.timestamp.localeCompare(b.timestamp))) {
+    try {
+      await saveQuestionAttempt(client, attempt);
+    } catch {
+      return;
+    }
   }
   localStorage.setItem(marker, "complete");
 }
