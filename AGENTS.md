@@ -26,9 +26,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## Pre-Push Verification Checklist
 Before pushing to remote:
 1. **Bring Turnstile back (Re-enable protection)**: Turnstile was disabled temporarily for local testing. Always re-enable and enforce it (`disableCaptcha = false` in `AuthPanel.tsx` and `ForgotPanel.tsx`, `NEXT_PUBLIC_DISABLE_CAPTCHA=false`) before any push. Never push with Turnstile bypassed.
-2. `npm run security:secrets` (must pass with 0 leaks)
-3. `npx tsc --noEmit` (clean typecheck)
-4. `npm test` (`next build` + all tests passing)
+2. **Visual Parity Check with Deployed Version**: When instructed to push, verify first that UI and layout look consistent with the deployed version (no visual regressions, unintended styling changes, or layout breaks compared to production) before executing push.
+3. `npm run security:secrets` (must pass with 0 leaks)
+4. `npx tsc --noEmit` (clean typecheck)
+5. `npm test` (`next build` + all tests passing)
 
 ## Execution & Output Rules
 - **No autonomous browser testing or verification:** Do NOT run browser automation, test scripts, or verification suites unless explicitly instructed with commands like "test this", "verify", or "run tests".
@@ -37,4 +38,9 @@ Before pushing to remote:
 
 ## Communication Style
 - **Default Mode**: Always communicate in ultra-compressed caveman mode (`/caveman ultra`). Cut filler, pleasantries, articles, and unnecessary words. Keep all technical substance, exact code symbols, and accuracy 100% intact.
+
+## Clarifications & Recommendations Policy
+- **Ask When Unsure**: If requirements, designs, or implementations are ambiguous, underspecified, or uncertain, ask questions before building.
+- **Suggest Recommendations**: Proactively propose recommended ideas or alternatives to the user's idea with clear trade-offs.
+- **Precision Over Assumptions**: Clarify upfront to ensure concise, flaw-free implementation aligned with user intent.
 

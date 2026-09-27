@@ -88,6 +88,132 @@ function findFractionRange(expression: string, cursorIndex: number) {
 
 export default function ScientificCalculator() {
   const [open, setOpen] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [fabY, setFabY] = useState<number | null>(null);
+  const [isFabDragging, setIsFabDragging] = useState(false);
+  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fabDragStateRef = useRef<{
+    pointerId: number;
+    startY: number;
+    initialTop: number;
+    moved: boolean;
+  } | null>(null);
+
+  const clearHideTimer = () => {
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+  };
+
+  const startHideTimer = () => {
+    clearHideTimer();
+    hideTimerRef.current = setTimeout(() => {
+      setIsRevealed(false);
+    }, 5000);
+  };
+
+  useEffect(() => {
+    return () => {
+      clearHideTimer();
+    };
+  }, []);
+
+  const handleFabClick = () => {
+    if (fabDragStateRef.current?.moved) return;
+    if (!isRevealed) {
+      setIsRevealed(true);
+      startHideTimer();
+    } else {
+      clearHideTimer();
+      setIsRevealed(false);
+      setOpen(true);
+    }
+  };
+
+  const handleFabPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (event.button !== 0) return;
+    clearHideTimer();
+    const fabEl = event.currentTarget;
+    fabEl.setPointerCapture(event.pointerId);
+    const rect = fabEl.getBoundingClientRect();
+    fabDragStateRef.current = {
+      pointerId: event.pointerId,
+      startY: event.clientY,
+      initialTop: rect.top,
+      moved: false,
+    };
+    setIsFabDragging(true);
+  };
+
+  const handleFabPointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const state = fabDragStateRef.current;
+    if (!state || state.pointerId !== event.pointerId) return;
+    const deltaY = event.clientY - state.startY;
+    if (!state.moved && Math.abs(deltaY) > 5) {
+      state.moved = true;
+    }
+    if (state.moved) {
+      const fabHeight = event.currentTarget.offsetHeight || 58;
+      const minY = PANEL_GUTTER;
+      const maxY = Math.max(minY, window.innerHeight - fabHeight - PANEL_GUTTER);
+      const nextY = Math.min(Math.max(minY, state.initialTop + deltaY), maxY);
+      setFabY(nextY);
+    }
+  };
+
+  const handleFabPointerUp = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const state = fabDragStateRef.current;
+    if (!state || state.pointerId !== event.pointerId) return;
+    try {
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    } catch {
+      // ignore
+    }
+    setIsFabDragging(false);
+    if (!state.moved) {
+      handleFabClick();
+    } else {
+      if (isRevealed) {
+        startHideTimer();
+      }
+    }
+    setTimeout(() => {
+      fabDragStateRef.current = null;
+    }, 0);
+  };
+
+  const handleFabPointerCancel = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const state = fabDragStateRef.current;
+    if (!state || state.pointerId !== event.pointerId) return;
+    try {
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+    } catch {
+      // ignore
+    }
+    setIsFabDragging(false);
+    fabDragStateRef.current = null;
+    if (isRevealed) {
+      startHideTimer();
+    }
+  };
+
+  const handleFabMouseEnter = () => {
+    if (isRevealed && !isFabDragging) {
+      clearHideTimer();
+    }
+  };
+
+  const handleFabMouseLeave = () => {
+    if (isRevealed && !isFabDragging) {
+      startHideTimer();
+    }
+  };
+
   const [timeline, setTimeline] = useState<Timeline>(INITIAL_TIMELINE);
   const [angleMode, setAngleMode] = useState<AngleMode>("deg");
   const [secondMode, setSecondMode] = useState(false);
@@ -407,16 +533,17 @@ export default function ScientificCalculator() {
     if (!panel) return;
     const rect = panel.getBoundingClientRect();
     const pointerId = event.pointerId;
-    const startX = event.clientX;
     const startY = event.clientY;
-    const originX = rect.left;
     const originY = rect.top;
     const panelWidth = rect.width;
     const panelHeight = rect.height;
+    const rightMargin = window.innerWidth <= 760 ? 10 : 20;
+    const fixedX = Math.max(PANEL_GUTTER, window.innerWidth - panelWidth - rightMargin);
+
     const move = (moveEvent: PointerEvent) => {
       if (moveEvent.pointerId !== pointerId) return;
       setPosition({
-        x: Math.min(Math.max(PANEL_GUTTER, originX + moveEvent.clientX - startX), Math.max(PANEL_GUTTER, window.innerWidth - panelWidth - PANEL_GUTTER)),
+        x: fixedX,
         y: Math.min(Math.max(PANEL_GUTTER, originY + moveEvent.clientY - startY), Math.max(PANEL_GUTTER, window.innerHeight - panelHeight - PANEL_GUTTER)),
       });
     };
@@ -434,7 +561,7 @@ export default function ScientificCalculator() {
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", stop);
     window.addEventListener("pointercancel", stop);
-    setPosition({ x: rect.left, y: rect.top });
+    setPosition({ x: fixedX, y: rect.top });
     setDragging(true);
     event.preventDefault();
   };
@@ -749,14 +876,29 @@ export default function ScientificCalculator() {
             <button type="button" className="function-key compact-key" onClick={() => append("Ans")}>Ans</button>
             <button type="button" className="equals-key" onClick={calculate}>=</button>
           </div>
-            <p className="calculator-drag-note" id="calculator-resize-instructions">Drag the title bar to move<span className="calculator-resize-note"> · drag the lower-right corner to resize</span></p>
+            <p className="calculator-drag-note" id="calculator-resize-instructions">Drag up/down along the right side<span className="calculator-resize-note"> · drag the lower-right corner to resize</span></p>
             </div>
           <button className="calculator-resize-handle" type="button" onPointerDown={startResize} onKeyDown={resizeWithKeyboard} aria-label="Resize calculator" aria-describedby="calculator-resize-instructions" title="Drag to resize; use arrow keys for precise control"><span aria-hidden="true">↘</span></button>
         </section>
       )}
 
       {!open && (
-        <button className="calculator-fab" type="button" onClick={() => setOpen(true)} aria-label="Open scientific calculator" aria-expanded="false" aria-controls="revit-scientific-calculator" title="Scientific calculator">
+        <button
+          className={`calculator-fab ${isRevealed ? "is-revealed" : "is-peeking"} ${isFabDragging ? "is-dragging" : ""}`}
+          style={fabY !== null ? { top: `${fabY}px`, bottom: "auto" } : undefined}
+          type="button"
+          onClick={handleFabClick}
+          onPointerDown={handleFabPointerDown}
+          onPointerMove={handleFabPointerMove}
+          onPointerUp={handleFabPointerUp}
+          onPointerCancel={handleFabPointerCancel}
+          onMouseEnter={handleFabMouseEnter}
+          onMouseLeave={handleFabMouseLeave}
+          aria-label={isRevealed ? "Open scientific calculator" : "Scientific calculator (Tap to expand, swipe up/down)"}
+          aria-expanded={isRevealed}
+          aria-controls="revit-scientific-calculator"
+          title={isRevealed ? "Tap to open scientific calculator (or drag up/down)" : "Scientific calculator (Tap to expand, drag up/down)"}
+        >
           <CalculatorIcon />
         </button>
       )}

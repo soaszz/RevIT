@@ -16,9 +16,9 @@
 
 .intro { align-self: center; }
 
-.heroFrog { position: relative; display: block; width: 148px; height: 108px; overflow: hidden; margin: 0 0 22px -8px; }
+.heroFrog { position: relative; display: block; width: 110px; height: 110px; overflow: hidden; margin: 0 0 22px 0; border-radius: 20px; }
 
-.heroFrog img { position: absolute; top: -67px; left: -73px; width: 290px; height: 290px; max-width: none; filter: drop-shadow(0 12px 22px rgba(24, 177, 149, .16)); }
+.heroFrog img { position: static; width: 110px; height: 110px; object-fit: cover; border-radius: 20px; filter: drop-shadow(0 12px 22px rgba(24, 177, 149, .16)); }
 
 .intro h1 { margin: 10px 0 0; font-size: clamp(42px, 6vw, 68px); letter-spacing: -.055em; line-height: .98; }
 
@@ -54,9 +54,9 @@
 
 .qrUnavailable > span:last-child { max-width: 240px; margin-top: 7px; color: var(--muted); font-size: 10px; line-height: 1.55; }
 
-.qrFallbackFrog { position: relative; display: block; width: 72px; height: 58px; overflow: hidden; margin-bottom: 10px; }
+.qrFallbackFrog { position: relative; display: block; width: 64px; height: 64px; overflow: hidden; margin-bottom: 10px; border-radius: 12px; }
 
-.qrFallbackFrog img { position: absolute; top: -37px; left: -42px; width: 155px; height: 155px; max-width: none; opacity: .82; }
+.qrFallbackFrog img { position: static; width: 64px; height: 64px; object-fit: cover; opacity: .82; border-radius: 12px; }
 
 .scanCopy { margin: 18px 0 0; color: var(--ink); font-size: 11px; font-weight: 700; }
 

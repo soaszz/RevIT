@@ -22,6 +22,9 @@ import ReviewModeSwitch, { type ReviewLibraryMode } from "./components/ReviewMod
 import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
 import RevITLoadingScreen from "./components/RevITLoadingScreen";
 import ScientificCalculator from "./components/ScientificCalculator";
+import MobileNavDock from "./components/MobileNavDock";
+import MobileReviewBar from "./components/MobileReviewBar";
+import { motion, AnimatePresence } from "motion/react";
 import CustomConfirm from "./components/CustomConfirm";
 import ResumeSessionModal, { type SavedRecentSession } from "./components/ResumeSessionModal";
 import StudyCalendar from "./components/StudyCalendar";
@@ -129,14 +132,14 @@ const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "weakness", label: "Weakness Analytics", icon: "/icons/weakness.svg" },
   { id: "planner", label: "Study Planner", icon: "/icons/planner.svg" },
   { id: "grades", label: "Grades", icon: "/icons/grades.svg" },
-  { id: "assistant", label: "MedTech AI", icon: "/icons/medtech-ai.svg" },
+  { id: "assistant", label: "RevIT AI", icon: "/icons/revit-ai.png" },
 ];
 
 function RevITLogo() {
   return (
     <>
       <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
-      <span className="brand-frog" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} sizes="70px" priority /></span>
+      <span className="brand-frog" aria-hidden="true"><Image src="/revit-rounded.png" alt="" width={38} height={38} priority style={{ borderRadius: "9px", objectFit: "cover" }} /></span>
     </>
   );
 }
@@ -332,6 +335,7 @@ export type InitialUser = { id: string; email: string; username?: string };
 export default function RevITApp({ initialUser = null, cloudEnabled = false, turnstileSiteKey }: { initialUser?: InitialUser | null; cloudEnabled?: boolean; turnstileSiteKey?: string }) {
   const router = useRouter();
   const [activeView, setActiveView] = useState<View>("overview");
+  const [viewDirection, setViewDirection] = useState(1);
   const [libraryMode, setLibraryMode] = useState<ReviewLibraryMode>("mcqs");
   const [isFlashcardReviewing, setIsFlashcardReviewing] = useState(false);
   const [activeFlashcardTopics, setActiveFlashcardTopics] = useState<string[]>([]);
@@ -1496,6 +1500,12 @@ useEffect(() => {
   }
 
   function openView(view: View) {
+    const tabOrder: View[] = ["overview", "library", "progress", "leaderboards", "weakness", "planner", "grades", "assistant"];
+    const currIdx = tabOrder.indexOf(activeView);
+    const nextIdx = tabOrder.indexOf(view);
+    if (currIdx !== -1 && nextIdx !== -1) {
+      setViewDirection(nextIdx >= currIdx ? 1 : -1);
+    }
     if (view !== "library" && activeView === "library") {
       const isReviewing = (libraryMode === "mcqs" && sessionQuestionIds.length > 0) || (libraryMode === "flashcards" && isFlashcardReviewing);
       if (isReviewing) {
@@ -1872,7 +1882,7 @@ useEffect(() => {
   } : activeView === "grades" && gradeSimulatorEnabled ? {
     ...baseHeading,
     title: "Grades & Simulator",
-    description: "Record assessments by subject and use deterministic calculations to review weighted results and possible outcomes.",
+    description: "Record assessments by subject and use deterministic calculations calibrated for NU MOA Students to review weighted results and possible outcomes.",
   } : baseHeading;
   const selectedTopicNames = selectedTopicIds.map((id) => topicById.get(id)?.name).filter(Boolean);
   const profileInitials = profile.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R";
@@ -1919,7 +1929,10 @@ useEffect(() => {
               aria-current={activeView === item.id ? "page" : undefined}
               title={sidebarCollapsed ? item.label : undefined}
             >
-              <span className="nav-icon" aria-hidden="true"><Image src={item.icon} alt="" width={24} height={24} /></span><span className="nav-label">{item.label}</span>
+              <span className={`nav-icon ${item.id === "assistant" ? "nav-icon-ai" : ""}`} aria-hidden="true">
+                <Image src={item.icon} alt="" width={24} height={24} />
+              </span>
+              <span className="nav-label">{item.label}</span>
             </button>
           ))}
         </nav>
@@ -1929,7 +1942,7 @@ useEffect(() => {
           <span className="sidebar-control-copy"><strong>Appearance</strong><small>Light / dark</small></span>
         </button>
         <Link className="sidebar-support" href="/support" title={sidebarCollapsed ? "Support RevIT" : undefined}>
-          <span className="sidebar-support-frog" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} sizes="42px" /></span>
+          <span className="sidebar-support-frog" aria-hidden="true"><Image src="/icons/revit-support.svg" alt="" width={42} height={42} unoptimized style={{ borderRadius: "10px", objectFit: "cover" }} /></span>
           <span className="sidebar-support-copy"><strong>Support RevIT</strong><span>Help support continued development</span></span>
           <span className="sidebar-support-arrow" aria-hidden="true">›</span>
         </Link>
@@ -2041,11 +2054,33 @@ useEffect(() => {
           </div>
         )}
         <header className="mobile-header">
-          <div className="mobile-brand-stack">
-            <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home"><RevITLogo /></button>
-            <span className="mobile-current-view"><i aria-hidden="true"><Image src={activeNavItem.icon} alt="" width={15} height={15} /></i>{activeNavItem.label}</span>
+          <button className="brand brand-button" type="button" onClick={() => openView("overview")} aria-label="RevIT home">
+            <RevITLogo />
+          </button>
+          <div className="mobile-header-right">
+            {activeView === "overview" && (
+              <span className="mobile-online-presence" title={`${onlineLearnerCount} future RMT/s reviewing right now!`}>
+                <span className="online-presence-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                  </svg>
+                </span>
+                <span className="online-presence-beacon" aria-hidden="true" />
+                <strong>{onlineLearnerCount}</strong>
+              </span>
+            )}
+            {activeView === "overview" && (
+              <SiteNotificationTrigger className="mobile-header-notification" size="compact" unreadCount={unreadCount} onClick={() => setUpdatesModalOpen(true)} />
+            )}
+            <button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode">
+              <span className="theme-symbol light-symbol" aria-hidden="true">☼</span>
+              <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
+            </button>
+            <button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
+              {profile.photoDataUrl ? "" : profileInitials}
+            </button>
           </div>
-          <div className="mobile-actions"><label><span className="sr-only">Choose page</span><select value={activeView} onChange={(event) => { if (event.target.value === "support") router.push("/support"); else openView(event.target.value as View); }}>{availableNavItems.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}<option value="support">Support RevIT (optional)</option></select></label>{activeView === "overview" && <span className="mobile-online-presence" title={`${onlineLearnerCount} future RMT/s reviewing right now!`}><span className="online-presence-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg></span><span className="online-presence-beacon" aria-hidden="true" /><strong>{onlineLearnerCount}</strong></span>}{activeView === "overview" && <SiteNotificationTrigger className="mobile-header-notification" size="compact" unreadCount={unreadCount} onClick={() => setUpdatesModalOpen(true)} />}<button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode"><span className="theme-symbol light-symbol" aria-hidden="true">☼</span><span className="theme-symbol dark-symbol" aria-hidden="true">☾</span></button><button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">{profile.photoDataUrl ? "" : profileInitials}</button></div>
         </header>
 
         <div className="page-heading">
@@ -2099,7 +2134,32 @@ useEffect(() => {
         {progressionError && <div className="sync-banner error" role="status"><span>{progressionError}</span><button type="button" onClick={() => window.location.reload()}>Retry</button></div>}
         {!cloudEnabled && <div className="sync-banner local"><span>Local mode: reviewer data stays on this device until Supabase is connected.</span><a href="/auth">Connect account</a></div>}
 
-        {activeView === "overview" && (
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={activeView}
+            className="view-transition-container"
+            initial={{ opacity: 0, y: viewDirection * 32 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: viewDirection * -32 }}
+            transition={{ type: "spring", stiffness: 360, damping: 28 }}
+            drag={isReviewSessionActive ? false : "x"}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.15}
+            onDragEnd={(_e, { offset, velocity }) => {
+              if (Math.abs(offset.x) > 60 && Math.abs(velocity.x) > 0.15) {
+                const primaryTabs: View[] = ["overview", "library", "progress", "leaderboards"];
+                const currIdx = primaryTabs.indexOf(activeView);
+                if (currIdx !== -1) {
+                  if (offset.x < 0 && currIdx < primaryTabs.length - 1) {
+                    openView(primaryTabs[currIdx + 1]);
+                  } else if (offset.x > 0 && currIdx > 0) {
+                    openView(primaryTabs[currIdx - 1]);
+                  }
+                }
+              }
+            }}
+          >
+            {activeView === "overview" && (
           <div className="content-grid">
             <div className="dashboard-column">
               <section className="summary-grid" aria-label="Performance summary">
@@ -2130,11 +2190,16 @@ useEffect(() => {
                   </div>
                   <strong>{wrongQuestionIds.size}</strong>
                   <p>
-                    {wrongQuestionIds.size > 0
-                      ? `${wrongQuestionIds.size} question${wrongQuestionIds.size === 1 ? "" : "s"} to reinforce · Tap to review`
-                      : attempts.length > 0
-                        ? "0 missed questions · Excellent accuracy!"
-                        : "Incorrect answers will appear here for targeted review."}
+                    {wrongQuestionIds.size > 0 ? (
+                      <>
+                        {wrongQuestionIds.size} question{wrongQuestionIds.size === 1 ? "" : "s"} to reinforce ·{" "}
+                        <span className="tap-to-review">Tap to review</span>
+                      </>
+                    ) : attempts.length > 0 ? (
+                      "0 missed questions · Excellent accuracy!"
+                    ) : (
+                      "Incorrect answers will appear here for targeted review."
+                    )}
                   </p>
                 </article>
                 <article className="metric-card">
@@ -2212,7 +2277,7 @@ useEffect(() => {
                 })}
               </div>
               <div className="ai-peek-card">
-                <span className="ai-mark">AI</span>
+                <span className="ai-mark" style={{ overflow: "hidden", padding: 0 }}><Image src="/icons/revit-ai.png" alt="" width={32} height={32} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></span>
                 <h2>Ask for a clearer explanation</h2>
                 <p>Groq study support provides on-demand concepts and guidance while keeping scoring answers strictly unchanged.</p>
                 <button className="primary-button" type="button" onClick={() => openView("assistant")}>Open RevIT AI</button>
@@ -2283,9 +2348,15 @@ useEffect(() => {
                                   <div className="subject-heading-meta">
                                     <span className="eyebrow">{subjectQuestionCount} official MCQs · {subjectTopics.length} topic{subjectTopics.length === 1 ? "" : "s"} · {bookLabel}</span>
                                     {subjectSelected > 0 && (
-                                      <span className={`subject-status-badge ${subjectFullySelected ? "fully-selected" : "partially-selected"}`}>
+                                      <motion.span
+                                        layout
+                                        initial={{ scale: 0.75, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        transition={{ type: "spring", stiffness: 450, damping: 25 }}
+                                        className={`subject-status-badge ${subjectFullySelected ? "fully-selected" : "partially-selected"}`}
+                                      >
                                         {subjectFullySelected ? "All selected" : `${subjectSelected}/${subjectTopics.length} selected`}
-                                      </span>
+                                      </motion.span>
                                     )}
                                   </div>
                                   <h2>{subject.name}</h2>
@@ -2351,209 +2422,255 @@ useEffect(() => {
                                   </button>
                                 </div>
                               </div>
-                              <div
-                                id={`mcq-subject-topics-${subject.id}`}
-                                className={`subject-topics-collapse ${isExpanded ? "expanded" : ""}`}
-                                style={!isExpanded ? { display: "none" } : undefined}
-                                aria-hidden={!isExpanded}
-                              >
-                                <div className="subject-topics-content">
-                                  <div className="subject-topics-inner">
-                                    {selectedBook === "all" ? (
-                                      <div className="subject-book-groups">
-                                        {(["Harr", "Ciulla"] as const).map((bookName) => {
-                                          const bookTopics = subjectTopics.filter((t) => t.book === bookName);
-                                          if (!bookTopics.length) return null;
-                                          const bookTopicIds = bookTopics.map((t) => t.id);
-                                          const bookKey = `${subject.id}:${bookName}`;
-                                          const isBookExpanded = expandedBookEditionKeys.includes(bookKey);
-                                          const bookSelected = bookTopics.filter((t) => selectedTopicIds.includes(t.id)).length;
-                                          const bookFullySelected = bookTopics.length > 0 && bookSelected === bookTopics.length;
-                                          const bookQuestionCount = questions.filter((q) => bookTopicIds.includes(q.topicId)).length;
+                              <AnimatePresence initial={false}>
+                                {isExpanded && (
+                                  <motion.div
+                                    id={`mcq-subject-topics-${subject.id}`}
+                                    className="subject-topics-collapse expanded"
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: "auto", opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ type: "spring", stiffness: 360, damping: 30 }}
+                                    style={{ overflow: "hidden" }}
+                                  >
+                                    <div className="subject-topics-content">
+                                      <div className="subject-topics-inner">
+                                        {selectedBook === "all" ? (
+                                          <div className="subject-book-groups">
+                                            {(["Harr", "Ciulla"] as const).map((bookName) => {
+                                              const bookTopics = subjectTopics.filter((t) => t.book === bookName);
+                                              if (!bookTopics.length) return null;
+                                              const bookTopicIds = bookTopics.map((t) => t.id);
+                                              const bookKey = `${subject.id}:${bookName}`;
+                                              const isBookExpanded = expandedBookEditionKeys.includes(bookKey);
+                                              const bookSelected = bookTopics.filter((t) => selectedTopicIds.includes(t.id)).length;
+                                              const bookFullySelected = bookTopics.length > 0 && bookSelected === bookTopics.length;
+                                              const bookQuestionCount = questions.filter((q) => bookTopicIds.includes(q.topicId)).length;
 
-                                          return (
-                                            <div
-                                              className={`book-edition-accordion ${isBookExpanded ? "is-expanded" : ""}`}
-                                              key={bookName}
-                                              style={{
-                                                border: "1px solid var(--line)",
-                                                borderRadius: "12px",
-                                                background: isBookExpanded ? "var(--paper)" : "var(--surface-soft)",
-                                                overflow: "hidden",
-                                                transition: "all 0.2s ease",
-                                                marginBottom: "10px",
-                                              }}
-                                            >
-                                              <div
-                                                className="book-edition-heading"
-                                                onClick={() => toggleBookEditionExpanded(subject.id, bookName)}
-                                                role="button"
-                                                tabIndex={0}
-                                                aria-expanded={isBookExpanded}
-                                                aria-controls={`mcq-book-topics-${subject.id}-${bookName}`}
-                                                onKeyDown={(event) => {
-                                                  if (event.key === "Enter" || event.key === " ") {
-                                                    event.preventDefault();
-                                                    toggleBookEditionExpanded(subject.id, bookName);
-                                                  }
-                                                }}
-                                                style={{
-                                                  display: "flex",
-                                                  alignItems: "center",
-                                                  justifyContent: "space-between",
-                                                  padding: "13px 16px",
-                                                  gap: "14px",
-                                                  cursor: "pointer",
-                                                  userSelect: "none",
-                                                  width: "100%",
-                                                  boxSizing: "border-box",
-                                                }}
-                                              >
-                                                <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0, flex: "1 1 auto", flexWrap: "wrap" }}>
-                                                  <span className="book-edition-title" style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", whiteSpace: "nowrap" }}>
-                                                    {bookName} Edition
-                                                  </span>
-                                                  <span className="book-edition-meta" style={{ fontSize: "11px", color: "var(--muted)", fontWeight: 500, whiteSpace: "nowrap" }}>
-                                                    • {bookTopics.length} topic{bookTopics.length === 1 ? "" : "s"} · {bookQuestionCount} MCQs
-                                                  </span>
-                                                  {bookSelected > 0 && (
-                                                    <span className={`subject-status-badge ${bookFullySelected ? "fully-selected" : "partially-selected"}`} style={{ fontSize: "9px", padding: "1px 7px" }}>
-                                                      {bookFullySelected ? "All selected" : `${bookSelected}/${bookTopics.length}`}
-                                                    </span>
-                                                  )}
-                                                </div>
-                                                <div className="book-edition-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0, marginLeft: "auto" }}>
-                                                  <button
-                                                    className="text-button"
-                                                    type="button"
-                                                    onClick={(event) => {
-                                                      event.stopPropagation();
-                                                      toggleSubject(subject.id, bookTopicIds);
-                                                    }}
-                                                    style={{ fontSize: "11px", fontWeight: 650, whiteSpace: "nowrap" }}
-                                                  >
-                                                    {bookFullySelected ? `Unselect ${bookName}` : `Select ${bookName}`}
-                                                  </button>
-                                                  <span className={`topic-book-badge topic-book-${bookName.toLowerCase()}`} style={getBookBadgeStyle(bookName, { margin: 0 })}>
-                                                    {bookName}
-                                                  </span>
-                                                  <button
-                                                    className="book-edition-toggle"
-                                                    type="button"
-                                                    aria-label={isBookExpanded ? `Hide ${bookName} topics` : `Show ${bookName} topics`}
-                                                    onClick={(event) => {
-                                                      event.stopPropagation();
-                                                      toggleBookEditionExpanded(subject.id, bookName);
+                                              return (
+                                                <div
+                                                  className={`book-edition-accordion ${isBookExpanded ? "is-expanded" : ""}`}
+                                                  key={bookName}
+                                                  style={{
+                                                    border: "1px solid var(--line)",
+                                                    borderRadius: "12px",
+                                                    background: isBookExpanded ? "var(--paper)" : "var(--surface-soft)",
+                                                    overflow: "hidden",
+                                                    transition: "all 0.2s ease",
+                                                    marginBottom: "10px",
+                                                  }}
+                                                >
+                                                  <div
+                                                    className="book-edition-heading"
+                                                    onClick={() => toggleBookEditionExpanded(subject.id, bookName)}
+                                                    role="button"
+                                                    tabIndex={0}
+                                                    aria-expanded={isBookExpanded}
+                                                    aria-controls={`mcq-book-topics-${subject.id}-${bookName}`}
+                                                    onKeyDown={(event) => {
+                                                      if (event.key === "Enter" || event.key === " ") {
+                                                        event.preventDefault();
+                                                        toggleBookEditionExpanded(subject.id, bookName);
+                                                      }
                                                     }}
                                                     style={{
-                                                      display: "inline-flex",
+                                                      display: "flex",
                                                       alignItems: "center",
-                                                      gap: "6px",
-                                                      padding: "6px 12px",
-                                                      borderRadius: "8px",
-                                                      border: "1px solid var(--line)",
-                                                      background: isBookExpanded ? "var(--green-soft)" : "var(--surface-tint)",
-                                                      color: isBookExpanded ? "var(--green-dark)" : "var(--ink)",
-                                                      fontSize: "10.5px",
-                                                      fontWeight: 650,
+                                                      justifyContent: "space-between",
+                                                      padding: "13px 16px",
+                                                      gap: "14px",
                                                       cursor: "pointer",
-                                                      whiteSpace: "nowrap",
-                                                      lineHeight: 1,
-                                                      flexShrink: 0,
+                                                      userSelect: "none",
+                                                      width: "100%",
+                                                      boxSizing: "border-box",
                                                     }}
                                                   >
-                                                    <span>{isBookExpanded ? "Hide topics" : "Show topics"}</span>
-                                                    <svg
-                                                      width="13"
-                                                      height="13"
-                                                      viewBox="0 0 24 24"
-                                                      fill="none"
-                                                      stroke="currentColor"
-                                                      strokeWidth="2.5"
-                                                      strokeLinecap="round"
-                                                      strokeLinejoin="round"
-                                                      aria-hidden="true"
-                                                      style={{
-                                                        flexShrink: 0,
-                                                        transform: isBookExpanded ? "rotate(180deg)" : "rotate(0deg)",
-                                                        transition: "transform 0.22s ease",
-                                                        color: isBookExpanded ? "var(--green)" : "var(--muted)",
-                                                      }}
-                                                    >
-                                                      <polyline points="6 9 12 15 18 9" />
-                                                    </svg>
-                                                  </button>
-                                                </div>
-                                              </div>
-                                              <div
-                                                id={`mcq-book-topics-${subject.id}-${bookName}`}
-                                                className="book-edition-content"
-                                                style={!isBookExpanded ? { display: "none" } : undefined}
-                                                aria-hidden={!isBookExpanded}
-                                              >
-                                                <div className="topic-selection-grid">
-                                                  {bookTopics.map((topic) => {
-                                                    const count = questions.filter((question) => question.topicId === topic.id).length;
-                                                    const selected = selectedTopicIds.includes(topic.id);
-                                                    return (
-                                                      <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
-                                                        <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                                        <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                                                        <span className="topic-select-copy">
-                                                          <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
-                                                            <strong>{topic.name}</strong>
-                                                            {topic.book && (
-                                                              <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={getBookBadgeStyle(topic.book, { marginLeft: "auto" })}>
-                                                                {topic.book}
-                                                              </span>
-                                                            )}
-                                                          </div>
-                                                          <small>{topic.description}</small>
-                                                          <em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em>
-                                                        </span>
-                                                      </label>
-                                                    );
-                                                  })}
-                                                </div>
-                                                <p className="subject-selection-note">{bookSelected} of {bookTopics.length} {bookName} topics selected</p>
-                                              </div>
-                                            </div>
-                                          );
-                                        })}
-                                        <p className="subject-selection-note" style={{ marginTop: "6px" }}>{subjectSelected} of {subjectTopics.length} total topics selected</p>
-                                      </div>
-                                    ) : (
-                                      <>
-                                        <div className="topic-selection-grid">
-                                          {subjectTopics.map((topic) => {
-                                            const count = questions.filter((question) => question.topicId === topic.id).length;
-                                            const selected = selectedTopicIds.includes(topic.id);
-                                            return (
-                                              <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
-                                                <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                                <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
-                                                <span className="topic-select-copy">
-                                                  <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
-                                                    <strong>{topic.name}</strong>
-                                                    {topic.book && (
-                                                      <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={getBookBadgeStyle(topic.book, { marginLeft: "auto" })}>
-                                                        {topic.book}
+                                                    <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0, flex: "1 1 auto", flexWrap: "wrap" }}>
+                                                      <span className="book-edition-title" style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", whiteSpace: "nowrap" }}>
+                                                        {bookName} Edition
                                                       </span>
-                                                    )}
+                                                      <span className="book-edition-meta" style={{ fontSize: "11px", color: "var(--muted)", fontWeight: 500, whiteSpace: "nowrap" }}>
+                                                        • {bookTopics.length} topic{bookTopics.length === 1 ? "" : "s"} · {bookQuestionCount} MCQs
+                                                      </span>
+                                                      {bookSelected > 0 && (
+                                                        <span className={`subject-status-badge ${bookFullySelected ? "fully-selected" : "partially-selected"}`} style={{ fontSize: "9px", padding: "1px 7px" }}>
+                                                          {bookFullySelected ? "All selected" : `${bookSelected}/${bookTopics.length}`}
+                                                        </span>
+                                                      )}
+                                                    </div>
+                                                    <div className="book-edition-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0, marginLeft: "auto" }}>
+                                                      <button
+                                                        className="text-button"
+                                                        type="button"
+                                                        onClick={(event) => {
+                                                          event.stopPropagation();
+                                                          toggleSubject(subject.id, bookTopicIds);
+                                                        }}
+                                                        style={{ fontSize: "11px", fontWeight: 650, whiteSpace: "nowrap" }}
+                                                      >
+                                                        {bookFullySelected ? `Unselect ${bookName}` : `Select ${bookName}`}
+                                                      </button>
+                                                      <span className={`topic-book-badge topic-book-${bookName.toLowerCase()}`} style={getBookBadgeStyle(bookName, { margin: 0 })}>
+                                                        {bookName}
+                                                      </span>
+                                                      <button
+                                                        className="book-edition-toggle"
+                                                        type="button"
+                                                        aria-label={isBookExpanded ? `Hide ${bookName} topics` : `Show ${bookName} topics`}
+                                                        onClick={(event) => {
+                                                          event.stopPropagation();
+                                                          toggleBookEditionExpanded(subject.id, bookName);
+                                                        }}
+                                                        style={{
+                                                          display: "inline-flex",
+                                                          alignItems: "center",
+                                                          gap: "6px",
+                                                          padding: "6px 12px",
+                                                          borderRadius: "8px",
+                                                          border: "1px solid var(--line)",
+                                                          background: isBookExpanded ? "var(--green-soft)" : "var(--surface-tint)",
+                                                          color: isBookExpanded ? "var(--green-dark)" : "var(--ink)",
+                                                          fontSize: "10.5px",
+                                                          fontWeight: 650,
+                                                          cursor: "pointer",
+                                                          whiteSpace: "nowrap",
+                                                          lineHeight: 1,
+                                                          flexShrink: 0,
+                                                        }}
+                                                      >
+                                                        <span>{isBookExpanded ? "Hide topics" : "Show topics"}</span>
+                                                        <svg
+                                                          width="13"
+                                                          height="13"
+                                                          viewBox="0 0 24 24"
+                                                          fill="none"
+                                                          stroke="currentColor"
+                                                          strokeWidth="2.5"
+                                                          strokeLinecap="round"
+                                                          strokeLinejoin="round"
+                                                          aria-hidden="true"
+                                                          style={{
+                                                            flexShrink: 0,
+                                                            transform: isBookExpanded ? "rotate(180deg)" : "rotate(0deg)",
+                                                            transition: "transform 0.22s ease",
+                                                            color: isBookExpanded ? "var(--green)" : "var(--muted)",
+                                                          }}
+                                                        >
+                                                          <polyline points="6 9 12 15 18 9" />
+                                                        </svg>
+                                                      </button>
+                                                    </div>
                                                   </div>
-                                                  <small>{topic.description}</small>
-                                                  <em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em>
-                                                </span>
-                                              </label>
-                                            );
-                                          })}
-                                        </div>
-                                        <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
-                                      </>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
+                                                  <AnimatePresence initial={false}>
+                                                    {isBookExpanded && (
+                                                      <motion.div
+                                                        id={`mcq-book-topics-${subject.id}-${bookName}`}
+                                                        className="book-edition-content"
+                                                        initial={{ height: 0, opacity: 0 }}
+                                                        animate={{ height: "auto", opacity: 1 }}
+                                                        exit={{ height: 0, opacity: 0 }}
+                                                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                                                        style={{ overflow: "hidden" }}
+                                                      >
+                                                        <div className="topic-selection-grid">
+                                                          {bookTopics.map((topic) => {
+                                                            const count = questions.filter((question) => question.topicId === topic.id).length;
+                                                            const selected = selectedTopicIds.includes(topic.id);
+                                                            return (
+                                                              <motion.label
+                                                                className={`topic-select-card ${selected ? "selected" : ""}`}
+                                                                key={topic.id}
+                                                                whileTap={{ scale: 0.985 }}
+                                                                transition={{ type: "spring", stiffness: 450, damping: 25 }}
+                                                              >
+                                                                <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                                                <span className="topic-check" aria-hidden="true">
+                                                                  {selected && (
+                                                                    <motion.span
+                                                                      initial={{ scale: 0, rotate: -25 }}
+                                                                      animate={{ scale: 1, rotate: 0 }}
+                                                                      transition={{ type: "spring", stiffness: 520, damping: 22 }}
+                                                                      style={{ display: "inline-block" }}
+                                                                    >
+                                                                      ✓
+                                                                    </motion.span>
+                                                                  )}
+                                                                </span>
+                                                                <span className="topic-select-copy">
+                                                                  <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
+                                                                    <strong>{topic.name}</strong>
+                                                                    {topic.book && (
+                                                                      <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={getBookBadgeStyle(topic.book, { marginLeft: "auto" })}>
+                                                                        {topic.book}
+                                                                      </span>
+                                                                    )}
+                                                                  </div>
+                                                                  <small>{topic.description}</small>
+                                                                  <em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em>
+                                                                </span>
+                                                              </motion.label>
+                                                            );
+                                                          })}
+                                                        </div>
+                                                        <p className="subject-selection-note">{bookSelected} of {bookTopics.length} {bookName} topics selected</p>
+                                                      </motion.div>
+                                                    )}
+                                                  </AnimatePresence>
+                                                </div>
+                                              );
+                                            })}
+                                            <p className="subject-selection-note" style={{ marginTop: "6px" }}>{subjectSelected} of {subjectTopics.length} total topics selected</p>
+                                          </div>
+                                        ) : (
+                                          <>
+                                            <div className="topic-selection-grid">
+                                              {subjectTopics.map((topic) => {
+                                                const count = questions.filter((question) => question.topicId === topic.id).length;
+                                                const selected = selectedTopicIds.includes(topic.id);
+                                                return (
+                                                  <motion.label
+                                                    className={`topic-select-card ${selected ? "selected" : ""}`}
+                                                    key={topic.id}
+                                                    whileTap={{ scale: 0.985 }}
+                                                    transition={{ type: "spring", stiffness: 450, damping: 25 }}
+                                                  >
+                                                    <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
+                                                    <span className="topic-check" aria-hidden="true">
+                                                      {selected && (
+                                                        <motion.span
+                                                          initial={{ scale: 0, rotate: -25 }}
+                                                          animate={{ scale: 1, rotate: 0 }}
+                                                          transition={{ type: "spring", stiffness: 520, damping: 22 }}
+                                                          style={{ display: "inline-block" }}
+                                                        >
+                                                          ✓
+                                                        </motion.span>
+                                                      )}
+                                                    </span>
+                                                    <span className="topic-select-copy">
+                                                      <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
+                                                        <strong>{topic.name}</strong>
+                                                        {topic.book && (
+                                                          <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={getBookBadgeStyle(topic.book, { marginLeft: "auto" })}>
+                                                            {topic.book}
+                                                          </span>
+                                                        )}
+                                                      </div>
+                                                      <small>{topic.description}</small>
+                                                      <em>{count} questions · {topic.sourcePdfs.length} source PDF{topic.sourcePdfs.length === 1 ? "" : "s"}</em>
+                                                    </span>
+                                                  </motion.label>
+                                                );
+                                              })}
+                                            </div>
+                                            <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
+                                          </>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
                             </section>
                           );
                         })}
@@ -2611,10 +2728,42 @@ useEffect(() => {
                       onTimerEnabledChange={setTimerEnabled}
                       onTimerDurationChange={setTimerDuration}
                     />
-                    <button className="primary-button wide" type="button" onClick={startSession} disabled={!sessionQuestions.length}>Start review</button>
-                    {selectedTopicNames.length > 0 && <div className="selected-tags">{selectedTopicNames.map((name) => <span key={name}>{name}</span>)}</div>}
+                    <motion.button
+                      whileTap={{ scale: 0.98 }}
+                      transition={{ type: "spring", stiffness: 450, damping: 25 }}
+                      className="primary-button wide"
+                      type="button"
+                      onClick={startSession}
+                      disabled={!sessionQuestions.length}
+                    >
+                      Start review
+                    </motion.button>
+                    {selectedTopicNames.length > 0 && (
+                      <div className="selected-tags">
+                        <AnimatePresence>
+                          {selectedTopicNames.map((name) => (
+                            <motion.span
+                              layout
+                              key={name}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              transition={{ type: "spring", stiffness: 420, damping: 26 }}
+                            >
+                              {name}
+                            </motion.span>
+                          ))}
+                        </AnimatePresence>
+                      </div>
+                    )}
                   </aside>
                 </div>
+                <MobileReviewBar
+                  selectedTopicCount={selectedTopicIds.length}
+                  questionCount={sessionQuestions.length}
+                  onStart={startSession}
+                  onClear={() => setSelectedTopicIds([])}
+                />
               </>
             ) : sessionComplete ? (
               <SessionSummary attempts={sessionAttempts} onDone={leaveSession} cloudEnabled={cloudEnabled && attemptHistoryAvailable} />
@@ -2641,56 +2790,97 @@ useEffect(() => {
                   </div>
                 </div>
                 <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
-                <p className="question-source">{currentQuestion.book ? `${currentQuestion.book} · ` : ""}{subjectById.get(currentQuestion.subjectId)?.name}</p>
-                {currentQuestion.caseStudy && (
-                  <div className="quiz-case-study" style={{ marginBottom: "1rem", fontSize: "1.05rem", lineHeight: "1.6", color: "var(--text-main, #f1f5f9)", fontWeight: 500 }}>
-                    <p>{currentQuestion.caseStudy}</p>
-                  </div>
-                )}
-                <QuestionStimulus stimulus={currentQuestion.stimulus} />
-                <div className="quiz-question-heading" style={{ marginTop: currentQuestion.stimulus || currentQuestion.caseStudy ? "1rem" : undefined }}>
-                  <div>
-                    <h2>{currentQuestion.prompt}</h2>
-                  </div>
-                  {activeTimer.enabled && (
-                    <QuestionTimer
-                      key={`${sessionIndex}:${currentQuestion.id}`}
-                      durationSeconds={activeTimer.duration}
-                      questionKey={`${sessionIndex}:${currentQuestion.id}`}
-                      paused={answerRevealed}
-                      onExpire={handleQuestionTimeout}
-                    />
-                  )}
-                </div>
-                <div className="choice-list">
-                  {currentChoiceOrder.map((choiceIndex, displayIndex) => {
-                    const choice = currentQuestion.choices[choiceIndex];
-                    const isCorrect = answerRevealed && choiceIndex === currentQuestion.correctAnswer;
-                    const isWrong = answerRevealed && choiceIndex === selectedChoice && choiceIndex !== currentQuestion.correctAnswer;
-                    return (
-                      <button
-                        type="button"
-                        className={`choice-button ${selectedChoice === choiceIndex ? "selected" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
-                        key={`${currentQuestion.id}-${choiceIndex}`}
-                        onClick={() => !answerRevealed && setSelectedChoice(choiceIndex)}
-                        aria-pressed={selectedChoice === choiceIndex}
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.div
+                    key={`${currentQuestion.id}-${sessionIndex}`}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  >
+                    <p className="question-source">{currentQuestion.book ? `${currentQuestion.book} · ` : ""}{subjectById.get(currentQuestion.subjectId)?.name}</p>
+                    {currentQuestion.caseStudy && (
+                      <div className="quiz-case-study" style={{ marginBottom: "1rem", fontSize: "1.05rem", lineHeight: "1.6", color: "var(--text-main, #f1f5f9)", fontWeight: 500 }}>
+                        <p>{currentQuestion.caseStudy}</p>
+                      </div>
+                    )}
+                    <QuestionStimulus stimulus={currentQuestion.stimulus} />
+                    <div className="quiz-question-heading" style={{ marginTop: currentQuestion.stimulus || currentQuestion.caseStudy ? "1rem" : undefined }}>
+                      <div>
+                        <h2>{currentQuestion.prompt}</h2>
+                      </div>
+                      {activeTimer.enabled && (
+                        <QuestionTimer
+                          key={`${sessionIndex}:${currentQuestion.id}`}
+                          durationSeconds={activeTimer.duration}
+                          questionKey={`${sessionIndex}:${currentQuestion.id}`}
+                          paused={answerRevealed}
+                          onExpire={handleQuestionTimeout}
+                        />
+                      )}
+                    </div>
+                    <div className="choice-list">
+                      {currentChoiceOrder.map((choiceIndex, displayIndex) => {
+                        const choice = currentQuestion.choices[choiceIndex];
+                        const isCorrect = answerRevealed && choiceIndex === currentQuestion.correctAnswer;
+                        const isWrong = answerRevealed && choiceIndex === selectedChoice && choiceIndex !== currentQuestion.correctAnswer;
+                        return (
+                          <motion.button
+                            type="button"
+                            className={`choice-button ${selectedChoice === choiceIndex ? "selected" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
+                            key={`${currentQuestion.id}-${choiceIndex}`}
+                            onClick={() => !answerRevealed && setSelectedChoice(choiceIndex)}
+                            aria-pressed={selectedChoice === choiceIndex}
+                            whileTap={!answerRevealed ? { scale: 0.985 } : undefined}
+                            animate={isCorrect ? { scale: [1, 1.025, 1] } : isWrong ? { x: [-3, 3, -3, 3, 0] } : undefined}
+                            transition={{ type: "spring", stiffness: 420, damping: 25 }}
+                          >
+                            <span className="choice-index">{String.fromCharCode(65 + displayIndex)}</span>
+                            <b className="choice-copy">{choice}</b>
+                            {isCorrect && (
+                              <motion.i
+                                className="choice-result-icon"
+                                aria-hidden="true"
+                                initial={{ scale: 0, rotate: -20 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                              >
+                                ✓
+                              </motion.i>
+                            )}
+                            {isWrong && (
+                              <motion.i
+                                className="choice-result-icon"
+                                aria-hidden="true"
+                                initial={{ scale: 0, rotate: 20 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                              >
+                                !
+                              </motion.i>
+                            )}
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                    {answerRevealed && (
+                      <motion.div
+                        className={`answer-panel ${selectedChoice === currentQuestion.correctAnswer ? "correct" : "wrong"} ${timedOut ? "timed-out" : ""}`}
+                        aria-live="polite"
+                        initial={{ opacity: 0, y: 14, scale: 0.985 }}
+                        animate={selectedChoice === currentQuestion.correctAnswer
+                          ? { opacity: 1, y: 0, scale: 1 }
+                          : { opacity: 1, y: 0, scale: 1, x: [0, -5, 5, -3, 3, 0] }}
+                        transition={{ type: "spring", stiffness: 400, damping: 26 }}
                       >
-                        <span className="choice-index">{String.fromCharCode(65 + displayIndex)}</span>
-                        <b className="choice-copy">{choice}</b>
-                        {isCorrect && <i className="choice-result-icon" aria-hidden="true">✓</i>}
-                        {isWrong && <i className="choice-result-icon" aria-hidden="true">!</i>}
-                      </button>
-                    );
-                  })}
-                </div>
-                {answerRevealed && (
-                  <div className={`answer-panel ${selectedChoice === currentQuestion.correctAnswer ? "correct" : "wrong"} ${timedOut ? "timed-out" : ""}`} aria-live="polite">
-                    <strong><span aria-hidden="true">{selectedChoice === currentQuestion.correctAnswer ? "✓" : "!"}</span>{timedOut ? "Time's up" : selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
-                    <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
-                    <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
-                    {selectedChoice !== currentQuestion.correctAnswer && <p className="reinforcement-note">We’ll bring this concept back later.</p>}
-                  </div>
-                )}
+                        <strong><span aria-hidden="true">{selectedChoice === currentQuestion.correctAnswer ? "✓" : "!"}</span>{timedOut ? "Time's up" : selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
+                        <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
+                        <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
+                        {selectedChoice !== currentQuestion.correctAnswer && <p className="reinforcement-note">We’ll bring this concept back later.</p>}
+                      </motion.div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
                 <div className="quiz-actions">
                   {!answerRevealed
                     ? <button className="primary-button" type="button" onClick={submitAnswer} disabled={selectedChoice === null}>Check answer</button>
@@ -2884,7 +3074,7 @@ useEffect(() => {
 
               <div className="assistant-card assistant-card-wide">
                 <div className="assistant-header">
-                  <div><span className="ai-mark">AI</span><div><h2>RevIT AI</h2><p><i />{activeAiChat?.title ?? "Groq educational support"}</p></div></div>
+                  <div><span className="ai-mark" style={{ overflow: "hidden", padding: 0 }}><Image src="/icons/revit-ai.png" alt="" width={32} height={32} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></span><div><h2>RevIT AI</h2><p><i />{activeAiChat?.title ?? "Groq educational support"}</p></div></div>
                   {cloudEnabled && <span className="history-status">{activeChatId ? "Saved" : "Ready"}</span>}
                 </div>
                 {chatError && <div className="chat-error" role="alert"><span>{chatError}</span><button type="button" onClick={() => setChatError("")} aria-label="Dismiss chat error">×</button></div>}
@@ -2893,7 +3083,7 @@ useEffect(() => {
                     <div className="conversation-loading" role="status"><span className="history-loader" /><strong>Opening conversation…</strong><p>Your saved messages are being loaded.</p></div>
                   ) : messages.length === 0 ? (
                     <>
-                      <div className="assistant-intro"><span className="ai-mark large">AI</span><h3>Ask RevIT AI a study question</h3><p>Groq can explain study concepts, while the supplied reviewer answers stay local and remain the only scoring source of truth.</p></div>
+                      <div className="assistant-intro"><span className="ai-mark large" style={{ overflow: "hidden", padding: 0 }}><Image src="/icons/revit-ai.png" alt="" width={42} height={42} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></span><h3>Ask RevIT AI a study question</h3><p>Groq can explain study concepts, while the supplied reviewer answers stay local and remain the only scoring source of truth.</p></div>
                       <div className="prompt-chips">{chatSuggestions.map((suggestion) => <button type="button" key={suggestion} onClick={() => void ask(suggestion)} disabled={chatBusy}>{suggestion}</button>)}</div>
                     </>
                   ) : (
@@ -2919,6 +3109,8 @@ useEffect(() => {
             </div>
           </div>
         )}
+          </motion.div>
+        </AnimatePresence>
 
         {achievementsOpen && <AchievementModal progression={progression} metrics={progressMetrics} onClose={() => setAchievementsOpen(false)} />}
         {levelUp !== null && <div className="level-up-toast" role="status" aria-live="polite">
@@ -2960,6 +3152,15 @@ useEffect(() => {
         {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>
       <ScientificCalculator />
+      <MobileNavDock
+        activeView={activeView}
+        onSelectView={(view) => openNavigationView(view)}
+        gradesEnabled={gradesEnabled}
+        onOpenFeedback={() => setFeedbackOpen(true)}
+        onOpenProfile={openProfileEditor}
+        wrongCount={wrongQuestionIds.size}
+        unreadCount={unreadCount}
+      />
       <SiteUpdatesModal
         isOpen={updatesModalOpen}
         onClose={() => { setUpdatesModalOpen(false); dismissPopup(); }}

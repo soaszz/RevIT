@@ -85,9 +85,9 @@ test("remaining-average and maximum-possible guidance are deterministic", () => 
   assert.ok(Math.abs(guidance.requiredAverage - 61.11111111111111) < 1e-9);
   assert.equal(guidance.state, "On track");
   const impossible = calculateGuidance(grades({ pre_test: 0, post_test: 0, comprehensive: 0, written_revalida: 0 }));
-  assert.ok(Math.abs(impossible.maxPossible - 15) < 1e-9);
+  assert.ok(Math.abs(impossible.maxPossible - 25) < 1e-9);
   assert.equal(impossible.state, "Mathematically impossible");
-  const secured = calculateGuidance(grades({ pre_test: 50, post_test: 70, comprehensive: 100, written_revalida: 34 }));
+  const secured = calculateGuidance(grades({ pre_test: 50, post_test: 70, comprehensive: 100, written_revalida: 60 }));
   assert.equal(secured.state, "Passing secured");
 });
 

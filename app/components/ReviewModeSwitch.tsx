@@ -1,4 +1,7 @@
+"use client";
+
 import type { CSSProperties } from "react";
+import { motion } from "motion/react";
 import styles from "./ReviewModeSwitch.module.css";
 
 export type ReviewLibraryMode = "mcqs" | "flashcards";
@@ -18,22 +21,35 @@ export default function ReviewModeSwitch({ mode, onChange }: ReviewModeSwitchPro
     <div className={styles.switcher}>
       <span className={styles.label}>Review mode</span>
       <div className={styles.options} role="group" aria-label="Choose review mode">
-        {modes.map((option) => (
-          <button
-            className={`${styles.option} ${mode === option.id ? styles.active : ""}`}
-            type="button"
-            key={option.id}
-            aria-pressed={mode === option.id}
-            onClick={() => onChange(option.id)}
-          >
-            <span
-              className={styles.icon}
-              style={{ "--review-mode-icon": `url("${option.icon}")` } as CSSProperties}
-              aria-hidden="true"
-            />
-            <span>{option.label}</span>
-          </button>
-        ))}
+        {modes.map((option) => {
+          const isActive = mode === option.id;
+          return (
+            <motion.button
+              className={`${styles.option} ${isActive ? styles.active : ""}`}
+              type="button"
+              key={option.id}
+              aria-pressed={isActive}
+              onClick={() => onChange(option.id)}
+              whileTap={{ scale: 0.96 }}
+              transition={{ type: "spring", stiffness: 400, damping: 26 }}
+              style={{ position: "relative" }}
+            >
+              {isActive && (
+                <motion.span
+                  layoutId="activeReviewModePill"
+                  className={styles.activePill}
+                  transition={{ type: "spring", stiffness: 420, damping: 30 }}
+                />
+              )}
+              <span
+                className={styles.icon}
+                style={{ "--review-mode-icon": `url("${option.icon}")`, position: "relative", zIndex: 1 } as CSSProperties}
+                aria-hidden="true"
+              />
+              <span style={{ position: "relative", zIndex: 1 }}>{option.label}</span>
+            </motion.button>
+          );
+        })}
       </div>
     </div>
   );

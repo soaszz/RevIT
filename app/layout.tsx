@@ -42,6 +42,13 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       images: [socialImage],
     },
+    icons: {
+      icon: [
+        { url: "/revit-rounded.png", sizes: "32x32", type: "image/png" },
+        { url: "/revit-rounded.png", sizes: "192x192", type: "image/png" },
+      ],
+      apple: [{ url: "/revit-rounded.png", sizes: "180x180", type: "image/png" }],
+    },
   };
 }
 

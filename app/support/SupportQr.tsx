@@ -13,7 +13,7 @@ export default function SupportQr() {
     return (
       <div className={styles.qrUnavailable} role="status">
         <span className={styles.qrFallbackFrog} aria-hidden="true">
-          <Image src="/revit-frog.png" alt="" width={2000} height={2000} sizes="70px" />
+          <Image src="/icons/revit-support.svg" alt="Support RevIT" width={64} height={64} unoptimized style={{ borderRadius: "12px", objectFit: "cover" }} />
         </span>
         <strong>Payment QR not configured</strong>
         <span>The owner-provided QR will appear here once it is added. RevIT remains free and fully available.</span>

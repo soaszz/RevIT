@@ -55,11 +55,18 @@
   color: var(--green-dark);
 }
 
-.option.active {
-  border-color: color-mix(in srgb, var(--green) 30%, var(--line));
+.activePill {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
   background: var(--green-soft);
-  color: var(--green-dark);
+  border: 1px solid color-mix(in srgb, var(--green) 30%, var(--line));
   box-shadow: 0 3px 9px color-mix(in srgb, var(--sidebar) 8%, transparent);
+  z-index: 0;
+}
+
+.option.active {
+  color: var(--green-dark);
 }
 
 .option.active .icon {

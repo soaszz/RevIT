@@ -117,11 +117,31 @@ export default function GradesPage({ grades, onSave, showSimulator }: {
     <div className="grades-shell">
       <section className="grade-overview-card grade-ledger-overview">
         <div className="grade-ledger-heading">
-          <div><p className="eyebrow">Assessment gradebook</p><h2>Grades by category</h2><p>Enter every subject grade under its assessment category. Each card shows how much that category contributes to your final grade.</p></div>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
+              <p className="eyebrow" style={{ margin: 0 }}>Assessment gradebook</p>
+              <span style={{ fontSize: "9.5px", padding: "2px 8px", borderRadius: "99px", background: "var(--green-soft)", color: "var(--green-dark)", border: "1px solid color-mix(in srgb, var(--green) 35%, transparent)", fontWeight: 750, letterSpacing: "0.03em" }}>
+                NU MOA MTAP
+              </span>
+            </div>
+            <h2>Grades by category</h2>
+            <p>Enter every subject grade under its assessment category. Calibrated specifically for <strong>NU MOA Students</strong>. Each card shows how much that category contributes to your final grade.</p>
+          </div>
           <span className="state-pill">Pass mark {PASSING_GRADE}%</span>
         </div>
         <div className="grade-summary-grid">
-          {showSimulator && <div className="grade-simulator-summary"><span>Grade Simulator</span><strong>{overallPercentage.toFixed(2)}%</strong><small>Projected weighted grade from the scores currently entered</small></div>}
+          {showSimulator && (
+            <div className="grade-simulator-summary">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px" }}>
+                <span>Grade Simulator</span>
+                <span style={{ fontSize: "9px", padding: "2px 7px", borderRadius: "99px", background: "var(--green)", color: "var(--accent-ink)", fontWeight: 800, letterSpacing: "0.02em" }}>
+                  For NU MOA
+                </span>
+              </div>
+              <strong>{overallPercentage.toFixed(2)}%</strong>
+              <small>Projected weighted grade calibrated for <strong>NU MOA Students</strong></small>
+            </div>
+          )}
           <div><span>Grades recorded</span><strong>{completedEntries} / {SUBJECTS.length * GRADE_FIELDS.length}</strong><small>Across four subjects and five assessments</small></div>
           <div><span>Assessments remaining</span><strong>{SUBJECTS.length * GRADE_FIELDS.length - completedEntries}</strong><small>Blank entries can be completed later</small></div>
         </div>

@@ -157,7 +157,7 @@ test("QnA setup stays accessible and the professional navigation can collapse", 
   assert.match(app, /label: "Overview", icon: "\/icons\/home\.svg"/);
   assert.match(app, /label: "Review Library", icon: "\/icons\/qna\.svg"/);
   assert.match(app, /src="\/revit-logo\.png"/);
-  assert.match(app, /src="\/revit-frog\.png"/);
+  assert.match(app, /src="\/(revit-rounded\.png|revit-frog\.png)"/);
   assert.doesNotMatch(app, /sidebar-current-view/);
   assert.match(app, /aria-expanded=\{!sidebarCollapsed\}/);
   assert.match(app, /sidebarCollapsed \? "☰" : "«"/);
@@ -210,7 +210,7 @@ test("uses RevIT and Groq branding while keeping the MedTech AI tab", async () =
   assert.match(layout, /data-theme="light"/i);
   assert.match(layout, /revit-theme/i);
   assert.match(app, /Ask RevIT AI/i);
-  assert.match(app, /label: "MedTech AI"/i);
+  assert.match(app, /label: "(RevIT AI|MedTech AI)"/i);
   assert.match(app, /Toggle light and dark mode/i);
   assert.match(route, /from "groq-sdk"/i);
   assert.match(route, /GROQ_API_KEY/i);

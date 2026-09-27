@@ -3,7 +3,8 @@
 .controlCard { display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 18px 24px; padding: 20px; }
 .filterGroup, .scopeGroup { display: grid; gap: 8px; min-width: 0; }
 .filterGroup > span, .scopeGroup > span { color: var(--muted); font-size: 9px; font-weight: 760; letter-spacing: .08em; text-transform: uppercase; }
-.segmented { display: flex; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 3px; }
+.segmented { display: flex; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 12px; padding: 3px; gap: 3px; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.segmented::-webkit-scrollbar { display: none; }
 .segmented button { flex: 1; min-height: 34px; border: 0; border-radius: 9px; padding: 6px 10px; background: transparent; color: var(--muted); font-size: 10.5px; font-weight: 700; cursor: pointer; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); white-space: nowrap; }
 .segmented button:first-child { border-left: 0; }
 .segmented button:hover { color: var(--ink); background: color-mix(in srgb, var(--surface-tint) 60%, transparent); }

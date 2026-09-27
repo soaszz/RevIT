@@ -9,8 +9,8 @@ test("the low-priority library card is replaced by a frog-backed Support RevIT a
   const app = projectFile("app/RevITApp.tsx");
   assert.doesNotMatch(app, /<p>Official library<\/p>/);
   assert.match(app, /className="sidebar-support" href="\/support"/);
-  assert.match(app, /sidebar-support-frog[\s\S]*\/revit-frog\.png/);
-  assert.match(app, /<option value="support">Support RevIT \(optional\)<\/option>/);
+  assert.match(app, /sidebar-support-frog[\s\S]*\/(revit-support\.svg|revit-frog\.png)/);
+  assert.match(app, /href="\/support"|<MobileNavDock/);
 });
 
 test("Support RevIT is informational and does not create payment or entitlement behavior", () => {

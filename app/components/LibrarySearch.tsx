@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import styles from "./LibrarySearch.module.css";
 
 type LibrarySearchProps = {
   id: string;
@@ -31,12 +32,12 @@ export default function LibrarySearch({ id, isNuRevit, value, resultCount, empty
   }, [isNuRevit, onChange, value]);
 
   return (
-    <div className="library-search" role="search">
-      <div className="library-search-copy">
+    <div className={`library-search ${styles.searchShell}`} role="search">
+      <div className={`library-search-copy ${styles.searchCopy}`}>
         <label htmlFor={id}>Search subjects and topics</label>
         <span>{hasSearch ? `${resultCount} subject${resultCount === 1 ? "" : "s"} found` : (emptyHelperText || "Find a subject or topic in the library")}</span>
       </div>
-      <div className="library-category-filter" role="group" aria-label="Filter review library by category">
+      <div className={`library-category-filter ${styles.categoryFilter}`} role="group" aria-label="Filter review library by category">
         {categoryChoices.map((choice) => (
           <button
             className={value.trim() === choice.value ? "active" : ""}
@@ -49,7 +50,7 @@ export default function LibrarySearch({ id, isNuRevit, value, resultCount, empty
           </button>
         ))}
       </div>
-      <div className="library-search-control">
+      <div className={`library-search-control ${styles.searchControl}`}>
         <span aria-hidden="true">⌕</span>
         <input
           id={id}

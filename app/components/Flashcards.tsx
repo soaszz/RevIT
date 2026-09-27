@@ -16,8 +16,10 @@ import {
   getUnifiedSubjects,
   type UnifiedSubject,
 } from "../lib/reviewerLibrary";
+import { motion, AnimatePresence } from "motion/react";
 import styles from "./Flashcards.module.css";
 import LibrarySearch from "./LibrarySearch";
+import MobileReviewBar from "./MobileReviewBar";
 
 function isTypingTarget(target: EventTarget | null) {
   if (!(target instanceof HTMLElement)) return false;
@@ -249,81 +251,119 @@ export default function Flashcards({
           </div>
         </div>
 
-        <div className={`${styles.cardStage} ${flipped ? styles.flipped : ""}`} aria-live="polite">
-          <article className={`${styles.cardFace} ${styles.cardFront}`} aria-hidden={flipped}>
-            <button
-              className={styles.cardHitArea}
-              type="button"
-              tabIndex={flipped ? -1 : 0}
-              aria-label={`Show answer for: ${currentCard.prompt}`}
-              onClick={toggleCard}
-            />
-            <div className={styles.cardTopline}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                  <p className={styles.subjectLabel}>{subjectName}</p>
-                  {cardBook && (
-                    <span className={`topic-book-badge topic-book-${cardBook.toLowerCase()}`} style={getBookBadgeStyle(cardBook, { fontSize: "9px", padding: "1px 6px", margin: 0 })}>
-                      {cardBook}
-                    </span>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={cardIndex}
+            initial={{ opacity: 0, x: 20, scale: 0.99 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -20, scale: 0.99 }}
+            transition={{ type: "spring", stiffness: 380, damping: 28 }}
+          >
+            <div className={`${styles.cardStage} ${flipped ? styles.flipped : ""}`} aria-live="polite">
+              <article className={`${styles.cardFace} ${styles.cardFront}`} aria-hidden={flipped}>
+                <button
+                  className={styles.cardHitArea}
+                  type="button"
+                  tabIndex={flipped ? -1 : 0}
+                  aria-label={`Show answer for: ${currentCard.prompt}`}
+                  onClick={toggleCard}
+                />
+                <div className={styles.cardTopline}>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <p className={styles.subjectLabel}>{subjectName}</p>
+                      {cardBook && (
+                        <span className={`topic-book-badge topic-book-${cardBook.toLowerCase()}`} style={getBookBadgeStyle(cardBook, { fontSize: "9px", padding: "1px 6px", margin: 0 })}>
+                          {cardBook}
+                        </span>
+                      )}
+                    </div>
+                    <p className={styles.topicLabel}>{topicName}</p>
+                  </div>
+                  <span>{cardIndex + 1} / {deck.length}</span>
+                </div>
+                <div className={styles.questionArea}>
+                  <h2>{currentCard.prompt}</h2>
+                  {currentCard.choices && currentCard.choices.length > 0 && (
+                    <div className={styles.horizontalChoices} role="list" aria-label="Question choices">
+                      {currentCard.choices.map((choice, index) => {
+                        const cleanChoice = choice.trim().replace(/^[A-D](?:[.):])\s+/, "");
+                        const choiceLetter = String.fromCharCode(65 + index);
+                        return (
+                          <div className={styles.horizontalChoiceItem} key={index} role="listitem">
+                            <span className={styles.choiceLetter}>{choiceLetter}</span>
+                            <span className={styles.choiceText}>{cleanChoice}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
                   )}
                 </div>
-                <p className={styles.topicLabel}>{topicName}</p>
-              </div>
-              <span>{cardIndex + 1} / {deck.length}</span>
-            </div>
-            <div className={styles.questionArea}>
-              <h2>{currentCard.prompt}</h2>
-              {currentCard.choices && currentCard.choices.length > 0 && (
-                <div className={styles.horizontalChoices} role="list" aria-label="Question choices">
-                  {currentCard.choices.map((choice, index) => {
-                    const cleanChoice = choice.trim().replace(/^[A-D](?:[.):])\s+/, "");
-                    const choiceLetter = String.fromCharCode(65 + index);
-                    return (
-                      <div className={styles.horizontalChoiceItem} key={index} role="listitem">
-                        <span className={styles.choiceLetter}>{choiceLetter}</span>
-                        <span className={styles.choiceText}>{cleanChoice}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-            <button className={`${styles.flipControl} primary-button`} type="button" tabIndex={flipped ? -1 : 0} onClick={toggleCard}>
-              Flip card
-            </button>
-          </article>
+                <motion.button
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 450, damping: 24 }}
+                  className={`${styles.flipControl} primary-button`}
+                  type="button"
+                  tabIndex={flipped ? -1 : 0}
+                  onClick={toggleCard}
+                >
+                  Flip card
+                </motion.button>
+              </article>
 
-          <article className={`${styles.cardFace} ${styles.cardBack}`} aria-hidden={!flipped}>
-            <button
-              className={styles.cardHitArea}
-              type="button"
-              tabIndex={flipped ? 0 : -1}
-              aria-label={`Show question. Answer: ${currentCard.answer}`}
-              onClick={toggleCard}
-            />
-            <div className={styles.answerBlock}>
-              <p className={styles.sideLabel}>Answer</p>
-              <h2>{currentCard.answer}</h2>
+              <article className={`${styles.cardFace} ${styles.cardBack}`} aria-hidden={!flipped}>
+                <button
+                  className={styles.cardHitArea}
+                  type="button"
+                  tabIndex={flipped ? 0 : -1}
+                  aria-label={`Show question. Answer: ${currentCard.answer}`}
+                  onClick={toggleCard}
+                />
+                <div className={styles.answerBlock}>
+                  <p className={styles.sideLabel}>Answer</p>
+                  <h2>{currentCard.answer}</h2>
+                </div>
+                <div className={styles.explanationBlock}>
+                  <p className={styles.sideLabel}>Explanation</p>
+                  <p>{currentCard.explanation}</p>
+                </div>
+                <motion.button
+                  whileTap={{ scale: 0.96 }}
+                  transition={{ type: "spring", stiffness: 450, damping: 24 }}
+                  className={`${styles.flipControl} secondary-button`}
+                  type="button"
+                  tabIndex={flipped ? 0 : -1}
+                  onClick={toggleCard}
+                >
+                  Flip back
+                </motion.button>
+              </article>
             </div>
-            <div className={styles.explanationBlock}>
-              <p className={styles.sideLabel}>Explanation</p>
-              <p>{currentCard.explanation}</p>
-            </div>
-            <button className={`${styles.flipControl} secondary-button`} type="button" tabIndex={flipped ? 0 : -1} onClick={toggleCard}>
-              Flip back
-            </button>
-          </article>
-        </div>
+          </motion.div>
+        </AnimatePresence>
 
         <div className={styles.navigation} aria-label="Flashcard navigation">
-          <button className="secondary-button" type="button" onClick={() => moveCard(-1)} disabled={cardIndex === 0}>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 450, damping: 24 }}
+            className="secondary-button"
+            type="button"
+            onClick={() => moveCard(-1)}
+            disabled={cardIndex === 0}
+          >
             <span aria-hidden="true">←</span> Previous
-          </button>
+          </motion.button>
           <span aria-live="polite">Card {cardIndex + 1} of {deck.length}</span>
-          <button className="primary-button" type="button" onClick={() => moveCard(1)} disabled={cardIndex === deck.length - 1}>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 450, damping: 24 }}
+            className="primary-button"
+            type="button"
+            onClick={() => moveCard(1)}
+            disabled={cardIndex === deck.length - 1}
+          >
             Next <span aria-hidden="true">→</span>
-          </button>
+          </motion.button>
         </div>
         <p className={styles.keyboardHint}>Tip: use Space to flip and the arrow keys to move between cards.</p>
       </div>
@@ -454,14 +494,20 @@ export default function Flashcards({
                         </button>
                       </div>
                     </div>
-                    <div
-                      id={`flashcard-subject-topics-${subject.id}`}
-                      className={`subject-topics-collapse ${isExpanded ? "expanded" : ""}`}
-                      style={!isExpanded ? { display: "none" } : undefined}
-                      aria-hidden={!isExpanded}
-                    >
-                      <div className="subject-topics-content">
-                        <div className="subject-topics-inner">
+                    <AnimatePresence initial={false}>
+                      {isExpanded && (
+                        <motion.div
+                          id={`flashcard-subject-topics-${subject.id}`}
+                          className="subject-topics-collapse expanded"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                          style={{ overflow: "hidden" }}
+                          aria-hidden={!isExpanded}
+                        >
+                          <div className="subject-topics-content">
+                            <div className="subject-topics-inner">
                           {selectedBook === "all" ? (
                             <div className="subject-book-groups">
                               {(["Harr", "Ciulla"] as const).map((bookName) => {
@@ -591,20 +637,42 @@ export default function Flashcards({
                                         </button>
                                       </div>
                                     </div>
-                                    <div
-                                      id={`flashcard-book-topics-${subject.id}-${bookName}`}
-                                      className="book-edition-content"
-                                      style={!isBookExpanded ? { display: "none" } : undefined}
-                                      aria-hidden={!isBookExpanded}
-                                    >
+                                    <AnimatePresence initial={false}>
+                                      {isBookExpanded && (
+                                        <motion.div
+                                          id={`flashcard-book-topics-${subject.id}-${bookName}`}
+                                          className="book-edition-content"
+                                          initial={{ height: 0, opacity: 0 }}
+                                          animate={{ height: "auto", opacity: 1 }}
+                                          exit={{ height: 0, opacity: 0 }}
+                                          transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                                          style={{ overflow: "hidden" }}
+                                          aria-hidden={!isBookExpanded}
+                                        >
                                       <div className="topic-selection-grid">
                                         {bookTopics.map((topic) => {
                                           const count = topicQuestionCounts.get(topic.id) ?? 0;
                                           const selected = selectedTopicIds.includes(topic.id);
                                           return (
-                                            <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                            <motion.label
+                                              className={`topic-select-card ${selected ? "selected" : ""}`}
+                                              key={topic.id}
+                                              whileTap={{ scale: 0.985 }}
+                                              transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                                            >
                                               <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                              <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                              <span className="topic-check" aria-hidden="true">
+                                                {selected && (
+                                                  <motion.span
+                                                    initial={{ scale: 0, rotate: -25 }}
+                                                    animate={{ scale: 1, rotate: 0 }}
+                                                    transition={{ type: "spring", stiffness: 600, damping: 20 }}
+                                                    style={{ display: "inline-block" }}
+                                                  >
+                                                    ✓
+                                                  </motion.span>
+                                                )}
+                                              </span>
                                               <span className="topic-select-copy">
                                                 <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
                                                   <strong>{topic.name}</strong>
@@ -617,12 +685,14 @@ export default function Flashcards({
                                                 <small>{topic.description}</small>
                                                 <em>{count} card{count === 1 ? "" : "s"}</em>
                                               </span>
-                                            </label>
+                                            </motion.label>
                                           );
                                         })}
                                       </div>
                                       <p className="subject-selection-note">{bookSelected} of {bookTopics.length} {bookName} topics selected</p>
-                                    </div>
+                                        </motion.div>
+                                      )}
+                                    </AnimatePresence>
                                   </div>
                                 );
                               })}
@@ -635,9 +705,25 @@ export default function Flashcards({
                                   const count = topicQuestionCounts.get(topic.id) ?? 0;
                                   const selected = selectedTopicIds.includes(topic.id);
                                   return (
-                                    <label className={`topic-select-card ${selected ? "selected" : ""}`} key={topic.id}>
+                                    <motion.label
+                                      className={`topic-select-card ${selected ? "selected" : ""}`}
+                                      key={topic.id}
+                                      whileTap={{ scale: 0.985 }}
+                                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                                    >
                                       <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                      <span className="topic-check" aria-hidden="true">{selected ? "✓" : ""}</span>
+                                      <span className="topic-check" aria-hidden="true">
+                                        {selected && (
+                                          <motion.span
+                                            initial={{ scale: 0, rotate: -25 }}
+                                            animate={{ scale: 1, rotate: 0 }}
+                                            transition={{ type: "spring", stiffness: 600, damping: 20 }}
+                                            style={{ display: "inline-block" }}
+                                          >
+                                            ✓
+                                          </motion.span>
+                                        )}
+                                      </span>
                                       <span className="topic-select-copy">
                                         <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
                                           <strong>{topic.name}</strong>
@@ -650,7 +736,7 @@ export default function Flashcards({
                                         <small>{topic.description}</small>
                                         <em>{count} card{count === 1 ? "" : "s"}</em>
                                       </span>
-                                    </label>
+                                    </motion.label>
                                   );
                                 })}
                               </div>
@@ -659,8 +745,10 @@ export default function Flashcards({
                           )}
                         </div>
                       </div>
-                    </div>
-                  </section>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </section>
                 );
               })}
             </div>
@@ -699,11 +787,32 @@ export default function Flashcards({
           </button>
           {selectedTopicNames.length > 0 && (
             <div className="selected-tags">
-              {selectedTopicNames.map((name) => <span key={name}>{name}</span>)}
+              <AnimatePresence>
+                {selectedTopicNames.map((name) => (
+                  <motion.span
+                    key={name}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                    layout
+                  >
+                    {name}
+                  </motion.span>
+                ))}
+              </AnimatePresence>
             </div>
           )}
         </aside>
       </div>
+
+      <MobileReviewBar
+        selectedTopicCount={selectedTopicIds.length}
+        questionCount={availableCards}
+        itemLabel="card"
+        onStart={startReviewing}
+        onClear={() => setSelectedTopicIds([])}
+      />
     </div>
   );
 }

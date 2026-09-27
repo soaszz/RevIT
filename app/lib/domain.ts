@@ -13,9 +13,9 @@ export type AssessmentType = (typeof ASSESSMENT_TYPES)[number];
 export const GRADE_FIELDS = [
   { key: "pre_test", label: "Pre-Test", max: 50, weight: 0.1 },
   { key: "post_test", label: "Post-Test", max: 70, weight: 0.15 },
-  { key: "comprehensive", label: "Comprehensive Exam", max: 100, weight: 0.3 },
-  { key: "written_revalida", label: "Written Revalida", max: 100, weight: 0.3 },
-  { key: "oral_revalida", label: "Oral Revalida", max: 100, weight: 0.15 },
+  { key: "comprehensive", label: "Comprehensive Exam", max: 100, weight: 0.25 },
+  { key: "written_revalida", label: "Written Revalida", max: 100, weight: 0.25 },
+  { key: "oral_revalida", label: "Oral Revalida", max: 100, weight: 0.25 },
 ] as const;
 
 export type GradeField = (typeof GRADE_FIELDS)[number]["key"];
