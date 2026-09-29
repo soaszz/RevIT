@@ -88,7 +88,7 @@ function findFractionRange(expression: string, cursorIndex: number) {
 
 export default function ScientificCalculator() {
   const [open, setOpen] = useState(false);
-  const [isRevealed, setIsRevealed] = useState(false);
+  const [isRevealed, setIsRevealed] = useState(true);
   const [fabY, setFabY] = useState<number | null>(null);
   const [isFabDragging, setIsFabDragging] = useState(false);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -110,10 +110,8 @@ export default function ScientificCalculator() {
   };
 
   const startHideTimer = () => {
+    // Keep visible permanently - no auto-hiding into the edge
     clearHideTimer();
-    hideTimerRef.current = setTimeout(() => {
-      setIsRevealed(false);
-    }, 5000);
   };
 
   useEffect(() => {
@@ -129,10 +127,7 @@ export default function ScientificCalculator() {
     }
     if (!isRevealed) {
       setIsRevealed(true);
-      startHideTimer();
     } else {
-      clearHideTimer();
-      setIsRevealed(false);
       setOpen(true);
     }
   };
