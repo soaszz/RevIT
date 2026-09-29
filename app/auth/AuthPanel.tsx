@@ -41,7 +41,7 @@ function AuthFooter() {
 }
 
 export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { next?: string; turnstileSiteKey: string }) {
-  const disableCaptcha = true;
+  const disableCaptcha = false;
   const router = useRouter();
   const turnstileRef = useRef<TurnstileChallengeHandle>(null);
   const [mode, setMode] = useState<Mode>("login");

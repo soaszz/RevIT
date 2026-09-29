@@ -10526,13 +10526,13 @@
       "topicId": "clinical-chemistry-6-8",
       "prompt": "For a drug that follows first-order pharmacokinetics, adjustment of dosage to achieve the desired blood level can be made by using which formula?",
       "choices": [
-        "New dose",
-        "New dose",
-        "New dose",
-        "New dose"
+        "New dose = (Current dose / Current blood level) x Desired blood level",
+        "New dose = (Current blood level / Current dose) x Desired blood level",
+        "New dose = (Current dose x Current blood level) / Desired blood level",
+        "New dose = Current dose + (Desired blood level - Current blood level)"
       ],
       "correctAnswer": 0,
-      "officialAnswer": "New dose",
+      "officialAnswer": "New dose = (Current dose / Current blood level) x Desired blood level",
       "explanation": "Most drugs follow first-order pharmacokinetics—that is, the clearance of drug is linearly related to the drug dose. The dose of such drugs can be adjusted by multiplying the ratio of the current dose to blood concentration by the desired drug concentration, provided the blood concentration is measured at steady state.",
       "source": {
         "fileName": "Clinical Chemistry.pdf",

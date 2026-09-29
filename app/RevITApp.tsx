@@ -2790,97 +2790,65 @@ useEffect(() => {
                   </div>
                 </div>
                 <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={`${currentQuestion.id}-${sessionIndex}`}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  >
-                    <p className="question-source">{currentQuestion.book ? `${currentQuestion.book} · ` : ""}{subjectById.get(currentQuestion.subjectId)?.name}</p>
-                    {currentQuestion.caseStudy && (
-                      <div className="quiz-case-study" style={{ marginBottom: "1rem", fontSize: "1.05rem", lineHeight: "1.6", color: "var(--text-main, #f1f5f9)", fontWeight: 500 }}>
-                        <p>{currentQuestion.caseStudy}</p>
-                      </div>
-                    )}
-                    <QuestionStimulus stimulus={currentQuestion.stimulus} />
-                    <div className="quiz-question-heading" style={{ marginTop: currentQuestion.stimulus || currentQuestion.caseStudy ? "1rem" : undefined }}>
-                      <div>
-                        <h2>{currentQuestion.prompt}</h2>
-                      </div>
-                      {activeTimer.enabled && (
-                        <QuestionTimer
-                          key={`${sessionIndex}:${currentQuestion.id}`}
-                          durationSeconds={activeTimer.duration}
-                          questionKey={`${sessionIndex}:${currentQuestion.id}`}
-                          paused={answerRevealed}
-                          onExpire={handleQuestionTimeout}
-                        />
-                      )}
+                <div key={`${currentQuestion.id}-${sessionIndex}`}>
+                  <p className="question-source">{currentQuestion.book ? `${currentQuestion.book} · ` : ""}{subjectById.get(currentQuestion.subjectId)?.name}</p>
+                  {currentQuestion.caseStudy && (
+                    <div className="quiz-case-study" style={{ marginBottom: "1rem", fontSize: "1.05rem", lineHeight: "1.6", color: "var(--text-main, #f1f5f9)", fontWeight: 500 }}>
+                      <p>{currentQuestion.caseStudy}</p>
                     </div>
-                    <div className="choice-list">
-                      {currentChoiceOrder.map((choiceIndex, displayIndex) => {
-                        const choice = currentQuestion.choices[choiceIndex];
-                        const isCorrect = answerRevealed && choiceIndex === currentQuestion.correctAnswer;
-                        const isWrong = answerRevealed && choiceIndex === selectedChoice && choiceIndex !== currentQuestion.correctAnswer;
-                        return (
-                          <motion.button
-                            type="button"
-                            className={`choice-button ${selectedChoice === choiceIndex ? "selected" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
-                            key={`${currentQuestion.id}-${choiceIndex}`}
-                            onClick={() => !answerRevealed && setSelectedChoice(choiceIndex)}
-                            aria-pressed={selectedChoice === choiceIndex}
-                            whileTap={!answerRevealed ? { scale: 0.985 } : undefined}
-                            animate={isCorrect ? { scale: [1, 1.025, 1] } : isWrong ? { x: [-3, 3, -3, 3, 0] } : undefined}
-                            transition={{ type: "spring", stiffness: 420, damping: 25 }}
-                          >
-                            <span className="choice-index">{String.fromCharCode(65 + displayIndex)}</span>
-                            <b className="choice-copy">{choice}</b>
-                            {isCorrect && (
-                              <motion.i
-                                className="choice-result-icon"
-                                aria-hidden="true"
-                                initial={{ scale: 0, rotate: -20 }}
-                                animate={{ scale: 1, rotate: 0 }}
-                                transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                              >
-                                ✓
-                              </motion.i>
-                            )}
-                            {isWrong && (
-                              <motion.i
-                                className="choice-result-icon"
-                                aria-hidden="true"
-                                initial={{ scale: 0, rotate: 20 }}
-                                animate={{ scale: 1, rotate: 0 }}
-                                transition={{ type: "spring", stiffness: 500, damping: 20 }}
-                              >
-                                !
-                              </motion.i>
-                            )}
-                          </motion.button>
-                        );
-                      })}
+                  )}
+                  <QuestionStimulus stimulus={currentQuestion.stimulus} />
+                  <div className="quiz-question-heading" style={{ marginTop: currentQuestion.stimulus || currentQuestion.caseStudy ? "1rem" : undefined }}>
+                    <div>
+                      <h2>{currentQuestion.prompt}</h2>
                     </div>
-                    {answerRevealed && (
-                      <motion.div
-                        className={`answer-panel ${selectedChoice === currentQuestion.correctAnswer ? "correct" : "wrong"} ${timedOut ? "timed-out" : ""}`}
-                        aria-live="polite"
-                        initial={{ opacity: 0, y: 14, scale: 0.985 }}
-                        animate={selectedChoice === currentQuestion.correctAnswer
-                          ? { opacity: 1, y: 0, scale: 1 }
-                          : { opacity: 1, y: 0, scale: 1, x: [0, -5, 5, -3, 3, 0] }}
-                        transition={{ type: "spring", stiffness: 400, damping: 26 }}
-                      >
-                        <strong><span aria-hidden="true">{selectedChoice === currentQuestion.correctAnswer ? "✓" : "!"}</span>{timedOut ? "Time's up" : selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
-                        <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
-                        <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
-                        {selectedChoice !== currentQuestion.correctAnswer && <p className="reinforcement-note">We’ll bring this concept back later.</p>}
-                      </motion.div>
+                    {activeTimer.enabled && (
+                      <QuestionTimer
+                        key={`${sessionIndex}:${currentQuestion.id}`}
+                        durationSeconds={activeTimer.duration}
+                        questionKey={`${sessionIndex}:${currentQuestion.id}`}
+                        paused={answerRevealed}
+                        onExpire={handleQuestionTimeout}
+                      />
                     )}
-                  </motion.div>
-                </AnimatePresence>
+                  </div>
+                  <div className="choice-list">
+                    {currentChoiceOrder.map((choiceIndex, displayIndex) => {
+                      const choice = currentQuestion.choices[choiceIndex];
+                      const isCorrect = answerRevealed && choiceIndex === currentQuestion.correctAnswer;
+                      const isWrong = answerRevealed && choiceIndex === selectedChoice && choiceIndex !== currentQuestion.correctAnswer;
+                      return (
+                        <button
+                          type="button"
+                          className={`choice-button ${selectedChoice === choiceIndex ? "selected" : ""} ${isCorrect ? "correct" : ""} ${isWrong ? "wrong" : ""}`}
+                          key={`${currentQuestion.id}-${choiceIndex}`}
+                          onClick={() => !answerRevealed && setSelectedChoice(choiceIndex)}
+                          aria-pressed={selectedChoice === choiceIndex}
+                        >
+                          <span className="choice-index">{String.fromCharCode(65 + displayIndex)}</span>
+                          <b className="choice-copy">{choice}</b>
+                          {isCorrect && (
+                            <i className="choice-result-icon" aria-hidden="true">✓</i>
+                          )}
+                          {isWrong && (
+                            <i className="choice-result-icon" aria-hidden="true">!</i>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {answerRevealed && (
+                    <div
+                      className={`answer-panel ${selectedChoice === currentQuestion.correctAnswer ? "correct" : "wrong"} ${timedOut ? "timed-out" : ""}`}
+                      aria-live="polite"
+                    >
+                      <strong><span aria-hidden="true">{selectedChoice === currentQuestion.correctAnswer ? "✓" : "!"}</span>{timedOut ? "Time's up" : selectedChoice === currentQuestion.correctAnswer ? "Correct" : "Review this one"}</strong>
+                      <p className="answer-key"><b>Correct answer:</b> {String.fromCharCode(65 + currentChoiceOrder.indexOf(currentQuestion.correctAnswer))}. {currentQuestion.officialAnswer}</p>
+                      <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
+                      {selectedChoice !== currentQuestion.correctAnswer && <p className="reinforcement-note">We’ll bring this concept back later.</p>}
+                    </div>
+                  )}
+                </div>
                 <div className="quiz-actions">
                   {!answerRevealed
                     ? <button className="primary-button" type="button" onClick={submitAnswer} disabled={selectedChoice === null}>Check answer</button>

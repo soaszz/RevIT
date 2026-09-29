@@ -94,6 +94,7 @@ export default function ScientificCalculator() {
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fabDragStateRef = useRef<{
     pointerId: number;
+    startX: number;
     startY: number;
     initialTop: number;
     moved: boolean;
@@ -144,6 +145,7 @@ export default function ScientificCalculator() {
     const rect = fabEl.getBoundingClientRect();
     fabDragStateRef.current = {
       pointerId: event.pointerId,
+      startX: event.clientX,
       startY: event.clientY,
       initialTop: rect.top,
       moved: false,
@@ -155,7 +157,23 @@ export default function ScientificCalculator() {
   const handleFabPointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
     const state = fabDragStateRef.current;
     if (!state || state.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - state.startX;
     const deltaY = event.clientY - state.startY;
+
+    // Detect horizontal swipe to reveal / peek
+    if (!state.moved && Math.abs(deltaX) > 10 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+      state.moved = true;
+      dragOccurredRef.current = true;
+      if (deltaX < -10) {
+        setIsRevealed(true);
+        startHideTimer();
+      } else if (deltaX > 10) {
+        setIsRevealed(false);
+        clearHideTimer();
+      }
+      return;
+    }
+
     if (!state.moved && Math.abs(deltaY) > 5) {
       state.moved = true;
       dragOccurredRef.current = true;
@@ -163,7 +181,9 @@ export default function ScientificCalculator() {
     if (state.moved) {
       const fabHeight = event.currentTarget.offsetHeight || 58;
       const minY = PANEL_GUTTER;
-      const maxY = Math.max(minY, window.innerHeight - fabHeight - PANEL_GUTTER);
+      const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
+      const bottomGutter = isMobile ? 100 : PANEL_GUTTER;
+      const maxY = Math.max(minY, window.innerHeight - fabHeight - bottomGutter);
       const nextY = Math.min(Math.max(minY, state.initialTop + deltaY), maxY);
       setFabY(nextY);
     }

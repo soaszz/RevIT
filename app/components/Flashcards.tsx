@@ -251,15 +251,8 @@ export default function Flashcards({
           </div>
         </div>
 
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={cardIndex}
-            initial={{ opacity: 0, x: 20, scale: 0.99 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -20, scale: 0.99 }}
-            transition={{ type: "spring", stiffness: 380, damping: 28 }}
-          >
-            <div className={`${styles.cardStage} ${flipped ? styles.flipped : ""}`} aria-live="polite">
+        <div key={cardIndex}>
+          <div className={`${styles.cardStage} ${flipped ? styles.flipped : ""}`} aria-live="polite">
               <article className={`${styles.cardFace} ${styles.cardFront}`} aria-hidden={flipped}>
                 <button
                   className={styles.cardHitArea}
@@ -339,8 +332,7 @@ export default function Flashcards({
                 </motion.button>
               </article>
             </div>
-          </motion.div>
-        </AnimatePresence>
+        </div>
 
         <div className={styles.navigation} aria-label="Flashcard navigation">
           <motion.button

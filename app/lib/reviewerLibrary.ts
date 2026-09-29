@@ -72,6 +72,13 @@ export const CANONICAL_COMBINED_SUBJECTS: {
     description: "Immune system principles, antigen-antibody interactions, serological testing, autoimmune disorders, and hypersensitivity from Harr and Ciulla.",
     sourceSubjectIds: ["immunology", "ciulla-immunology-and-serology"],
   },
+  {
+    id: "mycology-and-virology",
+    name: "Mycology and Virology",
+    category: "Other Majors",
+    description: "Fungal physiology, cutaneous, subcutaneous, and systemic mycoses, opportunistic fungi, viral structure, DNA and RNA viruses, and diagnostic virology techniques from Harr and Ciulla.",
+    sourceSubjectIds: ["mycology-and-virology", "ciulla-mycology-and-virology"],
+  },
 ];
 
 export function getUnifiedSubjects(

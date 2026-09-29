@@ -18,6 +18,7 @@
 ## 4. Updates Tab Guidelines
 - **Plain & Straightforward Language**: When adding entries to `app/data/siteUpdates.ts` (Updates tab), keep titles, summaries, and highlights simple, direct, and plain-English (e.g., "Combined Hematology 1 and 2 on Harr", "Added Ciulla Book Fourth Edition").
 - **No Overly Deep Words**: Avoid dense technical jargon or overly elevated prose. Use clear words that users easily understand.
+- **Sync Platform Version**: Every time RevIT has an update in `app/data/siteUpdates.ts`, ensure `RevIT Platform v#.#.#` at the bottom of the Updates tab (`app/components/SiteUpdatesModal.tsx`) matches and syncs to the latest update version (`SITE_UPDATES[0].version`).
 
 ## 5. Multi-Book Edition Architecture Rules
 - When adding any new book editions (e.g. beyond Harr and Ciulla):

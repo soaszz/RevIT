@@ -13,6 +13,22 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-7-4",
+    version: "v1.7.4",
+    date: "September 30, 2026",
+    type: "minor",
+    title: "Faster Question Loading and Reviewer Updates",
+    summary: "Removed question loading delays in MCQs and flashcards, fixed the sidebar to follow while scrolling, moved the calculator button above the mobile navbar, and cleaned up Ciulla questions.",
+    tags: ["MCQs", "Flashcards", "Calculator", "UI/UX"],
+    highlights: [
+      "Removed question transition delays so questions and flashcards load instantly when clicking next or previous.",
+      "Fixed the left navigation bar to follow smoothly when scrolling up and down.",
+      "Moved the calculator button above the bottom navigation bar on phones so it is easy to see, tap, and swipe.",
+      "Combined Mycology and Virology in Ciulla into a single subject under Other Majors.",
+      "Fixed questions, typos, and rationales across Ciulla and Harr to match the review books."
+    ]
+  },
+  {
     id: "update-v1-7-3",
     version: "v1.7.3",
     date: "September 29, 2026",

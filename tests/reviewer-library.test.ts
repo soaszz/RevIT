@@ -64,9 +64,8 @@ test("NU RevIT groups Ciulla subjects under MTAP 1 and Other Majors", () => {
     "ciulla-hemostasis",
     "ciulla-immunology-and-serology",
     "ciulla-immunohematology",
-    "ciulla-mycology",
+    "ciulla-mycology-and-virology",
     "ciulla-parasitology",
-    "ciulla-virology",
     "ciulla-molecular-diagnostics",
     "ciulla-laboratory-calculations",
     "ciulla-general-laboratory-principles",
@@ -84,7 +83,7 @@ test("NU RevIT groups combined subjects under MTAP 1 and Other Majors", () => {
   assert.ok(mtapOne);
   assert.ok(otherMajors);
   assert.equal(mtapOne.subjects.length, 8);
-  assert.equal(otherMajors.subjects.length, 15);
+  assert.equal(otherMajors.subjects.length, 14);
   assert.ok(mtapOne.subjects.every((subject) => subject.category === "MTAP 1"));
   assert.ok(otherMajors.subjects.every((subject) => subject.category === "Other Majors"));
 });
@@ -95,7 +94,7 @@ test("library search matches subject and topic metadata for Harr and Ciulla", ()
   assert.deepEqual(filterSubjectsBySearch(harrSubjects, harrTopics, "malaria").map((subject) => subject.id), ["parasitology"]);
   assert.deepEqual(filterSubjectsBySearch(ciullaSubjects, ciullaTopics, "protozoa").map((subject) => subject.id), ["ciulla-parasitology"]);
   assert.deepEqual(filterSubjectsBySearch(harrSubjects, harrTopics, "yeasts").map((subject) => subject.id), ["mycology-and-virology"]);
-  assert.deepEqual(filterSubjectsBySearch(ciullaSubjects, ciullaTopics, "fungal").map((subject) => subject.id), ["ciulla-mycology"]);
+  assert.deepEqual(filterSubjectsBySearch(ciullaSubjects, ciullaTopics, "fungal").map((subject) => subject.id), ["ciulla-mycology-and-virology"]);
   assert.deepEqual(filterSubjectsBySearch(harrSubjects, harrTopics, "hemostasis").map((subject) => subject.id), ["hematology"]);
   assert.deepEqual(filterSubjectsBySearch(ciullaSubjects, ciullaTopics, "hemostasis").map((subject) => subject.id), ["ciulla-hemostasis"]);
   assert.deepEqual(filterSubjectsBySearch(harrSubjects, harrTopics, "MTAP 1").map((subject) => subject.id), [
@@ -142,7 +141,7 @@ test("MCQ and flashcard libraries expose shared category choices, search, and re
 });
 
 test("Ciulla question count, structure, and stimuli integrity", () => {
-  assert.equal(ciullaSubjects.length, 14);
+  assert.equal(ciullaSubjects.length, 13);
   assert.equal(ciullaTopics.length, 49);
   assert.equal(ciullaQuestions.length, 1884);
 

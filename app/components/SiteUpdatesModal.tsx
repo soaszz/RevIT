@@ -199,7 +199,7 @@ export default function SiteUpdatesModal({
         {/* Footer */}
         <footer className="updates-footer">
           <div className="updates-footer-copy">
-            <span>RevIT Platform v1.4.0</span>
+            <span>RevIT Platform {SITE_UPDATES[0]?.version ?? "v1.7.3"}</span>
             <span className="footer-dot">•</span>
             <span>Continuously updated for Philippine MTAP &amp; Board review</span>
           </div>
