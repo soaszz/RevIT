@@ -77,8 +77,8 @@ button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-
 
 .revit-loading-screen { position: fixed; z-index: 1000; inset: 0; display: grid; min-height: 100vh; min-height: 100dvh; place-items: center; overflow: hidden; padding: 32px 20px; background: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--green-soft) 68%, transparent) 0, transparent 36%), var(--canvas); color: var(--ink); }
 .revit-loading-content { display: grid; width: min(100%, 320px); justify-items: center; text-align: center; }
-.revit-loading-wordmark { position: relative; display: block; width: 172px; height: 43px; overflow: hidden; }
-.revit-loading-wordmark img { position: absolute; top: -28px; left: 0; width: 172px; height: 96px; max-width: none; }
+.revit-loading-wordmark { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 172px; height: 45px; flex-shrink: 0; }
+.revit-loading-wordmark img { position: static; width: 100%; height: 100%; object-fit: contain; max-width: none; }
 .revit-loading-animation { width: 86px; height: 86px; margin: 34px 0 19px; color: var(--green); filter: drop-shadow(0 8px 18px color-mix(in srgb, var(--green) 18%, transparent)); }
 .revit-loading-frog { position: relative; display: block; width: 54px; height: 49px; overflow: hidden; opacity: .9; filter: drop-shadow(0 7px 13px rgba(24, 117, 98, .16)); }
 .revit-loading-frog img { position: absolute; top: -37px; left: -35px; width: 124px; height: 124px; max-width: none; }
@@ -89,8 +89,8 @@ button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-
 }
 
 @media (max-width: 480px) {
-  .revit-loading-wordmark { width: 148px; height: 37px; }
-  .revit-loading-wordmark img { top: -24px; width: 148px; height: 83px; }
+  .revit-loading-wordmark { width: 148px; height: 39px; }
+  .revit-loading-wordmark img { position: static; top: auto; left: auto; width: 100%; height: 100%; object-fit: contain; }
   .revit-loading-animation { width: 74px; height: 74px; margin-top: 29px; }
   .revit-loading-content p { margin-top: 21px; font-size: 12px; }
 }
@@ -1206,11 +1206,11 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .auth-shell::before { display: none; }
 .auth-layout { width: min(1180px, 100%); grid-template-columns: minmax(430px, 1fr) minmax(410px, .88fr); border-radius: 20px; box-shadow: 0 22px 64px rgba(5, 27, 22, .12); }
 .auth-intro { gap: 30px; padding: clamp(34px, 4vw, 50px); background: #0d2822; }
-.auth-logo { position: relative; width: 151px; height: 38px; overflow: visible; }
-.auth-logo-wordmark { position: relative; display: block; width: 126px; height: 33px; overflow: hidden; }
-.auth-logo-wordmark img { position: absolute; top: -21px; left: 0; width: 126px; height: 70px; max-width: none; }
-.auth-logo-frog { position: relative; display: block; width: 30px; height: 29px; margin-left: -8px; overflow: hidden; }
-.auth-logo-frog img { position: absolute; top: -22px; left: -21px; width: 72px; height: 72px; max-width: none; }
+.auth-logo { position: relative; display: inline-flex; align-items: center; gap: 8px; width: auto; height: 34px; overflow: visible; text-decoration: none; }
+.auth-logo-wordmark { position: relative; display: inline-flex; align-items: center; width: 120px; height: 32px; flex-shrink: 0; }
+.auth-logo-wordmark img { position: static; width: 100%; height: 100%; object-fit: contain; max-width: none; }
+.auth-logo-frog { position: relative; display: block; width: 34px; height: 34px; border-radius: 8px; overflow: hidden; flex-shrink: 0; filter: drop-shadow(0 0 5px rgba(30, 238, 199, .2)); }
+.auth-logo-frog img { position: static; width: 34px; height: 34px; object-fit: cover; border-radius: 8px; }
 .auth-hero-copy { margin-top: auto; }
 .auth-intro h2 { max-width: 460px; font-size: clamp(38px, 4.2vw, 56px); }
 .auth-intro > .auth-hero-copy > p:last-child { max-width: 480px; margin: 18px 0 0; color: #b9cdc7; font-size: 12px; line-height: 1.72; }
@@ -1237,8 +1237,8 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
 .legal-header, .legal-document, .legal-footer { width: min(1040px, calc(100% - 40px)); margin-inline: auto; }
 .legal-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 82px; border-bottom: 1px solid var(--line); }
 .legal-brand { display: flex; align-items: center; gap: 15px; color: var(--ink); text-decoration: none; }
-.legal-brand-wordmark { position: relative; display: block; width: 112px; height: 29px; overflow: hidden; }
-.legal-brand-wordmark img { position: absolute; top: -18px; left: 0; width: 112px; height: 63px; max-width: none; }
+.legal-brand-wordmark { position: relative; display: inline-flex; align-items: center; width: 112px; height: 30px; flex-shrink: 0; }
+.legal-brand-wordmark img { position: static; width: 100%; height: 100%; object-fit: contain; max-width: none; }
 .legal-brand > span:last-child { padding-left: 15px; border-left: 1px solid var(--line); color: var(--muted); font-size: 10px; font-weight: 620; letter-spacing: .02em; }
 .legal-document { display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 42px; padding-block: clamp(45px, 7vw, 78px); }
 .legal-title-block { grid-column: 1 / -1; max-width: 790px; }
@@ -1291,7 +1291,7 @@ h1 { max-width: 840px; margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight
   .auth-theme-toggle { top: 18px; right: 16px; }
   .legal-header { min-height: 72px; }
   .legal-brand-wordmark { width: 98px; height: 26px; }
-  .legal-brand-wordmark img { top: -16px; width: 98px; height: 55px; }
+  .legal-brand-wordmark img { position: static; top: auto; left: auto; width: 100%; height: 100%; object-fit: contain; }
   .legal-sections section { grid-template-columns: 28px minmax(0, 1fr); gap: 11px; }
   .legal-footer { align-items: flex-start; flex-direction: column; }
 }

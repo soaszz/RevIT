@@ -16,8 +16,8 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
       <div className="auth-layout">
         <aside className="auth-intro" aria-label="About RevIT">
           <a className="auth-logo" href="/overview" aria-label="RevIT home">
-            <span className="auth-logo-wordmark" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
-            <span className="auth-logo-frog" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} priority /></span>
+            <span className="auth-logo-wordmark" aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1208} height={319} priority /></span>
+            <span className="auth-logo-frog" aria-hidden="true"><Image src="/revit-rounded.png" alt="" width={34} height={34} priority style={{ borderRadius: "8px", objectFit: "cover" }} /></span>
             <span className="sr-only">RevIT</span>
           </a>
           <div className="auth-hero-copy">

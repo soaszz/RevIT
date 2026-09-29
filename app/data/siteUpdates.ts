@@ -13,6 +13,20 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-7-3",
+    version: "v1.7.3",
+    date: "September 29, 2026",
+    type: "minor",
+    title: "Fixed RevIT Logo and Updated Login Mascot",
+    summary: "Fixed the text logo across login, loading, and main screens so letters are no longer cut off, and updated the login mascot to the rounded frog design.",
+    tags: ["Branding", "Mascot", "UI/UX"],
+    highlights: [
+      "Fixed the RevIT text logo across login, loading, and main screens so letters display fully without being cut off.",
+      "Updated the login page frog mascot to the new rounded waving frog icon.",
+      "Aligned logo and mascot styling across all pages for a clean, consistent look."
+    ]
+  },
+  {
     id: "update-v1-7-2",
     version: "v1.7.2",
     date: "September 29, 2026",

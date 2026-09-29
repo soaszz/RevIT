@@ -6,7 +6,7 @@ export default function RevITLoadingScreen() {
     <main className="revit-loading-screen" aria-busy="true" aria-label="RevIT is preparing your study space">
       <div className="revit-loading-content">
         <span className="revit-loading-wordmark" role="img" aria-label="RevIT">
-          <Image src="/revit-logo.png" alt="" width={1376} height={768} priority />
+          <Image src="/revit-logo.png" alt="" width={1208} height={319} priority />
         </span>
 
         <MorphingInfinity className="revit-loading-animation" aria-label="Initializing RevIT" />
