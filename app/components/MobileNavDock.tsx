@@ -245,7 +245,7 @@ export default function MobileNavDock({
                   onClick={() => setSheetOpen(false)}
                 >
                   <span className="mobile-sheet-sub-icon" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                    <Image src="/icons/revit-support.svg" alt="" width={20} height={20} unoptimized style={{ objectFit: "cover", borderRadius: "5px" }} />
+                    <Image src="/icons/revit-support.svg" alt="" width={20} height={20} unoptimized style={{ width: "auto", height: "auto", objectFit: "cover", borderRadius: "5px" }} />
                   </span>
                   <span>Support RevIT</span>
                 </a>

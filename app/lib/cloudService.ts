@@ -138,7 +138,7 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     preferencesPromise,
     client.from("question_reinforcement").select("user_id,question_id,reinforcement_level,updated_at").eq("user_id", userId),
     client.from("question_attempts").select(QUESTION_ATTEMPT_COLUMNS).eq("user_id", userId)
-      .order("answered_at", { ascending: false }).limit(5000),
+      .order("answered_at", { ascending: false }).limit(1000),
   ]);
   const failure = [profile, grades, activity, exams, preferences].find((result) => result.error)?.error;
   if (failure) throw new Error(failure.message);
@@ -217,6 +217,16 @@ export function queueQuestionAttempt(userId: string, attempt: QuestionAttempt) {
     localStorage.setItem(key, JSON.stringify(queued));
   } catch (error) {
     console.warn(errorMessage(error));
+  }
+}
+
+export function getQueuedQuestionAttemptsCount(userId: string): number {
+  try {
+    const key = questionAttemptQueueKey(userId);
+    const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as unknown[];
+    return queued.length;
+  } catch {
+    return 0;
   }
 }
 

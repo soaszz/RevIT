@@ -36,6 +36,7 @@ import {
   deleteExam as deleteCloudExam,
   flushActivityQueue,
   flushQuestionAttemptQueue,
+  getQueuedQuestionAttemptsCount,
   loadCloudSnapshot,
   localProfileToCloud,
   migrateLocalActivity,
@@ -45,7 +46,6 @@ import {
   saveGrade as saveCloudGrade,
   savePreferences,
   saveQuestionReinforcement,
-  saveQuestionAttempt,
 } from "./lib/cloudService";
 import type { DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, StudyPlan, UserPreferences } from "./lib/domain";
 import type { ProgressEvent, ProgressionUpdate } from "./lib/xpService";
@@ -62,7 +62,6 @@ import { type ReviewTimerDuration } from "./lib/reviewTimer";
 import { playReviewSound, unlockReviewSounds } from "./lib/reviewSounds";
 import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
 import { createClient } from "./lib/supabase/client";
-import { useOnlinePresence } from "./lib/useOnlinePresence";
 import { hasCurrentLegalConsent } from "./lib/legal";
 import { canAccessFeature } from "./lib/features";
 import { ALL_MAJORS_CATEGORY, buildSubjectSections, filterSubjectsBySearch, getUnifiedSubjects, MTAP_1_CATEGORY, OTHER_MAJORS_CATEGORY, type UnifiedSubject } from "./lib/reviewerLibrary";
@@ -391,7 +390,6 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const [profileOpen, setProfileOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [updatesModalOpen, setUpdatesModalOpen] = useState(false);
-  const onlineLearnerCount = useOnlinePresence(initialUser?.id);
   const { readIds, unreadCount, markAllRead, toggleRead, hasNewForPopup, dismissPopup } = useSiteNotifications();
   const [profileError, setProfileError] = useState("");
   const [cloudProfile, setCloudProfile] = useState<Profile | null>(null);
@@ -427,6 +425,8 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const attemptMigrationStarted = useRef(false);
   const answerLockedRef = useRef(false);
+  const syncTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isSyncingRef = useRef(false);
   const [progression, setProgression] = useState(emptyProgression);
   const [progressionReady, setProgressionReady] = useState(false);
   const [progressionError, setProgressionError] = useState("");
@@ -1239,8 +1239,9 @@ useEffect(() => {
           () => {
             clearRecentSession();
             if (sessionId) {
-              void recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
+              recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
             }
+            scheduleBatchedCloudSync(true);
             const answeredIds = sessionQuestionIds.slice(0, sessionAttempts.length);
             setSessionQuestionIds(answeredIds.length > 0 ? answeredIds : sessionQuestionIds.slice(0, 1));
             setSessionIndex(sessionAttempts.length);
@@ -1261,6 +1262,7 @@ useEffect(() => {
       return false;
     }
     clearRecentSession();
+    scheduleBatchedCloudSync(true);
     answerLockedRef.current = true;
     setSessionPoolIds([]);
     setSessionTargetCount(0);
@@ -1327,29 +1329,79 @@ useEffect(() => {
     }
   }
 
-  async function persistProgressEvents(
+  const flushBatchedCloudSync = useCallback(async () => {
+    if (!cloudEnabled || !initialUser || isSyncingRef.current) return;
+    isSyncingRef.current = true;
+    try {
+      const client = createClient();
+      await flushQuestionAttemptQueue(client, initialUser.id);
+      const update = await flushCloudProgressEventQueue(client, initialUser.id);
+      if (update) {
+        applyProgressionUpdate(update);
+      }
+    } catch {
+      // Kept in queue for next flush or reconnect
+    } finally {
+      isSyncingRef.current = false;
+    }
+  }, [cloudEnabled, initialUser, progression.totalXp, progressionReady, progressionOwnerKey]);
+
+  const scheduleBatchedCloudSync = useCallback((immediate = false) => {
+    if (!cloudEnabled || !initialUser) return;
+    if (syncTimerRef.current) {
+      clearTimeout(syncTimerRef.current);
+      syncTimerRef.current = null;
+    }
+    if (immediate) {
+      void flushBatchedCloudSync();
+      return;
+    }
+    syncTimerRef.current = setTimeout(() => {
+      void flushBatchedCloudSync();
+    }, 4000);
+  }, [cloudEnabled, flushBatchedCloudSync, initialUser]);
+
+  useEffect(() => {
+    if (sessionComplete) {
+      scheduleBatchedCloudSync(true);
+    }
+  }, [sessionComplete, scheduleBatchedCloudSync]);
+
+  useEffect(() => {
+    const handleFlush = () => {
+      scheduleBatchedCloudSync(true);
+    };
+    window.addEventListener("beforeunload", handleFlush);
+    return () => {
+      window.removeEventListener("beforeunload", handleFlush);
+      handleFlush();
+    };
+  }, [scheduleBatchedCloudSync]);
+
+  function persistProgressEvents(
     events: ProgressEvent[],
     metrics = progressMetrics,
-    cloudPrerequisite?: Promise<boolean>,
+    immediate = false,
   ) {
     try {
-      let update: ProgressionUpdate;
-      if (cloudEnabled && initialUser) {
-        if (cloudPrerequisite && !(await cloudPrerequisite)) {
-          throw new Error("The related answer is waiting for question-history sync.");
-        }
-        update = await recordCloudProgressEvents(createClient(), initialUser.id, events);
-      } else {
-        update = recordLocalProgressEvents(progressionOwnerKey, events, metrics);
-      }
+      const update = recordLocalProgressEvents(progressionOwnerKey, events, metrics);
       applyProgressionUpdate(update);
+      if (cloudEnabled && initialUser) {
+        queueCloudProgressEvents(initialUser.id, events);
+        const queuedCount = getQueuedQuestionAttemptsCount(initialUser.id);
+        if (immediate || queuedCount >= 5) {
+          scheduleBatchedCloudSync(true);
+        } else {
+          scheduleBatchedCloudSync(false);
+        }
+      }
     } catch {
       if (cloudEnabled && initialUser) queueCloudProgressEvents(initialUser.id, events);
       setProgressionError("Progression is queued and will sync when the connection recovers.");
     }
   }
 
-  async function recordStudyEvent(input: {
+  function recordStudyEvent(input: {
     eventKey: string;
     eventType: ProgressEvent["eventType"];
     questions?: number;
@@ -1357,7 +1409,7 @@ useEffect(() => {
     reviews?: number;
     subjectId?: string;
     subjectName?: string;
-  }, xp = 0, extraEvents: Array<{ eventKey: string; eventType: ProgressEvent["eventType"]; xp: number }> = [], cloudPrerequisite?: Promise<boolean>) {
+  }, xp = 0, extraEvents: Array<{ eventKey: string; eventType: ProgressEvent["eventType"]; xp: number }> = []) {
     const activityDate = dateKeyInTimeZone(new Date(), preferences.timezone);
     const nextActivity = activityAfterEvent(activity, activityDate, {
       ...input,
@@ -1377,11 +1429,11 @@ useEffect(() => {
     if ((input.questions ?? 0) > 0 || (input.reviews ?? 0) > 0) {
       events.push({ eventKey: `xp:daily-streak:${activityDate}`, eventType: "daily_streak", activityDate, xp: XP_REWARDS.DAILY_STREAK });
     }
-    await persistProgressEvents(events, nextMetrics, cloudPrerequisite);
+    persistProgressEvents(events, nextMetrics);
   }
 
-  async function recordProgressOnlyEvent(eventKey: string, eventType: ProgressEvent["eventType"], xp: number, metrics = progressMetrics) {
-    await persistProgressEvents([{ eventKey, eventType, xp, activityDate: dateKeyInTimeZone(new Date(), preferences.timezone) }], metrics);
+  function recordProgressOnlyEvent(eventKey: string, eventType: ProgressEvent["eventType"], xp: number, metrics = progressMetrics) {
+    persistProgressEvents([{ eventKey, eventType, xp, activityDate: dateKeyInTimeZone(new Date(), preferences.timezone) }], metrics, true);
   }
 
   function completeQuestion(selectedAnswer: number | null, didTimeOut = false) {
@@ -1420,23 +1472,8 @@ useEffect(() => {
       void saveQuestionReinforcement(createClient(), initialUser.id, currentQuestion.id, nextReinforcementLevel)
         .catch(() => setCloudError("Your answer is saved locally, but reinforcement sync needs another attempt."));
     }
-    let attemptPersistence: Promise<boolean> | undefined;
-    if (cloudEnabled && initialUser && attemptHistoryAvailable) {
-      attemptPersistence = saveQuestionAttempt(createClient(), attempt)
-        .then((saved) => {
-          setAttempts((current) => current.map((item) => item.id === saved.id ? saved : item));
-          setSessionAttempts((current) => current.map((item) => item.id === saved.id ? saved : item));
-          return true;
-        })
-        .catch(() => {
-          queueQuestionAttempt(initialUser.id, attempt);
-          setCloudError("Your answer is safe on this device and queued for question-history sync.");
-          return false;
-        });
-    } else if (cloudEnabled && initialUser) {
+    if (cloudEnabled && initialUser) {
       queueQuestionAttempt(initialUser.id, attempt);
-      setCloudError("Your answer is safe on this device and queued for question-history sync.");
-      attemptPersistence = Promise.resolve(false);
     }
     setSelectedChoice(selectedAnswer);
     setTimedOut(didTimeOut);
@@ -1444,14 +1481,14 @@ useEffect(() => {
     if (soundEffectsEnabled) {
       void playReviewSound(didTimeOut ? "timeout" : attempt.correct ? "correct" : "incorrect");
     }
-    void recordStudyEvent({
+    recordStudyEvent({
       eventKey: `answer:${attempt.id}`,
       eventType: "question_answered",
       questions: 1,
       correct: attempt.correct ? 1 : 0,
       subjectId: attempt.subjectId,
       subjectName: subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId,
-    }, attempt.correct ? XP_REWARDS.CORRECT_QUESTION : 0, [], attemptPersistence);
+    }, attempt.correct ? XP_REWARDS.CORRECT_QUESTION : 0);
   }
 
   function submitAnswer() {
@@ -1466,26 +1503,29 @@ useEffect(() => {
     answerLockedRef.current = false;
     setTimedOut(false);
     if (sessionStrictWrongOnly) {
-      if (sessionCanFinish && sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
+      if (sessionCanFinish && sessionId) recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
+      scheduleBatchedCloudSync(true);
       return;
     }
     if (sessionCanFinish) {
-      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
+      if (sessionId) recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
+      scheduleBatchedCloudSync(true);
       return;
     }
 
     const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds, Math.random, questionPerformance);
     if (!nextQuestionId) {
-      if (sessionId) void recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
+      if (sessionId) recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
       setSessionIndex((current) => current + 1);
       setSelectedChoice(null);
       setAnswerRevealed(false);
+      scheduleBatchedCloudSync(true);
       return;
     }
     const nextIndex = sessionQuestionIds.length;
@@ -1942,7 +1982,7 @@ useEffect(() => {
           <span className="sidebar-control-copy"><strong>Appearance</strong><small>Light / dark</small></span>
         </button>
         <Link className="sidebar-support" href="/support" title={sidebarCollapsed ? "Support RevIT" : undefined}>
-          <span className="sidebar-support-frog" aria-hidden="true"><Image src="/icons/revit-support.svg" alt="" width={42} height={42} unoptimized style={{ borderRadius: "10px", objectFit: "cover" }} /></span>
+          <span className="sidebar-support-frog" aria-hidden="true"><Image src="/icons/revit-support.svg" alt="" width={42} height={42} unoptimized style={{ width: "auto", height: "auto", borderRadius: "10px", objectFit: "cover" }} /></span>
           <span className="sidebar-support-copy"><strong>Support RevIT</strong><span>Help support continued development</span></span>
           <span className="sidebar-support-arrow" aria-hidden="true">›</span>
         </Link>
@@ -1987,66 +2027,6 @@ useEffect(() => {
               gap: "10px"
             }}
           >
-            <div
-              className="online-presence-pill"
-              title={`${onlineLearnerCount} future RMT/s reviewing right now!`}
-              aria-label={`${onlineLearnerCount} future RMT/s reviewing`}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                height: "38px",
-                padding: "0 14px 0 8px",
-                border: "1px solid var(--line)",
-                borderRadius: "99px",
-                background: "var(--paper)",
-                boxShadow: "var(--shadow)",
-                color: "var(--muted)",
-                fontSize: "11px",
-                fontWeight: 650,
-                whiteSpace: "nowrap",
-                cursor: "default",
-                userSelect: "none"
-              }}
-            >
-              <span
-                className="online-presence-icon"
-                aria-hidden="true"
-                style={{
-                  display: "grid",
-                  placeItems: "center",
-                  width: "24px",
-                  height: "24px",
-                  borderRadius: "50%",
-                  background: "var(--green-soft)",
-                  color: "var(--green)",
-                  flexShrink: 0
-                }}
-              >
-                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-              </span>
-              <span
-                className="online-presence-beacon"
-                aria-hidden="true"
-                style={{
-                  position: "relative",
-                  width: "6px",
-                  height: "6px",
-                  marginLeft: "-2px",
-                  borderRadius: "50%",
-                  background: "var(--green)",
-                  flexShrink: 0
-                }}
-              />
-              <span className="online-presence-copy">
-                <strong style={{ color: "var(--green)", fontWeight: 800, marginRight: "3px" }}>{onlineLearnerCount}</strong> future RMT/s reviewing
-              </span>
-            </div>
             <SiteNotificationTrigger
               unreadCount={unreadCount}
               onClick={() => setUpdatesModalOpen(true)}
@@ -2058,18 +2038,6 @@ useEffect(() => {
             <RevITLogo />
           </button>
           <div className="mobile-header-right">
-            {activeView === "overview" && (
-              <span className="mobile-online-presence" title={`${onlineLearnerCount} future RMT/s reviewing right now!`}>
-                <span className="online-presence-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                  </svg>
-                </span>
-                <span className="online-presence-beacon" aria-hidden="true" />
-                <strong>{onlineLearnerCount}</strong>
-              </span>
-            )}
             {activeView === "overview" && (
               <SiteNotificationTrigger className="mobile-header-notification" size="compact" unreadCount={unreadCount} onClick={() => setUpdatesModalOpen(true)} />
             )}

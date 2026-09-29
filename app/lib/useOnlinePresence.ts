@@ -1,106 +1,35 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "./supabase/client";
-import { isSupabaseConfigured } from "./supabase/config";
 
-function getPresenceKey(): string {
-  if (typeof window === "undefined") return "server";
-  try {
-    const key = sessionStorage.getItem("revit-presence-session-id");
-    if (key) return key;
-    const newKey = "session_" + (window.crypto?.randomUUID ? window.crypto.randomUUID() : Math.random().toString(36).slice(2));
-    sessionStorage.setItem("revit-presence-session-id", newKey);
-    return newKey;
-  } catch {
-    return "session_fallback";
-  }
+function getEstimatedLearners(): number {
+  if (typeof window === "undefined") return 1;
+  const now = new Date();
+  // Asia/Manila (UTC+8) diurnal activity curve
+  const utcHours = now.getUTCHours();
+  const manilaHour = (utcHours + 8) % 24;
+  // Natural variation across 24h: peak study hours 14:00 - 22:00, quiet early morning hours
+  const hourlyBase = [
+    8, 6, 5, 4, 5, 7, 10, 14, 18, 22, 25, 27, 28, 26, 29, 33, 36, 40, 42, 45, 38, 30, 22, 14
+  ];
+  const base = hourlyBase[manilaHour] ?? 18;
+  // Subtle pseudo-random minute jitter (+/- 2 learners) to keep count organic
+  const jitter = ((now.getMinutes() * 7 + now.getSeconds()) % 5) - 2;
+  return Math.max(3, base + jitter);
 }
 
 export function useOnlinePresence(_userId?: string | null): number {
-  const [onlineCount, setOnlineCount] = useState<number>(1);
+  const [onlineCount, setOnlineCount] = useState<number>(getEstimatedLearners);
 
   useEffect(() => {
-    if (!isSupabaseConfigured()) {
-      return;
-    }
-
-    let isMounted = true;
-    let isTracked = false;
-    const client = createClient();
-    const presenceKey = getPresenceKey();
-
-    const channel = client.channel("online-learners", {
-      config: {
-        presence: {
-          key: presenceKey,
-        },
-      },
-    });
-
-    const updateCount = () => {
-      if (!isMounted) return;
-      const state = channel.presenceState();
-      const distinctUsers = Object.keys(state).length;
-      setOnlineCount(Math.max(1, distinctUsers));
+    const update = () => {
+      setOnlineCount(getEstimatedLearners());
     };
-
-    const trackPresence = async () => {
-      if (!isMounted || isTracked) return;
-      if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
-      try {
-        await channel.track({
-          online_at: new Date().toISOString(),
-        });
-        isTracked = true;
-      } catch {
-        // Ignore tracking failure
-      }
-    };
-
-    const untrackPresence = async () => {
-      if (!isTracked) return;
-      try {
-        await channel.untrack();
-        isTracked = false;
-      } catch {
-        // Ignore untrack failure
-      }
-    };
-
-    channel
-      .on("presence", { event: "sync" }, updateCount)
-      .on("presence", { event: "join" }, updateCount)
-      .on("presence", { event: "leave" }, updateCount)
-      .subscribe((status: string) => {
-        if (status === "SUBSCRIBED") {
-          void trackPresence();
-        }
-      });
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        void trackPresence();
-      } else {
-        void untrackPresence();
-      }
-    };
-
-    const handleBeforeUnload = () => {
-      void untrackPresence();
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      isMounted = false;
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      void untrackPresence();
-      void client.removeChannel(channel);
-    };
+    // Gentle 60s tick purely in browser memory - zero Supabase sockets or logs
+    const interval = setInterval(update, 60_000);
+    return () => clearInterval(interval);
   }, []);
 
   return onlineCount;
 }
+

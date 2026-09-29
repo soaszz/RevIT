@@ -8,8 +8,8 @@
 - Keep developer notes, architecture details, and internal changelogs in `changelog-private.md` (which is git-ignored).
 
 ## 2. Privacy & Telemetry Rules
-- **Online Presence**: Real-time counter (`app/lib/useOnlinePresence.ts`) uses Supabase Realtime channel `online-learners`.
-- **Zero PII**: Presence keys must remain purely anonymous session tokens (`sessionStorage`). Never broadcast `userId`, emails, or database identifiers.
+- **Online Presence**: Real-time counter (`app/lib/useOnlinePresence.ts`) uses lightweight client-side diurnal estimate with zero database/websocket connections to prevent log ingestion overload.
+- **Zero PII**: Never broadcast `userId`, emails, or database identifiers.
 
 ## 3. UX & Architectural Conventions
 - **Sound Effects**: Default ON permanently. Do not add sound toggles to session preference modals.

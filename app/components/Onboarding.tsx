@@ -83,8 +83,8 @@ export default function Onboarding({
       const avatarUrl = avatarFile ? await uploadAvatar(client, profile.id, avatarFile) : profile.avatar_url;
       const saved = await saveProfile(client, { ...profile, first_name: cleanFirstName, username: cleanUsername, avatar_url: avatarUrl, onboarding_complete: true });
       onComplete(saved);
-    } catch {
-      setStatus("Your profile could not be saved. Please try again.");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Your profile could not be saved. Please try again.");
     } finally { setPending(false); }
   }
 

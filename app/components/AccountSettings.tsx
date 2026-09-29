@@ -56,8 +56,9 @@ export default function AccountSettings({ profile, preferences, email, onClose, 
       const avatarUrl = avatarFile ? await uploadAvatar(client, profile.id, avatarFile) : (preview || null);
       const saved = await saveProfile(client, { ...profile, first_name: firstName.trim(), username: cleanUsername, avatar_url: avatarUrl });
       onProfile(saved); setStatus("Profile saved to the cloud.");
-    } catch { setStatus("Profile could not be saved. Please try again."); }
-    finally { setPending(false); }
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Profile could not be saved. Please try again.");
+    } finally { setPending(false); }
   }
 
   async function changePassword(event: FormEvent<HTMLFormElement>) {

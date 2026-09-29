@@ -23,7 +23,7 @@ export default function SupportPage() {
 
       <div className={styles.page}>
         <section className={styles.intro} aria-labelledby="support-title">
-          <span className={styles.heroFrog} aria-hidden="true"><Image src="/icons/revit-support.svg" alt="Support RevIT Mascot" width={110} height={110} priority unoptimized /></span>
+          <span className={styles.heroFrog} aria-hidden="true"><Image src="/icons/revit-support.svg" alt="Support RevIT Mascot" width={110} height={110} priority unoptimized style={{ width: "auto", height: "auto" }} /></span>
           <p className="eyebrow">Optional contribution</p>
           <h1 id="support-title">Support RevIT</h1>
           <p className={styles.lead}><strong>RevIT is currently free to use.</strong> If RevIT has been helpful to your studies and you would like to support its continued development and operating costs, you may make a voluntary contribution.</p>
