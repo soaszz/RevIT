@@ -13,6 +13,20 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-7-2",
+    version: "v1.7.2",
+    date: "September 29, 2026",
+    type: "minor",
+    title: "Clearer Signup Messages and Email Checks",
+    summary: "Added clear messages when an email is already taken and added email format checks to make signing up and logging in easier.",
+    tags: ["Account", "Authentication", "UI/UX"],
+    highlights: [
+      "Added a clear message showing that an email is already taken so you can sign in or reset your password directly.",
+      "Added email format checking to prevent typos and invalid email entries during signup and login.",
+      "Improved error messages to clearly show why an account could not be created."
+    ]
+  },
+  {
     id: "update-v1-7-1",
     version: "v1.7.1",
     date: "September 27, 2026",

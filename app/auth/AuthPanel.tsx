@@ -18,6 +18,16 @@ class AuthInputError extends Error {}
 
 function getErrorMessage(error: unknown, fallback: string) {
   if (error instanceof AuthInputError && error.message) return error.message;
+  if (error && typeof error === "object" && "message" in error && typeof error.message === "string") {
+    const msg = error.message.toLowerCase();
+    if (
+      msg.includes("already registered") ||
+      msg.includes("already exists") ||
+      ("code" in error && error.code === "user_already_exists")
+    ) {
+      return "That email is already taken. Please sign in or reset your password.";
+    }
+  }
   return fallback;
 }
 
@@ -159,6 +169,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
     const cleanEmail = email.trim().toLowerCase();
     const cleanUsername = username.trim().toLowerCase();
     if (!cleanEmail || !username.trim() || !password) throw new AuthInputError("Email, username, and password are required.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) throw new AuthInputError("Please use a valid email.");
     if (!legalConsent) throw new AuthInputError("Please read and agree to the Terms of Service and Privacy Policy.");
     if (!/^[a-z0-9_]{3,24}$/.test(cleanUsername)) {
       throw new AuthInputError("Username must be 3–24 characters using letters, numbers, or underscores.");
@@ -183,7 +194,18 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         captchaToken: token && token !== "disabled_bypass" ? token : undefined,
       },
     });
-    if (error) throw error;
+    if (error) {
+      const msg = error.message?.toLowerCase() || "";
+      if (
+        msg.includes("already registered") ||
+        msg.includes("already exists") ||
+        (error as { code?: string }).code === "user_already_exists" ||
+        (error as { status?: number }).status === 422
+      ) {
+        throw new AuthInputError("That email is already taken. Please sign in or reset your password.");
+      }
+      throw new AuthInputError(error.message || "Account creation could not be completed. Please try again.");
+    }
 
     if (data.session) {
       const { error: signOutError } = await supabase.auth.signOut({ scope: "local" });
@@ -219,8 +241,12 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         await register(token);
         return;
       }
+      const cleanEmail = email.trim().toLowerCase();
+      if (!cleanEmail || !password) throw new AuthInputError("Email and password are required.");
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) throw new AuthInputError("Please use a valid email.");
+
       const { error } = await createClient().auth.signInWithPassword({
-        email: email.trim(),
+        email: cleanEmail,
         password,
         options: {
           captchaToken: token && token !== "disabled_bypass" ? token : undefined,
