@@ -120,8 +120,20 @@ async function loadCloudProgressionRows(client: SupabaseClient, userId: string):
   };
 }
 
+function isPermanentProgressEventError(error: { code?: string; message?: string } | null | undefined): boolean {
+  if (!error) return false;
+  const msg = error.message?.toLowerCase() ?? "";
+  return error.code === "22023"
+    || error.code === "23505"
+    || msg.includes("does not exist")
+    || msg.includes("already exists")
+    || msg.includes("duplicate")
+    || msg.includes("invalid question event key")
+    || msg.includes("invalid progression event type");
+}
+
 export async function loadCloudProgression(client: SupabaseClient, userId: string): Promise<ProgressionUpdate> {
-  const newlyUnlocked = await checkCloudAchievements(client);
+  const newlyUnlocked = await checkCloudAchievements(client).catch(() => []);
   return { snapshot: await loadCloudProgressionRows(client, userId), newlyUnlocked };
 }
 
@@ -131,9 +143,15 @@ export async function recordCloudProgressEvents(client: SupabaseClient, userId: 
       p_event_key: event.eventKey,
       p_event_type: normalizedEventType(event),
     });
-    if (error) throw new Error(error.message);
+    if (error) {
+      if (isPermanentProgressEventError(error)) {
+        console.warn(`[xpService] Skipping unrecordable progress event: ${event.eventKey} (${error.message})`);
+        continue;
+      }
+      throw new Error(error.message);
+    }
   }
-  const newlyUnlocked = await checkCloudAchievements(client);
+  const newlyUnlocked = await checkCloudAchievements(client).catch(() => []);
   return { snapshot: await loadCloudProgressionRows(client, userId), newlyUnlocked };
 }
 
@@ -151,9 +169,27 @@ export async function flushCloudProgressEventQueue(client: SupabaseClient, userI
   const key = cloudQueueKey(userId);
   const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as ProgressEvent[];
   if (!queued.length) return null;
-  const update = await recordCloudProgressEvents(client, userId, queued);
-  localStorage.removeItem(key);
-  return update;
+  const remaining: ProgressEvent[] = [];
+  for (const event of queued) {
+    const { error } = await client.rpc("record_study_activity", {
+      p_event_key: event.eventKey,
+      p_event_type: normalizedEventType(event),
+    });
+    if (error) {
+      if (isPermanentProgressEventError(error)) {
+        console.warn(`[xpService] Dropping invalid progress event: ${event.eventKey} (${error.message})`);
+      } else {
+        remaining.push(event);
+      }
+    }
+  }
+  if (remaining.length) {
+    localStorage.setItem(key, JSON.stringify(remaining));
+  } else {
+    localStorage.removeItem(key);
+  }
+  const newlyUnlocked = await checkCloudAchievements(client).catch(() => []);
+  return { snapshot: await loadCloudProgressionRows(client, userId), newlyUnlocked };
 }
 
 export function emptyProgression(): ProgressionSnapshot {

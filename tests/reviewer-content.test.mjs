@@ -78,12 +78,12 @@ test("randomizes displayed choices per review session and labels the PDF rationa
   assert.match(stimulus, /<Image/);
 });
 
-test("waits for cloud question history before recording dependent progression", async () => {
+test("queues question attempts and batches cloud progression", async () => {
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
 
-  assert.match(app, /if \(cloudPrerequisite && !\(await cloudPrerequisite\)\)[\s\S]*recordCloudProgressEvents/);
-  assert.match(app, /attemptPersistence = saveQuestionAttempt\([\s\S]*return true;[\s\S]*queueQuestionAttempt\([\s\S]*return false;/);
-  assert.match(app, /XP_REWARDS\.CORRECT_QUESTION : 0, \[\], attemptPersistence\)/);
+  assert.match(app, /queueQuestionAttempt\(initialUser\.id,\s*attempt\)/);
+  assert.match(app, /recordStudyEvent\([\s\S]*XP_REWARDS\.CORRECT_QUESTION/);
+  assert.match(app, /scheduleBatchedCloudSync\(true\)/);
 });
 
 test("passes Turnstile tokens to protected Supabase auth operations", async () => {

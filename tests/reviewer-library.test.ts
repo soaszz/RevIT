@@ -143,7 +143,7 @@ test("MCQ and flashcard libraries expose shared category choices, search, and re
 test("Ciulla question count, structure, and stimuli integrity", () => {
   assert.equal(ciullaSubjects.length, 13);
   assert.equal(ciullaTopics.length, 49);
-  assert.equal(ciullaQuestions.length, 1884);
+  assert.equal(ciullaQuestions.length, 1890);
 
   const withStimulus = ciullaQuestions.filter((q) => q.stimulus);
   assert.ok(withStimulus.length >= 17, `Expected at least 17 stimulus questions, found ${withStimulus.length}`);

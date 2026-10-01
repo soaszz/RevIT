@@ -1976,39 +1976,36 @@ useEffect(() => {
             </button>
           ))}
         </nav>
-        <button className="theme-toggle sidebar-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode">
-          <span className="theme-symbol light-symbol" aria-hidden="true">☼</span>
-          <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
-          <span className="sidebar-control-copy"><strong>Appearance</strong><small>Light / dark</small></span>
-        </button>
-        <Link className="sidebar-support" href="/support" title={sidebarCollapsed ? "Support RevIT" : undefined}>
-          <span className="sidebar-support-frog" aria-hidden="true"><Image src="/icons/revit-support.svg" alt="" width={42} height={42} unoptimized style={{ width: "auto", height: "auto", borderRadius: "10px", objectFit: "cover" }} /></span>
-          <span className="sidebar-support-copy"><strong>Support RevIT</strong><span>Help support continued development</span></span>
-          <span className="sidebar-support-arrow" aria-hidden="true">›</span>
-        </Link>
-        <button
-          onClick={() => setFeedbackOpen(true)}
-          title="Send Feedback"
-          style={{
-            display: "flex", alignItems: "center", gap: "10px", marginTop: "12px",
-            padding: "8px 12px", background: "transparent", border: "1px solid #29443e",
-            borderRadius: "10px", color: "#a9c0ba", fontSize: "11px", fontWeight: "600",
-            cursor: "pointer", transition: "all 0.15s ease",
-            ...(sidebarCollapsed ? { justifyContent: "center", width: "52px", marginRight: "auto", marginBottom: "0", marginLeft: "auto" } : {})
-          }}
-        >
-          <span aria-hidden="true" style={{ fontSize: "14px" }}>✉</span>
-          {!sidebarCollapsed && <span>Send Feedback</span>}
-        </button>
-        <div className="profile-card">
-          <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
-            <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
-            <span className="profile-copy"><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
+        <div className="sidebar-footer">
+          <button className="theme-toggle sidebar-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode">
+            <span className="theme-symbol light-symbol" aria-hidden="true">☼</span>
+            <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
+            <span className="sidebar-control-copy"><strong>Appearance</strong><small>Light / dark</small></span>
           </button>
-          <button className="profile-level" type="button" onClick={() => setAchievementsOpen(true)} aria-label="Open achievements">
-            <span><b>Level {currentLevel.level}</b><strong>{currentLevel.title}</strong></span>
-            <XpProgress totalXp={progression.totalXp} compact />
+          <Link className="sidebar-support" href="/support" title={sidebarCollapsed ? "Support RevIT" : undefined}>
+            <span className="sidebar-support-frog" aria-hidden="true"><Image src="/icons/revit-support.svg" alt="" width={42} height={42} unoptimized style={{ width: "auto", height: "auto", borderRadius: "10px", objectFit: "cover" }} /></span>
+            <span className="sidebar-support-copy"><strong>Support RevIT</strong><span>Help support continued development</span></span>
+            <span className="sidebar-support-arrow" aria-hidden="true">›</span>
+          </Link>
+          <button
+            className="sidebar-feedback-btn"
+            onClick={() => setFeedbackOpen(true)}
+            title="Send Feedback"
+            style={sidebarCollapsed ? { justifyContent: "center", width: "52px", marginRight: "auto", marginBottom: "0", marginLeft: "auto" } : undefined}
+          >
+            <span aria-hidden="true" style={{ fontSize: "14px" }}>✉</span>
+            {!sidebarCollapsed && <span>Send Feedback</span>}
           </button>
+          <div className="profile-card">
+            <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
+              <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
+              <span className="profile-copy"><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
+            </button>
+            <button className="profile-level" type="button" onClick={() => setAchievementsOpen(true)} aria-label="Open achievements">
+              <span><b>Level {currentLevel.level}</b><strong>{currentLevel.title}</strong></span>
+              <XpProgress totalXp={progression.totalXp} compact />
+            </button>
+          </div>
         </div>
       </aside>
 

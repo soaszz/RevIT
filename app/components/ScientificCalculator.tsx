@@ -88,7 +88,7 @@ function findFractionRange(expression: string, cursorIndex: number) {
 
 export default function ScientificCalculator() {
   const [open, setOpen] = useState(false);
-  const [isRevealed, setIsRevealed] = useState(true);
+  const [isRevealed, setIsRevealed] = useState(false);
   const [fabY, setFabY] = useState<number | null>(null);
   const [isFabDragging, setIsFabDragging] = useState(false);
   const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -110,8 +110,10 @@ export default function ScientificCalculator() {
   };
 
   const startHideTimer = () => {
-    // Keep visible permanently - no auto-hiding into the edge
     clearHideTimer();
+    hideTimerRef.current = setTimeout(() => {
+      setIsRevealed(false);
+    }, 4000);
   };
 
   useEffect(() => {
@@ -125,11 +127,7 @@ export default function ScientificCalculator() {
       dragOccurredRef.current = false;
       return;
     }
-    if (!isRevealed) {
-      setIsRevealed(true);
-    } else {
-      setOpen(true);
-    }
+    setOpen(true);
   };
 
   const handleFabPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -177,7 +175,7 @@ export default function ScientificCalculator() {
       const fabHeight = event.currentTarget.offsetHeight || 58;
       const minY = PANEL_GUTTER;
       const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
-      const bottomGutter = isMobile ? 100 : PANEL_GUTTER;
+      const bottomGutter = isMobile ? 80 : PANEL_GUTTER;
       const maxY = Math.max(minY, window.innerHeight - fabHeight - bottomGutter);
       const nextY = Math.min(Math.max(minY, state.initialTop + deltaY), maxY);
       setFabY(nextY);

@@ -15856,7 +15856,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Corynebacterium diphtheriae",
-      "explanation": "C. diphtheriae must be recovered from the deep layers of the pseudomembrane that forms in the nasopharyngeal area. A flexible calcium alginate nasopharyngeal swab is the best choice for collecting a specimen from the posterior nares and pharynx.",
+      "explanation": "diphtheriae must be recovered from the deep layers of the pseudomembrane that forms in the nasopharyngeal area. A flexible calcium alginate nasopharyngeal swab is the best choice for collecting a specimen from the posterior nares and pharynx.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 61,
@@ -16896,7 +16896,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Yellow pigmentation and negative sorbitol fermentation",
-      "explanation": "C. sakazakii was formally called a yellow-pigmented E. cloacae and is best differentiated from E. cloacae by sorbitol fermentation (95% positive for E. cloacae and 0% for [E.]",
+      "explanation": "sakazakii was formally called a yellow-pigmented E. cloacae and is best differentiated from E. cloacae by sorbitol fermentation (95% positive for E. cloacae and 0% for [E.]",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 76,
@@ -17056,7 +17056,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Citrobacter freundii strains",
-      "explanation": "C. freundii and Salmonella spp. are H 2 S positive and indole, VP, and phenylalanine deaminase negative. Biochemical characteristics that help to differentiate C. freundii from Salmonella include lactose fermentation (50% of C. freundii are lactose positive, whereas 100% of Salmonella are lactose negative) and urease production (70% of Citrobacter are positive and greater than 99% of Salmonella are negative).",
+      "explanation": "freundii and Salmonella spp. are H 2 S positive and indole, VP, and phenylalanine deaminase negative. Biochemical characteristics that help to differentiate C. freundii from Salmonella include lactose fermentation (50% of C. freundii are lactose positive, whereas 100% of Salmonella are lactose negative) and urease production (70% of Citrobacter are positive and greater than 99% of Salmonella are negative).",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 79,
@@ -17656,7 +17656,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "Burkholderia pseudomallei",
-      "explanation": "B. pseudomallei produces wrinkled colonies resembling P. stutzeri. Infections are usually asymptomatic and can be diagnosed only by serological methods. The organism exists in soil and water in an area of latitude 20° north and south of the equator (mainly in Thailand and Vietnam). Thousands of U.S. military personnel were infected with these bacteria during the 1960s and 1970s. The disease may reactivate many years after exposure and has been called the “Vietnamese time bomb.”",
+      "explanation": "pseudomallei produces wrinkled colonies resembling P. stutzeri. Infections are usually asymptomatic and can be diagnosed only by serological methods. The organism exists in soil and water in an area of latitude 20° north and south of the equator (mainly in Thailand and Vietnam). Thousands of U.S. military personnel were infected with these bacteria during the 1960s and 1970s. The disease may reactivate many years after exposure and has been called the “Vietnamese time bomb.”",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 91,
@@ -17707,15 +17707,15 @@
       "id": "bacteriology-8-3-012",
       "subjectId": "bacteriology",
       "topicId": "bacteriology-8-3",
-      "prompt": "Alcaligenes faecalis (formerly",
+      "prompt": "Alcaligenes faecalis (formerly A. odorans) is distinguished from Bordetella bronchiseptica with which test?",
       "choices": [
-        "odorans) is distinguished from Bordetella bronchiseptica with which test? A. Urease (rapid)",
+        "Urease (rapid)",
         "Oxidase",
         "Growth on MacConkey agar",
         "Motility"
       ],
       "correctAnswer": 0,
-      "officialAnswer": "odorans) is distinguished from Bordetella bronchiseptica with which test? A. Urease (rapid)",
+      "officialAnswer": "Urease (rapid)",
       "explanation": "Alcaligenes spp. and Bordetella spp. (nonpertussis) are two organisms that are very similar biochemically, but B. bronchiseptica is urease positive. Both organisms are oxidase positive, grow on MacConkey agar, and are motile by peritrichous flagella. B. bronchiseptica grows well on MacConkey agar, but other species of Bordetella are fastidious gram-negative rods. B. bronchiseptica is the cause of mild respiratory infections, whereas B. pertussis is the cause of whooping cough.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
@@ -17876,7 +17876,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Motility",
-      "explanation": "B. cepacia (93%) are weakly oxidase positive and motile. Chryseobacterium spp. are oxidase positive but are nonmotile.",
+      "explanation": "cepacia (93%) are weakly oxidase positive and motile. Chryseobacterium spp. are oxidase positive but are nonmotile.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 95,
@@ -17936,7 +17936,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Burkholderia mallei",
-      "explanation": "B. mallei is rarely transmitted to humans. It is the causative agent of glanders in mules, donkeys, and horses. It is not part of the human skin flora, and the most likely transmission to humans is through broken skin.",
+      "explanation": "mallei is rarely transmitted to humans. It is the causative agent of glanders in mules, donkeys, and horses. It is not part of the human skin flora, and the most likely transmission to humans is through broken skin.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 96,
@@ -17956,7 +17956,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Burkholderia pseudomallei",
-      "explanation": "B. pseudomallei infections often produce abscesses in organs (liver, spleen, lungs) as well as on the skin, in soft tissue, and in joints and bones. Vietnam War veterans especially may harbor these organisms, which are limited to tropical and subtropical environments (Southeast Asia and Australia). The organism may surface years later after surviving in a latent state within phagocytes. There is a high prevalence of this organism on the surfaces of rice paddies in northern Thailand.",
+      "explanation": "pseudomallei infections often produce abscesses in organs (liver, spleen, lungs) as well as on the skin, in soft tissue, and in joints and bones. Vietnam War veterans especially may harbor these organisms, which are limited to tropical and subtropical environments (Southeast Asia and Australia). The organism may surface years later after surviving in a latent state within phagocytes. There is a high prevalence of this organism on the surfaces of rice paddies in northern Thailand.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 96,
@@ -18167,16 +18167,16 @@
       "id": "bacteriology-8-4-008",
       "subjectId": "bacteriology",
       "topicId": "bacteriology-8-4",
-      "prompt": "Which are the best two tests to differentiate",
+      "prompt": "Which are the best two tests to differentiate A. hydrophilia from P. shigelloides?",
       "choices": [
-        "hydrophilia from P. shigelloides? A. Oxidase and motility",
+        "Oxidase and motility",
         "DNase and Voges-Proskauer test",
         "Indole and lysine decarboxylase",
         "Growth on MacConkey and blood agar"
       ],
       "correctAnswer": 1,
       "officialAnswer": "DNase and Voges-Proskauer test",
-      "explanation": "Both these bacteria cause diarrhea, grow well on enteric agar, and may be confused with other pathogenic gram-negative rods. Both organisms are positive for oxidase, motility, indole, and lysine decarboxylase. The following reactions are differential: Test",
+      "explanation": "Both these bacteria cause diarrhea, grow well on enteric agar, and may be confused with other pathogenic gram-negative rods. Both organisms are positive for oxidase, motility, indole, and lysine decarboxylase. The following reactions are differential: DNase and Voges-Proskauer test.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 101,
@@ -18216,7 +18216,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Indole",
-      "explanation": "C. hominis (indole positive) is a gram-negative coccobacillus biochemically similar to Aggregatibacter (Actinobacillus) spp. (indole negative). Like Aggregatibacter (formerly Actinobacillus) spp., it is a cause of endocarditis. However, Cardiobacterium spp. are positive for cytochrome oxidase and negative for nitrate reduction and catalase, whereas most Aggregatibacter (formerly Actinobacillus) spp. are negative for oxidase and positive for nitrate reduction and catalase. C. hominis will grow on blood agar after 48 to 72 hours in 5% CO 2 at 35°C, but Aggregatibacter (formerly Actinobacillus) requires chocolate agar.",
+      "explanation": "hominis (indole positive) is a gram-negative coccobacillus biochemically similar to Aggregatibacter (Actinobacillus) spp. (indole negative). Like Aggregatibacter (formerly Actinobacillus) spp., it is a cause of endocarditis. However, Cardiobacterium spp. are positive for cytochrome oxidase and negative for nitrate reduction and catalase, whereas most Aggregatibacter (formerly Actinobacillus) spp. are negative for oxidase and positive for nitrate reduction and catalase. C. hominis will grow on blood agar after 48 to 72 hours in 5% CO 2 at 35°C, but Aggregatibacter (formerly Actinobacillus) requires chocolate agar.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 102,
@@ -18336,7 +18336,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "Bordet-Gengou agar",
-      "explanation": "B. pertussis is an oxidase-positive, nonmotile, gram-negative coccobacillus and appears as small, round colonies resembling droplets of mercury on Bordet-Gengou media with sheep blood agar. It is fastidious and does not grow on chocolate or MacConkey agar. However, B. pertussis adapts to blood agar, growing within 3 to 6 days. This organism is the cause of whooping cough, which can be prevented by immunization with the diphtheria, tetanus, pertussis (DPT) vaccine. The DPT vaccine contains diphtheria and tetanus toxoids and killed whole-cell B. pertussis.",
+      "explanation": "pertussis is an oxidase-positive, nonmotile, gram-negative coccobacillus and appears as small, round colonies resembling droplets of mercury on Bordet-Gengou media with sheep blood agar. It is fastidious and does not grow on chocolate or MacConkey agar. However, B. pertussis adapts to blood agar, growing within 3 to 6 days. This organism is the cause of whooping cough, which can be prevented by immunization with the diphtheria, tetanus, pertussis (DPT) vaccine. The DPT vaccine contains diphtheria and tetanus toxoids and killed whole-cell B. pertussis.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 104,
@@ -18376,7 +18376,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Basic fuchsin and thionin",
-      "explanation": "B. abortus can be differentiated from B. melitensis by the following reactions: H 2 S Urease CO 2 Requirement Basic Fuchsin Thionin (20 mg) B. melitensis Neg V Neg + growth + growth B. abortus + + +/V + growth (Neg) No growth",
+      "explanation": "abortus can be differentiated from B. melitensis by the following reactions: H 2 S Urease CO 2 Requirement Basic Fuchsin Thionin (20 mg) B. melitensis Neg V Neg + growth + growth B. abortus + + +/V + growth (Neg) No growth",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 105,
@@ -18536,7 +18536,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Aggregatibacter (Haemophilus) aphrophilus",
-      "explanation": "A. (H.) aphrophilus does not require either X or V factor for growth and is differentiated from the other Haemophilus species by its ability to produce acid from lactose and a positive ALA test. H. influenzae and H. haemolyticus are incapable of synthesizing protoporphyrin from Δ-ALA and are negative for this test.",
+      "explanation": "(H.) aphrophilus does not require either X or V factor for growth and is differentiated from the other Haemophilus species by its ability to produce acid from lactose and a positive ALA test. H. influenzae and H. haemolyticus are incapable of synthesizing protoporphyrin from Δ-ALA and are negative for this test.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 107,
@@ -18656,7 +18656,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Bordetella pertussis",
-      "explanation": "B. pertussis, the cause of whooping cough, is highly contagious during the 5- to 10- day period after acquisition. The incidence of whooping cough is greater in nonimmunized individuals, and therefore, is higher in children ages less than 1 year.",
+      "explanation": "pertussis, the cause of whooping cough, is highly contagious during the 5- to 10- day period after acquisition. The incidence of whooping cough is greater in nonimmunized individuals, and therefore, is higher in children ages less than 1 year.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 109,
@@ -18716,7 +18716,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Capnocytophaga canimorsus",
-      "explanation": "C. canimorsus are part of the oral flora of dogs. The organisms require at least 5% CO 2 for growth and grow slowly on blood and chocolate agars. Colonies can grow in 48 hours if cultured in high CO 2 on BHI agar with 5% sheep blood.",
+      "explanation": "canimorsus are part of the oral flora of dogs. The organisms require at least 5% CO 2 for growth and grow slowly on blood and chocolate agars. Colonies can grow in 48 hours if cultured in high CO 2 on BHI agar with 5% sheep blood.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 111,
@@ -18856,7 +18856,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Enzyme-linked immunosorbent assay (ELISA) using paired samples",
-      "explanation": "B. pertussis produces a virulence factor, pertussis toxin (PT). The organism attaches to the respiratory ciliated epithelial cells of the upper respiratory tract, causing coughing and irritation. The recommended method for identification of the toxin in serum is by ELISA using paired samples of acute and convalescent sera. PCR on nasopharyngeal swabs as well as DFA tests are available. MALDI-TOF MS can also be used successfully for identification.",
+      "explanation": "pertussis produces a virulence factor, pertussis toxin (PT). The organism attaches to the respiratory ciliated epithelial cells of the upper respiratory tract, causing coughing and irritation. The recommended method for identification of the toxin in serum is by ELISA using paired samples of acute and convalescent sera. PCR on nasopharyngeal swabs as well as DFA tests are available. MALDI-TOF MS can also be used successfully for identification.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 113,
@@ -20656,7 +20656,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Clostridium perfringens",
-      "explanation": "C. perfringens produces a double zone of β-hemolysis on blood agar, which makes identification relatively easy. The inner zone of complete hemolysis is caused by a θ- toxin and the outer zone of incomplete hemolysis is caused by an α-toxin (lecithinase activity). The Bacteroides spp. are gram-negative bacilli, and C. difficile is lecithinase negative and does not produce a double zone of β-hemolysis.",
+      "explanation": "perfringens produces a double zone of β-hemolysis on blood agar, which makes identification relatively easy. The inner zone of complete hemolysis is caused by a θ- toxin and the outer zone of incomplete hemolysis is caused by an α-toxin (lecithinase activity). The Bacteroides spp. are gram-negative bacilli, and C. difficile is lecithinase negative and does not produce a double zone of β-hemolysis.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 144,
@@ -20796,7 +20796,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Toxin neutralization test",
-      "explanation": "C. botulinum and C. sporogenes have similar characteristics biochemically (see the following chart), and definitive identification of C. botulinum is made by the toxin neutralization test for its neurotoxins in serum or feces. Specimens should be kept at 4°C and sent to the CDC for culture and toxin assays. Spore Type Motility Lipase GLC Products C. botulinum Subterminal + + A, (P)*, B, (IB)†, IV‡ C. sporogenes Subterminal + + A, (P), B, (IB), IV *Variable. †Isobutyric acid. ‡Isovaleric acid.",
+      "explanation": "botulinum and C. sporogenes have similar characteristics biochemically (see the following chart), and definitive identification of C. botulinum is made by the toxin neutralization test for its neurotoxins in serum or feces. Specimens should be kept at 4°C and sent to the CDC for culture and toxin assays. Spore Type Motility Lipase GLC Products C. botulinum Subterminal + + A, (P)*, B, (IB)†, IV‡ C. sporogenes Subterminal + + A, (P), B, (IB), IV *Variable. †Isobutyric acid. ‡Isovaleric acid.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 147,
@@ -20816,7 +20816,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Clostridium difficile",
-      "explanation": "C. difficile is also implicated in hospital- and nursing home–acquired diarrhea and colitis. Clinical testing for C. difficile includes culture and cytotoxin testing. Because culture takes 3 days and will detect nontoxigenic strains that do not cause diarrheal disease, immunoassays using antibodies against either the A toxin or both the A and B toxins are most frequently employed. Assays detecting both toxins are only slightly more sensitive because infections producing only B toxin are infrequent. The cytotoxin assay requires that specimens (only liquid or nonformed stools) be shipped to a reference laboratory on dry ice or kept at 4°C to 6°C if done in-house for up to 72 hours. Nucleic acid–based assays are also available.",
+      "explanation": "difficile is also implicated in hospital- and nursing home–acquired diarrhea and colitis. Clinical testing for C. difficile includes culture and cytotoxin testing. Because culture takes 3 days and will detect nontoxigenic strains that do not cause diarrheal disease, immunoassays using antibodies against either the A toxin or both the A and B toxins are most frequently employed. Assays detecting both toxins are only slightly more sensitive because infections producing only B toxin are infrequent. The cytotoxin assay requires that specimens (only liquid or nonformed stools) be shipped to a reference laboratory on dry ice or kept at 4°C to 6°C if done in-house for up to 72 hours. Nucleic acid–based assays are also available.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 147,
@@ -20876,7 +20876,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "Bacteroides ureolyticus",
-      "explanation": "B. ureolyticus spp. is the only species listed that is susceptible to penicillin and produces urease. The other organisms listed are resistant to penicillin.",
+      "explanation": "ureolyticus spp. is the only species listed that is susceptible to penicillin and produces urease. The other organisms listed are resistant to penicillin.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 147,
@@ -20996,7 +20996,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Actinomyces israelii",
-      "explanation": "A. israelii is part of the normal flora of the mouth and tonsils but may cause upper or lower respiratory tract infections. The sulfur granules are granular microcolonies with a purulent exudate. Like Nocardia, Actinomyces produces unbranched mycelia and is sometimes (erroneously) considered a fungus. It has also been implicated in pelvic infection associated with intrauterine contraceptive devices (IUDs).",
+      "explanation": "israelii is part of the normal flora of the mouth and tonsils but may cause upper or lower respiratory tract infections. The sulfur granules are granular microcolonies with a purulent exudate. Like Nocardia, Actinomyces produces unbranched mycelia and is sometimes (erroneously) considered a fungus. It has also been implicated in pelvic infection associated with intrauterine contraceptive devices (IUDs).",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 149,
@@ -21036,7 +21036,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Bacteroides fragilis",
-      "explanation": "B. fragilis infections usually occur below the diaphragm and it is the most commonly encountered anaerobe in anaerobic infections. The Gram-stained smear showing “safety pin” and pleomorphic bacilli is often seen as a preliminary clue in abdominal fluids.",
+      "explanation": "fragilis infections usually occur below the diaphragm and it is the most commonly encountered anaerobe in anaerobic infections. The Gram-stained smear showing “safety pin” and pleomorphic bacilli is often seen as a preliminary clue in abdominal fluids.",
       "source": {
         "fileName": "HEMA AND BACTE.pdf",
         "page": 150,
@@ -25996,7 +25996,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Diphyllobothrium latum",
-      "explanation": "D. latum infection is acquired through ingestion of infected raw or inadequately cooked freshwater fish.",
+      "explanation": "latum infection is acquired through ingestion of infected raw or inadequately cooked freshwater fish.",
       "source": {
         "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
         "page": 2,
@@ -26296,7 +26296,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Diphyllobothrium latum",
-      "explanation": "D. latum is the operculated cestode emphasized in the source.",
+      "explanation": "latum is the operculated cestode emphasized in the source.",
       "source": {
         "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
         "page": 5,
@@ -26796,7 +26796,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Angiostrongylus cantonensis",
-      "explanation": "A. cantonensis is associated with eosinophilic meningitis/meningoencephalitis and larval migration.",
+      "explanation": "cantonensis is associated with eosinophilic meningitis/meningoencephalitis and larval migration.",
       "source": {
         "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
         "page": 9,
@@ -27476,7 +27476,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Urease and niger seed agar",
-      "explanation": "C. neoformans is urease positive and produces brown to black pigmentation on niger seed (birdseed) agar because of phenol oxidase activity.",
+      "explanation": "neoformans is urease positive and produces brown to black pigmentation on niger seed (birdseed) agar because of phenol oxidase activity.",
       "source": {
         "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
         "page": 3,
@@ -27516,7 +27516,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Candida albicans",
-      "explanation": "C. albicans commonly produces germ tubes and characteristic thick-walled terminal chlamydoconidia under appropriate culture conditions.",
+      "explanation": "albicans commonly produces germ tubes and characteristic thick-walled terminal chlamydoconidia under appropriate culture conditions.",
       "source": {
         "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
         "page": 3,
@@ -27816,7 +27816,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Aspergillus niger",
-      "explanation": "A. niger produces black conidia that create a pepper-like colony surface while the reverse remains relatively pale.",
+      "explanation": "niger produces black conidia that create a pepper-like colony surface while the reverse remains relatively pale.",
       "source": {
         "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
         "page": 6,
@@ -27836,7 +27836,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Aspergillus fumigatus",
-      "explanation": "A. fumigatus is a major cause of aspergillosis and typically sporulates from the upper half to two-thirds of the vesicle.",
+      "explanation": "fumigatus is a major cause of aspergillosis and typically sporulates from the upper half to two-thirds of the vesicle.",
       "source": {
         "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
         "page": 6,
@@ -27956,7 +27956,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Coccidioides immitis",
-      "explanation": "C. immitis forms spherules containing endospores in tissue and highly infectious barrel-shaped arthroconidia in its mold phase.",
+      "explanation": "immitis forms spherules containing endospores in tissue and highly infectious barrel-shaped arthroconidia in its mold phase.",
       "source": {
         "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
         "page": 7,

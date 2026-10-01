@@ -13,6 +13,22 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-7-5",
+    version: "v1.7.5",
+    date: "October 1, 2026",
+    type: "minor",
+    title: "Question Quality Fixes and Sidebar Improvements",
+    summary: "Audited and cleaned up review questions, docked the calculator button above rankings on phones, fixed sidebar spacing, and resolved study progress loading retries.",
+    tags: ["MCQs", "Calculator", "UI/UX", "Progress"],
+    highlights: [
+      "Audited all questions across Harr and Ciulla to fix typos, cut-off questions, and answer choices.",
+      "Moved the calculator button to peek above the rankings button on phones so it stays out of the way until tapped.",
+      "Improved the sidebar on laptops and tablets so user profiles stay anchored at the bottom with no empty space.",
+      "Fixed an issue where study progress would get stuck retrying on reconnect.",
+      "Fixed mobile review buttons from showing up on computer screens."
+    ]
+  },
+  {
     id: "update-v1-7-4",
     version: "v1.7.4",
     date: "September 30, 2026",

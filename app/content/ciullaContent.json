@@ -1069,16 +1069,16 @@
       "topicId": "ciulla-cc-instrumentation-and-analytical-principles",
       "subtopic": "Instrumentation and Analytical Principles",
       "difficulty": "Medium",
-      "prompt": "Which of the following formulas is an expression of the Beer-Lambert law that is routinely applied to spectrophotometric analysis? C v",
+      "prompt": "Which of the following formulas is an expression of the Beer-Lambert law that is routinely applied to spectrophotometric analysis?",
       "choices": [
-        "A u X —- = C u As",
-        "C u X -f = A u As",
-        "A s X -^ = A u",
-        "A = 2 - log %T 1 1 . In spectrophotometry, which of the following is a mathematical expression of the relationship between absorbance and transmittance? A. A — abc R A u _ A s C~~C ^U ^5 C. A = 2 - log %T D. A = log %T"
+        "Au × (Cs / As) = Cu",
+        "Cu × (Au / As) = Au",
+        "As × (Cu / Au) = Au",
+        "Au × (Cu / As) = As"
       ],
       "correctAnswer": 0,
-      "officialAnswer": "A u X —- = C u As",
-      "explanation": "When the absorbance of a sample in solution varies directly with the concentration of the sample, Beer's law is followed. In turn, when the absorbance increases exponentially with an increase in the light path, the Lambert law is followed. Incorporation of these two laws may be stated as A = abc, where A = absorbance, a = absorptivity of the substance being measured, b = light path in cm, and c = concentration of the measured substance. When the Beer-Lambert law is applied to spectrophotometric analyses of standards and unknown samples that are being measured, the following equation is derived: & u X C S /A S = C u , where A u = absorbance of unknown, C u — concentration of unknown, A s = absorbance of standard, and A u = absorbance of unknown. This formula is applied to assays that exhibit linear relationships between changes in absorbance with changes in concentration to calculate the concentration of the unknown sample.",
+      "officialAnswer": "Au × (Cs / As) = Cu",
+      "explanation": "When the absorbance of a sample in solution varies directly with the concentration of the sample, Beer's law is followed. In turn, when the absorbance increases exponentially with an increase in the light path, the Lambert law is followed. Incorporation of these two laws may be stated as A = abc. When applied to spectrophotometric analyses of standards and unknown samples, the following equation is derived: Au × (Cs / As) = Cu.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 3,
@@ -3300,9 +3300,9 @@
       "topicId": "ciulla-cc-proteins-and-tumor-markers",
       "subtopic": "Proteins and Tumor Markers",
       "difficulty": "Hard",
-      "prompt": "A male patient, 48 years old, mentions during his annual physical that he has been having difficulty urinating. The physician performs a rectal examination, and he orders a total prostate-specific antigen (PSA) and free PS",
+      "prompt": "A male patient, 48 years old, mentions during his annual physical that he has been having difficulty urinating. The physician performs a rectal examination, and he orders a total prostate-specific antigen (PSA) and free PSA. The patient has the tests done the following week, and the total PSA result is 3.1 ng/mL and the free PSA is 0.3 ng/mL. What do these results suggest?",
       "choices": [
-        "The patient has the tests done the following week, and the total PSA result is 3.1 ng/mL and the free PSA is 0.3 ng/mL. What do these results suggest? A. Both are normal, no disease present",
+        "Both are normal, no disease present",
         "Benign prostatic hypertrophy",
         "Increased risk of prostate cancer",
         "Free PSA is low and does not correlate with total PSA"
@@ -3351,7 +3351,7 @@
         "cq-Acid glycoprotein",
         "aj-Fetoprotein",
         "a 2 -Macroglobulin",
-        "Carcinoembryonic antigen 1 1 1 . Which of the following is false about PSA? A. Serum quantified using immunoassays B. Single-chain glycoprotein C. Used as a tumor marker D. Not elevated in benign prostatic hyperplasia"
+        "Carcinoembryonic antigen"
       ],
       "correctAnswer": 1,
       "officialAnswer": "aj-Fetoprotein",
@@ -8249,7 +8249,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "The freezing point is lowered by an amount that is directly proportional to the concentration of dissolved particles in the solution.",
-      "explanation": "The freezing point of an aqueous solution is lowered 1.86°C for every osmole of dissolved particles per kilogram of water. These particles may be ions (e.g., Na + and Cl~), or undissociated molecules such as glucose. The freezing point osmometer is an instrument designed to measure the freezing point of solutions. It uses a thermistor that is capable of measuring very small changes in temperature. CH AFTER 1: CLINICAL CHEMISTRY",
+      "explanation": "The freezing point of an aqueous solution is lowered 1.86°C for every osmole of dissolved particles per kilogram of water. These particles may be ions (e.g., Na + and Cl~), or undissociated molecules such as glucose. The freezing point osmometer is an instrument designed to measure the freezing point of solutions. It uses a thermistor that is capable of measuring very small changes in temperature. CH AFTER",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 38,
@@ -9257,10 +9257,10 @@
         "Estradiol, mother",
         "Estradiol, fetus",
         "16a-Hydroxy-DHEA-S,mother",
-        "16a-Hydroxy-DHEA-S, fetus 138 CH AFTER 1: CLINICAL CHEMISTRY"
+        "16a-Hydroxy-DHEA-S, fetus"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "16a-Hydroxy-DHEA-S, fetus 138 CH AFTER 1: CLINICAL CHEMISTRY",
+      "officialAnswer": "16a-Hydroxy-DHEA-S, fetus",
       "explanation": "The formation of estriol during pregnancy involves mainly the fetoplacental unit. Dehydroepiandrosterone sulfate (DHEA-S) and its 16a-hydroxy-DHEA-S derivative are formed mainly by the fetal adrenal glands and to a lesser degree by the liver. The fetus possesses 16ahydroxylase activity, which is needed to convert dehydroepiandrosterone sulfate (DHEA-S) to 16a-hydroxy-DHEA-S. The 16a-hydroxyDHEA-S compound is metabolized by the placenta to estriol. The placenta lacks certain enzymes needed for the conversion of simple precursors such as acetate, cholesterol, and progesterone to estrogens. Thus, the placenta must rely on immediate precursors produced in the fetus. In the case of estriol, the placenta utilizes the 16a-hydroxy-DHEA-S precursor made in the adrenal glands of the fetus. The latter compound crosses into the placenta, which takes over with the necessary enzymes to complete the synthesis of estriol. This estriol produced in the placenta is rapidly reflected in the maternal plasma and far exceeds maternal synthesis of estriol. Thus measurement of estriol in the maternal blood or urine is a sensitive indicator of the integrity of the fetoplacental unit. A defect in either the fetus or the placenta will be reflected by a decrease in estriol production.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -14997,21 +14997,21 @@
       "book": "Ciulla"
     },
     {
-      "id": "ciulla-hema-170",
+      "id": "ciulla-hema-180",
       "subjectId": "ciulla-hematology",
       "topicId": "ciulla-hema-leukocytes-and-malignancies",
       "subtopic": "Leukocytes and Malignancies",
       "difficulty": "Medium",
-      "prompt": "The blood smear shows teardrop erythrocytes and leukoerythroblastosis. These findings are most consistent with",
+      "prompt": "An adult patient with massive splenomegaly has mild anemia, a slightly elevated WBC count, and an LAP score of 170. The blood smear shows teardrop erythrocytes and leukoerythroblastosis. These findings are most consistent with",
       "choices": [
         "Chronic myelogenous leukemia",
         "Idiopathic myelofibrosis",
         "Primary polycythemia",
         "Primary thrombocythemia"
       ],
-      "correctAnswer": 3,
-      "officialAnswer": "Primary thrombocythemia",
-      "explanation": "Myeloperoxidase is an enzyme present in the primary granules, regardless of the phagocytic activity of the cell. The products produced during the respiratory burst, many of them short lived, are generated in response to chemotactic activation and ingestion of microbes. Generation of oxygen metabolites is necessary for microbial killing. Leukocyte Disorders",
+      "correctAnswer": 1,
+      "officialAnswer": "Idiopathic myelofibrosis",
+      "explanation": "The bone marrow is progressively replaced by fibrotic tissue in myelofibrosis, a chronic myeloproliferative disorder. Attempts to aspirate bone marrow usually result in a \"dry tap.\" The presence of teardrop-shaped red blood cells is an important feature of myelofibrosis. In addition, abnormal platelets, a leukoerythroblastic blood profile and myeloid metaplasia are typical findings.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 156,
@@ -19441,10 +19441,10 @@
       "topicId": "ciulla-imm-immune-system-and-immunoglobulins",
       "subtopic": "Immune System and Immunoglobulins",
       "difficulty": "Medium",
-      "prompt": "Ahaptenis",
+      "prompt": "A hapten is",
       "choices": [
         "Half of an immunoglobulin molecule",
-        "A earner molecule for an antigen that is not antigenic alone",
+        "A carrier molecule for an antigen that is not antigenic alone",
         "An immunoglobulin functional only in the presence of complement",
         "A determinant capable of stimulating an immune response only when bound to a carrier"
       ],
@@ -19956,7 +19956,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Cancer of plasma cells characterized by increased antibody concentration",
-      "explanation": "Plasma cells are normally end-stage cells; they live a few days and die. During multiple myeloma, plasma cells become cancerous and continue to secrete antibody. The cells also secrete excess light chains that can be found in the urine; these proteins are called Bence Jones proteins. 4: IMMUNOLOGY AND SEROLOGY",
+      "explanation": "Plasma cells are normally end-stage cells; they live a few days and die. During multiple myeloma, plasma cells become cancerous and continue to secrete antibody. The cells also secrete excess light chains that can be found in the urine; these proteins are called Bence Jones proteins. AND SEROLOGY",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 250,
@@ -20177,9 +20177,9 @@
       "topicId": "ciulla-imm-antigen-antibody-reactions-and-serological-testing",
       "subtopic": "Antigen-Antibody Reactions and Serological Testing",
       "difficulty": "Medium",
-      "prompt": "Diagnostic reagents useful for detecting antigen by the coagglutination reaction may be prepared by binding antibody to killed staphylococcal cells via the Fc receptor of staphylococcal protein",
+      "prompt": "The class of antibody bound by staphylococcal protein A is",
       "choices": [
-        "The class of antibody bound by this protein is A. IgA",
+        "IgA",
         "IgD",
         "IgG",
         "IgM"
@@ -20715,7 +20715,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "It is the region of the molecule that binds to receptors on various white blood cells.",
-      "explanation": "The Fc (crystalline) fragment of an immunoglobulin is produced by papain digestion of an immunoglobulin monomer. The Fc portion of antibodies binds to specific Fc receptors on the surface of some white blood cells. Only part of the heavy chain is found in the Fc fragment. The Fab fragment contains the antigen-combining I sites of both the heavy chains and the light chains. 4: IMMUNOLOGY AND SEROLOGY",
+      "explanation": "The Fc (crystalline) fragment of an immunoglobulin is produced by papain digestion of an immunoglobulin monomer. The Fc portion of antibodies binds to specific Fc receptors on the surface of some white blood cells. Only part of the heavy chain is found in the Fc fragment. The Fab fragment contains the antigen-combining I sites of both the heavy chains and the light chains. AND SEROLOGY",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 254,
@@ -20931,12 +20931,12 @@
       "book": "Ciulla"
     },
     {
-      "id": "ciulla-imm-4",
+      "id": "ciulla-imm-68",
       "subjectId": "ciulla-immunology-and-serology",
       "topicId": "ciulla-imm-immune-system-and-immunoglobulins",
       "subtopic": "Immune System and Immunoglobulins",
       "difficulty": "Medium",
-      "prompt": "What is the relationship between the antigens in wells 2 and 4?",
+      "prompt": "An Ouchterlony gel diffusion plate is depicted in Color Plate 24B. The center well contains antibody, and the peripheral wells contain antigens labeled 1 through 4. What is the relationship between the antigens in wells 2 and 4?",
       "choices": [
         "Cannot be determined.",
         "They are identical.",
@@ -20945,7 +20945,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "They are identical.",
-      "explanation": "Lymphokines are soluble mediators of immune reactions. They are produced most often by T lymphocytes. Antibodies are produced by plasma cells.",
+      "explanation": "When two antigens are identical, a smooth curved line of precipitation is formed between them. In the diagram, the antigen in well 2 is identical to one of two antigens in well 1. The same antigen in well 1 is identical to antigen in well 4. Therefore, it follows that antigens 2 and 4 are identical.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 248,
@@ -21451,7 +21451,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Hematopoietic stem cells",
-      "explanation": "The stem cells of the bone marrow give rise to both T and B cells, as well as other cells in the bloodstream. Macrophages and monocytes also arise from hematopoietic stem cells, but they do not differentiate into lymphocytes. Mucosa-associated lymphoid tissue contains mature lymphocytes, particularly B cells, but is not the source of lymphocytes. The fetal liver is a maturation site for B lymphocytes during fetal life but is not the source of those lymphocytes. 4: IMMUNOLOGY AND SEROLOGY",
+      "explanation": "The stem cells of the bone marrow give rise to both T and B cells, as well as other cells in the bloodstream. Macrophages and monocytes also arise from hematopoietic stem cells, but they do not differentiate into lymphocytes. Mucosa-associated lymphoid tissue contains mature lymphocytes, particularly B cells, but is not the source of lymphocytes. The fetal liver is a maturation site for B lymphocytes during fetal life but is not the source of those lymphocytes. AND SEROLOGY",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 257,
@@ -22500,7 +22500,7 @@
       "topicId": "ciulla-bb-blood-groups-genetics-and-serology",
       "subtopic": "Blood Groups, Genetics, and Serology",
       "difficulty": "Easy",
-      "prompt": "Platelet concentrate",
+      "prompt": "What is the required storage temperature for platelet concentrate?",
       "choices": [
         "1-6°C",
         "20-24°C",
@@ -22546,7 +22546,7 @@
       "topicId": "ciulla-bb-blood-groups-genetics-and-serology",
       "subtopic": "Blood Groups, Genetics, and Serology",
       "difficulty": "Medium",
-      "prompt": "EDTA",
+      "prompt": "What is the maximum storage time for whole blood or RBCs collected in EDTA?",
       "choices": [
         "21 days",
         "35 days",
@@ -24463,9 +24463,9 @@
       "topicId": "ciulla-bb-antibody-identification-and-transfusion-therapy",
       "subtopic": "Antibody Identification and Transfusion Therapy",
       "difficulty": "Medium",
-      "prompt": "Case: A postpartum female is bleeding because of disseminated intravascular coagulation (DIC). The attending physician orders cryoprecipitate for fibrinogen replacement. Freezer inventory contains: 6 bags Group A, 8 bags Group O, 6 bags Group AB, 12 bags Group B. The patient is group",
+      "prompt": "A postpartum female is bleeding because of disseminated intravascular coagulation (DIC). The attending physician orders cryoprecipitate for fibrinogen replacement. Freezer inventory contains: 6 bags Group A, 8 bags Group O, 6 bags Group AB, 12 bags Group B. The patient is group A. Which cryoprecipitate units would most appropriately be used to treat this patient?",
       "choices": [
-        "Which cryoprecipitate units would most appropriately be used to treat this patient? A. Group A only",
+        "Group A only",
         "Group AB only",
         "Group A and Group O",
         "Group A and Group AB"
@@ -25709,8 +25709,8 @@
       "prompt": "Case: An antibody screen is performed on a 25-year-old male referred for elective surgery. Gel testing shows positive reactions with screening cells and a negative autocontrol. What has happened to the matrix in SC I that caused a difference in its appearance from that of SCII?",
       "choices": [
         "Antibody-coated cells have been trapped in the gel matrix of SC I.",
-        "A too heavy red cell suspension was used in SC I; correct suspensions were used in SCII and A",
-        "C. Hemolysis is occurring in SC I, but not in SCII or AC.",
+        "A too heavy red cell suspension was used in SC I; correct suspensions were used in SC II and AC.",
+        "Hemolysis is occurring in SC I, but not in SC II or AC.",
         "SC II shows a mixed-field reaction."
       ],
       "correctAnswer": 0,
@@ -25733,11 +25733,11 @@
       "choices": [
         "PCH is a common form of cold autoimmune anemia whereas CHD is rare.",
         "PCH is a warm autoimmune hemolytic anemia.",
-        "The offending antibody in PCH is an IgG antibody unlike the IgM antibody in CH",
-        "D. The offending antibody in PCH is an IgM antibody while an IgG antibody is common in CHD."
+        "The offending antibody in PCH is an IgG antibody unlike the IgM antibody in CHD.",
+        "The offending antibody in PCH is an IgM antibody while an IgG antibody is common in CHD."
       ],
       "correctAnswer": 2,
-      "officialAnswer": "The offending antibody in PCH is an IgG antibody unlike the IgM antibody in CH",
+      "officialAnswer": "The offending antibody in PCH is an IgG antibody unlike the IgM antibody in CHD.",
       "explanation": "Paroxysmal cold hemoglobinuria (PCH) is the rarest form of cold autoimmune hemolytic anemia. It is characterized by an IgG antibody that usually exhibits anti-P specificity. The antiP attaches to the RBC during exposure to cold and then activates complement when the patient rewarms, causing hemolysis. A diagnostic test used to aid in the identification of PCH is the Donath-Landsteiner test. CHD is usually caused by anti-I, which is IgM.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -26260,13 +26260,13 @@
       "difficulty": "Medium",
       "prompt": "Which of the following is the most commonly isolated species of Bacillus in opportunistic infections such as bacteremia, post-traumatic infections of the eye, and endocarditis?",
       "choices": [
-        "B. circulans",
-        "B. cereus",
-        "B. licheniformis",
-        "B. subtilis"
+        "circulans",
+        "cereus",
+        "licheniformis",
+        "subtilis"
       ],
       "correctAnswer": 1,
-      "officialAnswer": "B. cereus",
+      "officialAnswer": "cereus",
       "explanation": "The vegetative cells and spores of Bacillus cereus are widely distributed in the environment. The virulence mechanisms of B. cereus are an enterotoxin and a pyogenic toxin. Accidents in nature resulting in cuts or abrasions contaminated with soil or vegetation, intravenous drug abuse, ingestion of contaminated foods, and traumatic introduction into a normally sterile site through the use of contaminated medical equipment are associated with infection.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -26700,10 +26700,10 @@
         "Erysipelothrix rhusiopathiae",
         "Corynebacterium diphtheriae",
         "Staphylococcus saprophyticus",
-        "Streptococcus pyogenes 6: BACTERIOLOGY"
+        "Streptococcus pyogenes"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "Streptococcus pyogenes 6: BACTERIOLOGY",
+      "officialAnswer": "Streptococcus pyogenes",
       "explanation": "Bacteriologic cultures of a typical impetigo lesion may yield either a pure culture of Streptococcus pyogenes or a mixed culture of S. pyogenes and Staphylococcus aureus. The thick crust form of impetigo, which is most commonly seen, is primarily caused by S. pyogenes. It is the bullous form of impetigo for which S. aureus is the etiologic agent. The route of infection is direct inoculation of the causative agents into abraded or otherwise compromised areas of the skin.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -26835,13 +26835,13 @@
       "difficulty": "Hard",
       "prompt": "Which of the following species of Bacillus is nonmotile?",
       "choices": [
-        "B. cereus",
-        "B. subtilis",
-        "B. anthracis",
-        "B. thuringiensis"
+        "cereus",
+        "subtilis",
+        "anthracis",
+        "thuringiensis"
       ],
       "correctAnswer": 2,
-      "officialAnswer": "B. anthracis",
+      "officialAnswer": "anthracis",
       "explanation": "Motility is a key test for the differentiation of Bacillus anthracis from other species of Bacillus. Suspect Bacillus colonies are inoculated in a broth medium and allowed to grow to a visible turbidity. A sample of this actively growing culture should be examined using the hanging-drop technique for motility. B. anthracis is nonmotile and can therefore be easily differentiated from commonly encountered motile species.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -27183,7 +27183,7 @@
         "Bacillus cereus",
         "Streptococcuspneumoniae",
         "Staphylococcus aureus",
-        "Staphylococcus saprophyticus 6: BACTERIOLOGY 672"
+        "Staphylococcus saprophyticus"
       ],
       "correctAnswer": 2,
       "officialAnswer": "Staphylococcus aureus",
@@ -27988,10 +27988,10 @@
         "Citrobacterfreundii",
         "Proteus mirabilis",
         "Providencia rettgeri",
-        "Salmonella 6: BACTERIOLOGY 676"
+        "Salmonella"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "Salmonella 6: BACTERIOLOGY 676",
+      "officialAnswer": "Salmonella",
       "explanation": "Most serotypes of Salmonella produce hydrogen sulfide in triple sugar iron agar. As seen in Color Plate 27 •, they demonstrate a positive lysine and a negative urease reaction, which differentiates them from Proteus spp., which also produce H 2 S. It is important to be able to quickly differentiate those organisms resembling Salmonella from other H 2 S-producing organisms such as Citrobacter freundii and Edwardsiella tarda.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -28038,7 +28038,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Burkholderia mallei",
-      "explanation": "B. cepacia is the most common Burkolderia spp. in clinical specimens. P. aeruginosa is the most common gram-negative bacillus that is not in the family Enterobacteriaceae and Stenotrophomonas maltophilia the second most common. B. mallei has not been isolated recently in the U.S.",
+      "explanation": "cepacia is the most common Burkolderia spp. in clinical specimens. P. aeruginosa is the most common gram-negative bacillus that is not in the family Enterobacteriaceae and Stenotrophomonas maltophilia the second most common. B. mallei has not been isolated recently in the U.S.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 353,
@@ -28144,7 +28144,7 @@
       "topicId": "ciulla-bact-gram-positive-cocci",
       "subtopic": "Gram-Positive Cocci",
       "difficulty": "Medium",
-      "prompt": "Acinetobacter baumannii",
+      "prompt": "Acinetobacter baumannii:",
       "choices": [
         "Requires cysteine",
         "Is oxidase negative",
@@ -28236,7 +28236,7 @@
       "topicId": "ciulla-bact-gram-negative-bacilli-and-cocci",
       "subtopic": "Gram-Negative Bacilli and Cocci",
       "difficulty": "Easy",
-      "prompt": "Campylobacterjejuniis",
+      "prompt": "Campylobacter jejuni is:",
       "choices": [
         "Nonmotile",
         "Oxidase negative",
@@ -28470,12 +28470,12 @@
       "choices": [
         "A",
         "B",
-        "G!",
-        "D 6: BACTERIOLOGY"
+        "C1",
+        "D"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "D 6: BACTERIOLOGY",
-      "explanation": "Organisms biochemically resembling Salmonella are typically tested using a polyvalent antiserum composed of antibodies against the commonly isolated strains, including antisera against the Vi antigen. The Vi antigen is a heat-labile capsular antigen associated with Salmonella Typhi. After heating a Salmonella Typhi suspension, the Vi antigen has been removed, and the organism can now react with the somatic grouping antisera. Salmonella Typhi demonstrates a positive agglutination reaction in D-grouping sera.",
+      "officialAnswer": "D",
+      "explanation": "Organisms biochemically resembling Salmonella are typically tested using a polyvalent antiserum composed of antibodies against the commonly isolated strains, including antisera against the Vi antigen. After heating a Salmonella Typhi suspension, the Vi antigen is removed, allowing agglutination in D-grouping sera.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 355,
@@ -28491,13 +28491,13 @@
       "difficulty": "Hard",
       "prompt": "The species of Campylobacter noted to produce septicemia, septic arthritis, meningitis, jaundice with hepatomegaly, and thrombophlebitis in debilitated patients is",
       "choices": [
-        "C. coli",
-        "C. fetus",
-        "C. laris",
-        "C. sputorum"
+        "coli",
+        "fetus",
+        "laris",
+        "sputorum"
       ],
       "correctAnswer": 1,
-      "officialAnswer": "C. fetus",
+      "officialAnswer": "fetus",
       "explanation": "Campylobacter fetus subsp./eftw is occasionally implicated in human disease. This organism, unlike C. jejuni, is characterized as producing extraintestinal symptoms. Those persons most at risk of infection are those with preexisting disease who are in a debilitated condition.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -28553,7 +28553,7 @@
       "book": "Ciulla"
     },
     {
-      "id": "ciulla-bact-111",
+      "id": "ciulla-bact-117",
       "subjectId": "ciulla-bacteriology",
       "topicId": "ciulla-bact-gram-negative-bacilli-and-cocci",
       "subtopic": "Gram-Negative Bacilli and Cocci",
@@ -28565,9 +28565,9 @@
         "Nonmotile",
         "Toxigenic"
       ],
-      "correctAnswer": 0,
-      "officialAnswer": "Adherent to enterocytes",
-      "explanation": "Acinetobacter is widely distributed in nature and commonly colonizes hospitalized patients. Infection occurs mainly in compromised hosts. Its resistance to many of the commonly used antimicrobial agents limits the selection of therapeutic agents.",
+      "correctAnswer": 2,
+      "officialAnswer": "Nonmotile",
+      "explanation": "Pathogenic mechanisms of V. cholerae include adherence to enterocytes via pili, motility, enzymes such as protease and mucinase, and the production of an enterotoxin. Epidemic strains colonize the small intestine where they elaborate choleragen, an enterotoxin.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 355,
@@ -29064,7 +29064,7 @@
       "topicId": "ciulla-bact-gram-negative-bacilli-and-cocci",
       "subtopic": "Gram-Negative Bacilli and Cocci",
       "difficulty": "Medium",
-      "prompt": "Legionella pneumophila",
+      "prompt": "Legionella pneumophila:",
       "choices": [
         "Infections are most often acquired from environmental sources",
         "Metabolizes a number of carbohydrates",
@@ -29772,7 +29772,7 @@
       "book": "Ciulla"
     },
     {
-      "id": "ciulla-bact-111",
+      "id": "ciulla-bact-171",
       "subjectId": "ciulla-bacteriology",
       "topicId": "ciulla-bact-gram-negative-bacilli-and-cocci",
       "subtopic": "Gram-Negative Bacilli and Cocci",
@@ -29780,13 +29780,13 @@
       "prompt": "A positive gelatin reaction is characteristic of",
       "choices": [
         "Morganella morganii",
-        "Proteus vulgar is",
+        "Proteus vulgaris",
         "Salmonella Typhimurium",
         "Serratia liquefaciens"
       ],
-      "correctAnswer": 0,
-      "officialAnswer": "Morganella morganii",
-      "explanation": "Acinetobacter is widely distributed in nature and commonly colonizes hospitalized patients. Infection occurs mainly in compromised hosts. Its resistance to many of the commonly used antimicrobial agents limits the selection of therapeutic agents.",
+      "correctAnswer": 3,
+      "officialAnswer": "Serratia liquefaciens",
+      "explanation": "Serratia liquefaciens, as its name implies, is able to liquefy gelatin. This bacterium is an opportunistic pathogen occasionally associated with nosocomial infections.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 355,
@@ -29910,7 +29910,7 @@
       "book": "Ciulla"
     },
     {
-      "id": "ciulla-bact-111",
+      "id": "ciulla-bact-177",
       "subjectId": "ciulla-bacteriology",
       "topicId": "ciulla-bact-gram-negative-bacilli-and-cocci",
       "subtopic": "Gram-Negative Bacilli and Cocci",
@@ -29920,11 +29920,11 @@
         "Incubation at 22°C",
         "Incubation at 42°C",
         "Growth on sheep blood agar",
-        "Growth on typtic soy agar without blood"
+        "Growth on tryptic soy agar without blood"
       ],
       "correctAnswer": 0,
       "officialAnswer": "Incubation at 22°C",
-      "explanation": "Acinetobacter is widely distributed in nature and commonly colonizes hospitalized patients. Infection occurs mainly in compromised hosts. Its resistance to many of the commonly used antimicrobial agents limits the selection of therapeutic agents.",
+      "explanation": "Serratia marcescens is a chromogenic member of the family Enterobacteriaceae. The red pigment (prodigiosin) produced is not water soluble and is demonstrated more readily by incubation at room temperature (22°C) than at 35°C.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 355,
@@ -30173,7 +30173,7 @@
         "Klebsiella pneumoniae",
         "Pseudomonas aeruginosa",
         "Salmonella spp.",
-        "Serratia marcescens \\. Which of the following is not appropriate for the cultivation ofNeisseria gonorrheae? A. Chocolate agar B. Cefsulodin-irgasan-novobiocin agar C. Martin-Lewis agar D. Modified Thayer-Martin agar"
+        "Serratia marcescens"
       ],
       "correctAnswer": 1,
       "officialAnswer": "Pseudomonas aeruginosa",
@@ -31037,7 +31037,7 @@
       "book": "Ciulla"
     },
     {
-      "id": "ciulla-bact-221",
+      "id": "ciulla-bact-227",
       "subjectId": "ciulla-bacteriology",
       "topicId": "ciulla-bact-fastidious-and-anaerobic-bacteria",
       "subtopic": "Fastidious and Anaerobic Bacteria",
@@ -31051,7 +31051,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Botulism",
-      "explanation": "M. kansasii is the most commonly isolated photochromogen in the U.S. It is the second most commonly isolated nontuberculosis Mycobacterium sp. behind M. avium complex. M. kansasii produces chronic lung disease resembling classic tuberculosis.",
+      "explanation": "Zoonotic diseases are diseases of animals transmissible to humans. Leptospirosis, anthrax, and brucellosis are zoonoses. Botulism is an intoxication usually caused by ingestion of preformed toxin in food, not a zoonotic infection.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 368,
@@ -31281,7 +31281,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Assays to detect toxin in stool",
-      "explanation": "C. difficile is an important cause of a hospitalacquired infection commonly called pseudomembranous colitis. Hospitalized patients treated with broad-spectrum antimicrobial agents become colonized when their normal intestinal flora is diminished. The most rapid and accurate diagnostic method is detecting toxins A and/or B in stool specimens. Cycloserine-cefoxitin-fructose agar (CCFA) is the recommended selective medium for C. difficile, although few laboratories attempt isolation.",
+      "explanation": "difficile is an important cause of a hospitalacquired infection commonly called pseudomembranous colitis. Hospitalized patients treated with broad-spectrum antimicrobial agents become colonized when their normal intestinal flora is diminished. The most rapid and accurate diagnostic method is detecting toxins A and/or B in stool specimens. Cycloserine-cefoxitin-fructose agar (CCFA) is the recommended selective medium for C. difficile, although few laboratories attempt isolation.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 370,
@@ -31366,13 +31366,13 @@
       "difficulty": "Easy",
       "prompt": "Which of the following clostridia has a terminal spore that causes the cell to swell?",
       "choices": [
-        "C. botulinum",
-        "C. difficile",
-        "C. perfringens",
-        "C. tetani"
+        "botulinum",
+        "difficile",
+        "perfringens",
+        "tetani"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "C. tetani",
+      "officialAnswer": "tetani",
       "explanation": "The spore of Clostridium tetani is located terminally and is larger than the sporangium. Characteristically, when seen on Gram stain, the cells of Clostridium tetani resemble a drumstick or tennis racket. Spores can be readily seen in late growth phase cultures incubated at 37°C.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -31529,8 +31529,8 @@
       "choices": [
         "Botulinum toxin",
         "Erythrogenic toxin",
-        "C. difficile toxin B",
-        "C. perfringens alpha-toxin"
+        "difficile toxin B",
+        "perfringens alpha-toxin"
       ],
       "correctAnswer": 0,
       "officialAnswer": "Botulinum toxin",
@@ -31550,13 +31550,13 @@
       "difficulty": "Hard",
       "prompt": "Which Clostridium sp. is most commonly recovered from cases of gas gangrene?",
       "choices": [
-        "C. bifermentans",
-        "C. perfringens",
-        "C. sordellii",
-        "C. difficile"
+        "bifermentans",
+        "perfringens",
+        "sordellii",
+        "difficile"
       ],
       "correctAnswer": 1,
-      "officialAnswer": "C. perfringens",
+      "officialAnswer": "perfringens",
       "explanation": "Clostridium perfringens is the species most commonly associated with clostridial myonecrosis or gas gangrene. These soil and water saprophytes most frequently gain entrance to the human body through traumatic wounds. Once they have been introduced into injured tissue, the characteristic syndrome of myonecrosis due to the elaboration of exotoxins may occur. Other species involved with myonecrosis are C. septicum, C. novyi, C. sordellii, and C. histolyticum.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -31599,10 +31599,10 @@
         "Pseudomembranous colitis is due to a toxin produced by C. difficile.",
         "Clinically significant clostridia are found in the normal flora of the colon and in the soil.",
         "Botulism is caused by ingesting preformed toxin and can be prevented by boiling food prior to eating.",
-        "C. tetani spores will form in the presence of oxygen; therefore, anaerobiosis in a wound is not required to cause tetanus."
+        "tetani spores will form in the presence of oxygen; therefore, anaerobiosis in a wound is not required to cause tetanus."
       ],
       "correctAnswer": 3,
-      "officialAnswer": "C. tetani spores will form in the presence of oxygen; therefore, anaerobiosis in a wound is not required to cause tetanus.",
+      "officialAnswer": "tetani spores will form in the presence of oxygen; therefore, anaerobiosis in a wound is not required to cause tetanus.",
       "explanation": "Clostridium tetani is an obligate anaerobe. Spores are widespread in the soil. When introduced into a puncture wound, the spores require the reduced oxygen environment produced by the necrotic tissue and poor blood supply in the wound. Cleaning and debridement of the wound is important, as is the administration of a tetanus toxoid booster. Many clostridia require anaerobic conditions for spore formation.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -31727,7 +31727,7 @@
       "book": "Ciulla"
     },
     {
-      "id": "ciulla-bact-251",
+      "id": "ciulla-bact-257",
       "subjectId": "ciulla-bacteriology",
       "topicId": "ciulla-bact-fastidious-and-anaerobic-bacteria",
       "subtopic": "Fastidious and Anaerobic Bacteria",
@@ -31741,7 +31741,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "Fluorescence test",
-      "explanation": "Clostridium tetani is an obligate anaerobe. Spores are widespread in the soil. When introduced into a puncture wound, the spores require the reduced oxygen environment produced by the necrotic tissue and poor blood supply in the wound. Cleaning and debridement of the wound is important, as is the administration of a tetanus toxoid booster. Many clostridia require anaerobic conditions for spore formation.",
+      "explanation": "Prevotella melaninogenica can be rapidly presumptively identified on media containing laked blood with the use of an ultraviolet light source. This important anaerobic pathogen can be differentiated after 5 to 7 days incubation by its black pigmentation. The use of ultraviolet light enables a more rapid differentiation because of the appearance of a brick red fluorescence before the pigment is demonstrated.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 371,
@@ -32243,7 +32243,7 @@
         "Mycoplasma genitalium",
         "Mycoplasma hominis",
         "Mycoplasma pneumoniae",
-        "Ureaplasma urealyticum 6: BACTERIOLOGY"
+        "Ureaplasma urealyticum"
       ],
       "correctAnswer": 2,
       "officialAnswer": "Mycoplasma pneumoniae",
@@ -33098,7 +33098,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Haemophilus influenzas",
-      "explanation": "Haemophilus influenzae should be tested for beta-lactamase production. The test can be performed directly, and the methods are rapid and reliable for the detection of penicillin and ampicillin resistance. Rapid test methods, in general, rely on a color change to detect the presence of this enzyme. A pH indicator may be used to detect the penicilloic acid produced when the beta-lactam ring of penicillin is cleaved, or a color change can be observed when the beta-lactam ring of a chromogenic cephalosporin is hydrolyzed by the enzyme. 6: BACTERIOLOGY",
+      "explanation": "Haemophilus influenzae should be tested for beta-lactamase production. The test can be performed directly, and the methods are rapid and reliable for the detection of penicillin and ampicillin resistance. Rapid test methods, in general, rely on a color change to detect the presence of this enzyme. A pH indicator may be used to detect the penicilloic acid produced when the beta-lactam ring of penicillin is cleaved, or a color change can be observed when the beta-lactam ring of a chromogenic cephalosporin is hydrolyzed by the enzyme.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 379,
@@ -33554,7 +33554,7 @@
         "Sodium desoxycholate",
         "Lead acetate",
         "Potassium tellurite",
-        "Sodium thiosulfate 6: BACTERIOLOGY 700"
+        "Sodium thiosulfate"
       ],
       "correctAnswer": 1,
       "officialAnswer": "Lead acetate",
@@ -34708,7 +34708,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "Candida albicans",
-      "explanation": "C. albicans is an endogenous species causing a variety of opportunistic infections. Infection is usually secondary to a predisposing debility. Aspergillus spp. are common saprophytic contaminants. Paracoccidioides brasiliensis and Penicillium marneffei are dimorphic fungi that cause systemic mycoses.",
+      "explanation": "albicans is an endogenous species causing a variety of opportunistic infections. Infection is usually secondary to a predisposing debility. Aspergillus spp. are common saprophytic contaminants. Paracoccidioides brasiliensis and Penicillium marneffei are dimorphic fungi that cause systemic mycoses.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 432,
@@ -34750,10 +34750,10 @@
         "The hyphae usually invade blood vessels",
         "Encapsulated yeast cells are typical",
         "Tuberculate macroconidia are typical",
-        "The fungus is usually intracellular For each numbered mycosis below, choose the letter of the environment most commonly associated with an increased incidence of that infection."
+        "The fungus is usually intracellular"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "The fungus is usually intracellular For each numbered mycosis below, choose the letter of the environment most commonly associated with an increased incidence of that infection.",
+      "officialAnswer": "The fungus is usually intracellular",
       "explanation": "Histoplasma capsulatum is found primarily within histiocytes and in macrophages or monocytes in specimens from bone marrow aspirates, biopsies, or the buffy coat of centrifuged blood. Unstained cell wall of the tissue (yeast) form of H. capsulatum may be mistaken for a capsular halo in stained preparations. Only the mould phase would exhibit hyphae and macroconidia.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -34768,12 +34768,12 @@
       "topicId": "ciulla-myco-cutaneous-subcutaneous-and-systemic-mycoses",
       "subtopic": "Cutaneous, Subcutaneous, and Systemic Mycoses",
       "difficulty": "Hard",
-      "prompt": "Cryptococcosis",
+      "prompt": "Choose the environment most commonly associated with an increased incidence of Cryptococcosis:",
       "choices": [
         "Lower Sonoran Life Zone",
         "Mississippi and Ohio River basins",
         "Pigeon roosts",
-        "Bat roosts For each numbered mycosis below, choose the letter of the environment most commonly associated with an increased incidence of that infection."
+        "Bat roosts"
       ],
       "correctAnswer": 2,
       "officialAnswer": "Pigeon roosts",
@@ -34791,7 +34791,7 @@
       "topicId": "ciulla-myco-cutaneous-subcutaneous-and-systemic-mycoses",
       "subtopic": "Cutaneous, Subcutaneous, and Systemic Mycoses",
       "difficulty": "Easy",
-      "prompt": "Sporotrichosis",
+      "prompt": "Choose the environment most commonly associated with an increased incidence of Sporotrichosis:",
       "choices": [
         "Sphagnum moss",
         "Starling roosts",
@@ -34819,7 +34819,7 @@
         "Hortaea werneckii",
         "Trichosporon sp.",
         "Piedraia hortae",
-        "Fonsecaea compacta For each numbered incomplete statement, select the letter of the most appropriate species."
+        "Fonsecaea compacta"
       ],
       "correctAnswer": 0,
       "officialAnswer": "Hortaea werneckii",
@@ -34888,7 +34888,7 @@
         "Mucor sp.",
         "Candida tropicalis",
         "Cryptococcus neoformans",
-        "Candida albicans Select the letter of the most appropriate specimen source for isolation of each numbered species description."
+        "Candida albicans"
       ],
       "correctAnswer": 2,
       "officialAnswer": "Cryptococcus neoformans",
@@ -35490,7 +35490,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Diphyllobothrium latum",
-      "explanation": "D. latum is a tapeworm that has been linked to vitamin B ]2 deficiencies in individuals of Scandinavian descent. T. saginata and H. diminuta are tapeworms that infect the gastrointestinal tract of humans but have not been linked to vitamin B 12 deficiencies. E. granulosus is a dog tapeworm that causes hydatid disease in the tissue of humans.",
+      "explanation": "latum is a tapeworm that has been linked to vitamin B ]2 deficiencies in individuals of Scandinavian descent. T. saginata and H. diminuta are tapeworms that infect the gastrointestinal tract of humans but have not been linked to vitamin B 12 deficiencies. E. granulosus is a dog tapeworm that causes hydatid disease in the tissue of humans.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 447,
@@ -36019,7 +36019,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Ticks",
-      "explanation": "B. microti is a sporozoan parasite commonly found in voles and field mice. The vector is the tick Ixodes, normally a parasite of deer. Humans are accidental hosts when bitten by an infected tick. Many B. microti infections within the U.S. occur in the Northeast. It is important to differentiate this parasite from Plasmodium in a stained blood film. Antimalarial drugs are not effective in babesiosis. 5_L",
+      "explanation": "microti is a sporozoan parasite commonly found in voles and field mice. The vector is the tick Ixodes, normally a parasite of deer. Humans are accidental hosts when bitten by an infected tick. Many B. microti infections within the U.S. occur in the Northeast. It is important to differentiate this parasite from Plasmodium in a stained blood film. Antimalarial drugs are not effective in babesiosis. 5_L",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 450,
@@ -36088,7 +36088,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Balantidium coli",
-      "explanation": "B. coli is the only ciliate that is pathogenic for humans. It is relatively easy to detect in stool samples because of its large size. The trophozoite, seen in Color Plate 38B, is generally oval and measures 50-100 X 40-70 |jm. A cytosome is present on the anterior end.",
+      "explanation": "coli is the only ciliate that is pathogenic for humans. It is relatively easy to detect in stool samples because of its large size. The trophozoite, seen in Color Plate 38B, is generally oval and measures 50-100 X 40-70 |jm. A cytosome is present on the anterior end.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 450,
@@ -36700,7 +36700,7 @@
       "topicId": "ciulla-viro-viral-structure-and-taxonomy",
       "subtopic": "Viral Structure and Taxonomy",
       "difficulty": "Medium",
-      "prompt": "Arboviruses",
+      "prompt": "Arboviruses:",
       "choices": [
         "Only infect humans",
         "Often cause hepatitis",
@@ -38121,7 +38121,7 @@
       "book": "Ciulla"
     },
     {
-      "id": "ciulla-mol-3",
+      "id": "ciulla-mol-33",
       "subjectId": "ciulla-molecular-diagnostics",
       "topicId": "ciulla-mol-nucleic-acid-principles-and-isolation",
       "subtopic": "Nucleic Acid Principles and Isolation",
@@ -38133,9 +38133,9 @@
         "Pulsed field gel electrophoresis",
         "Reverse transcription-polymerase chain reaction"
       ],
-      "correctAnswer": 0,
-      "officialAnswer": "Ribotyping",
-      "explanation": "The first letter of a restriction endonuclease's name comes from the bacterial genus from which it originated. The second and third letters derive from the bacterial species. The last letter indicates the subspecies or strain from which the enzyme was obtained. The last Roman numeral represents the numerical place the enzyme has among those which have been isolated from that bacterial genus/species/strain. For example, EcoRI is the first restriction endonuclease isolated from the bacterium Escherichia coli, strain R, whereas EcoRV is the fifth such enzyme to be discovered.",
+      "correctAnswer": 2,
+      "officialAnswer": "Pulsed field gel electrophoresis",
+      "explanation": "Pulsed field gel electrophoresis (PFGE) is used to separate extremely large DNA molecules by placing them in an electric field that is charged periodically in alternating directions, forcing the molecule to reorient before moving through the gel. Larger molecules take more time to reorient; thus they move more slowly.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 475,
@@ -39006,7 +39006,7 @@
         "Lipids",
         "Casts",
         "Red blood cells",
-        "Ketone bodies 24. \"Glitter cell\" is a term used to describe a specific type of A. Ketone body B. Oval fat body C. Fatty droplet D. Neutrophil"
+        "Ketone bodies"
       ],
       "correctAnswer": 0,
       "officialAnswer": "Lipids",
@@ -41076,7 +41076,7 @@
         "3",
         "7",
         "10",
-        "100 49. 125 I has a half-life of 60 days. At the end of 180 days, what percent of activity would remain? A. 12.5 B. 25.0 C. 33.3 D. 50.0"
+        "100"
       ],
       "correctAnswer": 1,
       "officialAnswer": "7",
@@ -41490,10 +41490,10 @@
         "J",
         "M",
         "P",
-        "S 8. \"To deliver\" (TD) pipettes are identified by A. Two etched bands near the top B. Self-draining capacity C. Dual-purpose pipette labels D. Blue graduation levels"
+        "S"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "S 8. \"To deliver\" (TD) pipettes are identified by A. Two etched bands near the top B. Self-draining capacity C. Dual-purpose pipette labels D. Blue graduation levels",
+      "officialAnswer": "S",
       "explanation": "The National Institute of Standards and Technology recognizes the use of five specific types of calibrating weights. Analytical balances should be checked monthly and before accurate analytical work for proper calibration using Class S weights. To calibrate the weights themselves, Class M weights are used to check other weights, because their quality is that of a primary standard. Class P weights are allowed greater tolerance levels than Class S-l, with the latter being used for routine analytical work. Class J weights are used for microanalytical work.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -44373,6 +44373,144 @@
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 577,
+        "kind": "Ciulla Success in Clinical Laboratory Science"
+      },
+      "book": "Ciulla"
+    },
+    {
+      "id": "ciulla-cc-11",
+      "subjectId": "ciulla-clinical-chemistry",
+      "topicId": "ciulla-cc-instrumentation-and-analytical-principles",
+      "subtopic": "Instrumentation and Analytical Principles",
+      "difficulty": "Medium",
+      "prompt": "In spectrophotometry, which of the following is a mathematical expression of the relationship between absorbance and transmittance?",
+      "choices": [
+        "A = abc",
+        "(Au / Cu) = (As / Cs)",
+        "A = 2 - log %T",
+        "A = log %T"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "A = 2 - log %T",
+      "explanation": "Absorbance cannot be directly measured by a spectrophotometer; rather, percent transmittance (%T) is quantified. Absorbance and percent transmittance are inversely and logarithmically related: A = -log T = -log (%T / 100) = log 100 - log %T = 2 - log %T.",
+      "source": {
+        "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
+        "page": 3,
+        "kind": "Ciulla Success in Clinical Laboratory Science"
+      },
+      "book": "Ciulla"
+    },
+    {
+      "id": "ciulla-cc-111",
+      "subjectId": "ciulla-clinical-chemistry",
+      "topicId": "ciulla-cc-proteins-and-tumor-markers",
+      "subtopic": "Proteins and Tumor Markers",
+      "difficulty": "Easy",
+      "prompt": "Which of the following is false about PSA?",
+      "choices": [
+        "Serum quantified using immunoassays",
+        "Single-chain glycoprotein",
+        "Used as a tumor marker",
+        "Not elevated in benign prostatic hyperplasia"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Not elevated in benign prostatic hyperplasia",
+      "explanation": "PSA is a single-chain glycoprotein whose function aids in the liquefaction of seminal coagulum. PSA is found specifically in the prostate gland, and elevated levels are associated with prostate cancer and benign prostatic hyperplasia (BPH). Thus, combining the quantification of PSA with the performance of the digital rectal examination is beneficial for prostate cancer detection.",
+      "source": {
+        "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
+        "page": 14,
+        "kind": "Ciulla Success in Clinical Laboratory Science"
+      },
+      "book": "Ciulla"
+    },
+    {
+      "id": "ciulla-bact-189",
+      "subjectId": "ciulla-bacteriology",
+      "topicId": "ciulla-bact-gram-negative-bacilli-and-cocci",
+      "subtopic": "Gram-Negative Bacilli and Cocci",
+      "difficulty": "Easy",
+      "prompt": "Which of the following is not appropriate for the cultivation of Neisseria gonorrhoeae?",
+      "choices": [
+        "Chocolate agar",
+        "Cefsulodin-irgasan-novobiocin agar",
+        "Martin-Lewis agar",
+        "Modified Thayer-Martin agar"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Cefsulodin-irgasan-novobiocin agar",
+      "explanation": "Cefsulodin-irgasan-novobiocin (CIN) agar is selective for Yersinia enterocolitica and Aeromonas. Chocolate agar enriched with hemoglobin supports Neisseria gonorrhoeae, while Martin-Lewis, Modified Thayer-Martin, and New York City agars contain antimicrobials to inhibit commensal flora.",
+      "source": {
+        "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
+        "page": 361,
+        "kind": "Ciulla Success in Clinical Laboratory Science"
+      },
+      "book": "Ciulla"
+    },
+    {
+      "id": "ciulla-aubf-24",
+      "subjectId": "ciulla-urinalysis-and-body-fluids",
+      "topicId": "ciulla-aubf-renal-physiology-and-physical-chemical-urinalysis",
+      "subtopic": "Renal Physiology and Physical/Chemical Urinalysis",
+      "difficulty": "Easy",
+      "prompt": "\"Glitter cell\" is a term used to describe a specific type of",
+      "choices": [
+        "Ketone body",
+        "Oval fat body",
+        "Fatty droplet",
+        "Neutrophil"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Neutrophil",
+      "explanation": "Under hypotonic conditions, neutrophils in urinary sediment swell and the cytoplasmic granules contained within the cells exhibit Brownian movement, causing the contents to refract so that cells appear to glitter—thus the name \"glitter cells.\"",
+      "source": {
+        "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
+        "page": 499,
+        "kind": "Ciulla Success in Clinical Laboratory Science"
+      },
+      "book": "Ciulla"
+    },
+    {
+      "id": "ciulla-calc-49",
+      "subjectId": "ciulla-laboratory-calculations",
+      "topicId": "ciulla-calc-spectrophotometry-beer-s-law-and-enzymology",
+      "subtopic": "Spectrophotometry, Beer’s Law, and Enzymology",
+      "difficulty": "Medium",
+      "prompt": "125 I has a half-life of 60 days. At the end of 180 days, what percent of activity would remain?",
+      "choices": [
+        "12.5",
+        "25.0",
+        "33.3",
+        "50.0"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "12.5",
+      "explanation": "Because 125 I has a half-life of 60 days, the lapse of 180 days represents three half-lives (180 / 60 = 3). At 60 days 50% remains, at 120 days 25% remains, and at 180 days 12.5% of activity remains.",
+      "source": {
+        "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
+        "page": 524,
+        "kind": "Ciulla Success in Clinical Laboratory Science"
+      },
+      "book": "Ciulla"
+    },
+    {
+      "id": "ciulla-genlab-8",
+      "subjectId": "ciulla-general-laboratory-principles",
+      "topicId": "ciulla-genlab-laboratory-safety-hazards-and-regulations",
+      "subtopic": "Laboratory Safety, Hazards, and Regulations",
+      "difficulty": "Easy",
+      "prompt": "\"To deliver\" (TD) pipettes are identified by",
+      "choices": [
+        "Two etched bands near the top",
+        "Self-draining capacity",
+        "Dual-purpose pipette labels",
+        "Blue graduation levels"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Self-draining capacity",
+      "explanation": "Serologic pipettes are \"to deliver\" (TD) types calibrated to deliver the stated volume by gravity alone (self-draining). Blow-out pipettes are indicated by two frosted/etched rings near the top.",
+      "source": {
+        "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
+        "page": 547,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
       "book": "Ciulla"

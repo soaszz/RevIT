@@ -21,9 +21,11 @@ function errorMessage(error: unknown) {
 
 export function isMissingQuestionReinforcementTableError(error: { code?: string; message?: string } | null | undefined) {
   if (!error) return false;
+  const msg = error.message?.toLowerCase() ?? "";
   return error.code === "PGRST205"
     || error.code === "42P01"
-    || (error.message?.includes("question_reinforcement") && error.message.includes("schema cache"))
+    || error.code === "404"
+    || msg.includes("question_reinforcement")
     || false;
 }
 
