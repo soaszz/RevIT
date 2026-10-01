@@ -656,7 +656,7 @@ useEffect(() => {
         let progressionUpdate: ProgressionUpdate | null = null;
         let progressionLoadError = "";
         try {
-          await flushCloudProgressEventQueue(client, initialUser!.id);
+          await flushCloudProgressEventQueue(client, initialUser!.id).catch(() => null);
           progressionUpdate = await loadCloudProgression(client, initialUser!.id);
         } catch {
           progressionLoadError = "Progression could not be loaded. It will retry when the connection recovers.";
