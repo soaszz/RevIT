@@ -6725,7 +6725,7 @@
       "prompt": "Which of the following is a qualitative screening test for porphobilinogen that may be performed to aid in the diagnosis of the porphyrias?",
       "choices": [
         "Caraway test",
-        "Gutmantest",
+        "Gutman test",
         "Jendrassik-Grof test",
         "Watson-Schwartz test"
       ],
@@ -26076,13 +26076,13 @@
       "difficulty": "Hard",
       "prompt": "Streptococcus pyogenes can be presumptively identified using a(an)",
       "choices": [
-        "PYRdisk",
-        "ONPGdisk",
-        "SPSdisk",
+        "PYR disk",
+        "ONPG disk",
+        "SPS disk",
         "Optochin disk"
       ],
-      "correctAnswer": 1,
-      "officialAnswer": "ONPGdisk",
+      "correctAnswer": 0,
+      "officialAnswer": "PYR disk",
       "explanation": "Presumptive identification of group A streptococci can be achieved through the PYR (L-pyrrolidonyl-(3-naphthlylamide) disk test. The use of a 0.04-unit bacitracin disk is no longer recommended because groups C and G streptococci are also susceptible to this agent. A positive test result is interpreted as a bright red color change within 5 minutes.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -26330,12 +26330,12 @@
       "prompt": "Precipitates of diphtheria toxin and antitoxin formed in agar gels are an in vitro means for detecting toxigenic strains of Corynebacterium diphtheriae. The name of this test procedure is the",
       "choices": [
         "D-test",
-        "Elektest",
+        "Elek test",
         "Hodge test",
-        "Naglertest"
+        "Nagler test"
       ],
       "correctAnswer": 1,
-      "officialAnswer": "Elektest",
+      "officialAnswer": "Elek test",
       "explanation": "The Elek immunodiffusion test is recommended for detecting toxigenic strains of Corynebacterium diphtheriae. In the test, diphtheria antitoxin is impregnated on a sterile filter paper strip, which is pressed onto the surface of an Elek agar plate. Test and control strains are then inoculated perpendicular to the strip on both sides and without touching the strip. A positive reaction by toxigenic strains produces a precipitin line at a 45-degree angle to the inoculum streak.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -30724,11 +30724,11 @@
       "choices": [
         "Elek test",
         "CAMP test",
-        "Naglertest",
-        "PPDtest"
+        "Nagler test",
+        "PPD test"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "PPDtest",
+      "officialAnswer": "PPD test",
       "explanation": "A positive tuberculin skin test reaction is an example of a hypersensitivity reaction. Tuberculin preparations are prepared from culture filtrates, which are precipitated with trichloroacetic acid and are known as purified protein derivative (PPD). A positive test demonstrates an area of induration following an intradermal injection of PPD.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -31735,7 +31735,7 @@
       "prompt": "Which of the following tests is most appropriate for the presumptive identification of Prevotella melaninogenica?",
       "choices": [
         "SPS sensitivity test",
-        "Naglertest",
+        "Nagler test",
         "Cytotoxin assay",
         "Fluorescence test"
       ],
@@ -31758,7 +31758,7 @@
       "prompt": "Which of the following tests is most appropriate for the identification of Clostridium difficile?",
       "choices": [
         "SPS sensitivity test",
-        "Naglertest",
+        "Nagler test",
         "Cytotoxin assay",
         "Fluorescence test"
       ],
@@ -31803,13 +31803,13 @@
       "difficulty": "Medium",
       "prompt": "Which of the following tests is most appropriate for the presumptive identification of Peptostreptococcus anaerobius?",
       "choices": [
-        "SPSdisk",
-        "Colistindisk",
+        "SPS disk",
+        "Colistin disk",
         "Kanamycin disk",
         "Vancomycin disk"
       ],
       "correctAnswer": 0,
-      "officialAnswer": "SPSdisk",
+      "officialAnswer": "SPS disk",
       "explanation": "The identification of Peptostreptococcus anaerobius is made easier by the use of the sodium polyethanol sulfonate (SPS) disk. The test is performed by growing the organism in the presence of a disk impregnated with SPS. A zone of inhibition of 12-18 mm around the disk is considered sensitive and a presumptive identification of this organism.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -32128,10 +32128,10 @@
         "Charcoal yeast extract medium",
         "Fletcher semisolid medium",
         "Middlebrook",
-        "SP4agar"
+        "SP4 agar"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "SP4agar",
+      "officialAnswer": "SP4 agar",
       "explanation": "Provided that arginine is added for Mycoplasma hominis, SP4 agar or broth can be used for the growth of M. pneumoniae and M. hominis. M. pneumoniae is a slow-grower, so most infections are diagnosed by serologic assays. M. pneumoniae is an important respiratory tract pathogen of humans. It is found only in humans and is typically spread person to person.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -32473,7 +32473,7 @@
         "Acid-fast stain",
         "Gram stain",
         "Lysis of red blood cells",
-        "Catalasetest"
+        "Catalase test"
       ],
       "correctAnswer": 2,
       "officialAnswer": "Lysis of red blood cells",
@@ -32954,7 +32954,7 @@
       "prompt": "The agar recommended by the Clinical and Laboratory Standards Institute for routine susceptibility testing of nonfastidious bacteria is",
       "choices": [
         "MacConkey agar",
-        "MiddlebrookVHIOagar",
+        "Middlebrook 7H10 agar",
         "Mueller-Hinton agar",
         "Trypticase soy agar"
       ],
