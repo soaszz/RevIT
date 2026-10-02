@@ -136,7 +136,7 @@ do $$ begin
   if exists (select 1 from public.user_preferences where user_id = '11111111-1111-1111-1111-111111111111') then
     raise exception 'RLS failure: user two can see user one private preferences or MTAP choice';
   end if;
-  if (select count(*) from public.achievements) <> 8 then
+  if (select count(*) from public.achievements) <> 12 then
     raise exception 'RLS failure: public achievement definitions are not readable';
   end if;
   if (select count(*) from public.get_leaderboard('daily', 'questions', null, 50, 0)) <> 1 then

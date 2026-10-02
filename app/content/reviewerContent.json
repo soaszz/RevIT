@@ -18809,7 +18809,7 @@
       "topicId": "bacteriology-8-4",
       "prompt": "A 20-year-old male presented with soft chancres in the genital area and swollen lymph nodes. A culture specimen was taken but failed to grow after 4 days on chocolate agar, sheep blood agar, and MTM agar. Gram staining showed small, pleomorphic gram- negative rods. What is the most likely presumptive identification?",
       "choices": [
-        "Neisseria gonorrheae",
+        "Neisseria gonorrhoeae",
         "Haemophilus ducreyi",
         "Haemophilus influenzae",
         "Moraxella spp."
@@ -25958,7 +25958,7 @@
       "officialAnswer": "Serial cellophane tape preparations",
       "explanation": "Enterobius vermicularis eggs are deposited around the perianal region, so serial adhesive-tape preparations are preferred over routine stool examination.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -25978,7 +25978,7 @@
       "officialAnswer": "Charcot-Leyden crystals",
       "explanation": "Charcot-Leyden crystals are associated with breakdown products of eosinophils and may be encountered in parasitic disease.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -25998,7 +25998,7 @@
       "officialAnswer": "Diphyllobothrium latum",
       "explanation": "latum infection is acquired through ingestion of infected raw or inadequately cooked freshwater fish.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26018,7 +26018,7 @@
       "officialAnswer": "Tsetse fly",
       "explanation": "T. brucei gambiense and T. brucei rhodesiense are transmitted through the bite of the tsetse fly.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26038,7 +26038,7 @@
       "officialAnswer": "Cystoisospora belli",
       "explanation": "Cystoisospora belli produces oocysts that can be demonstrated in stool using modified acid-fast staining.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26058,7 +26058,7 @@
       "officialAnswer": "Feces",
       "explanation": "T. vaginalis is a urogenital parasite, so fecal material is not the expected diagnostic specimen.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26078,7 +26078,7 @@
       "officialAnswer": "Trichrome stain",
       "explanation": "A trichrome-stained fecal smear is a preferred method for demonstrating D. fragilis trophozoites.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26098,7 +26098,7 @@
       "officialAnswer": "Giardia lamblia",
       "explanation": "Giardia cysts can contaminate food and water and have caused well-described waterborne outbreaks.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26118,7 +26118,7 @@
       "officialAnswer": "Entamoeba gingivalis",
       "explanation": "E. gingivalis inhabits the mouth and may ingest polymorphonuclear leukocytes.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26138,7 +26138,7 @@
       "officialAnswer": "Trophozoites containing ingested RBCs",
       "explanation": "Ingested RBCs within trophozoites are an important morphologic clue supporting true pathogenic E. histolytica.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26158,7 +26158,7 @@
       "officialAnswer": "Naegleria fowleri",
       "explanation": "N. fowleri is a free-living amoeba associated with warm freshwater and causes primary amebic meningoencephalitis.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26178,7 +26178,7 @@
       "officialAnswer": "Short buccal cavity and prominent genital primordium",
       "explanation": "The Strongyloides rhabditiform larva has a short buccal cavity and a relatively prominent genital primordium.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26198,7 +26198,7 @@
       "officialAnswer": "Serologic testing for Toxocara",
       "explanation": "Toxocara species cause visceral or ocular larva migrans in humans, and serology is the diagnostic method emphasized in the source.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26218,7 +26218,7 @@
       "officialAnswer": "Strongyloides stercoralis",
       "explanation": "S. stercoralis can undergo internal autoinfection, permitting infection to persist for years and progress to hyperinfection in immunosuppressed patients.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26238,7 +26238,7 @@
       "officialAnswer": "Schistosoma haematobium",
       "explanation": "Adult S. haematobium inhabit veins around the bladder, and their eggs are commonly recovered from urine.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26258,7 +26258,7 @@
       "officialAnswer": "Paragonimus westermani",
       "explanation": "Adult P. westermani inhabit the lung, allowing eggs to be coughed into sputum and sometimes swallowed into stool.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26278,7 +26278,7 @@
       "officialAnswer": "Taenia solium and Trichinella spiralis",
       "explanation": "T. solium cysticerci and encysted T. spiralis larvae can both be acquired by eating inadequately cooked infected pork.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26298,7 +26298,7 @@
       "officialAnswer": "Diphyllobothrium latum",
       "explanation": "latum is the operculated cestode emphasized in the source.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26318,7 +26318,7 @@
       "officialAnswer": "Dog intestine",
       "explanation": "Dogs are the definitive hosts and harbor adult E. granulosus; humans may become accidental intermediate hosts with hydatid cysts.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26338,7 +26338,7 @@
       "officialAnswer": "Humans can function as definitive or accidental intermediate hosts",
       "explanation": "Eating cysticerci can lead to an adult intestinal worm, whereas ingesting eggs can lead to tissue cysticerci, making humans either definitive or accidental intermediate hosts.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26358,7 +26358,7 @@
       "officialAnswer": "Hymenolepis nana",
       "explanation": "H. nana can complete its life cycle in one human, with tissue cysticercoid and adult intestinal stages.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26378,7 +26378,7 @@
       "officialAnswer": "Plasmodium falciparum",
       "explanation": "Babesia often resembles P. falciparum ring forms and may show multiple rings within erythrocytes.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26398,7 +26398,7 @@
       "officialAnswer": "Modified acid-fast stain",
       "explanation": "Cryptosporidium oocysts can be visualized as small acid-fast-positive structures using modified acid-fast staining.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26418,7 +26418,7 @@
       "officialAnswer": "Onchocerca volvulus",
       "explanation": "O. volvulus microfilariae are located mainly in superficial skin tissues, so skin snips are the appropriate diagnostic specimen.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26438,7 +26438,7 @@
       "officialAnswer": "Plasmodium falciparum",
       "explanation": "P. falciparum can produce severe hemolysis, multiorgan disease, blackwater fever, and cerebral malaria.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26458,7 +26458,7 @@
       "officialAnswer": "Giardia, Dientamoeba, and Cryptosporidium",
       "explanation": "Giardia, Dientamoeba fragilis, and Cryptosporidium have all been implicated in nursery-school outbreaks.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26478,7 +26478,7 @@
       "officialAnswer": "Concentrating protozoan cysts and helminth eggs",
       "explanation": "The concentration procedure improves recovery of protozoan cysts, coccidian oocysts, and helminth eggs from feces.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26498,7 +26498,7 @@
       "officialAnswer": "Large glycogen vacuole",
       "explanation": "I. butschlii cysts characteristically contain a large glycogen vacuole, readily demonstrated with iodine.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26518,7 +26518,7 @@
       "officialAnswer": "Miracidial hatching test",
       "explanation": "Viable Schistosoma eggs can hatch and release miracidia, making the miracidial hatching procedure useful for viability assessment.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26538,7 +26538,7 @@
       "officialAnswer": "Giardia and Cryptosporidium",
       "explanation": "Both Giardia cysts and Cryptosporidium oocysts are transmitted through contaminated water and have caused outbreaks.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26558,7 +26558,7 @@
       "officialAnswer": "Giardia and Cryptosporidium",
       "explanation": "Fecal immunoassays are widely used to detect Giardia and Cryptosporidium antigens.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26578,7 +26578,7 @@
       "officialAnswer": "Gastrointestinal tract",
       "explanation": "The source describes the gastrointestinal tract as the likely initial site after ingestion of infective microsporidial spores.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26598,7 +26598,7 @@
       "officialAnswer": "Contaminated contact-lens care solutions",
       "explanation": "Many Acanthamoeba eye infections have been associated with contaminated lens-care solutions, especially homemade saline.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26618,7 +26618,7 @@
       "officialAnswer": "Non-nutrient agar seeded with E. coli",
       "explanation": "Acanthamoeba can be recovered on non-nutrient agar seeded with E. coli, which serves as a food source.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26638,7 +26638,7 @@
       "officialAnswer": "Immunocompromised patients",
       "explanation": "Human microsporidiosis has been most strongly associated with immunocompromised patients, including those with AIDS.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26658,7 +26658,7 @@
       "officialAnswer": "A weaker acid decolorizer is used",
       "explanation": "Modified acid-fast procedures commonly use a weaker sulfuric-acid decolorizer than the acid-alcohol used for mycobacteria.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26678,7 +26678,7 @@
       "officialAnswer": "Giardiasis - malabsorption",
       "explanation": "Giardiasis may cause malabsorption. The other pairings do not match the clinical associations emphasized in the source.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26698,7 +26698,7 @@
       "officialAnswer": "Hymenolepis nana",
       "explanation": "H. nana eggs have a thin shell surrounding an oncosphere and characteristic polar filaments.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26718,7 +26718,7 @@
       "officialAnswer": "Microfilariae from blood",
       "explanation": "Knott concentration lyses red cells and concentrates microfilariae from blood for microscopic examination.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26738,7 +26738,7 @@
       "officialAnswer": "Schistosoma mansoni",
       "explanation": "S. mansoni eggs have a large lateral spine, while S. haematobium eggs characteristically have a terminal spine.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26758,7 +26758,7 @@
       "officialAnswer": "Blood films for malaria",
       "explanation": "Malaria blood films require rapid processing and examination because delayed diagnosis, especially with P. falciparum, can be fatal.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26778,7 +26778,7 @@
       "officialAnswer": "Strongyloides stercoralis",
       "explanation": "Latent Strongyloides infection can persist through autoinfection and progress to hyperinfection or disseminated disease during immunosuppression.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26798,7 +26798,7 @@
       "officialAnswer": "Angiostrongylus cantonensis",
       "explanation": "cantonensis is associated with eosinophilic meningitis/meningoencephalitis and larval migration.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26818,7 +26818,7 @@
       "officialAnswer": "Accidental intermediate host",
       "explanation": "Humans accidentally ingest E. granulosus eggs and develop hydatid cysts, functioning as accidental intermediate hosts.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26838,7 +26838,7 @@
       "officialAnswer": "Trichinella spiralis",
       "explanation": "Trichinella larvae can be acquired from inadequately cooked bear meat and cause fever, myalgia, and periorbital edema.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26858,7 +26858,7 @@
       "officialAnswer": "Intermediate host with cysticercosis",
       "explanation": "Ingested T. solium eggs release larvae that migrate into human tissues, producing cysticercosis and making the human an accidental intermediate host.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26878,7 +26878,7 @@
       "officialAnswer": "Microsporidia - modified trichrome stain",
       "explanation": "Microsporidia can cause severe diarrhea in immunocompromised patients, and modified trichrome staining is a recommended diagnostic method.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26898,7 +26898,7 @@
       "officialAnswer": "Examine thick blood films for microfilariae",
       "explanation": "The clinical setting suggests lymphatic filariasis, for which thick blood films can aid recovery of circulating microfilariae.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26918,7 +26918,7 @@
       "officialAnswer": "Cryptosporidium",
       "explanation": "Cryptosporidium oocysts are immediately infective on passage and can therefore contribute to nosocomial transmission.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26938,7 +26938,7 @@
       "officialAnswer": "Trypanosoma cruzi",
       "explanation": "T. cruzi causes Chagas disease and can persist as amastigotes in cardiac and other striated muscle.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26958,7 +26958,7 @@
       "officialAnswer": "Travel location, return date, and antimalarial drug history",
       "explanation": "Travel destination, timing of return, and antimalarial use can strongly affect species likelihood, relapse considerations, drug resistance, and parasite density.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26978,7 +26978,7 @@
       "officialAnswer": "Cryptosporidium",
       "explanation": "Cryptosporidium has caused well-documented outbreaks associated with contaminated municipal water.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -26998,7 +26998,7 @@
       "officialAnswer": "Cyclospora cayetanensis",
       "explanation": "Cyclospora has been linked to foodborne outbreaks involving fresh produce such as berries, basil, and leafy vegetables.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27018,7 +27018,7 @@
       "officialAnswer": "Skin snip",
       "explanation": "Onchocerca microfilariae are found in superficial skin rather than routinely circulating in peripheral blood.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27038,7 +27038,7 @@
       "officialAnswer": "Trichuris trichiura",
       "explanation": "T. trichiura eggs have a characteristic thick shell and bipolar plugs.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27058,7 +27058,7 @@
       "officialAnswer": "Toxocara canis",
       "explanation": "Humans can ingest infective Toxocara eggs and become accidental hosts for migrating larvae.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27078,7 +27078,7 @@
       "officialAnswer": "Schuffner dots and a true relapse stage",
       "explanation": "Both P. vivax and P. ovale infect younger RBCs, may display Schuffner stippling, and can relapse because of persistent liver stages.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27098,7 +27098,7 @@
       "officialAnswer": "Cryptosporidium and Strongyloides stercoralis",
       "explanation": "The source specifically notes internal autoinfection in Cryptosporidium and S. stercoralis.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27118,7 +27118,7 @@
       "officialAnswer": "Cryptosporidium and microsporidia",
       "explanation": "Cryptosporidium requires modified acid-fast methods and microsporidia require specialized modified trichrome staining, so routine O&P methods may miss them.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27138,7 +27138,7 @@
       "officialAnswer": "Polar tubule",
       "explanation": "Demonstration of the characteristic polar tubule supports confirmation of microsporidial spores.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27158,7 +27158,7 @@
       "officialAnswer": "Plasmodium falciparum",
       "explanation": "Early P. knowlesi rings can resemble P. falciparum, creating a potential identification problem.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27178,7 +27178,7 @@
       "officialAnswer": "Cryptosporidium oocyst",
       "explanation": "Cryptosporidium oocysts are already infective when excreted, unlike several other parasites that require environmental development.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27198,7 +27198,7 @@
       "officialAnswer": "Plasmodium malariae",
       "explanation": "More mature P. knowlesi stages can resemble P. malariae, including band-like forms.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27218,7 +27218,7 @@
       "officialAnswer": "Cyclospora cayetanensis",
       "explanation": "Cyclospora oocysts exhibit autofluorescence, a useful presumptive feature before confirmatory staining.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27238,7 +27238,7 @@
       "officialAnswer": "A rapid 24-hour erythrocytic cycle and ability to infect RBCs of different ages",
       "explanation": "P. knowlesi has a rapid 24-hour erythrocytic cycle, can involve RBCs across age groups, and may cause serious disease.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27258,7 +27258,7 @@
       "officialAnswer": "Light microscopy with a modified trichrome stain",
       "explanation": "Modified trichrome staining examined by light microscopy is a recommended approach for demonstrating microsporidial spores.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 13,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27278,7 +27278,7 @@
       "officialAnswer": "Morphologically similar subtypes may differ in pathogenicity",
       "explanation": "The source notes multiple morphologically indistinguishable subtypes or strains, some potentially pathogenic and others nonpathogenic.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 13,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27298,7 +27298,7 @@
       "officialAnswer": "Delayed preparation can alter parasite morphology and reduce organism recovery",
       "explanation": "Holding EDTA blood too long can change parasite morphology, reduce organism recovery, and impair staining quality.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 13,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27318,7 +27318,7 @@
       "officialAnswer": "RBCs are lysed during or before staining",
       "explanation": "Thick films require lysis of RBCs, allowing a larger volume of blood to be screened sensitively for parasites.",
       "source": {
-        "fileName": "Parasitology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Parasitology.pdf",
         "page": 13,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27338,7 +27338,7 @@
       "officialAnswer": "Surface swab",
       "explanation": "Swabs are generally poor specimens for fungal recovery because they may dry out, contain insufficient material, and collect contaminating skin flora.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27358,7 +27358,7 @@
       "officialAnswer": "10% KOH",
       "explanation": "KOH preparations help dissolve keratinous material and other debris in skin, hair, and nail specimens, making fungal elements easier to visualize.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27378,7 +27378,7 @@
       "officialAnswer": "India ink preparation",
       "explanation": "India ink excludes the polysaccharide capsule of Cryptococcus neoformans, producing a clear halo around the yeast cell.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27398,7 +27398,7 @@
       "officialAnswer": "Dermatophytes",
       "explanation": "Dermatophytes are specialized for keratinized tissues and commonly cause infections of skin, hair, and/or nails.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27418,7 +27418,7 @@
       "officialAnswer": "Germ tube test",
       "explanation": "Most C. albicans isolates produce true germ tubes after short incubation under appropriate conditions, making this a useful presumptive identification test.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27438,7 +27438,7 @@
       "officialAnswer": "A pseudohyphal structure",
       "explanation": "True germ tubes lack a constriction at their point of origin. A constriction favors pseudohyphal development and can cause false interpretation of a germ tube test.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27458,7 +27458,7 @@
       "officialAnswer": "It enhances demonstration of characteristic microscopic structures",
       "explanation": "Cornmeal Tween 80 agar promotes formation and visualization of structures such as blastoconidia, pseudohyphae, true hyphae, arthroconidia, and chlamydoconidia.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27478,7 +27478,7 @@
       "officialAnswer": "Urease and niger seed agar",
       "explanation": "neoformans is urease positive and produces brown to black pigmentation on niger seed (birdseed) agar because of phenol oxidase activity.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27498,7 +27498,7 @@
       "officialAnswer": "Melanin production associated with phenol oxidase activity",
       "explanation": "Phenol oxidase enables C. neoformans to oxidize diphenolic compounds and produce melanin, yielding brown to black colonies.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27518,7 +27518,7 @@
       "officialAnswer": "Candida albicans",
       "explanation": "albicans commonly produces germ tubes and characteristic thick-walled terminal chlamydoconidia under appropriate culture conditions.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27538,7 +27538,7 @@
       "officialAnswer": "Cryptococcus",
       "explanation": "Cryptococcus species characteristically produce blastoconidia but lack pseudohyphae and arthroconidia.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27558,7 +27558,7 @@
       "officialAnswer": "Rhodotorula species",
       "explanation": "Rhodotorula species are notable for pink to coral pigmentation and may act as opportunistic pathogens in immunosuppressed patients.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27578,7 +27578,7 @@
       "officialAnswer": "Saccharomyces cerevisiae",
       "explanation": "S. cerevisiae is an ascomycetous yeast and can form ascospores on appropriate sporulation media.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27598,7 +27598,7 @@
       "officialAnswer": "Yeast phase",
       "explanation": "The source describes dimorphic molds as occurring in the yeast form in infected tissues and at approximately 37 C, with mold growth at lower culture temperatures.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27618,7 +27618,7 @@
       "officialAnswer": "Coccidioides immitis",
       "explanation": "The mold phase of C. immitis forms distinctive barrel-shaped arthroconidia separated by empty or ghost cells.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27638,7 +27638,7 @@
       "officialAnswer": "Sporothrix schenckii",
       "explanation": "S. schenckii produces characteristic oval to elongated cigar-shaped yeast forms in tissue.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27658,7 +27658,7 @@
       "officialAnswer": "Histoplasma capsulatum",
       "explanation": "The mold phase of H. capsulatum produces large, thick-walled tuberculate macroconidia that can resemble Sepedonium.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27678,7 +27678,7 @@
       "officialAnswer": "Paracoccidioides brasiliensis",
       "explanation": "The multiple budding yeast form of P. brasiliensis creates the classic mariner's wheel appearance.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27698,7 +27698,7 @@
       "officialAnswer": "Mucorales",
       "explanation": "Common Mucorales such as Rhizopus and Mucor display broad aseptate or sparsely septate hyphae, unlike the septate groups listed.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27718,7 +27718,7 @@
       "officialAnswer": "Malassezia furfur",
       "explanation": "The combination of short hyphae and budding yeast in skin scales is characteristic of M. furfur, the cause of tinea versicolor.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27738,7 +27738,7 @@
       "officialAnswer": "Trichophyton",
       "explanation": "Trichophyton species can involve all three keratinized sites. Microsporum typically affects skin and hair, while Epidermophyton affects skin and nails.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27758,7 +27758,7 @@
       "officialAnswer": "Trichophyton rubrum",
       "explanation": "T. rubrum is distinguished by its characteristic red pigmentation and compatible microscopic morphology.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27778,7 +27778,7 @@
       "officialAnswer": "Epidermophyton",
       "explanation": "Epidermophyton species characteristically lack microconidia and form club-shaped macroconidia.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27798,7 +27798,7 @@
       "officialAnswer": "Dematiaceous mold",
       "explanation": "Dematiaceous molds contain dark pigment in their hyphae and typically produce dark colonies.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27818,7 +27818,7 @@
       "officialAnswer": "Aspergillus niger",
       "explanation": "niger produces black conidia that create a pepper-like colony surface while the reverse remains relatively pale.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27838,7 +27838,7 @@
       "officialAnswer": "Aspergillus fumigatus",
       "explanation": "fumigatus is a major cause of aspergillosis and typically sporulates from the upper half to two-thirds of the vesicle.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27858,7 +27858,7 @@
       "officialAnswer": "Fusarium",
       "explanation": "Fusarium species are hyaline molds recognized by their characteristic curved, multiseptate macroconidia.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27878,7 +27878,7 @@
       "officialAnswer": "Lichtheimia (formerly Absidia)",
       "explanation": "The source distinguishes Lichtheimia from Rhizopus by the location of the rhizoids relative to the sporangiophores.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27898,7 +27898,7 @@
       "officialAnswer": "Cryptococcus neoformans",
       "explanation": "Encapsulation, urease positivity, and melanin-producing brown colonies on niger seed agar strongly support C. neoformans.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27918,7 +27918,7 @@
       "officialAnswer": "Histoplasma capsulatum",
       "explanation": "H. capsulatum is thermally dimorphic, appears as small intracellular yeast in tissue, and produces tuberculate macroconidia in its mold phase.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27938,7 +27938,7 @@
       "officialAnswer": "Pneumocystis jirovecii",
       "explanation": "P. jirovecii is identified in respiratory material using special stains such as GMS and is not recovered on routine fungal culture media.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27958,7 +27958,7 @@
       "officialAnswer": "Coccidioides immitis",
       "explanation": "immitis forms spherules containing endospores in tissue and highly infectious barrel-shaped arthroconidia in its mold phase.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27978,7 +27978,7 @@
       "officialAnswer": "Rhizopus species",
       "explanation": "Rhizopus species are highlighted as the most common cause of mucormycosis, particularly in patients with serious underlying disease.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -27998,7 +27998,7 @@
       "officialAnswer": "Whether the genome contains RNA or DNA",
       "explanation": "Viruses are initially classified in part by their nucleic acid composition, with viral genomes containing either RNA or DNA.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28018,7 +28018,7 @@
       "officialAnswer": "Respiratory syncytial virus",
       "explanation": "RSV is a major pediatric respiratory pathogen and is especially important in infants, causing bronchiolitis, pneumonia, and related syndromes.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28038,7 +28038,7 @@
       "officialAnswer": "Coxsackie B virus",
       "explanation": "Coxsackie B viruses are classically associated with myocarditis, pericarditis, and pleurodynia.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28058,7 +28058,7 @@
       "officialAnswer": "Cytomegalovirus",
       "explanation": "CMV may cause a self-limited mononucleosis-like syndrome, especially in otherwise healthy individuals.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28078,7 +28078,7 @@
       "officialAnswer": "Influenza virus and adenovirus",
       "explanation": "Influenza viruses and adenoviruses are important causes of adult respiratory disease, including pneumonia.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28098,7 +28098,7 @@
       "officialAnswer": "Rotavirus",
       "explanation": "Rotavirus is an important cause of gastroenteritis in infants and young children and can produce significant dehydration.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28118,7 +28118,7 @@
       "officialAnswer": "Parvovirus B19",
       "explanation": "Parvovirus B19 causes erythema infectiosum, also known as fifth disease, which classically produces a slapped-cheek rash.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28138,7 +28138,7 @@
       "officialAnswer": "Norovirus",
       "explanation": "Noroviruses cause community and institutional outbreaks of acute gastroenteritis across age groups, including adults.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28158,7 +28158,7 @@
       "officialAnswer": "Human papillomavirus",
       "explanation": "HPV causes anogenital warts, and infected squamous cells may show koilocytosis. Certain HPV types are associated with anogenital neoplasia.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28178,7 +28178,7 @@
       "officialAnswer": "Serology, nucleic acid testing, and histologic/cytologic methods",
       "explanation": "The source describes serology, nucleic acid methods such as PCR/probes, and cytologic or histologic examination as useful alternatives to culture.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28198,7 +28198,7 @@
       "officialAnswer": "HIV infection can be present before a full antibody response develops",
       "explanation": "Nucleic acid methods can detect viral RNA during early infection before antibodies become sufficiently detectable.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28218,7 +28218,7 @@
       "officialAnswer": "Nuchal skin biopsy with immunofluorescence",
       "explanation": "Rabies antigen can be demonstrated by direct immunofluorescence in cutaneous nerves around hair follicles from a nuchal skin biopsy.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28238,7 +28238,7 @@
       "officialAnswer": "RT-PCR",
       "explanation": "RT-PCR provides sensitive and rapid detection of respiratory viruses and has increasingly replaced slower culture-based approaches.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28258,7 +28258,7 @@
       "officialAnswer": "Vesicle or lesion material",
       "explanation": "Material collected directly from an active vesicle can be examined using rapid antigen methods, and molecular methods can also detect HSV sensitively.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28278,7 +28278,7 @@
       "officialAnswer": "Epstein-Barr virus",
       "explanation": "EBV-specific testing may help establish infectious mononucleosis when a rapid heterophile assay is negative, especially when the clinical syndrome remains suggestive.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28298,7 +28298,7 @@
       "officialAnswer": "West Nile virus",
       "explanation": "Birds are important reservoirs for West Nile virus and mosquitoes transmit infection to incidental human hosts, in whom neurologic disease may occur.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28318,7 +28318,7 @@
       "officialAnswer": "Hantavirus",
       "explanation": "Hantavirus pulmonary syndrome is associated with exposure to aerosolized rodent excreta and can progress to severe respiratory disease and pulmonary edema.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28338,7 +28338,7 @@
       "officialAnswer": "Rotavirus",
       "explanation": "Rotavirus commonly causes significant winter gastroenteritis in infants and young children.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28358,7 +28358,7 @@
       "officialAnswer": "Viral load, CD4 lymphocyte quantitation, and resistance testing",
       "explanation": "The source discusses plasma viral load, CD4 lymphocyte counts, and genotype/phenotype resistance testing as relevant laboratory information for antiviral management.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28378,7 +28378,7 @@
       "officialAnswer": "RSV",
       "explanation": "RSV is a major cause of bronchiolitis and hospitalization for respiratory illness in infants, with severe disease risk in vulnerable children.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28398,7 +28398,7 @@
       "officialAnswer": "Rabies immune globulin plus rabies vaccination",
       "explanation": "When a potentially rabid animal cannot be tested, the source recommends prompt postexposure prophylaxis with rabies immune globulin and vaccine.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28418,7 +28418,7 @@
       "officialAnswer": "RT-PCR",
       "explanation": "The source identifies RT-PCR as the recommended laboratory method for confirming SARS coronavirus infection.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28438,7 +28438,7 @@
       "officialAnswer": "HSV",
       "explanation": "The source describes neonatal disseminated HSV, particularly HSV-2 associated with maternal genital infection, as potentially fatal.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28458,7 +28458,7 @@
       "officialAnswer": "Varicella-zoster virus",
       "explanation": "Varicella-zoster virus remains latent in sensory ganglia after chickenpox and may later reactivate as shingles.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28478,7 +28478,7 @@
       "officialAnswer": "Norovirus",
       "explanation": "Norovirus is a classic cause of explosive gastroenteritis outbreaks in settings such as cruise ships and affects adults as well as children.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28498,7 +28498,7 @@
       "officialAnswer": "BK virus in urine",
       "explanation": "BK polyomavirus has urinary tract tropism and can cause renal and bladder disease in immunocompromised patients; urine is an appropriate specimen.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28518,7 +28518,7 @@
       "officialAnswer": "Ebola virus",
       "explanation": "Ebola is a filovirus with characteristic filamentous forms and is associated with severe viral hemorrhagic fever.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28538,7 +28538,7 @@
       "officialAnswer": "Zika virus",
       "explanation": "The source links Zika virus infection with serious fetal neurologic abnormalities, including microcephaly.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28558,7 +28558,7 @@
       "officialAnswer": "Hepatitis E virus",
       "explanation": "Hepatitis E is transmitted by the fecal-oral route and is associated with a substantially increased risk of severe or fatal disease during pregnancy.",
       "source": {
-        "fileName": "Mycology and Virology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Mycology and Virology.pdf",
         "page": 13,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28578,7 +28578,7 @@
       "officialAnswer": "Phenotype",
       "explanation": "Routine serologic blood grouping demonstrates the observable antigen expression of the red cells, which is the phenotype.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28598,7 +28598,7 @@
       "officialAnswer": "Dosage",
       "explanation": "Dosage describes stronger antibody reactivity with homozygous antigen expression than with heterozygous expression.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28618,7 +28618,7 @@
       "officialAnswer": "Codominance",
       "explanation": "ABO A and B alleles are codominant, so both antigens are expressed when both alleles are inherited.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28638,7 +28638,7 @@
       "officialAnswer": "hh",
       "explanation": "The Bombay phenotype lacks H substance and is associated with the hh genotype.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28658,7 +28658,7 @@
       "officialAnswer": "2pq",
       "explanation": "The heterozygous population is represented by 2pq; p^2 and q^2 represent the two homozygous populations.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28678,7 +28678,7 @@
       "officialAnswer": "A2 individuals may produce anti-A1",
       "explanation": "Some A2 individuals can form anti-A1, whereas an A1 individual would not normally make antibody against A1 on their own cells.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28698,7 +28698,7 @@
       "officialAnswer": "Bombay",
       "explanation": "Bombay cells lack H antigen and the serum contains anti-H, making ordinary group O red cells incompatible.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28718,7 +28718,7 @@
       "officialAnswer": "A1B",
       "explanation": "A1B cells convert much of the available H substance into A and B structures, leaving relatively little H.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28738,7 +28738,7 @@
       "officialAnswer": "Acquired B phenomenon",
       "explanation": "A weak unexpected anti-B reaction in an otherwise group A pattern can occur with acquired B antigen.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28758,7 +28758,7 @@
       "officialAnswer": "Cold autoagglutination",
       "explanation": "Panreactivity involving the autocontrol is consistent with a cold autoantibody; warm washing and adsorption may be needed to resolve the type.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28778,7 +28778,7 @@
       "officialAnswer": "Rh negative",
       "explanation": "Routine Rh-positive versus Rh-negative classification depends on the presence or absence of D antigen, not on c or e.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28798,7 +28798,7 @@
       "officialAnswer": "The cells may already be coated with IgG and produce misleading AHG reactivity",
       "explanation": "Weak D testing includes an antiglobulin phase. Preexisting coating of patient cells can cause a positive reaction unrelated to D antigen.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28818,7 +28818,7 @@
       "officialAnswer": "A unit lacking c antigen",
       "explanation": "Patients with alloanti-c should receive red cells that lack the corresponding c antigen.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28838,7 +28838,7 @@
       "officialAnswer": "D--/D--",
       "explanation": "D--/D-- cells can show enhanced D expression because precursor availability is not shared with C/c or E/e expression.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28858,7 +28858,7 @@
       "officialAnswer": "37 C incubation plus IAT",
       "explanation": "Weak D detection uses warm incubation followed by the indirect antiglobulin test to demonstrate weakly expressed D.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28878,7 +28878,7 @@
       "officialAnswer": "Neutralization with appropriate saliva",
       "explanation": "Lewis substances in suitable saliva can neutralize Lewis antibodies and help uncover additional clinically significant specificities.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28898,7 +28898,7 @@
       "officialAnswer": "Biphasic hemolysis",
       "explanation": "The Donath-Landsteiner antibody characteristically binds at cold temperature and causes complement-mediated hemolysis after warming to 37 C.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28918,7 +28918,7 @@
       "officialAnswer": "Anti-I",
       "explanation": "Adult red cells are rich in I antigen, whereas cord cells predominantly express i antigen, so anti-I reacts poorly with cord cells.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28938,7 +28938,7 @@
       "officialAnswer": "Approximately 95% confidence in the proposed specificity",
       "explanation": "The 3+3 rule uses reactive antigen-positive cells and nonreactive antigen-negative cells to support antibody identification at about 95% confidence.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28958,7 +28958,7 @@
       "officialAnswer": "Select Jka-negative compatible units",
       "explanation": "Kidd antibodies may fall below detectable levels. A known historical anti-Jka must still be honored with antigen-negative blood.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28978,7 +28978,7 @@
       "officialAnswer": "Compatibility testing should be completed as soon as possible",
       "explanation": "Emergency release does not eliminate the need for compatibility testing. Testing should proceed when a patient specimen becomes available.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -28998,7 +28998,7 @@
       "officialAnswer": "High-frequency alloantibody or multiple alloantibodies",
       "explanation": "Panreactivity with reagent cells plus a negative autocontrol points away from an autoantibody and toward alloantibody reactivity.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29018,7 +29018,7 @@
       "officialAnswer": "Recipient RBCs with donor plasma",
       "explanation": "The minor crossmatch tests recipient red cells against donor serum or plasma.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29038,7 +29038,7 @@
       "officialAnswer": "A positive DAT on the donor cells",
       "explanation": "An isolated incompatible donor with a negative screen can result from antibody or complement already coating that donor unit.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29058,7 +29058,7 @@
       "officialAnswer": "When the current screen is negative and there is no antibody history",
       "explanation": "The abbreviated immediate-spin approach is appropriate when there is no history of clinically significant antibodies and the current antibody screen is negative.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29078,7 +29078,7 @@
       "officialAnswer": "Check for clerical or identification errors",
       "explanation": "Clerical and identification errors are an important cause of serious transfusion reactions and should be checked early in the investigation.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29098,7 +29098,7 @@
       "officialAnswer": "Delayed immune response from a previously formed alloantibody",
       "explanation": "A delayed hemolytic transfusion reaction can follow an anamnestic rise in antibodies such as Kidd antibodies several days after exposure.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29118,7 +29118,7 @@
       "officialAnswer": "Antileukocyte antibody",
       "explanation": "TRALI is associated with antibodies directed against leukocyte antigens, including HLA or neutrophil antigens.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29138,7 +29138,7 @@
       "officialAnswer": "Febrile nonhemolytic transfusion reaction",
       "explanation": "A transfusion-associated fever rise of more than 1 C without another explanation is characteristic of a febrile nonhemolytic reaction.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29158,7 +29158,7 @@
       "officialAnswer": "Volume overload",
       "explanation": "The hemodynamic pattern and transfused volume support transfusion-associated circulatory overload rather than immune hemolysis.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29178,7 +29178,7 @@
       "officialAnswer": "6",
       "explanation": "One RBC unit typically raises hemoglobin by roughly 1 to 1.5 g/dL, so an increase of about 6 g/dL may require approximately six units.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29198,7 +29198,7 @@
       "officialAnswer": "The unit may no longer meet return-to-inventory requirements",
       "explanation": "The chapter applies a 30-minute limit to RBC units kept outside appropriate storage conditions before return to inventory.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29218,7 +29218,7 @@
       "officialAnswer": "Granulocyte concentrate",
       "explanation": "Granulocyte concentrates may provide short-term support when phagocytic function is severely impaired.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29238,7 +29238,7 @@
       "officialAnswer": "20-24 C with continuous agitation",
       "explanation": "Standard platelets are stored at room-temperature range with continuous agitation to preserve function.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29258,7 +29258,7 @@
       "officialAnswer": "To prevent donor lymphocytes from proliferating",
       "explanation": "Irradiation prevents transfusion-associated graft-versus-host disease by disabling the proliferative capacity of donor lymphocytes.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29278,7 +29278,7 @@
       "officialAnswer": "No deferral solely because of the vaccine if symptom-free",
       "explanation": "The chapter states that a symptom-free donor does not require a deferral simply because of hepatitis B vaccination.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29298,7 +29298,7 @@
       "officialAnswer": "Platelet count 75 x 10^9/L",
       "explanation": "The chapter gives a minimum platelet count above 150 x 10^9/L for frequent platelet donors; 75 x 10^9/L is too low.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29318,7 +29318,7 @@
       "officialAnswer": "The donor may still be acceptable",
       "explanation": "Athletes can have physiologic bradycardia and may remain eligible when the low pulse reflects conditioning rather than illness.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29338,7 +29338,7 @@
       "officialAnswer": "160/110 mm Hg",
       "explanation": "The chapter lists a diastolic upper limit of 100 mm Hg, so a diastolic pressure of 110 mm Hg is unacceptable.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29358,7 +29358,7 @@
       "officialAnswer": "Platelets",
       "explanation": "Clopidogrel impairs platelet function, so platelet products should not be collected for transfusion from that donor under the chapter guidance.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29378,7 +29378,7 @@
       "officialAnswer": "Passive anti-D may be present after Rh immune globulin",
       "explanation": "Rh immune globulin can produce detectable passive anti-D and is a common reason for a positive screen in an Rh-negative pregnant patient.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29398,7 +29398,7 @@
       "officialAnswer": "IgG anti-A,B",
       "explanation": "The chapter identifies maternal IgG anti-A,B as a possible cause of a positive neonatal DAT in this setting.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29418,7 +29418,7 @@
       "officialAnswer": "Neonates do not produce their own significant antibodies at birth",
       "explanation": "Antibodies found in a newborn are maternally derived; the chapter notes that babies do not begin producing their own antibodies until later infancy.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29438,7 +29438,7 @@
       "officialAnswer": "AB-negative or O-negative RBCs",
       "explanation": "AB-negative or O-negative red cells lack D and are ABO compatible choices for an AB infant in the scenario described.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29458,7 +29458,7 @@
       "officialAnswer": "Plasmapheresis",
       "explanation": "Plasmapheresis can lower circulating maternal anti-E temporarily while fetal maturity and disease severity are assessed.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29478,7 +29478,7 @@
       "officialAnswer": "Test the individual donor samples from that pool",
       "explanation": "Reactive NAT pools require resolution by testing individual donor samples to identify the reactive donation.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29498,7 +29498,7 @@
       "officialAnswer": "HIV, HCV, HBV, Zika, and West Nile virus",
       "explanation": "The chapter lists NAT for HIV, HCV, HBV, Zika, and West Nile virus.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29518,7 +29518,7 @@
       "officialAnswer": "HBsAg",
       "explanation": "The chapter identifies hepatitis B surface antigen as the first listed marker to appear in HBV infection.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29538,7 +29538,7 @@
       "officialAnswer": "Anti-CMV",
       "explanation": "CMV antibody testing is not required for every donor unit, though it may be used for selected high-risk recipients.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29558,7 +29558,7 @@
       "officialAnswer": "CD38 is present on reagent red cells as well as myeloma cells",
       "explanation": "Daratumumab targets CD38, which is also expressed on red cells, producing broad serologic reactivity that can mimic a warm autoantibody pattern.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29578,7 +29578,7 @@
       "officialAnswer": "Group A secretor pattern",
       "explanation": "Neutralization of anti-A and anti-H indicates soluble A and H substances in saliva, supporting a group A secretor.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29598,7 +29598,7 @@
       "officialAnswer": "Perform expanded ABO discrepancy testing with anti-A,B, anti-H, additional reagent cells, and an autocontrol",
       "explanation": "The chapter recommends a structured discrepancy workup rather than assigning an ABO type before the conflicting reactions are explained.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29618,7 +29618,7 @@
       "officialAnswer": "Use methods that minimize cold-reactive anti-M interference",
       "explanation": "Anti-M is often cold reactive. Techniques that reduce or remove its cold reactivity can clarify the expected reverse-grouping reactions.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29638,7 +29638,7 @@
       "officialAnswer": "AET-treated cells",
       "explanation": "The chapter notes that AET treatment denatures Kell antigens but does not specifically enhance or clarify Kidd antibodies, while homozygous cells, enzymes, and longer incubation can help detect anti-Jka.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29658,7 +29658,7 @@
       "officialAnswer": "Cord blood cells",
       "explanation": "Cord red cells predominantly express i rather than I antigen, so anti-I should react weakly or not at all and can be distinguished from other cold-reactive patterns.",
       "source": {
-        "fileName": "Immunohematology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_4_Immunohematology.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29678,7 +29678,7 @@
       "officialAnswer": "Immunoglobulin",
       "explanation": "Immunoglobulins are antigen-specific products of adaptive immunity. Complement and lysozyme participate mainly in nonspecific defense mechanisms.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29698,7 +29698,7 @@
       "officialAnswer": "Bone marrow and thymus",
       "explanation": "Hematopoietic cells arise in bone marrow, while T lymphocytes undergo maturation and selection in the thymus.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29718,7 +29718,7 @@
       "officialAnswer": "Plasma cells and memory B cells",
       "explanation": "Activated B cells differentiate into antibody-secreting plasma cells and long-lived memory B cells.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29738,7 +29738,7 @@
       "officialAnswer": "CD3",
       "explanation": "CD3 is characteristically associated with mature T cells and forms part of the T-cell receptor complex.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29758,7 +29758,7 @@
       "officialAnswer": "MHC class I",
       "explanation": "Cytotoxic CD8 T cells recognize antigen presented by MHC class I molecules, which are expressed on most nucleated cells.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29778,7 +29778,7 @@
       "officialAnswer": "C3",
       "explanation": "C3 is a central component shared by both pathways and contributes to downstream complement activation.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29798,7 +29798,7 @@
       "officialAnswer": "IgM",
       "explanation": "IgM typically appears first after initial antigen exposure; IgG becomes more prominent in the secondary response.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29818,7 +29818,7 @@
       "officialAnswer": "IgG",
       "explanation": "IgG crosses the placenta through Fc receptor-mediated transport and provides temporary neonatal protection.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29838,7 +29838,7 @@
       "officialAnswer": "Affinity",
       "explanation": "Affinity describes the strength of a single antigen-antibody interaction; avidity reflects the combined strength of multiple interactions.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29858,7 +29858,7 @@
       "officialAnswer": "Prozone",
       "explanation": "In the prozone, antibody excess prevents optimal lattice formation and may produce a false-negative result.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29878,7 +29878,7 @@
       "officialAnswer": "Falsely high signal",
       "explanation": "Residual enzyme conjugate can react with substrate even though it is not specifically bound, increasing the measured signal.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29898,7 +29898,7 @@
       "officialAnswer": "Dilute the specimen and repeat",
       "explanation": "A result above the validated calibration range should generally be diluted and reassayed so it falls within the reportable range.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29918,7 +29918,7 @@
       "officialAnswer": "Immunofixation electrophoresis",
       "explanation": "IFE confirms monoclonality and identifies the immunoglobulin heavy- and light-chain classes.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29938,7 +29938,7 @@
       "officialAnswer": "Negative test",
       "explanation": "If patient antibody did not fix complement, complement remains available to lyse the indicator red cells; therefore hemolysis represents a negative result.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29958,7 +29958,7 @@
       "officialAnswer": "Select the cell population to analyze",
       "explanation": "Gating isolates a population based on scatter or fluorescence characteristics so the intended cells are counted and characterized.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29978,7 +29978,7 @@
       "officialAnswer": "Biological false-positive nontreponemal test",
       "explanation": "RPR is a nontreponemal assay and may react in conditions unrelated to syphilis. A negative treponemal test supports a biological false positive.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -29998,7 +29998,7 @@
       "officialAnswer": "p24 antigen",
       "explanation": "Fourth-generation assays detect HIV antibodies and p24 antigen, allowing infection to be detected before antibodies are fully developed.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30018,7 +30018,7 @@
       "officialAnswer": "Early HIV infection before detectable antibody",
       "explanation": "Positive viral RNA with a negative differentiation antibody assay can occur during early infection before seroconversion.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30038,7 +30038,7 @@
       "officialAnswer": "HIV nucleic acid testing",
       "explanation": "Maternal IgG can persist in the infant and confound antibody testing. Nucleic acid testing directly detects viral material.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30058,7 +30058,7 @@
       "officialAnswer": "HBsAg",
       "explanation": "HBsAg is an early marker of HBV infection and generally becomes detectable before protective anti-HBs develops.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30078,7 +30078,7 @@
       "officialAnswer": "IgM anti-HBc",
       "explanation": "During the window, HBsAg and anti-HBs may both be absent. IgM anti-HBc remains an important marker of acute infection.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30098,7 +30098,7 @@
       "officialAnswer": "Current or recent EBV infection",
       "explanation": "IgM to VCA supports recent infection, while VCA IgG appears during infection and can persist afterward.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30118,7 +30118,7 @@
       "officialAnswer": "HIV viral load",
       "explanation": "Viral load responds relatively quickly to effective or failing therapy and directly reflects the amount of circulating HIV RNA.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30138,7 +30138,7 @@
       "officialAnswer": "Loss of tolerance to self-antigens",
       "explanation": "Autoimmunity results when immune tolerance to self is lost, allowing immune responses against the body's own antigens.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30158,7 +30158,7 @@
       "officialAnswer": "Systemic lupus erythematosus",
       "explanation": "Anti-Sm is strongly associated with SLE and is considered a highly specific serologic marker.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30178,7 +30178,7 @@
       "officialAnswer": "Speckled",
       "explanation": "A speckled ANA pattern commonly reflects antibodies directed against extractable nuclear antigens.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30198,7 +30198,7 @@
       "officialAnswer": "Fc region",
       "explanation": "Classic rheumatoid factor is usually IgM that recognizes determinants in the Fc portion of IgG.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30218,7 +30218,7 @@
       "officialAnswer": "Anti-CCP",
       "explanation": "Anti-CCP is an important serologic criterion for RA and can be positive even when rheumatoid factor is negative.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30238,7 +30238,7 @@
       "officialAnswer": "Anti-thyroid peroxidase",
       "explanation": "Thyroid peroxidase antibodies can occur in autoimmune hyperthyroidism and autoimmune hypothyroidism.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30258,7 +30258,7 @@
       "officialAnswer": "HLA-DQ2/DQ8 typing",
       "explanation": "Celiac disease is strongly associated with HLA-DQ2 and/or DQ8. Their presence is supportive, though not diagnostic by itself.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30278,7 +30278,7 @@
       "officialAnswer": "Type I",
       "explanation": "Type I hypersensitivity is immediate and IgE mediated, with mast-cell degranulation after allergen cross-linking.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30298,7 +30298,7 @@
       "officialAnswer": "Type II",
       "explanation": "Type II hypersensitivity involves antibodies directed against antigens on cells or tissues, resulting in cytotoxic injury.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30318,7 +30318,7 @@
       "officialAnswer": "Type III",
       "explanation": "Type III reactions result from deposition of soluble antigen-antibody complexes followed by complement-driven inflammation.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30338,7 +30338,7 @@
       "officialAnswer": "T lymphocytes and macrophages",
       "explanation": "The tuberculin reaction is a delayed, type IV response driven by sensitized T cells and recruited macrophages.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30358,7 +30358,7 @@
       "officialAnswer": "Direct antiglobulin test",
       "explanation": "The DAT detects antibody and/or complement bound to RBCs inside the patient.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30378,7 +30378,7 @@
       "officialAnswer": "Anti-IgA",
       "explanation": "IgA-deficient patients can become sensitized to IgA and may develop anti-IgA capable of causing severe reactions after plasma exposure.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30398,7 +30398,7 @@
       "officialAnswer": "CBC with differential",
       "explanation": "A CBC and differential provide a practical first screen for abnormal leukocyte numbers or morphology before specialized immune testing.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30418,7 +30418,7 @@
       "officialAnswer": "Quantitative immunoglobulin levels",
       "explanation": "Quantitative immunoglobulin testing can demonstrate markedly reduced or absent IgA and help explain anti-IgA-associated transfusion reactions.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30438,7 +30438,7 @@
       "officialAnswer": "Waldenstrom macroglobulinemia",
       "explanation": "Waldenstrom macroglobulinemia is a lymphoplasmacytic malignancy characterized by secretion of monoclonal IgM.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30458,7 +30458,7 @@
       "officialAnswer": "Flow cytometry",
       "explanation": "Flow cytometry can count and characterize T-cell populations using CD markers, making it useful in thymic/T-cell deficiency.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30478,7 +30478,7 @@
       "officialAnswer": "Functional activity of the classical complement pathway",
       "explanation": "CH50 measures the serum complement activity required to lyse a defined proportion of antibody-sensitized red cells and reflects classical pathway function.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30498,7 +30498,7 @@
       "officialAnswer": "DHR or NBT",
       "explanation": "DHR and the older NBT assay assess oxidative burst activity, which is defective in chronic granulomatous disease.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30518,7 +30518,7 @@
       "officialAnswer": "Monitor for possible recurrence",
       "explanation": "CEA lacks adequate specificity and sensitivity as a stand-alone diagnostic test, but serial measurements can help monitor treated colorectal cancer for recurrence.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30538,7 +30538,7 @@
       "officialAnswer": "A single tumor marker may lack sufficient sensitivity",
       "explanation": "Tumor markers are imperfect. A low CA-125 cannot by itself exclude recurrent ovarian cancer.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30558,7 +30558,7 @@
       "officialAnswer": "Some testicular tumors produce hCG",
       "explanation": "Certain testicular tumors secrete hCG, including free beta subunit, so hCG can function as a tumor marker in men.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30578,7 +30578,7 @@
       "officialAnswer": "T cells",
       "explanation": "Acute rejection is predominantly a cell-mediated response in which T lymphocytes attack graft tissue.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30598,7 +30598,7 @@
       "officialAnswer": "Avoidance of graft-versus-host disease",
       "explanation": "Autologous cells originate from the patient, so they do not mount an allogeneic graft-versus-host attack.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30618,7 +30618,7 @@
       "officialAnswer": "PCR-based testing",
       "explanation": "HLA genes can be characterized by molecular methods, and PCR-based techniques are commonly used for tissue typing.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30638,7 +30638,7 @@
       "officialAnswer": "1:2, 1:6, 1:12",
       "explanation": "The first step from 1:2 to 1:6 is threefold, but 1:6 to 1:12 is only twofold. A consistent threefold series would continue to 1:18.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30658,7 +30658,7 @@
       "officialAnswer": "APTT",
       "explanation": "Antiphospholipid antibodies may interfere with phospholipid-dependent coagulation assays, commonly prolonging the APTT in vitro.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30678,7 +30678,7 @@
       "officialAnswer": "Neutrophils, macrophages, complement, fibrinogen, and C-reactive protein",
       "explanation": "Early inflammation prominently involves phagocytes, complement, and acute-phase proteins such as fibrinogen and CRP.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30698,7 +30698,7 @@
       "officialAnswer": "Markedly reduced IgG, IgA, and IgM",
       "explanation": "Bruton agammaglobulinemia prevents normal B-cell maturation, producing profound deficiency of multiple immunoglobulin classes.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30718,7 +30718,7 @@
       "officialAnswer": "Quantitative immunoglobulin measurement",
       "explanation": "Recurrent mucosal infections plus anaphylaxis to plasma raises concern for IgA deficiency with anti-IgA; measuring immunoglobulins helps evaluate this possibility.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30738,7 +30738,7 @@
       "officialAnswer": "Specific antigen assays such as ELISA or multiplex testing",
       "explanation": "Specific antigen assays can distinguish individual autoantibodies when a complex fluorescence pattern cannot be resolved by dilution.",
       "source": {
-        "fileName": "Immunology_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_3_Immunology.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30758,7 +30758,7 @@
       "officialAnswer": "Tissue factor",
       "explanation": "Tissue factor is exposed after vascular injury and binds factor VII/VIIa. The resulting complex helps activate factors IX and X, initiating thrombin generation.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30778,7 +30778,7 @@
       "officialAnswer": "Prolonged APTT",
       "explanation": "Factor XII participates in the contact pathway measured by the APTT in vitro. Its deficiency can markedly prolong the APTT even though it does not usually produce a bleeding tendency.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30798,7 +30798,7 @@
       "officialAnswer": "3.2% sodium citrate",
       "explanation": "Sodium citrate reversibly binds calcium and preserves coagulation factors well enough for routine clot-based testing.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30818,7 +30818,7 @@
       "officialAnswer": "9:1",
       "explanation": "Routine coagulation specimens require approximately nine parts blood to one part citrate. Incorrect filling changes the effective citrate concentration and can distort clotting times.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30838,7 +30838,7 @@
       "officialAnswer": "Factor X belongs to the common pathway",
       "explanation": "Factor X is part of the common pathway evaluated by both PT and APTT, so a significant deficiency can prolong both assays.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30858,7 +30858,7 @@
       "officialAnswer": "Factor XIII functions after fibrin formation",
       "explanation": "Factor XIII stabilizes an already formed fibrin clot by cross-linking fibrin. PT and APTT measure events leading to initial fibrin formation, so they do not assess factor XIII.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30878,7 +30878,7 @@
       "officialAnswer": "It supports carboxylation of several coagulation proteins",
       "explanation": "Vitamin K is needed for gamma-carboxylation of vitamin K-dependent proteins, including factors II, VII, IX, and X.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30898,7 +30898,7 @@
       "officialAnswer": "Breakdown of cross-linked fibrin",
       "explanation": "D-dimer is produced when plasmin degrades fibrin that has been cross-linked by factor XIIIa, making it a marker of clot formation followed by fibrinolysis.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30918,7 +30918,7 @@
       "officialAnswer": "APTT",
       "explanation": "The APTT assesses factors of the intrinsic pathway, including XII, XI, IX, and VIII, plus the common pathway factors.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30938,7 +30938,7 @@
       "officialAnswer": "Excess citrate relative to plasma binds reagent calcium",
       "explanation": "Underfilling leaves too much citrate relative to plasma. During testing, excess citrate can bind added calcium and artifactually prolong clotting times.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30958,7 +30958,7 @@
       "officialAnswer": "Tissue plasminogen activator",
       "explanation": "Tissue plasminogen activator is produced by the body and promotes conversion of plasminogen to plasmin.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30978,7 +30978,7 @@
       "officialAnswer": "Alpha-2 antiplasmin",
       "explanation": "Alpha-2 antiplasmin rapidly binds and inhibits free plasmin, limiting excessive fibrinolysis.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -30998,7 +30998,7 @@
       "officialAnswer": "TTP",
       "explanation": "TTP is characterized by platelet consumption in microvascular thrombi and MAHA. Unlike DIC, routine PT and APTT are generally normal.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31018,7 +31018,7 @@
       "officialAnswer": "Cyclooxygenase",
       "explanation": "Aspirin irreversibly inhibits platelet cyclooxygenase, decreasing thromboxane A2 production and thereby reducing platelet aggregation.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31038,7 +31038,7 @@
       "officialAnswer": "GPIb",
       "explanation": "GPIb serves as an important platelet receptor for VWF and is essential for platelet adhesion at sites of vascular injury.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31058,7 +31058,7 @@
       "officialAnswer": "Normal platelet count",
       "explanation": "Platelet number is generally normal in von Willebrand disease. The disorder primarily affects VWF-mediated adhesion and can also reduce factor VIII activity.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31078,7 +31078,7 @@
       "officialAnswer": "Giant platelets and thrombocytopenia",
       "explanation": "Bernard-Soulier syndrome results from a GPIb-related adhesion defect and classically features giant platelets with thrombocytopenia.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31098,7 +31098,7 @@
       "officialAnswer": "Bernard-Soulier syndrome",
       "explanation": "Ristocetin-dependent agglutination requires the VWF-GPIb interaction. Bernard-Soulier syndrome lacks functional GPIb and therefore shows an abnormal ristocetin response.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31118,7 +31118,7 @@
       "officialAnswer": "Normal ristocetin response with poor responses to ADP, collagen, and epinephrine",
       "explanation": "Glanzmann thrombasthenia is caused by a GPIIb/IIIa defect. Ristocetin-dependent adhesion remains intact, while aggregation to several other agonists is impaired.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31138,7 +31138,7 @@
       "officialAnswer": "Acute immune thrombocytopenia",
       "explanation": "Acute immune thrombocytopenia commonly follows viral infection in children and presents with isolated thrombocytopenia and mucocutaneous bleeding.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31158,7 +31158,7 @@
       "officialAnswer": "Escherichia coli O157:H7",
       "explanation": "HUS is strongly associated with Shiga toxin-producing E. coli, particularly O157:H7, and may cause thrombocytopenia, MAHA, and renal injury.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31178,7 +31178,7 @@
       "officialAnswer": "Granules",
       "explanation": "Storage pool deficiencies are platelet granule disorders, often involving reduced dense-granule contents and impaired secretion.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31198,7 +31198,7 @@
       "officialAnswer": "ADAMTS13",
       "explanation": "Acquired TTP commonly results from autoantibodies against ADAMTS13, allowing unusually large VWF multimers to persist and promote platelet-rich microthrombi.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31218,7 +31218,7 @@
       "officialAnswer": "Prostacyclin",
       "explanation": "Prostacyclin released by endothelium inhibits platelet aggregation, opposing the proaggregatory effect of thromboxane A2.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31238,7 +31238,7 @@
       "officialAnswer": "Hemophilia A",
       "explanation": "Hemophilia A is factor VIII deficiency. Because factor VIII belongs to the intrinsic pathway, APTT is prolonged while PT and platelet studies remain normal.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31258,7 +31258,7 @@
       "officialAnswer": "Factor X",
       "explanation": "Factor X is part of the common pathway, so its deficiency can prolong both PT and APTT. Thrombin time evaluates conversion of fibrinogen to fibrin and may remain normal.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31278,7 +31278,7 @@
       "officialAnswer": "Obstructive jaundice causing impaired vitamin K absorption",
       "explanation": "Vitamin K is fat soluble and requires bile for intestinal absorption. Obstructive jaundice can therefore produce vitamin K deficiency and impaired synthesis of functional vitamin K-dependent factors.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31298,7 +31298,7 @@
       "officialAnswer": "Factor VIII activity",
       "explanation": "Specific factor assays measure the patient's ability to correct plasma deficient in the factor being tested. Factor VIII-deficient plasma is therefore used to assess factor VIII activity.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31318,7 +31318,7 @@
       "officialAnswer": "DIC",
       "explanation": "DIC consumes platelets and coagulation factors during widespread thrombin and fibrin generation, often prolonging both PT and APTT.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31338,7 +31338,7 @@
       "officialAnswer": "Adenocarcinoma",
       "explanation": "Some malignancies, including adenocarcinomas, can release procoagulant substances and trigger disseminated coagulation.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31358,7 +31358,7 @@
       "officialAnswer": "Factor XII is important for the in-vitro contact pathway but is not required for normal physiologic hemostasis",
       "explanation": "Factor XII strongly affects contact activation in laboratory APTT testing, yet physiologic clotting can proceed through tissue factor-dependent mechanisms.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31378,7 +31378,7 @@
       "officialAnswer": "von Willebrand disease",
       "explanation": "VWF supports platelet adhesion and carries factor VIII. VWF deficiency can therefore cause an abnormal ristocetin response and a prolonged APTT from reduced factor VIII.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31398,7 +31398,7 @@
       "officialAnswer": "Hemarthrosis",
       "explanation": "Severe factor VIII deficiency can cause spontaneous deep-tissue bleeding, particularly recurrent bleeding into joints.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31418,7 +31418,7 @@
       "officialAnswer": "Factor XIII",
       "explanation": "Factor XIII stabilizes fibrin after the initial clot forms. Its deficiency can cause delayed bleeding and poor wound healing while routine PT and APTT remain normal.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31438,7 +31438,7 @@
       "officialAnswer": "Type 1",
       "explanation": "Type 1 is the most common form and generally reflects a partial quantitative deficiency of VWF.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31458,7 +31458,7 @@
       "officialAnswer": "Antithrombin acts as an important heparin cofactor",
       "explanation": "Antithrombin is a major physiologic anticoagulant, and heparin greatly enhances its inhibitory activity against several activated coagulation enzymes.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31478,7 +31478,7 @@
       "officialAnswer": "A circulating inhibitor",
       "explanation": "Normal plasma supplies missing factors and typically corrects a factor deficiency. Failure to correct suggests that an inhibitor remains active in the mixture.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31498,7 +31498,7 @@
       "officialAnswer": "Phospholipid-dependent coagulation assays",
       "explanation": "Lupus anticoagulants target phospholipid-associated reactions and can prolong phospholipid-dependent clotting tests such as APTT and DRVVT.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31518,7 +31518,7 @@
       "officialAnswer": "Dilute Russell viper venom test",
       "explanation": "DRVVT is phospholipid dependent and is commonly used as part of lupus anticoagulant evaluation.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31538,7 +31538,7 @@
       "officialAnswer": "INR",
       "explanation": "The INR standardizes PT results across thromboplastin reagents and is the routine laboratory measure used to monitor warfarin.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31558,7 +31558,7 @@
       "officialAnswer": "Va and VIIIa",
       "explanation": "Activated protein C downregulates coagulation by proteolytically inactivating factors Va and VIIIa, with protein S enhancing this action.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31578,7 +31578,7 @@
       "officialAnswer": "Factor V Leiden",
       "explanation": "Factor V Leiden makes factor Va relatively resistant to inactivation by activated protein C, increasing thrombotic risk.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31598,7 +31598,7 @@
       "officialAnswer": "Prasugrel",
       "explanation": "Prasugrel is a P2Y12 inhibitor and reduces ADP-mediated platelet aggregation. Clopidogrel acts through the same receptor.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31618,7 +31618,7 @@
       "officialAnswer": "Chromogenic anti-factor Xa assay",
       "explanation": "The anti-factor Xa assay estimates heparin activity through inhibition of a known amount of factor Xa in an antithrombin-dependent system.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31638,7 +31638,7 @@
       "officialAnswer": "Antibody against a heparin-PF4 complex",
       "explanation": "Immune HIT results from antibodies against complexes of heparin and platelet factor 4. These immune complexes activate platelets and can cause both thrombocytopenia and thrombosis.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31658,7 +31658,7 @@
       "officialAnswer": "Argatroban",
       "explanation": "Argatroban directly inhibits thrombin and can be used when heparin must be stopped because of HIT.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31678,7 +31678,7 @@
       "officialAnswer": "Bethesda assay",
       "explanation": "The Bethesda assay measures the inhibitory effect of patient plasma on factor VIII activity and reports the inhibitor titer.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31698,7 +31698,7 @@
       "officialAnswer": "Factor Va resists normal inactivation by activated protein C",
       "explanation": "The mutation makes activated factor V resistant to cleavage by activated protein C, allowing procoagulant activity to persist longer.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31718,7 +31718,7 @@
       "officialAnswer": "Platelet aggregation study",
       "explanation": "Aspirin affects platelet function rather than platelet number or routine coagulation pathways, so platelet aggregation testing can demonstrate its effect.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31738,7 +31738,7 @@
       "officialAnswer": "Acute ITP",
       "explanation": "A recent viral illness followed by abrupt isolated thrombocytopenia and mucocutaneous bleeding in a child strongly supports acute immune thrombocytopenia.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31758,7 +31758,7 @@
       "officialAnswer": "von Willebrand disease",
       "explanation": "The combination of mucocutaneous bleeding, reduced VWF measurements, abnormal ristocetin response, and reduced factor VIII-related activity is characteristic of von Willebrand disease.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31778,7 +31778,7 @@
       "officialAnswer": "Cryoprecipitate",
       "explanation": "Cryoprecipitate is rich in fibrinogen and is useful when substantial fibrinogen replacement is required.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31798,7 +31798,7 @@
       "officialAnswer": "Platelet count",
       "explanation": "HIT should be suspected when thrombosis occurs with a substantial platelet-count decline during heparin exposure.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31818,7 +31818,7 @@
       "officialAnswer": "Time-dependent factor VIII inhibitor",
       "explanation": "Factor VIII inhibitors may show time- and temperature-dependent inhibition. Immediate correction followed by loss of correction after incubation is a classic clue.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31838,7 +31838,7 @@
       "officialAnswer": "The abnormal coagulation result should be addressed before proceeding",
       "explanation": "A markedly abnormal PT/INR signals increased procedural bleeding risk. The coagulation abnormality should be evaluated and managed before an invasive procedure.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31858,7 +31858,7 @@
       "officialAnswer": "The specimen for a clot or collection problem",
       "explanation": "Preanalytical problems can consume coagulation factors and produce unexpected results. Inspecting the specimen for clotting is an appropriate first troubleshooting step.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31878,7 +31878,7 @@
       "officialAnswer": "Cold activation of factor VII",
       "explanation": "Prolonged refrigeration can cause cold activation of factor VII and artifactually shorten PT.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31898,7 +31898,7 @@
       "officialAnswer": "Antithrombin",
       "explanation": "Heparin depends heavily on antithrombin for its anticoagulant effect. Antithrombin deficiency can therefore produce a poor response to heparin.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31918,7 +31918,7 @@
       "officialAnswer": "The negative assay alone does not safely exclude HIT",
       "explanation": "A major platelet decline plus new thrombosis during heparin exposure creates strong clinical concern for HIT. A single insensitive or negative platelet aggregation result should not override a convincing clinical picture.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31938,7 +31938,7 @@
       "officialAnswer": "Lupus anticoagulant",
       "explanation": "Failure to correct on mixing suggests an inhibitor, while correction with excess phospholipid supports a phospholipid-dependent inhibitor such as lupus anticoagulant.",
       "source": {
-        "fileName": "Hematolgy 2_Original_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_2_Hematology 2.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31958,7 +31958,7 @@
       "officialAnswer": "12 g",
       "explanation": "A 4% w/v solution contains 4 g per 100 mL, so 4 g / 100 mL x 300 mL = 12 g.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31978,7 +31978,7 @@
       "officialAnswer": "120 mL",
       "explanation": "A 16% v/v solution contains 16 mL per 100 mL, so 16 mL / 100 mL x 750 mL = 120 mL.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -31998,7 +31998,7 @@
       "officialAnswer": "C1V1 = C2V2",
       "explanation": "C1V1 = C2V2 conserves the amount of solute during dilution.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32018,7 +32018,7 @@
       "officialAnswer": "3.70",
       "explanation": "Using pH = -log[H+], -log(2.0 x 10^-4) is approximately 3.70.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32038,7 +32038,7 @@
       "officialAnswer": "8.8",
       "explanation": "At 25 C, pH + pOH = 14, so pH = 14 - 5.2 = 8.8.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32058,7 +32058,7 @@
       "officialAnswer": "Henderson-Hasselbalch equation",
       "explanation": "The Henderson-Hasselbalch equation relates pH, pKa, and the ratio of conjugate base to weak acid.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 2,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32078,7 +32078,7 @@
       "officialAnswer": "180 mg/dL",
       "explanation": "The concentration is calculated as 0.72 / 0.96 x 240 mg/dL = 180 mg/dL.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32098,7 +32098,7 @@
       "officialAnswer": "Subtract it from the patient absorbance",
       "explanation": "The serum blank contribution is subtracted from the patient absorbance before the concentration is calculated.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32118,7 +32118,7 @@
       "officialAnswer": "1 micromole of substrate consumed or product formed per minute",
       "explanation": "One international unit is the enzyme activity that consumes 1 micromole of substrate or forms 1 micromole of product per minute under defined conditions.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32138,7 +32138,7 @@
       "officialAnswer": "Coefficient of variation (CV)",
       "explanation": "The coefficient of variation expresses the standard deviation relative to the mean, allowing precision to be compared across concentrations.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32158,7 +32158,7 @@
       "officialAnswer": "95%",
       "explanation": "Approximately 95.4% of values in a Gaussian distribution lie within +/-2 standard deviations of the mean.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32178,7 +32178,7 @@
       "officialAnswer": "1_2s",
       "explanation": "The 1_2s warning rule is triggered by one control result outside 2 SD.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 3,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32198,7 +32198,7 @@
       "officialAnswer": "2_2s",
       "explanation": "The 2_2s rule is violated by two consecutive results beyond the same 2 SD limit and indicates systematic error.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32218,7 +32218,7 @@
       "officialAnswer": "1_3s",
       "explanation": "A single result beyond 3 SD violates the 1_3s rule.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32238,7 +32238,7 @@
       "officialAnswer": "4_1s",
       "explanation": "The 4_1s rule detects systematic error when four consecutive results exceed the same 1 SD limit.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32258,7 +32258,7 @@
       "officialAnswer": "Trend",
       "explanation": "A trend is a steady directional change across successive control results.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32278,7 +32278,7 @@
       "officialAnswer": "Shift",
       "explanation": "A persistent displacement of control results to one side of the mean is a shift.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32298,7 +32298,7 @@
       "officialAnswer": "Levey-Jennings chart",
       "explanation": "A Levey-Jennings chart displays sequential quality-control results around the mean and standard-deviation limits.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 4,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32318,7 +32318,7 @@
       "officialAnswer": "Tonks-Youden plot",
       "explanation": "A Tonks-Youden plot compares results for two control levels and helps distinguish systematic from random differences among laboratories.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32338,7 +32338,7 @@
       "officialAnswer": "CUSUM",
       "explanation": "CUSUM accumulates successive deviations and is sensitive to small, persistent changes.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32358,7 +32358,7 @@
       "officialAnswer": "Student t test",
       "explanation": "Student's t test is used to assess a difference between two means.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32378,7 +32378,7 @@
       "officialAnswer": "F test",
       "explanation": "The F statistic is a ratio of variances and is used to compare them.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32398,7 +32398,7 @@
       "officialAnswer": "+6",
       "explanation": "Bias is candidate minus reference, so 206 - 200 = +6.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32418,7 +32418,7 @@
       "officialAnswer": "Proportional error",
       "explanation": "Proportional error changes in magnitude with analyte concentration.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 5,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32438,7 +32438,7 @@
       "officialAnswer": "Constant error",
       "explanation": "The regression intercept estimates constant error.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32458,7 +32458,7 @@
       "officialAnswer": "Proportional error",
       "explanation": "A regression slope different from 1 estimates proportional error.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32478,7 +32478,7 @@
       "officialAnswer": "TN / (TN + FP)",
       "explanation": "Specificity is the fraction of disease-free people who test negative: TN / (TN + FP).",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32498,7 +32498,7 @@
       "officialAnswer": "TP / (TP + FN)",
       "explanation": "Sensitivity is the fraction of people with disease who test positive: TP / (TP + FN).",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32518,7 +32518,7 @@
       "officialAnswer": "120",
       "explanation": "At least 120 healthy reference individuals are recommended for direct nonparametric reference-interval estimation.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32538,7 +32538,7 @@
       "officialAnswer": "Standard deviation index (SDI)",
       "explanation": "The standard deviation index expresses the laboratory-to-peer difference in standard-deviation units.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 6,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32558,7 +32558,7 @@
       "officialAnswer": "Delta check",
       "explanation": "A delta check compares a patient's current and previous results and can flag an unexpectedly large change.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32578,7 +32578,7 @@
       "officialAnswer": "Six Sigma",
       "explanation": "Six Sigma describes process performance in terms of defect frequency, including defects per million opportunities.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32598,7 +32598,7 @@
       "officialAnswer": "Compare the new and current lots using controls and patient samples",
       "explanation": "A reagent-lot change should be validated by comparing new and current lots with controls and representative patient samples.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32618,7 +32618,7 @@
       "officialAnswer": "Severity of harm",
       "explanation": "IQCP risk assessment considers both the likelihood of an error and the severity of the resulting patient harm.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32638,7 +32638,7 @@
       "officialAnswer": "5",
       "explanation": "Sigma = (TEa - bias) / SD = (12 - 2) / 2 = 5.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 7,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32689,7 +32689,7 @@
       "officialAnswer": "Assay A",
       "explanation": "The coefficients of variation are 12%, 5%, 2%, and 2%, respectively, so assay A has the poorest relative precision.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32730,7 +32730,7 @@
       "officialAnswer": "Candidate method",
       "explanation": "The candidate method's bias relative to the reference is 246 - 235 = +11.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32771,7 +32771,7 @@
       "officialAnswer": "87.5%",
       "explanation": "Sensitivity = TP / (TP + FN) = 42 / (42 + 6) = 87.5%.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32812,7 +32812,7 @@
       "officialAnswer": "84.6%",
       "explanation": "Specificity = TN / (TN + FP) = 44 / (44 + 8) = 84.6%.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 8,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32853,7 +32853,7 @@
       "officialAnswer": "Osmometer B",
       "explanation": "Osmometer A has a CV of about 1.11%, while B has a CV of about 0.95%, so B has better relative precision.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 9,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32880,7 +32880,7 @@
       "officialAnswer": "5%",
       "explanation": "Approximately 95.4% of values lie within +/-2 SD, leaving roughly 5% outside those limits.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32907,7 +32907,7 @@
       "officialAnswer": "Trend",
       "explanation": "A progressive directional rise across successive runs is a trend.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 10,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32934,7 +32934,7 @@
       "officialAnswer": "Shift",
       "explanation": "Sustained control values on one side of the mean indicate a shift.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32961,7 +32961,7 @@
       "officialAnswer": "Day 15",
       "explanation": "On day 15, one control is above +2 SD and the other is below -2 SD, producing a range greater than 4 SD.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 11,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -32988,7 +32988,7 @@
       "officialAnswer": "A small sustained systematic movement",
       "explanation": "Accumulated positive deviations indicate a small persistent shift or trend.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -33015,7 +33015,7 @@
       "officialAnswer": "Both control levels are positively biased",
       "explanation": "In the upper-right quadrant, both control levels exceed their peer means, supporting positive systematic bias.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 12,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -33042,7 +33042,7 @@
       "officialAnswer": "Increasing negative proportional bias",
       "explanation": "Bias that becomes more negative as concentration increases indicates negative proportional bias.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 13,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -33069,7 +33069,7 @@
       "officialAnswer": "Proportional error",
       "explanation": "A slope below 1 with little intercept difference indicates proportional underestimation.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 14,
         "kind": "Original supplied MCQ reviewer"
       }
@@ -33096,7 +33096,7 @@
       "officialAnswer": "3.6",
       "explanation": "Among these options, 3.6 provides the best balance of relatively high sensitivity and relatively few false positives.",
       "source": {
-        "fileName": "Laboratory_Operations_Complete_Visual_MCQ_Reviewer.pdf",
+        "fileName": "Chapter_5_Laboratory_Operations.pdf",
         "page": 14,
         "kind": "Original supplied MCQ reviewer"
       }

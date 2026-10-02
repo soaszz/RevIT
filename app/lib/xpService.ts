@@ -83,6 +83,17 @@ export function loadLocalProgression(ownerKey: string, metrics: ProgressMetrics)
   return { snapshot: snapshotFromLocal(store), newlyUnlocked };
 }
 
+export function syncLocalProgressionFromCloud(ownerKey: string, cloud: ProgressionSnapshot) {
+  const store = readLocalStore(ownerKey);
+  const cloudXp = Number.isFinite(cloud.totalXp) ? Math.max(0, Math.floor(cloud.totalXp)) : 0;
+  const unlockedIds = new Set(store.unlocked.map((item) => item.achievement_id));
+  const missing = cloud.unlocked.filter((item) => !unlockedIds.has(item.achievement_id));
+  if (store.totalXp >= cloudXp && !missing.length) return;
+  store.totalXp = Math.max(store.totalXp, cloudXp);
+  store.unlocked.push(...missing);
+  writeLocalStore(ownerKey, store);
+}
+
 export function recordLocalProgressEvents(ownerKey: string, events: ProgressEvent[], metrics: ProgressMetrics): ProgressionUpdate {
   const store = readLocalStore(ownerKey);
   const knownEvents = new Set(store.eventKeys);

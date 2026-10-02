@@ -15,7 +15,7 @@ export default function SupportPage() {
     <main className={styles.shell}>
       <header className={styles.header}>
         <Link className={styles.brand} href="/overview" aria-label="Return to RevIT">
-          <span className={styles.wordmark} aria-hidden="true"><Image src="/revit-logo.png" alt="" width={1376} height={768} priority /></span>
+          <span className={styles.wordmark} aria-hidden="true"><Image src="/icons/neu/revit-wordmark.png" alt="" width={1086} height={362} priority /></span>
           <span>Review It Thoroughly.</span>
         </Link>
         <PublicThemeToggle />

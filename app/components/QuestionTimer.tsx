@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  reviewTimerProgress,
   reviewTimerVisualState,
   type ReviewTimerDuration,
 } from "../lib/reviewTimer";
@@ -27,8 +26,6 @@ export default function QuestionTimer({ durationSeconds, questionKey, paused, on
     if (paused) return;
     const durationMilliseconds = durationSeconds * 1000;
     const deadline = performance.now() + durationMilliseconds;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let frame = 0;
     let interval = 0;
     let expired = false;
 
@@ -42,23 +39,14 @@ export default function QuestionTimer({ durationSeconds, questionKey, paused, on
       return nextRemaining;
     };
 
-    if (reducedMotion) {
-      interval = window.setInterval(update, 250);
-    } else {
-      const tick = () => {
-        if (update() > 0) frame = window.requestAnimationFrame(tick);
-      };
-      frame = window.requestAnimationFrame(tick);
-    }
+    interval = window.setInterval(update, 250);
 
     return () => {
-      window.cancelAnimationFrame(frame);
       window.clearInterval(interval);
     };
   }, [durationSeconds, paused, questionKey]);
 
   const remainingSeconds = Math.ceil(remainingMilliseconds / 1000);
-  const progress = reviewTimerProgress(remainingMilliseconds, durationSeconds);
   const visualState = reviewTimerVisualState(remainingSeconds, durationSeconds);
   const timerColor = visualState === "critical"
     ? "var(--danger)"
@@ -94,7 +82,7 @@ export default function QuestionTimer({ durationSeconds, questionKey, paused, on
           strokeWidth="8"
           strokeLinecap="round"
           strokeDasharray="100"
-          strokeDashoffset={100 - progress * 100}
+          strokeDashoffset="0"
           transform="rotate(-90 60 60)"
         />
       </svg>

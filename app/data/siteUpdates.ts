@@ -13,6 +13,22 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-7-6",
+    version: "v1.7.6",
+    date: "October 2, 2026",
+    type: "minor",
+    title: "Scroll to Top, Flashcard Fixes, and New Achievements",
+    summary: "Added a quick scroll-to-top button, refreshed flashcard styling, added new unlockable achievements, and fixed answer sync retry issues.",
+    tags: ["Navigation", "Flashcards", "Achievements", "Sync"],
+    highlights: [
+      "Added a floating scroll-to-top button for easy navigation on long review and question lists.",
+      "Updated flashcard question and answer layouts for smoother flips and readability.",
+      "Added new unlockable achievements and badges to study progress.",
+      "Fixed an issue where clock differences caused answer submissions to get stuck in retry loops.",
+      "Refined question timer behavior and mobile navigation bar spacing."
+    ]
+  },
+  {
     id: "update-v1-7-5",
     version: "v1.7.5",
     date: "October 1, 2026",

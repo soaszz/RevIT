@@ -6,7 +6,7 @@
   height: 112px;
   border-radius: 50%;
   color: var(--green);
-  filter: drop-shadow(0 8px 18px color-mix(in srgb, currentColor 9%, transparent));
+  box-shadow: var(--neu-small);
 }
 
 .timer::before {
@@ -39,7 +39,7 @@
 .progress {
   stroke: currentColor;
   stroke-linecap: round;
-  transition: stroke-dashoffset .12s linear, stroke .2s ease;
+  transition: none;
 }
 
 .value {
@@ -81,18 +81,6 @@
   opacity: .72;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .critical:not(.paused) {
-    animation: timer-critical-pulse 1s ease-in-out infinite;
-  }
-}
-
-@keyframes timer-critical-pulse {
-  50% {
-    transform: scale(1.035);
-    filter: drop-shadow(0 0 10px color-mix(in srgb, currentColor 28%, transparent));
-  }
-}
 
 @media (max-width: 760px) {
   .timer {

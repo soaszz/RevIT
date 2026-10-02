@@ -23,7 +23,7 @@ export default function LegalPage({
       <header className="legal-header">
         <Link className="legal-brand" href="/auth" aria-label="RevIT account access">
           <span className="legal-brand-wordmark" aria-hidden="true">
-            <Image src="/revit-logo.png" alt="" width={1376} height={768} priority />
+            <Image src="/icons/neu/revit-wordmark.png" alt="" width={1086} height={362} priority />
           </span>
           <span>Review It Thoroughly.</span>
         </Link>

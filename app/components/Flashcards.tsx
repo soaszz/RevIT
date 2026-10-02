@@ -239,7 +239,7 @@ export default function Flashcards({
     const cardBook = currentCard.book ?? topicById.get(currentCard.topicId)?.book;
 
     return (
-      <div className={styles.reviewerShell}>
+      <div className={`${styles.reviewerShell} flashcard-session-active`}>
         <div className={styles.sessionToolbar}>
           <div>
             <p className="eyebrow">Passive review{selectedBook !== "all" ? ` · ${selectedBook}` : " · All Books"}</p>
@@ -292,16 +292,14 @@ export default function Flashcards({
                     </div>
                   )}
                 </div>
-                <motion.button
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ type: "spring", stiffness: 450, damping: 24 }}
+                <button
                   className={`${styles.flipControl} primary-button`}
                   type="button"
                   tabIndex={flipped ? -1 : 0}
                   onClick={toggleCard}
                 >
                   Flip card
-                </motion.button>
+                </button>
               </article>
 
               <article className={`${styles.cardFace} ${styles.cardBack}`} aria-hidden={!flipped}>
@@ -320,42 +318,36 @@ export default function Flashcards({
                   <p className={styles.sideLabel}>Explanation</p>
                   <p>{currentCard.explanation}</p>
                 </div>
-                <motion.button
-                  whileTap={{ scale: 0.96 }}
-                  transition={{ type: "spring", stiffness: 450, damping: 24 }}
+                <button
                   className={`${styles.flipControl} secondary-button`}
                   type="button"
                   tabIndex={flipped ? 0 : -1}
                   onClick={toggleCard}
                 >
                   Flip back
-                </motion.button>
+                </button>
               </article>
             </div>
         </div>
 
         <div className={styles.navigation} aria-label="Flashcard navigation">
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 450, damping: 24 }}
+          <button
             className="secondary-button"
             type="button"
             onClick={() => moveCard(-1)}
             disabled={cardIndex === 0}
           >
             <span aria-hidden="true">←</span> Previous
-          </motion.button>
+          </button>
           <span aria-live="polite">Card {cardIndex + 1} of {deck.length}</span>
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 450, damping: 24 }}
+          <button
             className="primary-button"
             type="button"
             onClick={() => moveCard(1)}
             disabled={cardIndex === deck.length - 1}
           >
             Next <span aria-hidden="true">→</span>
-          </motion.button>
+          </button>
         </div>
         <p className={styles.keyboardHint}>Tip: use Space to flip and the arrow keys to move between cards.</p>
       </div>

@@ -17,13 +17,13 @@ type MobileNavDockProps = {
 };
 
 const LEFT_TABS: Array<{ id: View; label: string; icon: string }> = [
-  { id: "overview", label: "Home", icon: "/icons/home.svg" },
-  { id: "library", label: "Review", icon: "/icons/qna.svg" },
+  { id: "overview", label: "Home", icon: "/icons/neu/overview.png" },
+  { id: "library", label: "Review", icon: "/icons/neu/review-library.png" },
 ];
 
 const RIGHT_TABS: Array<{ id: View; label: string; icon: string }> = [
-  { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
-  { id: "leaderboards", label: "Rankings", icon: "/icons/leaderboards.svg" },
+  { id: "progress", label: "Progress", icon: "/icons/neu/progress.png" },
+  { id: "leaderboards", label: "Rankings", icon: "/icons/neu/leaderboards.png" },
 ];
 
 export default function MobileNavDock({
@@ -43,14 +43,14 @@ export default function MobileNavDock({
     {
       id: "weakness",
       label: "Weakness Analytics",
-      icon: "/icons/weakness.svg",
+      icon: "/icons/neu/weakness.png",
       desc: "Mistake bank & prioritized study",
       badge: wrongCount > 0 ? `${wrongCount} missed` : undefined,
     },
     {
       id: "planner",
       label: "Study Planner",
-      icon: "/icons/planner.svg",
+      icon: "/icons/neu/study-planner.png",
       desc: "Daily study targets & exam calendar",
     },
     ...(gradesEnabled
@@ -58,7 +58,7 @@ export default function MobileNavDock({
           {
             id: "grades" as View,
             label: "Grades & Simulator",
-            icon: "/icons/grades.svg",
+            icon: "/icons/neu/grades.png",
             desc: "Assessment records & MTAP target grade",
           },
         ]
@@ -66,7 +66,7 @@ export default function MobileNavDock({
     {
       id: "assistant",
       label: "RevIT AI",
-      icon: "/icons/revit-ai.png",
+      icon: "/icons/neu/revit-ai.png",
       desc: "AI powered study explanations",
     },
   ];
@@ -99,7 +99,7 @@ export default function MobileNavDock({
                   />
                 )}
                 <span className="mobile-dock-icon">
-                  <Image src={tab.icon} alt="" width={20} height={20} />
+                  <Image src={tab.icon} alt="" width={512} height={512} unoptimized />
                 </span>
                 <span className="mobile-dock-label">{tab.label}</span>
               </motion.button>
@@ -158,7 +158,7 @@ export default function MobileNavDock({
                   />
                 )}
                 <span className="mobile-dock-icon">
-                  <Image src={tab.icon} alt="" width={20} height={20} />
+                  <Image src={tab.icon} alt="" width={512} height={512} unoptimized />
                 </span>
                 <span className="mobile-dock-label">{tab.label}</span>
               </motion.button>
@@ -223,7 +223,7 @@ export default function MobileNavDock({
                       whileTap={{ scale: 0.98 }}
                     >
                       <span className="mobile-sheet-item-icon">
-                        <Image src={item.icon} alt="" width={22} height={22} />
+                        <Image src={item.icon} alt="" width={512} height={512} unoptimized />
                       </span>
                       <div className="mobile-sheet-item-copy">
                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
@@ -244,8 +244,8 @@ export default function MobileNavDock({
                   className="mobile-sheet-sub-button"
                   onClick={() => setSheetOpen(false)}
                 >
-                  <span className="mobile-sheet-sub-icon" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
-                    <Image src="/icons/revit-support.svg" alt="" width={20} height={20} unoptimized style={{ width: "auto", height: "auto", objectFit: "cover", borderRadius: "5px" }} />
+                  <span className="mobile-sheet-sub-icon">
+                    <Image src="/icons/neu/support.png" alt="" width={512} height={512} unoptimized />
                   </span>
                   <span>Support RevIT</span>
                 </a>

@@ -8410,7 +8410,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "Metabolic alkalosis",
-      "explanation": "The acid-base equilibrium of the blood is expressed by the Henderson-Hasselbalch equation: cHCOj pH = pK' + log (PCO 2 X 0.03) In this buffer pair, pK' =6.1. Normally, the ratio of the concentration of bicarbonate ions cHCO^ to the concentration of carbonic acid expressed as (PCO 2 x 0.03) in the plasma is 20:1. The bicarbonate component of the equation is considered to be the \"metabolic\" component, controlled by the kidneys. The carbonic acid component is considered the \"respiratory\" component, controlled by the lungs. An excess of bicarbonate without a change in PCO2 will increase the ratio of bicarbonate to carbonic acid. Therefore, the pH will increase; that is, the plasma becomes more alkaline.",
+      "explanation": "The Henderson–Hasselbalch equation is pH = 6.1 + log([HCO₃⁻] / (0.03 × PCO₂)). At a normal ratio of bicarbonate to dissolved carbon dioxide of about 20:1, blood pH is about 7.4. Increasing bicarbonate while PCO₂ stays constant increases this ratio and raises pH, producing metabolic alkalosis.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 39,
@@ -8755,7 +8755,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "7.42",
-      "explanation": "The acid-base equilibrium of the blood is expressed by the Henderson-Hasselbalch equation: cHCC-3 pH = pK' + log (PCC-2 X 0.03) For the stated problem, convert PCO 2 in mm Hg to dissolved CO 2 , multiplying by the solubility coefficient of CO 2 gas: 44 mm Hg x 0.03 mmol/L/mm Hg = 1.32 mmol/L. Next, determine the bicarbonate concentration by finding the difference between the total CO 2 and dissolved CO 2 concentrations: 29 mmol/L - 1.32 mmol/L = 27.68 mmol/L. pK' for the bicarbonate buffer system is 6.1. Therefore, 27.68 pH = 6.1 + log t o 1J2 pH = 6.1 + log 20.97 pH = 6.1 + log 21 pH = 6.1 + 1.32 pH = 7.42 346-349. In evaluating acid-base balance, the pH, PCO and total CO 2 of an arterial blood specimen are measured. The reference values of arterial whole blood at 37°C for adults are as follows: 7.35-7.45 pH 35-45 mm Hg PCO 2 22-26 mmol/L 23-27 mmol/L ctCO 2 80-110 mmHg PO 2 Acid-base disturbances can be characterized into four basic disorders: metabolic alkalosis, metabolic acidosis, respiratory alkalosis, and respiratory acidosis. pH = pK' + log H C O 3 or pH = pK' + log (PCO 2 X 0.03) Normally, the average ratio of bicarbonate to the concentration of carbonic acid is 20:1, resulting in a blood pH of 7.4. The cHCO^ is represented in the measurement of total CO 2 value because 95% of the total CO 2 is HCO^. The concentration of carbonic acid is calculated by multiplying the PCO 2 value by 0.03 (the solubility coefficient of CO 2 gas). The bicarbonate (base) represents the renal component of the acid-base balance. It is related to metabolic function. The dissolved carbon dioxide, measured as PCO 2 , represents the respiration component and is related to respiratory function. Thus respiratory acidosis is characterized by an increase in blood PCO 2 , whereas respiratory alkalosis is characterized by a decrease of blood PCO 2 . Metabolic acidosis is characterized by a decrease in the blood bicarbonate levels, whereas metabolic alkalosis is related to an increase in blood bicarbonate levels. In acid-base disorders, the compensatory changes occur in the component that is not the original cause of the 2 , imbalance if compensation can occur. Thus in an acid-base imbalance of respiratory origin, the kidneys exert the major corrective action. In an acidbase imbalance of metabolic origin, the lungs exert the major corrective action. Sometimes a \"mixed\" or \"double\" problem of acidosis and alkalosis may exist due to more than one pathological process (e.g., a diabetic with asthma where both the respiratory and metabolic components indicate acidosis). If neither the respiratory nor the metabolic components indicate the condition of the patient (e.g., acidosis or alkalosis), then, most likely, there is something wrong with one or more of the blood gas results. In approaching acid-base problems, one should first key on the pH to determine the general condition (acidosis or alkalosis), then ask what is causing it—for example, a change in bicarbonate or PCO 2 —to determine if the problem is metabolic or respiratory, and finally look at the remaining component to see if there is compensation bringing the pH closer to 7.4. If there is no movement in the remaining component from the reference value, then there is no compensation or uncompensation.",
+      "explanation": "Use the Henderson–Hasselbalch equation: pH = 6.1 + log([HCO₃⁻] / (0.03 × PCO₂)). Dissolved CO₂ is 44 × 0.03 = 1.32 mmol/L. Bicarbonate is total CO₂ minus dissolved CO₂: 29 − 1.32 = 27.68 mmol/L. Therefore, pH = 6.1 + log(27.68 / 1.32) ≈ 7.42.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 40,
@@ -9942,7 +9942,7 @@
       "topicId": "ciulla-cc-toxicology",
       "subtopic": "Toxicology",
       "difficulty": "Easy",
-      "prompt": "Which of the following tests would be particularly useful in determining isopropanolexposure?",
+      "prompt": "Which of the following tests would be particularly useful in determining isopropanol exposure?",
       "choices": [
         "Serum osmolality and urine acetone",
         "Urine osmolality and serum osmolality",
@@ -19082,7 +19082,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "I, II, V, VIII, XIII",
-      "explanation": "A synonym for the fibrinogen group of factors is the consumed factors, because they are totally used up in clot formation. In the conversion of fibrinogen to fibrin, all of prothrombin is converted to thrombin. Thus, factors I, V, VIII, XIII, and II are all missing in serum. Case Studies",
+      "explanation": "A synonym for the fibrinogen group of factors is the consumed factors, because they are totally used up in clot formation. In the conversion of fibrinogen to fibrin, all of prothrombin is converted to thrombin. Thus, factors I, V, VIII, XIII, and II are all missing in serum.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 233,
@@ -26538,12 +26538,12 @@
       "choices": [
         "Rhodococcus sp.",
         "Corynebacterium urealyticum",
-        "Enterococcusfaecalis",
+        "Enterococcus faecalis",
         "Listeria monocytogenes"
       ],
       "correctAnswer": 3,
       "officialAnswer": "Listeria monocytogenes",
-      "explanation": "Listeria monocytogenes is motile at room temperature. When inoculated into a semisolid medium, growth away from the stab is characteristic of motility. Motility is generally enhanced just below the agar surface, giving the growth pattern an \"umbrella\" appearance. 1. monocytogenes is nonmotile at 35°C.",
+      "explanation": "Listeria monocytogenes is motile at room temperature. When inoculated into a semisolid medium, growth away from the stab is characteristic of motility. Motility is generally enhanced just below the agar surface, giving the growth pattern an \"umbrella\" appearance. L. monocytogenes is nonmotile at 35°C.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 345,
@@ -26744,9 +26744,9 @@
       "prompt": "Which of the following organisms is able to hydrolyze sodium hippurate to benzoic acid and glycine?",
       "choices": [
         "Streptococcus agalactiae",
-        "Streptococcuspneumoniae",
+        "Streptococcus pneumoniae",
         "Listeria monocytogenes",
-        "Enterococcusfaecalis"
+        "Enterococcus faecalis"
       ],
       "correctAnswer": 0,
       "officialAnswer": "Streptococcus agalactiae",
@@ -26773,7 +26773,7 @@
       ],
       "correctAnswer": 1,
       "officialAnswer": "Catalase negative",
-      "explanation": "Listeria monocy to genes and Streptococcus agalactiae produce an extracellular factor known as the CAMP factor. The test is performed by making a streak of the test isolate perpendicular to a streak of Staphylococcus aureus. A positive CAMP reaction is indicated by a zone of enhanced beta-hemolysis (arrowhead shape) at the point where the zone of hemolysis produced by S. aureus joins with that produced by the beta-hemolytic test isolate. Unlike 5. agalactiae, 1. monocytogenes is catalase positive.",
+      "explanation": "Listeria monocytogenes and Streptococcus agalactiae produce an extracellular factor known as the CAMP factor. The test is performed by making a streak of the test isolate perpendicular to a streak of Staphylococcus aureus. A positive CAMP reaction is indicated by a zone of enhanced beta-hemolysis (arrowhead shape) at the point where the zone of hemolysis produced by S. aureus joins with that produced by the beta-hemolytic test isolate. Unlike S. agalactiae, L. monocytogenes is catalase positive.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 347,
@@ -27158,7 +27158,7 @@
       "prompt": "The description of \"Medusa head\" colonies on solid agar is most characteristic of",
       "choices": [
         "Bacillus anthracis",
-        "Enterococcusfaecalis",
+        "Enterococcus faecalis",
         "Staphylococcus saprophyticus",
         "Streptococcus agalactiae"
       ],
@@ -27181,7 +27181,7 @@
       "prompt": "Which of the following is most likely to be isolated in cultures from the anterior nares of healthcare workers?",
       "choices": [
         "Bacillus cereus",
-        "Streptococcuspneumoniae",
+        "Streptococcus pneumoniae",
         "Staphylococcus aureus",
         "Staphylococcus saprophyticus"
       ],
@@ -27206,10 +27206,10 @@
         "Viridans streptococci",
         "Streptococcus pyogenes",
         "Streptococcus agalactiae",
-        "Streptococcus pneumonias"
+        "Streptococcus pneumoniae"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "Streptococcus pneumonias",
+      "officialAnswer": "Streptococcus pneumoniae",
       "explanation": "The susceptibility of alpha-hemolytic streptococcal isolates to optochin, or ethylhydrocupreine HC1, is a presumptive test for the differentiation of Streptococcus pneumoniae from viridans streptococci. Viridans streptococci are typically resistant to this agent and show no zone of inhibition or a zone of less than 10 mm with a 6-mm disk. S. pneumoniae characteristically is susceptible and produces a zone of inhibition greater than 14 mm.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -27226,14 +27226,14 @@
       "difficulty": "Medium",
       "prompt": "Solubility in the presence of sodium desoxycholate is characteristic of",
       "choices": [
-        "Enterococcusfaecalis",
+        "Enterococcus faecalis",
         "Streptococcus agalactiae",
-        "Streptococcus mutatis",
+        "Streptococcus mutans",
         "Streptococcus pneumoniae"
       ],
       "correctAnswer": 3,
       "officialAnswer": "Streptococcus pneumoniae",
-      "explanation": "Solubility of Streptococcus pneumoniae colonies by surface-active agents, such as sodium desoxycholate, is a widely used presumptive identification procedure. When a 10% solution of this reagent is applied to test colonies, 5. pneumoniae will be totally dissolved. Colonies of viridans streptococci typically remain intact when bile is applied.",
+      "explanation": "Solubility of Streptococcus pneumoniae colonies by surface-active agents, such as sodium desoxycholate, is a widely used presumptive identification procedure. When a 10% solution of this reagent is applied to test colonies, S. pneumoniae will be totally dissolved. Colonies of viridans streptococci typically remain intact when bile is applied.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 349,
@@ -27249,14 +27249,14 @@
       "difficulty": "Hard",
       "prompt": "Family members attending a picnic became ill about 2 hours after eating. The illness was characterized by rapid onset of violent vomiting. The most likely bacterial cause of such symptoms would be food poisoning caused by",
       "choices": [
-        "Enterococcusfaecium",
+        "Enterococcus faecium",
         "Bacillus subtilis",
         "Listeria monocytogenes",
         "Staphylococcus aureus"
       ],
       "correctAnswer": 3,
       "officialAnswer": "Staphylococcus aureus",
-      "explanation": "The ingestion of food contaminated with enterotoxin produced by Staphylococcus aureus is the most likely cause of the disease in the case described. 5. aureus multiplies rapidly in improperly stored food. Within a few hours, levels of 10 5 organisms per gram of food can be found. Enterotoxin is elaborated when the organism reaches stationary growth phase. Ingestion of small amounts of toxin results in a rapid onset (1-6 hours) of vomiting and diarrhea as a result of a neural response.",
+      "explanation": "The ingestion of food contaminated with enterotoxin produced by Staphylococcus aureus is the most likely cause of the disease in the case described. S. aureus multiplies rapidly in improperly stored food. Within a few hours, levels of 10 5 organisms per gram of food can be found. Enterotoxin is elaborated when the organism reaches stationary growth phase. Ingestion of small amounts of toxin results in a rapid onset (1-6 hours) of vomiting and diarrhea as a result of a neural response.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 349,
@@ -28402,7 +28402,7 @@
         "Campylobacterjejuni",
         "Helicobacterpylori",
         "Salmonella Typhi",
-        "Shigella sonnet"
+        "Shigella sonnei"
       ],
       "correctAnswer": 1,
       "officialAnswer": "Helicobacterpylori",
@@ -28512,7 +28512,7 @@
       "topicId": "ciulla-bact-gram-negative-bacilli-and-cocci",
       "subtopic": "Gram-Negative Bacilli and Cocci",
       "difficulty": "Easy",
-      "prompt": "Shigella sonnet is differentiated from other Shigella sp. by",
+      "prompt": "Shigella sonnei is differentiated from other Shigella sp. by",
       "choices": [
         "A positive ONPG",
         "Its positive phenylalanine deaminase reaction",
@@ -28521,7 +28521,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "A positive ONPG",
-      "explanation": "Shigella sonnet is a group D Shigella and is characterized by its ability to ferment lactose. S. sonnei is ONPG positive but is a delayed lactose fermenter. This is the most commonly isolated species of Shigella in the U.S. The genus Shigella is characterized biochemically by being negative for citrate, urease, motility, and lysine decarboxylation.",
+      "explanation": "Shigella sonnei is a group D Shigella and is characterized by its ability to ferment lactose. S. sonnei is ONPG positive but is a delayed lactose fermenter. This is the most commonly isolated species of Shigella in the U.S. The genus Shigella is characterized biochemically by being negative for citrate, urease, motility, and lysine decarboxylation.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 356,
@@ -29073,7 +29073,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "Infections are most often acquired from environmental sources",
-      "explanation": "Legionella pneumophila requires the use of special laboratory media for cultivation and does not stain well by the conventional Gram stain. Most Legionella spp. are motile, are biochemically inert, and autofluoresce.The primary mode of transmission is by the airborne route, usually in association with an environmental source of bacteria.",
+      "explanation": "Legionella pneumophila requires the use of special laboratory media for cultivation and does not stain well by the conventional Gram stain. Most Legionella spp. are motile, are biochemically inert, and autofluoresce. The primary mode of transmission is by the airborne route, usually in association with an environmental source of bacteria.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 359,
@@ -29096,7 +29096,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Bronchial washings",
-      "explanation": "Tissue samples from the lower respiratory tract (lung biopsy) have the greatest yield of positive cultres for Legionella pneumophila. However, these specimens require invasive procedures and are not commonly performed. Cultures of lower respiratory tract specimens, such as bronchial wash and expectorated sputum, are appropriate for the isolation of 1. pneumophila. The bacteria are seldom recovered from blood specimens.",
+      "explanation": "Tissue samples from the lower respiratory tract (lung biopsy) have the greatest yield of positive cultures for Legionella pneumophila. However, these specimens require invasive procedures and are not commonly performed. Cultures of lower respiratory tract specimens, such as bronchial wash and expectorated sputum, are appropriate for the isolation of L. pneumophila. The bacteria are seldom recovered from blood specimens.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 359,
@@ -29257,7 +29257,7 @@
       ],
       "correctAnswer": 3,
       "officialAnswer": "L. pneumophila",
-      "explanation": "Legionella pneumophila is able to hydrolyze hippurate. 1. pneumophila will also autofluoresce. Although most of the studies done on legionellosis are based on this species, 1. pneumophila is not the only one associated with human disease.",
+      "explanation": "Legionella pneumophila is able to hydrolyze hippurate. L. pneumophila will also autofluoresce. Although most of the studies done on legionellosis are based on this species, L. pneumophila is not the only one associated with human disease.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 359,
@@ -31847,7 +31847,7 @@
       "topicId": "ciulla-bact-mycobacteria-and-spirochetes",
       "subtopic": "Mycobacteria and Spirochetes",
       "difficulty": "Medium",
-      "prompt": "Pumlent material from a cerebral abscess was submitted to the laboratory for smear and culture. On direct Gram stain, grampositive cocci in chains and gram-negative bacilli with pointed ends were seen. Plates incubated aerobically exhibited no growth at 24 hours. On the basis of the organisms seen on the smear, what is the most likely presumptive identification of the etiologic anaerobic agents?",
+      "prompt": "Purulent material from a cerebral abscess was submitted to the laboratory for smear and culture. On direct Gram stain, grampositive cocci in chains and gram-negative bacilli with pointed ends were seen. Plates incubated aerobically exhibited no growth at 24 hours. On the basis of the organisms seen on the smear, what is the most likely presumptive identification of the etiologic anaerobic agents?",
       "choices": [
         "Veillonella sp. and Clostridium sp.",
         "Eubacterium sp. and Veillonella sp.",
@@ -33066,7 +33066,7 @@
       "topicId": "ciulla-bact-antimicrobial-susceptibility-and-case-studies",
       "subtopic": "Antimicrobial Susceptibility and Case Studies",
       "difficulty": "Hard",
-      "prompt": "Which of the following media should be used for in vitro susceptibility testing of 5. pneumoniae?",
+      "prompt": "Which of the following media should be used for in vitro susceptibility testing of S. pneumoniae?",
       "choices": [
         "Chocolate agar",
         "Charcoal yeast extract agar",
@@ -33075,7 +33075,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Mueller-Hinton base supplemented with 5% lysed horse blood",
-      "explanation": "Most fastidious bacteria do not grow satisfactorily in standard in vitro susceptibility test systems that use unsupplemented media. For certain species, such as Haemophilus influenzae, Neisseria gonorrheae, Streptococcus pneumoniae, and other Streptococcus species, modifications have been made to the standard Clinical and Laboratory Standards Institute (CLSI) methods. In the case of S. pneumoniae, current CLSI broth dilution test conditions include cation-supplemented Mueller-Hinton broth with 5% lysed horse blood.",
+      "explanation": "Most fastidious bacteria do not grow satisfactorily in standard in vitro susceptibility test systems that use unsupplemented media. For certain species, such as Haemophilus influenzae, Neisseria gonorrhoeae, Streptococcus pneumoniae, and other Streptococcus species, modifications have been made to the standard Clinical and Laboratory Standards Institute (CLSI) methods. In the case of S. pneumoniae, current CLSI broth dilution test conditions include cation-supplemented Mueller-Hinton broth with 5% lysed horse blood.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 379,
@@ -33459,13 +33459,13 @@
       "difficulty": "Medium",
       "prompt": "Suggested quality control organisms for Simmons citrate agar slants are",
       "choices": [
-        "Shigella sonnet; Escherichia coli",
-        "Klebsiellapneumoniae; Escherichia coli",
+        "Shigella sonnei; Escherichia coli",
+        "Klebsiella pneumoniae; Escherichia coli",
         "Escherichia coli; Edwardsiella tarda",
         "Morganella morganii; Edwardsiella tarda"
       ],
       "correctAnswer": 1,
-      "officialAnswer": "Klebsiellapneumoniae; Escherichia coli",
+      "officialAnswer": "Klebsiella pneumoniae; Escherichia coli",
       "explanation": "One of the metabolites in the tricarboxylic acid cycle, citrate can serve as an energy source for some bacteria. The assessment of the ability of an organism to use citrate as its sole carbon source aids in the identification of the family Enterobacteriaceae. Klebsiella pneumoniae is able to use citrate with the production of alkaline by-products. A blue color and/or growth of the isolate on the streak line or both are indicative of a positive reaction. Escherichia coli is citrate negative.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -33761,11 +33761,11 @@
         "Staphylococcus aureus",
         "Staphylococcus lugdunensis",
         "Streptococcus pyogenes",
-        "Enterococcusfaecalis"
+        "Enterococcus faecalis"
       ],
-      "correctAnswer": 1,
-      "officialAnswer": "Staphylococcus lugdunensis",
-      "explanation": "Pyrrolidonyl-a-naphthylamide (PYR) is the substrate. The test detects the presence of the enzyme L-pyrrolidonyl arylamidase. The PYR test helps differentiate Staphylococcus aureus (positive) from S. lugdunensis (negative). BACTERIOLOGY Case Studies",
+      "correctAnswer": 0,
+      "officialAnswer": "Staphylococcus aureus",
+      "explanation": "The PYR test detects L-pyrrolidonyl arylamidase. Staphylococcus aureus is PYR negative, so it is not suitable as a positive control. Staphylococcus lugdunensis, Streptococcus pyogenes, and Enterococcus faecalis are PYR positive.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 382,
@@ -34058,12 +34058,12 @@
       "prompt": "A woman, who had recently returned from a vacation in Mexico, was admitted to the hospital. She was febrile and complained of flulike symptoms. Her case history revealed that she had eaten cheese that had been made from unpasteurized milk while on vacation. The most likely etiologic agent in this case would be",
       "choices": [
         "Bordetella pertussis",
-        "Listeriamonocytogenes",
+        "Listeria monocytogenes",
         "Staphylococcus aureus",
         "Yersinia enterocolitica"
       ],
       "correctAnswer": 1,
-      "officialAnswer": "Listeriamonocytogenes",
+      "officialAnswer": "Listeria monocytogenes",
       "explanation": "Listeria monocytogenes has been associated with human disease following the ingestion of unpasteurized daily products. The organism is capable of replicating at refrigerator temperatures and is commonly found in low numbers in animal products. Listeriosis associated with contaminated food, in uncompromised patients, usually produces a self-limiting, nonspecific febrile illness.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -34110,7 +34110,7 @@
       ],
       "correctAnswer": 2,
       "officialAnswer": "Legionella pneumophila",
-      "explanation": "The clinical presentation suggests the etiologic agent is Legionella pneumophila. The Gram stain is not helpful in making the diagnosis because of the poor staining quality of this microorganism. Examination of the sputum using fluorescent antibody to 1. pneumophila could provide a rapid positive identification.",
+      "explanation": "The clinical presentation suggests the etiologic agent is Legionella pneumophila. The Gram stain is not helpful in making the diagnosis because of the poor staining quality of this microorganism. Examination of the sputum using fluorescent antibody to L. pneumophila could provide a rapid positive identification.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 384,
@@ -35283,7 +35283,7 @@
       ],
       "correctAnswer": 0,
       "officialAnswer": "S. haematobium",
-      "explanation": "The ova of Schistosoma contain a spine. 5. haematobium ova have a large prominent spine on one end. S. mansoni has a prominent lateral spine, whereas the spine of S. japonicurn is small and inconspicuous. S. mekongi is a rare human pathogen.",
+      "explanation": "The ova of Schistosoma contain a spine. S. haematobium ova have a large prominent spine on one end. S. mansoni has a prominent lateral spine, whereas the spine of S. japonicum is small and inconspicuous. S. mekongi is a rare human pathogen.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 446,

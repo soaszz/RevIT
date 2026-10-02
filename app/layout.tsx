@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "katex/dist/katex.min.css";
 import "./globals.css";
+import "./neumorphism.css";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],

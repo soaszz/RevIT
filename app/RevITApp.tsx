@@ -23,6 +23,7 @@ import ReviewSessionPreferences from "./components/ReviewSessionPreferences";
 import RevITLoadingScreen from "./components/RevITLoadingScreen";
 import ScientificCalculator from "./components/ScientificCalculator";
 import MobileNavDock from "./components/MobileNavDock";
+import ScrollToTop from "./components/ScrollToTop";
 import MobileReviewBar from "./components/MobileReviewBar";
 import { motion, AnimatePresence } from "motion/react";
 import CustomConfirm from "./components/CustomConfirm";
@@ -75,6 +76,7 @@ import {
   queueCloudProgressEvents,
   recordCloudProgressEvents,
   recordLocalProgressEvents,
+  syncLocalProgressionFromCloud,
   shouldShowLevelUp,
 } from "./lib/xpService";
 import { levelProgress, XP_REWARDS } from "./lib/xpConfig";
@@ -124,21 +126,22 @@ const SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects";
 const RECENT_SESSION_STORAGE_KEY = "revit_recent_session_v1";
 
 const navItems: Array<{ id: View; label: string; icon: string }> = [
-  { id: "overview", label: "Overview", icon: "/icons/home.svg" },
-  { id: "library", label: "Review Library", icon: "/icons/qna.svg" },
-  { id: "progress", label: "Progress", icon: "/icons/progress.svg" },
-  { id: "leaderboards", label: "Leaderboards", icon: "/icons/leaderboards.svg" },
-  { id: "weakness", label: "Weakness Analytics", icon: "/icons/weakness.svg" },
-  { id: "planner", label: "Study Planner", icon: "/icons/planner.svg" },
-  { id: "grades", label: "Grades", icon: "/icons/grades.svg" },
-  { id: "assistant", label: "RevIT AI", icon: "/icons/revit-ai.png" },
+  { id: "overview", label: "Overview", icon: "/icons/neu/overview.png" },
+  { id: "library", label: "Review Library", icon: "/icons/neu/review-library.png" },
+  { id: "progress", label: "Progress", icon: "/icons/neu/progress.png" },
+  { id: "leaderboards", label: "Leaderboards", icon: "/icons/neu/leaderboards.png" },
+  { id: "weakness", label: "Weakness Analytics", icon: "/icons/neu/weakness.png" },
+  { id: "planner", label: "Study Planner", icon: "/icons/neu/study-planner.png" },
+  { id: "grades", label: "Grades", icon: "/icons/neu/grades.png" },
+  { id: "assistant", label: "RevIT AI", icon: "/icons/neu/revit-ai.png" },
 ];
 
 function RevITLogo() {
   return (
     <>
-      <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/revit-logo.png" alt="RevIT" width={1208} height={319} priority /></span>
-      <span className="brand-frog" aria-hidden="true"><Image src="/revit-rounded.png" alt="" width={38} height={38} priority style={{ borderRadius: "9px", objectFit: "cover" }} /></span>
+      <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/icons/neu/revit-wordmark.png" alt="RevIT" width={1086} height={362} priority /></span>
+      <span className="brand-frog-head" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} unoptimized /></span>
+      
     </>
   );
 }
@@ -181,7 +184,7 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
   },
   assistant: {
     eyebrow: "Educational AI support",
-    title: "MedTech AI",
+    title: "RevIT AI",
     description: "Explore Medical Technology concepts while official reviewer answers remain separate from AI-generated explanations.",
   },
 };
@@ -194,7 +197,7 @@ const viewTitles: Record<View, string> = {
   weakness: "Weakness Analytics",
   planner: "Study Planner",
   grades: "Grades",
-  assistant: "MedTech AI",
+  assistant: "RevIT AI",
 };
 
 function normalizedDifficulty(value: unknown): QuestionDifficulty {
@@ -675,6 +678,7 @@ useEffect(() => {
         }));
         setProfile({ name: nextProfile.first_name?.trim() || DEFAULT_PROFILE.name, photoDataUrl: nextProfile.avatar_url ?? "" });
         if (progressionUpdate) {
+          syncLocalProgressionFromCloud(progressionOwnerKey, progressionUpdate.snapshot);
           setProgression(progressionUpdate.snapshot);
           markCurrentLevelSeen(progressionOwnerKey, levelProgress(progressionUpdate.snapshot.totalXp).level);
         }
@@ -1337,6 +1341,7 @@ useEffect(() => {
       await flushQuestionAttemptQueue(client, initialUser.id);
       const update = await flushCloudProgressEventQueue(client, initialUser.id);
       if (update) {
+        syncLocalProgressionFromCloud(progressionOwnerKey, update.snapshot);
         applyProgressionUpdate(update);
       }
     } catch {
@@ -1940,7 +1945,7 @@ useEffect(() => {
   const currentSessionSubjects = Array.from(new Set(currentSessionTopicIds.map((id) => topicById.get(id)?.subjectId).filter((id): id is string => Boolean(id)).map((id) => subjectById.get(id)?.name).filter((name): name is string => Boolean(name))));
 
   return (
-    <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""}`}>
+    <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${activeView === "library" && isReviewSessionActive && !sessionComplete ? "study-session-active" : ""}`}>
       <aside className="sidebar">
         <div className="sidebar-heading">
           <div className="sidebar-brand-row">
@@ -1970,7 +1975,7 @@ useEffect(() => {
               title={sidebarCollapsed ? item.label : undefined}
             >
               <span className={`nav-icon ${item.id === "assistant" ? "nav-icon-ai" : ""}`} aria-hidden="true">
-                <Image src={item.icon} alt="" width={24} height={24} />
+                <Image src={item.icon} alt="" width={512} height={512} unoptimized />
               </span>
               <span className="nav-label">{item.label}</span>
             </button>
@@ -1983,7 +1988,7 @@ useEffect(() => {
             <span className="sidebar-control-copy"><strong>Appearance</strong><small>Light / dark</small></span>
           </button>
           <Link className="sidebar-support" href="/support" title={sidebarCollapsed ? "Support RevIT" : undefined}>
-            <span className="sidebar-support-frog" aria-hidden="true"><Image src="/icons/revit-support.svg" alt="" width={42} height={42} unoptimized style={{ width: "auto", height: "auto", borderRadius: "10px", objectFit: "cover" }} /></span>
+            <span className="sidebar-support-frog" aria-hidden="true"><Image src="/icons/neu/support.png" alt="" width={42} height={42} unoptimized style={{ width: "auto", height: "auto", borderRadius: "10px", objectFit: "cover" }} /></span>
             <span className="sidebar-support-copy"><strong>Support RevIT</strong><span>Help support continued development</span></span>
             <span className="sidebar-support-arrow" aria-hidden="true">›</span>
           </Link>
@@ -3085,6 +3090,13 @@ useEffect(() => {
         {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>
       <ScientificCalculator />
+      {(["overview", "library", "progress", "leaderboards", "weakness", "grades"] as View[]).includes(activeView) && (
+        <ScrollToTop
+          view={activeView}
+          aboveReviewBar={activeView === "library" && libraryMode === "mcqs" && selectedTopicIds.length > 0 && !isReviewSessionActive && !sessionComplete}
+          instant={activeView === "library" && isReviewSessionActive && !sessionComplete}
+        />
+      )}
       <MobileNavDock
         activeView={activeView}
         onSelectView={(view) => openNavigationView(view)}

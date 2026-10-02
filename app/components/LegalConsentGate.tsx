@@ -67,7 +67,7 @@ export default function LegalConsentGate({
         <aside className={styles.brandPanel} aria-label="RevIT account agreement">
           <div className={styles.brandLockup} aria-label="RevIT">
             <span className={styles.wordmark} aria-hidden="true">
-              <Image src="/revit-logo.png" alt="" width={1376} height={768} priority />
+              <Image src="/icons/neu/revit-wordmark.png" alt="" width={1086} height={362} priority />
             </span>
             <span className={styles.frog} aria-hidden="true">
               <Image src="/revit-frog.png" alt="" width={2000} height={2000} priority />

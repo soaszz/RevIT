@@ -178,7 +178,8 @@ test("level thresholds match V1 and continue with the same scalable curve", () =
 
 test("all V1 action XP is centralized and achievement definitions are unique", () => {
   assert.deepEqual(XP_REWARDS, { CORRECT_QUESTION: 5, COMPLETE_STUDY_SESSION: 20, FIRST_AI_MESSAGE: 10, DAILY_STREAK: 10, FIRST_EXAM: 10 });
-  assert.equal(ACHIEVEMENT_CATALOG.length, 8);
-  assert.equal(new Set(ACHIEVEMENT_CATALOG.map((achievement) => achievement.id)).size, 8);
+  assert.equal(ACHIEVEMENT_CATALOG.length, 12);
+  assert.equal(new Set(ACHIEVEMENT_CATALOG.map((achievement) => achievement.id)).size, 12);
+  assert.deepEqual(ACHIEVEMENT_CATALOG.filter((achievement) => achievement.condition_type === "ai_messages").map((achievement) => [achievement.condition_value, achievement.xp_reward]), [[1, 25], [5, 50]]);
   assert.equal(metricForCondition("study_sessions", { questionsAnswered: 4, aiMessages: 2, streakDays: 3, examsCreated: 1, studySessions: 10 }), 10);
 });

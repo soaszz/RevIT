@@ -63,7 +63,7 @@
   height: 29px;
   margin-left: -8px;
   overflow: hidden;
-  filter: drop-shadow(0 0 6px rgba(30, 238, 199, 0.24));
+  filter: none;
 }
 
 .frog img {
