@@ -28,6 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = "RevIT helps Medical Technology students review their subjects and prepare for MTAP and board exams with structured practice, study planning, progress tracking, and educational AI support.";
 
   return {
+    applicationName: "RevIT",
     title: {
       default: title,
       template: "RevIT | %s",
@@ -47,10 +48,14 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     icons: {
       icon: [
-        { url: "/revit-rounded.png", sizes: "32x32", type: "image/png" },
-        { url: "/revit-rounded.png", sizes: "192x192", type: "image/png" },
+        { url: "/revit-192.png", sizes: "192x192", type: "image/png" },
       ],
-      apple: [{ url: "/revit-rounded.png", sizes: "180x180", type: "image/png" }],
+      apple: [{ url: "/revit-180.png", sizes: "180x180", type: "image/png" }],
+    },
+    appleWebApp: {
+      capable: true,
+      title: "RevIT",
+      statusBarStyle: "black-translucent",
     },
   };
 }

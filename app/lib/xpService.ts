@@ -189,7 +189,8 @@ export async function flushCloudProgressEventQueue(client: SupabaseClient, userI
   const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as ProgressEvent[];
   if (!queued.length) return null;
   const failed = new Set<string>();
-  for (const event of queued) {
+  for (let index = 0; index < queued.length; index += 1) {
+    const event = queued[index];
     const { error } = await client.rpc("record_study_activity", {
       p_event_key: event.eventKey,
       p_event_type: normalizedEventType(event),
@@ -198,7 +199,8 @@ export async function flushCloudProgressEventQueue(client: SupabaseClient, userI
       if (isPermanentProgressEventError(error)) {
         console.warn(`[xpService] Dropping invalid progress event: ${event.eventKey} (${error.message})`);
       } else {
-        failed.add(event.eventKey);
+        queued.slice(index).forEach((remainingEvent) => failed.add(remainingEvent.eventKey));
+        break;
       }
     }
   }

@@ -799,12 +799,9 @@ useEffect(() => {
         await flushQuestionAttemptQueue(client, initialUser!.id);
         await migrateLocalQuestionAttempts(client, initialUser!.id, attempts);
         await migrateLocalActivity(client, initialUser!.id, preferences.timezone, attempts, (id) => subjectById.get(id)?.name ?? id);
-        const snapshot = await loadCloudSnapshot(client, initialUser!.id);
-        if (!cancelled) {
-          setActivity(snapshot.activity);
-        }
+        if (!cancelled) setActivity((current) => mergeLocalAttemptActivity(attempts, current, preferences.timezone));
       } catch {
-        if (!cancelled) setCloudError("Local history is preserved, but cloud migration needs to retry.");
+        attemptMigrationStarted.current = false;
       }
     }
     void migrate();
@@ -1398,17 +1395,6 @@ useEffect(() => {
     }
   }, [sessionComplete, scheduleBatchedCloudSync]);
 
-  useEffect(() => {
-    const handleFlush = () => {
-      scheduleBatchedCloudSync(true);
-    };
-    window.addEventListener("beforeunload", handleFlush);
-    return () => {
-      window.removeEventListener("beforeunload", handleFlush);
-      handleFlush();
-    };
-  }, [scheduleBatchedCloudSync]);
-
   function persistProgressEvents(
     events: ProgressEvent[],
     metrics = progressMetrics,
@@ -1620,7 +1606,7 @@ useEffect(() => {
     root.style.colorScheme = nextTheme;
     localStorage.setItem("revit-theme", nextTheme);
     setPreferences((current) => ({ ...current, theme: nextTheme }));
-    if (cloudEnabled && initialUser) {
+    if (cloudAvailable && initialUser) {
       void savePreferences(createClient(), initialUser.id, { ...preferences, theme: nextTheme })
         .catch(() => setCloudError("Theme changed locally; cloud preference sync needs retry."));
     }

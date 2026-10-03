@@ -1,20 +1,6 @@
-const CACHE = "revit-offline-v1";
+const CACHE = "revit-offline-v2";
 const CORE = [
-  "/manifest.webmanifest", "/revit-192.png", "/revit-512.png", "/revit-rounded.png", "/revit-frog.png", "/icons/neu/revit-wordmark.png",
-  "/reviewer-assets/laboratory-operations/westgard-r4s.png", "/reviewer-assets/laboratory-operations/tonks-youden.png",
-  "/reviewer-assets/laboratory-operations/roc-curve.png", "/reviewer-assets/laboratory-operations/regression.png",
-  "/reviewer-assets/laboratory-operations/normal-distribution.png", "/reviewer-assets/laboratory-operations/levey-jennings.png",
-  "/reviewer-assets/laboratory-operations/cusum.png", "/reviewer-assets/laboratory-operations/bias-plot.png",
-  "/reviewer-assets/hematology-1/section1_8_q8.png", "/reviewer-assets/hematology-1/section1_8_q7.png",
-  "/reviewer-assets/hematology-1/section1_8_q4.png", "/reviewer-assets/hematology-1/section1_8_q17.png",
-  "/reviewer-assets/hematology-1/section1_8_q15.png", "/reviewer-assets/hematology-1/section1_8_q13.png",
-  "/reviewer-assets/hematology-1/section1_8_q12.png", "/reviewer-assets/hematology-1/section1_8_q11.png",
-  "/reviewer-assets/hematology-1/section1_8_q10.png", "/reviewer-assets/ciulla/rh-typing-table.png",
-  "/reviewer-assets/ciulla/red-cell-panel-3.png", "/reviewer-assets/ciulla/red-cell-panel-3-patient.png",
-  "/reviewer-assets/ciulla/red-cell-panel-2.png", "/reviewer-assets/ciulla/red-cell-panel-1.png",
-  "/reviewer-assets/ciulla/prenatal-typing-table.png", "/reviewer-assets/ciulla/michaelis-menten.png",
-  "/reviewer-assets/ciulla/kell-family-study-table.png", "/reviewer-assets/ciulla/hemostasis-mixing-study.png",
-  "/reviewer-assets/ciulla/alt-rate-reaction-data.png", "/reviewer-assets/ciulla/abo-typing-matrix.png",
+  "/manifest.webmanifest", "/revit-180.png", "/revit-192.png", "/revit-512.png",
 ];
 
 async function cacheOfflineShell() {
@@ -23,6 +9,12 @@ async function cacheOfflineShell() {
   const response = await fetch("/offline");
   if (!response.ok) throw new Error("Offline shell unavailable");
   await cache.put("/offline", response.clone());
+}
+
+async function warmOfflineShell() {
+  const cache = await caches.open(CACHE);
+  const response = await cache.match("/offline");
+  if (!response) return;
   const html = await response.text();
   const urls = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((match) => match[1])
     .filter((url) => url.startsWith("/") && !url.startsWith("//"));
@@ -38,11 +30,7 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("message", (event) => {
-  if (event.data?.type !== "CACHE_URLS" || !Array.isArray(event.data.urls)) return;
-  const urls = event.data.urls.filter((url) => {
-    try { return new URL(url).origin === self.location.origin; } catch { return false; }
-  });
-  event.waitUntil(caches.open(CACHE).then((cache) => Promise.allSettled(urls.map((url) => cache.add(url)))));
+  if (event.data?.type === "WARM_OFFLINE_SHELL") event.waitUntil(warmOfflineShell());
 });
 
 self.addEventListener("fetch", (event) => {

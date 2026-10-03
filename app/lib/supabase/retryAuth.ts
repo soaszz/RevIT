@@ -14,7 +14,7 @@ export async function retryAuthRequest<T extends AuthResult>(request: () => Prom
       const retryable = status === 502 || status === 503 || status === 504;
       if (!retryable || attempt === 1) return result;
     } catch (error) {
-      if (attempt === 1) throw error;
+      throw error;
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
   }

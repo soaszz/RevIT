@@ -13,6 +13,22 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-8-1",
+    version: "v1.8.1",
+    date: "October 3, 2026",
+    type: "minor",
+    title: "Faster App Installation and Offline Sync Improvements",
+    summary: "Sped up phone app installs, improved offline sync reliability, and removed cloud migration notices inside the installed app.",
+    tags: ["Installation", "Offline", "Sync", "Performance"],
+    highlights: [
+      "Faster app installation on phones and tablets with lightweight initial downloads.",
+      "Added support for home screen touch icons on iPhones and iPads.",
+      "Ensured the installed app name displays cleanly as RevIT across devices.",
+      "Removed distracting cloud migration banners inside installed apps while keeping saved history safe.",
+      "Improved offline sync to prevent repeated network retries during temporary connection drops."
+    ]
+  },
+  {
     id: "update-v1-8-0",
     version: "v1.8.0",
     date: "October 3, 2026",

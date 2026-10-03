@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "RevIT | Review It Thoroughly",
+    name: "RevIT",
     short_name: "RevIT",
     description: "Medical Technology reviewer, study planner, and progress tracker.",
     id: "/",
@@ -14,6 +14,7 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       { src: "/revit-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
       { src: "/revit-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/revit-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }

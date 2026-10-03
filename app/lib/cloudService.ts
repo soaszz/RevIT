@@ -259,9 +259,14 @@ export async function flushQuestionReinforcementQueue(client: SupabaseClient, us
   const key = reinforcementQueueKey(userId);
   const queued = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, number>;
   const failed = new Set<string>();
-  for (const [questionId, reinforcementLevel] of Object.entries(queued)) {
+  const entries = Object.entries(queued);
+  for (let index = 0; index < entries.length; index += 1) {
+    const [questionId, reinforcementLevel] = entries[index];
     try { await saveQuestionReinforcement(client, userId, questionId, reinforcementLevel); }
-    catch { failed.add(questionId); }
+    catch {
+      entries.slice(index).forEach(([remainingQuestionId]) => failed.add(remainingQuestionId));
+      break;
+    }
   }
   const current = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, number>;
   const remaining = Object.fromEntries(Object.entries(current).filter(([questionId, level]) =>
@@ -275,8 +280,12 @@ export async function flushQuestionAttemptQueue(client: SupabaseClient, userId: 
   const key = questionAttemptQueueKey(userId);
   const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as QuestionAttempt[];
   const failed = new Set<string>();
-  for (const attempt of queued) {
-    try { await saveQuestionAttempt(client, attempt); } catch { failed.add(attempt.id); }
+  for (let index = 0; index < queued.length; index += 1) {
+    try { await saveQuestionAttempt(client, queued[index]); }
+    catch {
+      queued.slice(index).forEach((attempt) => failed.add(attempt.id));
+      break;
+    }
   }
   const processed = new Set(queued.map((attempt) => attempt.id));
   const current = JSON.parse(localStorage.getItem(key) ?? "[]") as QuestionAttempt[];
