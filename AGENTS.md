@@ -38,6 +38,11 @@ Before pushing to remote:
 - **No visual artifacts/screenshots:** Do NOT capture, render, or attach screenshots, screen recordings, or visual previews unless explicitly asked.
 - **No Git or Push or Security Checks without command:** Do NOT run git commands (commit, push, log, diff, stash, etc.), do NOT push to remote, and do NOT run security checks unless user explicitly instructs to push or check.
 
+## Shared Agent Handoff
+- Read `AGENT_HANDOFF.md` at session start after this file.
+- Update `AGENT_HANDOFF.md` before switching agents or ending with unfinished or unpushed work.
+- Keep it concise and current. Never store secrets, tokens, credentials, environment values, or private user data.
+
 ## Communication Style
 - **Default Mode**: Always communicate in ultra-compressed caveman mode (`/caveman ultra`). Cut filler, pleasantries, articles, and unnecessary words. Keep all technical substance, exact code symbols, and accuracy 100% intact.
 
@@ -45,4 +50,3 @@ Before pushing to remote:
 - **Ask When Unsure**: If requirements, designs, or implementations are ambiguous, underspecified, or uncertain, ask questions before building.
 - **Suggest Recommendations**: Proactively propose recommended ideas or alternatives to the user's idea with clear trade-offs.
 - **Precision Over Assumptions**: Clarify upfront to ensure concise, flaw-free implementation aligned with user intent.
-

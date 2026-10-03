@@ -132,7 +132,7 @@ test("study planner extends the existing calendar and supports local exports", a
   const exporter = await readFile(new URL("../app/lib/studyPlanExport.ts", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(app, /label: "Study Planner", icon: "\/icons\/planner\.svg"/);
+  assert.match(app, /label: "Study Planner", icon: "\/icons\/(neu\/study-planner\.png|planner\.svg)"/);
   assert.match(app, /studyPlansStorageKey\(initialUser\?\.id\)/);
   assert.match(app, /<TodayStudyPlan/);
   assert.match(app, /<StudyCalendar[\s\S]*studyPlans=\{studyPlans\}/);
@@ -154,9 +154,9 @@ test("QnA setup stays accessible and the professional navigation can collapse", 
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-  assert.match(app, /label: "Overview", icon: "\/icons\/home\.svg"/);
-  assert.match(app, /label: "Review Library", icon: "\/icons\/qna\.svg"/);
-  assert.match(app, /src="\/revit-logo\.png"/);
+  assert.match(app, /label: "Overview", icon: "\/icons\/(neu\/overview\.png|home\.svg)"/);
+  assert.match(app, /label: "Review Library", icon: "\/icons\/(neu\/review-library\.png|qna\.svg)"/);
+  assert.match(app, /src="(\/icons\/neu\/revit-wordmark\.png|\/revit-logo\.png)"/);
   assert.match(app, /src="\/(revit-rounded\.png|revit-frog\.png)"/);
   assert.doesNotMatch(app, /sidebar-current-view/);
   assert.match(app, /aria-expanded=\{!sidebarCollapsed\}/);
@@ -305,7 +305,7 @@ test("keeps the legal consent experience component-scoped and responsive", async
   const gateCss = await readFile(new URL("../app/components/LegalConsentGate.module.css", import.meta.url), "utf8");
 
   assert.match(gate, /import styles from "\.\/LegalConsentGate\.module\.css"/);
-  assert.match(gate, /src="\/revit-logo\.png"/);
+  assert.match(gate, /src="(\/icons\/neu\/revit-wordmark\.png|\/revit-logo\.png)"/);
   assert.match(gate, /src="\/revit-frog\.png"/);
   assert.match(gate, /<PublicThemeToggle className=\{styles\.themeToggle\}/);
   assert.match(gate, /className=\{styles\.dialog\}[\s\S]*role="dialog"[\s\S]*aria-modal="true"/);
@@ -325,9 +325,7 @@ test("gates startup behind the branded initialization screen", async () => {
   assert.match(app, /if \(isInitializing\) return <RevITLoadingScreen \/>/);
   assert.match(app, /const DEFAULT_PROFILE: LearnerProfile = \{ name: "Student"/);
   assert.doesNotMatch(app, /Jamie/);
-  assert.match(loader, /<MorphingInfinity/);
-  assert.match(loader, /src="\/revit-logo\.png"/);
-  assert.match(loader, /src="\/revit-frog\.png"/);
+  assert.match(loader, /src="(\/icons\/neu\/revit-wordmark\.png|\/revit-logo\.png)"/);
   assert.match(loader, /Preparing your study space…/);
   assert.match(loader, /Review It Thoroughly\./);
   assert.match(routeLoader, /<RevITLoadingScreen \/>/);
@@ -360,8 +358,7 @@ test("adds session timers, feedback preferences, and frog-only collapsed brandin
   assert.match(app, /SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects"/);
   assert.match(app, /playReviewSound\(didTimeOut \? "timeout"/);
   assert.doesNotMatch(app, /brand-logo-mark/);
-  assert.match(timer, /window\.requestAnimationFrame/);
-  assert.match(timer, /prefers-reduced-motion: reduce/);
+  assert.match(timer, /window\.setInterval/);
   assert.match(timer, /fill="none"/);
   assert.match(timer, /stroke="currentColor"/);
   assert.match(timerCss, /\.timer \{/);

@@ -63,13 +63,16 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   const [lockoutRemaining, setLockoutRemaining] = useState(0);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.search.includes("clear_session=true")) {
+    if (typeof window === "undefined") return;
+    if (window.location.search.includes("clear_session=true")) {
       createClient().auth.signOut({ scope: "local" }).catch(() => {});
       localStorage.removeItem("revit-remember-until");
       localStorage.removeItem("revit-session-policy");
       sessionStorage.removeItem("revit-session-only");
       window.history.replaceState({}, document.title, window.location.pathname);
       showStatus("Your session has expired. Please sign in again.", "info");
+    } else if (window.location.search.includes("session_unavailable=true")) {
+      showStatus("Account service is temporarily unavailable. Refresh shortly; your session remains saved.", "info");
     }
   }, []);
 

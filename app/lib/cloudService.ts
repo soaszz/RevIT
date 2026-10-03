@@ -232,14 +232,57 @@ export function getQueuedQuestionAttemptsCount(userId: string): number {
   }
 }
 
+function reinforcementQueueKey(userId: string) {
+  return `revit-question-reinforcement-queue-v1:${userId}`;
+}
+
+export function queueQuestionReinforcement(userId: string, questionId: string, reinforcementLevel: number) {
+  try {
+    const key = reinforcementQueueKey(userId);
+    const queued = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, number>;
+    queued[questionId] = reinforcementLevel;
+    localStorage.setItem(key, JSON.stringify(queued));
+  } catch (error) {
+    console.warn(errorMessage(error));
+  }
+}
+
+export function getQueuedQuestionReinforcementCount(userId: string): number {
+  try {
+    return Object.keys(JSON.parse(localStorage.getItem(reinforcementQueueKey(userId)) ?? "{}") as object).length;
+  } catch {
+    return 0;
+  }
+}
+
+export async function flushQuestionReinforcementQueue(client: SupabaseClient, userId: string) {
+  const key = reinforcementQueueKey(userId);
+  const queued = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, number>;
+  const failed = new Set<string>();
+  for (const [questionId, reinforcementLevel] of Object.entries(queued)) {
+    try { await saveQuestionReinforcement(client, userId, questionId, reinforcementLevel); }
+    catch { failed.add(questionId); }
+  }
+  const current = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, number>;
+  const remaining = Object.fromEntries(Object.entries(current).filter(([questionId, level]) =>
+    failed.has(questionId) || queued[questionId] !== level));
+  if (Object.keys(remaining).length) localStorage.setItem(key, JSON.stringify(remaining));
+  else localStorage.removeItem(key);
+  return Object.keys(remaining).length;
+}
+
 export async function flushQuestionAttemptQueue(client: SupabaseClient, userId: string) {
   const key = questionAttemptQueueKey(userId);
   const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as QuestionAttempt[];
-  const remaining: QuestionAttempt[] = [];
+  const failed = new Set<string>();
   for (const attempt of queued) {
-    try { await saveQuestionAttempt(client, attempt); } catch { remaining.push(attempt); }
+    try { await saveQuestionAttempt(client, attempt); } catch { failed.add(attempt.id); }
   }
-  localStorage.setItem(key, JSON.stringify(remaining));
+  const processed = new Set(queued.map((attempt) => attempt.id));
+  const current = JSON.parse(localStorage.getItem(key) ?? "[]") as QuestionAttempt[];
+  const remaining = current.filter((attempt) => !processed.has(attempt.id) || failed.has(attempt.id));
+  if (remaining.length) localStorage.setItem(key, JSON.stringify(remaining));
+  else localStorage.removeItem(key);
   return remaining.length;
 }
 

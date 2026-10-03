@@ -176,11 +176,19 @@ export function queueCloudProgressEvents(userId: string, events: ProgressEvent[]
   } catch { localStorage.setItem(key, JSON.stringify(events)); }
 }
 
+export function getQueuedCloudProgressEventsCount(userId: string) {
+  try {
+    return (JSON.parse(localStorage.getItem(cloudQueueKey(userId)) ?? "[]") as ProgressEvent[]).length;
+  } catch {
+    return 0;
+  }
+}
+
 export async function flushCloudProgressEventQueue(client: SupabaseClient, userId: string) {
   const key = cloudQueueKey(userId);
   const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as ProgressEvent[];
   if (!queued.length) return null;
-  const remaining: ProgressEvent[] = [];
+  const failed = new Set<string>();
   for (const event of queued) {
     const { error } = await client.rpc("record_study_activity", {
       p_event_key: event.eventKey,
@@ -190,10 +198,13 @@ export async function flushCloudProgressEventQueue(client: SupabaseClient, userI
       if (isPermanentProgressEventError(error)) {
         console.warn(`[xpService] Dropping invalid progress event: ${event.eventKey} (${error.message})`);
       } else {
-        remaining.push(event);
+        failed.add(event.eventKey);
       }
     }
   }
+  const processed = new Set(queued.map((event) => event.eventKey));
+  const current = JSON.parse(localStorage.getItem(key) ?? "[]") as ProgressEvent[];
+  const remaining = current.filter((event) => !processed.has(event.eventKey) || failed.has(event.eventKey));
   if (remaining.length) {
     localStorage.setItem(key, JSON.stringify(remaining));
   } else {

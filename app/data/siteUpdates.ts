@@ -13,6 +13,23 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-8-0",
+    version: "v1.8.0",
+    date: "October 3, 2026",
+    type: "major",
+    title: "Offline Reviews and More Reliable Sign In",
+    summary: "Added offline review access, automatic progress sync, Chrome app installation, and fixes for sign-in loading and saved sessions.",
+    tags: ["Offline", "Sync", "Account", "Sessions"],
+    highlights: [
+      "Added offline review access after RevIT has been opened online once.",
+      "Saved offline answers and progress now sync automatically when the internet returns.",
+      "Added clear offline messages while RevIT AI, rankings, and account tools are unavailable.",
+      "Fixed users getting stuck while RevIT checks a temporarily unavailable account session.",
+      "Fixed saved review sessions so they stay with the correct account.",
+      "Added Chrome app installation support with proper app icons."
+    ]
+  },
+  {
     id: "update-v1-7-6",
     version: "v1.7.6",
     date: "October 2, 2026",

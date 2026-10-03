@@ -1,5 +1,10 @@
 # RevIT Project Memory & Guidelines
 
+## Shared Agent Handoff
+- Read `AGENT_HANDOFF.md` at session start.
+- Update it before switching agents or ending with unfinished or unpushed work.
+- Keep it concise and never store secrets or private user data.
+
 ## 1. README.md & Public Documentation Policy
 - **Never put private, internal, or technical implementation info in `README.md`**.
 - `README.md` must only showcase the site's core product features from the learner's perspective.
@@ -52,4 +57,3 @@ Before pushing to remote:
 - **Ask When Unsure**: If requirements, designs, or implementations are ambiguous, underspecified, or uncertain, ask questions before building.
 - **Suggest Recommendations**: Proactively propose recommended ideas or alternatives to the user's idea with clear trade-offs.
 - **Precision Over Assumptions**: Clarify upfront to ensure concise, flaw-free implementation aligned with user intent.
-

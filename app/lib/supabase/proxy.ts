@@ -1,8 +1,9 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured, supabaseConfig, supabaseCookieOptions } from "./config";
+import { isTransientAuthError, retryAuthRequest } from "./retryAuth";
 
-const PUBLIC_PATHS = ["/auth", "/terms", "/privacy", "/icon", "/api/chat"];
+const PUBLIC_PATHS = ["/auth", "/terms", "/privacy", "/offline", "/sw.js", "/manifest.webmanifest", "/icon", "/api/chat"];
 
 function isPublic(pathname: string) {
   return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
@@ -35,9 +36,18 @@ export async function updateSession(request: NextRequest, security: {
     },
   });
 
-  const { data } = await supabase.auth.getClaims();
-  const signedIn = Boolean(data?.claims?.sub);
+  const claimsResult = await retryAuthRequest(() => supabase.auth.getClaims()).catch(() => null);
   const pathname = request.nextUrl.pathname;
+  if (!claimsResult || isTransientAuthError(claimsResult.error)) {
+    if (isPublic(pathname)) return secure(response);
+    const target = request.nextUrl.clone();
+    target.pathname = "/auth";
+    target.searchParams.set("session_unavailable", "true");
+    target.searchParams.set("next", pathname === "/" ? "/overview" : pathname);
+    return secure(NextResponse.redirect(target));
+  }
+  const { data } = claimsResult;
+  const signedIn = Boolean(data?.claims?.sub);
 
   if (!signedIn && !isPublic(pathname)) {
     const target = request.nextUrl.clone();

@@ -35,18 +35,19 @@ import SiteNotificationTrigger from "./components/SiteNotificationTrigger";
 import SiteUpdatesModal, { useSiteNotifications } from "./components/SiteUpdatesModal";
 import {
   deleteExam as deleteCloudExam,
-  flushActivityQueue,
   flushQuestionAttemptQueue,
+  flushQuestionReinforcementQueue,
   getQueuedQuestionAttemptsCount,
+  getQueuedQuestionReinforcementCount,
   loadCloudSnapshot,
   localProfileToCloud,
   migrateLocalActivity,
   migrateLocalQuestionAttempts,
   queueQuestionAttempt,
+  queueQuestionReinforcement,
   saveExam as saveCloudExam,
   saveGrade as saveCloudGrade,
   savePreferences,
-  saveQuestionReinforcement,
 } from "./lib/cloudService";
 import type { DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, StudyPlan, UserPreferences } from "./lib/domain";
 import type { ProgressEvent, ProgressionUpdate } from "./lib/xpService";
@@ -67,9 +68,11 @@ import { hasCurrentLegalConsent } from "./lib/legal";
 import { canAccessFeature } from "./lib/features";
 import { ALL_MAJORS_CATEGORY, buildSubjectSections, filterSubjectsBySearch, getUnifiedSubjects, MTAP_1_CATEGORY, OTHER_MAJORS_CATEGORY, type UnifiedSubject } from "./lib/reviewerLibrary";
 import { LOCAL_PREFERENCES_STORAGE_KEY, normalizeUserPreferences, withMtapFeaturePreference } from "./lib/userPreferences";
+import { withTimeout } from "./lib/withTimeout";
 import {
   emptyProgression,
   flushCloudProgressEventQueue,
+  getQueuedCloudProgressEventsCount,
   loadCloudProgression,
   loadLocalProgression,
   markCurrentLevelSeen,
@@ -79,6 +82,7 @@ import {
   syncLocalProgressionFromCloud,
   shouldShowLevelUp,
 } from "./lib/xpService";
+import { useOnlineStatus } from "./lib/useOnlineStatus";
 import { levelProgress, XP_REWARDS } from "./lib/xpConfig";
 import {
   chatTitleFromFirstMessage,
@@ -124,6 +128,10 @@ const DEFAULT_PROFILE: LearnerProfile = { name: "Student", photoDataUrl: "" };
 const TIMER_DISABLED: ReviewTimerConfig = { enabled: false, duration: 60 };
 const SOUND_EFFECTS_STORAGE_KEY = "revit-sound-effects";
 const RECENT_SESSION_STORAGE_KEY = "revit_recent_session_v1";
+
+function recentSessionStorageKey(userId?: string) {
+  return `${RECENT_SESSION_STORAGE_KEY}:${userId ?? "local"}`;
+}
 
 const navItems: Array<{ id: View; label: string; icon: string }> = [
   { id: "overview", label: "Overview", icon: "/icons/neu/overview.png" },
@@ -334,8 +342,10 @@ function activityAfterEvent(current: DailyActivity[], activityDate: string, inpu
 
 export type InitialUser = { id: string; email: string; username?: string };
 
-export default function RevITApp({ initialUser = null, cloudEnabled = false, turnstileSiteKey }: { initialUser?: InitialUser | null; cloudEnabled?: boolean; turnstileSiteKey?: string }) {
+export default function RevITApp({ initialUser = null, cloudEnabled = false, offlineMode = false, turnstileSiteKey }: { initialUser?: InitialUser | null; cloudEnabled?: boolean; offlineMode?: boolean; turnstileSiteKey?: string }) {
   const router = useRouter();
+  const online = useOnlineStatus();
+  const cloudAvailable = cloudEnabled && online && !offlineMode;
   const [activeView, setActiveView] = useState<View>("overview");
   const [viewDirection, setViewDirection] = useState(1);
   const [libraryMode, setLibraryMode] = useState<ReviewLibraryMode>("mcqs");
@@ -409,11 +419,12 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, tur
     mtap_features_enabled: false,
     mtap_onboarding_completed: false,
   }));
-  const [cloudLoading, setCloudLoading] = useState(cloudEnabled);
+  const [cloudLoading, setCloudLoading] = useState(cloudEnabled && !offlineMode);
+  const [cloudSyncing, setCloudSyncing] = useState(false);
   const [cloudError, setCloudError] = useState("");
-  const [attemptHistoryAvailable, setAttemptHistoryAvailable] = useState(!cloudEnabled);
+  const [attemptHistoryAvailable, setAttemptHistoryAvailable] = useState(!cloudEnabled || offlineMode);
   const [isInitializing, setIsInitializing] = useState(true);
-  const [sessionPolicyReady, setSessionPolicyReady] = useState(!cloudEnabled);
+  const [sessionPolicyReady, setSessionPolicyReady] = useState(!cloudEnabled || offlineMode);
   const [themeReady, setThemeReady] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState<{isOpen: boolean, action?: () => void, title?: string, message?: string, confirmLabel?: string}>({ isOpen: false });
   const [recentSession, setRecentSession] = useState<SavedRecentSession | null>(null);
@@ -495,6 +506,11 @@ useEffect(() => {
   }, [activeView]);
 
   useEffect(() => {
+    if (!initialUser || offlineMode) return;
+    localStorage.setItem("revit-offline-user", JSON.stringify(initialUser));
+  }, [initialUser, offlineMode]);
+
+  useEffect(() => {
     const preferencesReady = storageReady && (!cloudEnabled || !cloudLoading);
     if (!preferencesReady || activeView !== "grades" || canAccessFeature("grades", preferences)) return;
 
@@ -569,14 +585,16 @@ useEffect(() => {
       // Invalid local data should not block a study session.
     }
     try {
-      const savedRecent = localStorage.getItem(RECENT_SESSION_STORAGE_KEY);
+      localStorage.removeItem(RECENT_SESSION_STORAGE_KEY);
+      const savedRecent = localStorage.getItem(recentSessionStorageKey(initialUser?.id));
       if (savedRecent) {
         const parsed = JSON.parse(savedRecent) as SavedRecentSession;
-        if (parsed && Array.isArray(parsed.questionIds) && parsed.questionIds.length > 0 && parsed.index < parsed.questionIds.length) {
+        if (parsed && Array.isArray(parsed.questionIds) && parsed.questionIds.length > 0
+          && parsed.index < parsed.questionIds.length && questionById.has(parsed.questionIds[parsed.index])) {
           setRecentSession(parsed);
           setResumeModalOpen(true);
         } else {
-          localStorage.removeItem(RECENT_SESSION_STORAGE_KEY);
+          localStorage.removeItem(recentSessionStorageKey(initialUser?.id));
         }
       }
     } catch {
@@ -605,7 +623,7 @@ useEffect(() => {
   }, [initialUser?.id, studyPlans, studyPlansReady]);
 
   useEffect(() => {
-    if (!storageReady || cloudEnabled) return;
+    if (!storageReady || (cloudEnabled && !offlineMode)) return;
     try {
       const savedGrades = JSON.parse(localStorage.getItem("revit-grades-v1") ?? "[]") as GradeRecord[];
       const savedExams = JSON.parse(localStorage.getItem("revit-exams-v1") ?? "[]") as ExamSchedule[];
@@ -616,15 +634,15 @@ useEffect(() => {
     } catch {
       setActivity(mergeLocalAttemptActivity(attempts, [], preferences.timezone));
     }
-  }, [attempts, cloudEnabled, preferences.timezone, storageReady]);
+  }, [attempts, cloudEnabled, offlineMode, preferences.timezone, storageReady]);
 
   useEffect(() => {
-    if (!storageReady || cloudEnabled) return;
+    if (!storageReady || (cloudEnabled && !offlineMode)) return;
     setActivity((current) => mergeLocalAttemptActivity(attempts, current, preferences.timezone));
-  }, [attempts, cloudEnabled, preferences.timezone, storageReady]);
+  }, [attempts, cloudEnabled, offlineMode, preferences.timezone, storageReady]);
 
   useEffect(() => {
-    if (!cloudEnabled || !initialUser) {
+    if (!cloudEnabled || !initialUser || offlineMode) {
       setSessionPolicyReady(true);
       return;
     }
@@ -645,26 +663,16 @@ useEffect(() => {
       return;
     }
     setSessionPolicyReady(true);
-  }, [cloudEnabled, initialUser, router]);
+  }, [cloudEnabled, initialUser, offlineMode, router]);
 
   useEffect(() => {
-    if (!cloudEnabled || !initialUser || !sessionPolicyReady) return;
+    if (!cloudEnabled || !initialUser || !sessionPolicyReady || offlineMode) return;
     let cancelled = false;
     async function load() {
       setCloudLoading(true); setCloudError("");
       try {
         const client = createClient();
-        await flushQuestionAttemptQueue(client, initialUser!.id);
-        await flushActivityQueue(client);
-        let progressionUpdate: ProgressionUpdate | null = null;
-        let progressionLoadError = "";
-        try {
-          await flushCloudProgressEventQueue(client, initialUser!.id).catch(() => null);
-          progressionUpdate = await loadCloudProgression(client, initialUser!.id);
-        } catch {
-          progressionLoadError = "Progression could not be loaded. It will retry when the connection recovers.";
-        }
-        const snapshot = await loadCloudSnapshot(client, initialUser!.id);
+        const snapshot = await withTimeout(loadCloudSnapshot(client, initialUser!.id), 12_000);
         if (cancelled) return;
         const fallbackName = initialUser!.username?.trim() || DEFAULT_PROFILE.name;
         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, fallbackName, "");
@@ -677,13 +685,6 @@ useEffect(() => {
           ...Object.fromEntries(snapshot.reinforcement.map((item) => [item.question_id, item.reinforcement_level])),
         }));
         setProfile({ name: nextProfile.first_name?.trim() || DEFAULT_PROFILE.name, photoDataUrl: nextProfile.avatar_url ?? "" });
-        if (progressionUpdate) {
-          syncLocalProgressionFromCloud(progressionOwnerKey, progressionUpdate.snapshot);
-          setProgression(progressionUpdate.snapshot);
-          markCurrentLevelSeen(progressionOwnerKey, levelProgress(progressionUpdate.snapshot.totalXp).level);
-        }
-        setProgressionError(progressionLoadError);
-        setProgressionReady(true);
         const savedTheme = localStorage.getItem("revit-theme");
         const cloudTheme = nextPreferences.theme === "light" || nextPreferences.theme === "dark" ? nextPreferences.theme : null;
         const resolvedTheme = savedTheme === "light" || savedTheme === "dark"
@@ -692,8 +693,26 @@ useEffect(() => {
         document.documentElement.dataset.theme = resolvedTheme;
         document.documentElement.style.colorScheme = resolvedTheme;
         if (savedTheme !== "light" && savedTheme !== "dark" && cloudTheme) localStorage.setItem("revit-theme", cloudTheme);
-      } catch {
-        if (!cancelled) setCloudError("Cloud data could not be loaded. Please try again.");
+        const queuedAttempts = getQueuedQuestionAttemptsCount(initialUser!.id);
+        const queuedReinforcement = getQueuedQuestionReinforcementCount(initialUser!.id);
+        const queuedProgress = getQueuedCloudProgressEventsCount(initialUser!.id);
+        void (async () => {
+          if (queuedAttempts) await flushQuestionAttemptQueue(client, initialUser!.id);
+          if (queuedReinforcement) await flushQuestionReinforcementQueue(client, initialUser!.id);
+          const progressionUpdate = queuedProgress
+            ? await flushCloudProgressEventQueue(client, initialUser!.id) ?? await loadCloudProgression(client, initialUser!.id)
+            : await loadCloudProgression(client, initialUser!.id);
+          if (cancelled) return;
+          syncLocalProgressionFromCloud(progressionOwnerKey, progressionUpdate.snapshot);
+          setProgression(progressionUpdate.snapshot);
+          markCurrentLevelSeen(progressionOwnerKey, levelProgress(progressionUpdate.snapshot.totalXp).level);
+        })().catch(() => {
+          if (!cancelled) setProgressionError("Progression could not be loaded. It will retry when the connection recovers.");
+        });
+      } catch (error) {
+        if (!cancelled) setCloudError(error instanceof Error && error.message === "Request timed out."
+          ? "Cloud data took too long to respond. Please try again."
+          : "Cloud data could not be loaded. Please try again.");
       } finally {
         if (!cancelled) {
           setProgressionReady(true);
@@ -705,10 +724,10 @@ useEffect(() => {
     return () => { cancelled = true; };
   // Load once for the authenticated identity; local fallback data is migrated separately.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cloudEnabled, initialUser?.id, sessionPolicyReady]);
+  }, [cloudEnabled, initialUser?.id, offlineMode, sessionPolicyReady]);
 
   useEffect(() => {
-    if (activeView !== "assistant" || !cloudEnabled || !initialUser || chatHistoryLoaded) return;
+    if (activeView !== "assistant" || !cloudAvailable || !initialUser || chatHistoryLoaded) return;
     let cancelled = false;
 
     async function loadHistory() {
@@ -740,10 +759,10 @@ useEffect(() => {
 
     void loadHistory();
     return () => { cancelled = true; };
-  }, [activeView, chatHistoryLoaded, cloudEnabled, initialUser]);
+  }, [activeView, chatHistoryLoaded, cloudAvailable, initialUser]);
 
   useEffect(() => {
-    if (activeView !== "assistant" || !cloudEnabled || !initialUser || !activeChatId || loadedChatId === activeChatId) return;
+    if (activeView !== "assistant" || !cloudAvailable || !initialUser || !activeChatId || loadedChatId === activeChatId) return;
     let cancelled = false;
 
     async function loadConversation() {
@@ -767,10 +786,10 @@ useEffect(() => {
 
     void loadConversation();
     return () => { cancelled = true; };
-  }, [activeChatId, activeView, cloudEnabled, initialUser, loadedChatId]);
+  }, [activeChatId, activeView, cloudAvailable, initialUser, loadedChatId]);
 
   useEffect(() => {
-    if (!cloudEnabled || !initialUser || !storageReady || cloudLoading || cloudError || !attemptHistoryAvailable) return;
+    if (!cloudAvailable || !initialUser || !storageReady || cloudLoading || cloudError || !attemptHistoryAvailable) return;
     if (attemptMigrationStarted.current) return;
     attemptMigrationStarted.current = true;
     let cancelled = false;
@@ -790,7 +809,7 @@ useEffect(() => {
     }
     void migrate();
     return () => { cancelled = true; };
-  }, [attemptHistoryAvailable, attempts, cloudEnabled, cloudError, cloudLoading, initialUser, preferences.timezone, storageReady]);
+  }, [attemptHistoryAvailable, attempts, cloudAvailable, cloudError, cloudLoading, initialUser, preferences.timezone, storageReady]);
 
   useEffect(() => {
     if (storageReady) localStorage.setItem(`revit-attempts-v2:${initialUser?.id ?? "local"}`, JSON.stringify(attempts));
@@ -830,9 +849,9 @@ useEffect(() => {
   }, [cloudEnabled]);
 
   useEffect(() => {
-    if (!storageReady || cloudEnabled) return;
+    if (!storageReady || (cloudEnabled && !offlineMode)) return;
     localStorage.setItem(LOCAL_PREFERENCES_STORAGE_KEY, JSON.stringify(preferences));
-  }, [cloudEnabled, preferences, storageReady]);
+  }, [cloudEnabled, offlineMode, preferences, storageReady]);
 
   useEffect(() => {
     if (!storageReady || cloudEnabled) return;
@@ -845,12 +864,12 @@ useEffect(() => {
   }, [cloudEnabled, exams, storageReady]);
 
   useEffect(() => {
-    if (!storageReady || cloudEnabled) return;
+    if (!storageReady || (cloudEnabled && !offlineMode)) return;
     localStorage.setItem("revit-activity-v1", JSON.stringify(activity));
-  }, [activity, cloudEnabled, storageReady]);
+  }, [activity, cloudEnabled, offlineMode, storageReady]);
 
   useEffect(() => {
-    if (!storageReady || cloudEnabled) return;
+    if (!storageReady || (cloudEnabled && !offlineMode)) return;
     const update = loadLocalProgression(progressionOwnerKey, progressMetrics);
     if (!progressionReady) {
       setProgression(update.snapshot);
@@ -861,7 +880,7 @@ useEffect(() => {
     applyProgressionUpdate(update);
   // Metrics are the existing local sources of truth; progression changes are applied inside this effect.
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cloudEnabled, progressMetrics, progressionOwnerKey, storageReady]);
+  }, [cloudEnabled, offlineMode, progressMetrics, progressionOwnerKey, storageReady]);
 
   useEffect(() => {
     const ready = themeReady
@@ -869,11 +888,11 @@ useEffect(() => {
       && storageReady
       && studyPlansReady
       && progressionReady
-      && (!cloudEnabled || !cloudLoading);
+      && (!cloudEnabled || offlineMode || !cloudLoading);
     if (!ready) return;
     const frame = window.requestAnimationFrame(() => setIsInitializing(false));
     return () => window.cancelAnimationFrame(frame);
-  }, [cloudEnabled, cloudLoading, progressionReady, sessionPolicyReady, storageReady, studyPlansReady, themeReady]);
+  }, [cloudEnabled, cloudLoading, offlineMode, progressionReady, sessionPolicyReady, storageReady, studyPlansReady, themeReady]);
 
 
   // Auto-open updates modal once per login when new updates exist
@@ -1140,7 +1159,7 @@ useEffect(() => {
 
   function clearRecentSession() {
     try {
-      localStorage.removeItem(RECENT_SESSION_STORAGE_KEY);
+      localStorage.removeItem(recentSessionStorageKey(initialUser?.id));
     } catch {}
     setRecentSession(null);
   }
@@ -1171,7 +1190,7 @@ useEffect(() => {
     };
 
     try {
-      localStorage.setItem(RECENT_SESSION_STORAGE_KEY, JSON.stringify(saved));
+      localStorage.setItem(recentSessionStorageKey(initialUser?.id), JSON.stringify(saved));
       setRecentSession(saved);
     } catch {}
 
@@ -1334,11 +1353,13 @@ useEffect(() => {
   }
 
   const flushBatchedCloudSync = useCallback(async () => {
-    if (!cloudEnabled || !initialUser || isSyncingRef.current) return;
+    if (!cloudAvailable || !initialUser || isSyncingRef.current) return;
     isSyncingRef.current = true;
+    setCloudSyncing(true);
     try {
       const client = createClient();
       await flushQuestionAttemptQueue(client, initialUser.id);
+      await flushQuestionReinforcementQueue(client, initialUser.id);
       const update = await flushCloudProgressEventQueue(client, initialUser.id);
       if (update) {
         syncLocalProgressionFromCloud(progressionOwnerKey, update.snapshot);
@@ -1348,11 +1369,12 @@ useEffect(() => {
       // Kept in queue for next flush or reconnect
     } finally {
       isSyncingRef.current = false;
+      setCloudSyncing(false);
     }
-  }, [cloudEnabled, initialUser, progression.totalXp, progressionReady, progressionOwnerKey]);
+  }, [cloudAvailable, initialUser, progression.totalXp, progressionReady, progressionOwnerKey]);
 
   const scheduleBatchedCloudSync = useCallback((immediate = false) => {
-    if (!cloudEnabled || !initialUser) return;
+    if (!cloudAvailable || !initialUser) return;
     if (syncTimerRef.current) {
       clearTimeout(syncTimerRef.current);
       syncTimerRef.current = null;
@@ -1364,7 +1386,11 @@ useEffect(() => {
     syncTimerRef.current = setTimeout(() => {
       void flushBatchedCloudSync();
     }, 4000);
-  }, [cloudEnabled, flushBatchedCloudSync, initialUser]);
+  }, [cloudAvailable, flushBatchedCloudSync, initialUser]);
+
+  useEffect(() => {
+    if (cloudAvailable) scheduleBatchedCloudSync(true);
+  }, [cloudAvailable, scheduleBatchedCloudSync]);
 
   useEffect(() => {
     if (sessionComplete) {
@@ -1474,8 +1500,7 @@ useEffect(() => {
     );
     setReinforcementLevels((current) => reinforcementAfterAnswer(current, currentQuestion.id, attempt.correct));
     if (cloudEnabled && initialUser && (!attempt.correct || currentReinforcementLevel > 0)) {
-      void saveQuestionReinforcement(createClient(), initialUser.id, currentQuestion.id, nextReinforcementLevel)
-        .catch(() => setCloudError("Your answer is saved locally, but reinforcement sync needs another attempt."));
+      queueQuestionReinforcement(initialUser.id, currentQuestion.id, nextReinforcementLevel);
     }
     if (cloudEnabled && initialUser) {
       queueQuestionAttempt(initialUser.id, attempt);
@@ -1579,6 +1604,10 @@ useEffect(() => {
   }
 
   function openProfileEditor() {
+    if (cloudEnabled && !cloudAvailable) {
+      setCloudError("Account settings need an internet connection.");
+      return;
+    }
     setProfileDraft(profile);
     setProfileError("");
     setProfileOpen(true);
@@ -1677,6 +1706,7 @@ useEffect(() => {
 
   async function startNewChat() {
     if (pending || chatActionPending) return;
+    if (!online) return setChatError("RevIT AI needs an internet connection.");
     setChatError("");
     setDraft("");
 
@@ -1710,7 +1740,7 @@ useEffect(() => {
   }
 
   async function removeAiChat(chat: AiChat) {
-    if (!cloudEnabled || !initialUser || pending || chatActionPending) return;
+    if (!cloudAvailable || !initialUser || pending || chatActionPending) return;
     
     requestConfirm("Delete conversation?", `Delete “${chat.title}”? This conversation cannot be recovered.`, "Delete", async () => {
       setChatActionPending(true);
@@ -1736,6 +1766,7 @@ useEffect(() => {
   async function ask(question: string) {
     const cleanQuestion = question.trim();
     if (!cleanQuestion || pending || chatActionPending || chatMessagesLoading) return;
+    if (!online) return setChatError("RevIT AI needs an internet connection.");
     let userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: "user",
@@ -1871,6 +1902,7 @@ useEffect(() => {
   }
 
   async function persistGrade(record: GradeRecord) {
+    if (cloudEnabled && !cloudAvailable) return setCloudError("Grade changes need an internet connection.");
     if (cloudEnabled && initialUser) {
       const saved = await saveCloudGrade(createClient(), initialUser.id, record);
       setGrades((current) => [...current.filter((item) => item.subject !== saved.subject), saved]);
@@ -1878,6 +1910,7 @@ useEffect(() => {
   }
 
   async function persistExam(exam: Omit<ExamSchedule, "id"> & { id?: string }) {
+    if (cloudEnabled && !cloudAvailable) return setCloudError("Exam changes need an internet connection.");
     const isFirstExam = exams.length === 0 && !exam.id;
     if (cloudEnabled && initialUser) {
       const saved = await saveCloudExam(createClient(), initialUser.id, exam);
@@ -1892,13 +1925,14 @@ useEffect(() => {
   }
 
   async function removeExam(id: string) {
+    if (cloudEnabled && !cloudAvailable) return setCloudError("Exam changes need an internet connection.");
     if (cloudEnabled && initialUser) await deleteCloudExam(createClient(), initialUser.id, id);
     setExams((current) => current.filter((exam) => exam.id !== id));
   }
 
   if (isInitializing) return <RevITLoadingScreen />;
 
-  if (cloudEnabled && !hasCurrentLegalConsent(cloudProfile)) {
+  if (cloudEnabled && !offlineMode && !hasCurrentLegalConsent(cloudProfile)) {
     return (
       <LegalConsentGate
         profile={cloudProfile}
@@ -1943,6 +1977,9 @@ useEffect(() => {
   const currentSessionTopicIds = libraryMode === "mcqs" ? selectedTopicIds : activeFlashcardTopics;
   const currentSessionTopicNames = currentSessionTopicIds.map((id) => topicById.get(id)?.name).filter((name): name is string => Boolean(name));
   const currentSessionSubjects = Array.from(new Set(currentSessionTopicIds.map((id) => topicById.get(id)?.subjectId).filter((id): id is string => Boolean(id)).map((id) => subjectById.get(id)?.name).filter((name): name is string => Boolean(name))));
+  const pendingSyncCount = initialUser ? getQueuedQuestionAttemptsCount(initialUser.id)
+    + getQueuedQuestionReinforcementCount(initialUser.id)
+    + getQueuedCloudProgressEventsCount(initialUser.id) : 0;
 
   return (
     <main className={`app-shell ${sidebarCollapsed ? "sidebar-collapsed" : ""} ${activeView === "library" && isReviewSessionActive && !sessionComplete ? "study-session-active" : ""}`}>
@@ -1995,6 +2032,7 @@ useEffect(() => {
           <button
             className="sidebar-feedback-btn"
             onClick={() => setFeedbackOpen(true)}
+            disabled={!online}
             title="Send Feedback"
             style={sidebarCollapsed ? { justifyContent: "center", width: "52px", marginRight: "auto", marginBottom: "0", marginLeft: "auto" } : undefined}
           >
@@ -2099,6 +2137,8 @@ useEffect(() => {
           </div>
         </div>
 
+        {!online && <div className="sync-banner local" role="status"><span>Offline mode: progress saves on this device and syncs automatically when you reconnect.{pendingSyncCount ? ` ${pendingSyncCount} update${pendingSyncCount === 1 ? "" : "s"} waiting.` : ""}</span></div>}
+        {online && cloudSyncing && <div className="sync-banner" role="status">Syncing saved offline progress…</div>}
         {cloudLoading && <div className="sync-banner">Loading your cloud workspace…</div>}
         {cloudError && <div className="sync-banner error" role="status"><span>{cloudError}</span><button type="button" onClick={() => window.location.reload()}>Retry</button></div>}
         {progressionError && <div className="sync-banner error" role="status"><span>{progressionError}</span><button type="button" onClick={() => window.location.reload()}>Retry</button></div>}
@@ -2938,7 +2978,7 @@ useEffect(() => {
           </div>
         )}
 
-        {activeView === "leaderboards" && (
+        {activeView === "leaderboards" && (!online ? <CloudOfflineState feature="Leaderboards" /> : (
           <LeaderboardPage
             cloudEnabled={cloudEnabled}
             leaderboardOptIn={preferences.leaderboard_opt_in}
@@ -2947,7 +2987,7 @@ useEffect(() => {
             onOpenSettings={openProfileEditor}
             onToggleOptIn={updateLeaderboardOptIn}
           />
-        )}
+        ))}
 
         {activeView === "weakness" && (
           <WeaknessDashboard
@@ -2976,7 +3016,7 @@ useEffect(() => {
 
         {activeView === "grades" && gradesEnabled && <GradesPage grades={grades} onSave={persistGrade} showSimulator={gradeSimulatorEnabled} />}
 
-        {activeView === "assistant" && (
+        {activeView === "assistant" && (!online ? <CloudOfflineState feature="RevIT AI" /> : (
           <div className="assistant-page">
             <section className="context-strip">
               <div><p className="eyebrow">Current library selection</p><strong>{selectedTopicIds.length ? `${selectedTopicIds.length} selected topic${selectedTopicIds.length === 1 ? "" : "s"}` : "No topics selected"}</strong></div>
@@ -3046,7 +3086,7 @@ useEffect(() => {
               </div>
             </div>
           </div>
-        )}
+        ))}
           </motion.div>
         </AnimatePresence>
 
@@ -3056,7 +3096,7 @@ useEffect(() => {
           <span>Level up</span><strong>You reached Level {levelUp}</strong><p>Keep improving.</p>
         </div>}
 
-        {feedbackOpen && <FeedbackModal profile={accountProfile ?? { id: initialUser?.id ?? "local", first_name: profile.name, username: profile.name, avatar_url: profile.photoDataUrl, onboarding_complete: true } as Profile} email={initialUser?.email} turnstileSiteKey={turnstileSiteKey} onClose={() => setFeedbackOpen(false)} />}
+        {feedbackOpen && online && <FeedbackModal profile={accountProfile ?? { id: initialUser?.id ?? "local", first_name: profile.name, username: profile.name, avatar_url: profile.photoDataUrl, onboarding_complete: true } as Profile} email={initialUser?.email} turnstileSiteKey={turnstileSiteKey} onClose={() => setFeedbackOpen(false)} />}
 
         {profileOpen && !cloudEnabled && (
           <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setProfileOpen(false); }}>
@@ -3085,8 +3125,8 @@ useEffect(() => {
             </section>
           </div>
         )}
-        {profileOpen && cloudEnabled && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} onMtapFeaturesChange={updateMtapFeatures} />}
-        {cloudEnabled && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} onMtapChoose={updateMtapFeatures} />}
+        {profileOpen && cloudAvailable && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} onMtapFeaturesChange={updateMtapFeatures} />}
+        {cloudAvailable && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} onMtapChoose={updateMtapFeatures} />}
         {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>
       <ScientificCalculator />
@@ -3129,6 +3169,15 @@ useEffect(() => {
         onDiscard={discardRecentSession}
       />
     </main>
+  );
+}
+
+function CloudOfflineState({ feature }: { feature: string }) {
+  return (
+    <section className="empty-progress" role="status">
+      <h2>{feature} needs internet</h2>
+      <p>Keep reviewing offline. Saved progress will sync automatically when your connection returns.</p>
+    </section>
   );
 }
 

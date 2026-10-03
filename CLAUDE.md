@@ -1,5 +1,7 @@
 @AGENTS.md
 
+Read `AGENT_HANDOFF.md` at session start. Update it before switching agents or ending with unfinished or unpushed work. Never store secrets or private user data there.
+
 # RevIT Project Memory & Guidelines
 
 ## 1. README.md & Public Documentation Policy
