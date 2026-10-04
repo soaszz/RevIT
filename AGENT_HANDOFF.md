@@ -17,7 +17,7 @@ Add Google sign-in and safe existing-account identity linking through Supabase A
 
 ## Current Status
 
-- Implementation complete in working tree; not pushed.
+- Implementation complete and pushed to origin/main (v1.9.0).
 - Email/password authentication remains.
 - Google is the only added social provider.
 - No database migrations or RLS changes.
