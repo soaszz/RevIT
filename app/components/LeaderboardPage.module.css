@@ -76,9 +76,6 @@
 .loadingState strong, .emptyState strong, .errorState strong { font-size: 13px; }
 .loadingState span, .emptyState p, .errorState p { max-width: 430px; margin: 6px 0 0; color: var(--muted); font-size: 9px; line-height: 1.55; }
 .errorState button { margin-top: 14px; }
-.pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding: 13px 18px; }
-.pagination button { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--input); color: var(--ink); font-size: 8px; font-weight: 700; }
-.pagination button:disabled { cursor: not-allowed; opacity: .45; }.pagination span { color: var(--muted); font-size: 8px; }
 .unavailable { min-height: 420px; display: grid; justify-items: center; align-content: center; padding: 30px; text-align: center; }
 .unavailable > span { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 15px; background: var(--green-soft); color: var(--green-dark); font-size: 24px; }
 .unavailable h2 { margin: 16px 0 0; font-size: 22px; }.unavailable p { max-width: 480px; margin: 8px 0 18px; color: var(--muted); font-size: 10px; line-height: 1.6; }

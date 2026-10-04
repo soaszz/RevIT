@@ -96,6 +96,24 @@ function questionAttemptFromRow(row: QuestionAttemptRow): QuestionAttempt {
 }
 
 const QUESTION_ATTEMPT_COLUMNS = "id,user_id,question_id,subject_id,subject_name,topic_id,topic_name,subtopic,difficulty,selected_answer,is_correct,attempt_number,review_mode,session_id,is_adaptive_repeat,answered_at";
+const SNAPSHOT_ROW_LIMIT = 1000;
+const REINFORCEMENT_PAGE_LIMIT = 1000;
+const REINFORCEMENT_MAX_ROWS = 10000;
+
+async function loadQuestionReinforcement(client: SupabaseClient, userId: string) {
+  const rows: QuestionReinforcement[] = [];
+  for (let offset = 0; offset < REINFORCEMENT_MAX_ROWS; offset += REINFORCEMENT_PAGE_LIMIT) {
+    const page = await client.from("question_reinforcement")
+      .select("user_id,question_id,reinforcement_level,updated_at")
+      .eq("user_id", userId)
+      .order("question_id", { ascending: true })
+      .range(offset, offset + REINFORCEMENT_PAGE_LIMIT - 1);
+    if (page.error) return { data: rows, error: page.error };
+    rows.push(...((page.data ?? []) as QuestionReinforcement[]));
+    if ((page.data?.length ?? 0) < REINFORCEMENT_PAGE_LIMIT) break;
+  }
+  return { data: rows, error: null };
+}
 
 export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
   const preferencesPromise = (async () => {
@@ -135,10 +153,11 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
   const [profile, grades, activity, exams, preferences, reinforcement, attempts] = await Promise.all([
     client.from("profiles").select(PROFILE_COLUMNS).eq("id", userId).maybeSingle(),
     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
-    client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId).order("activity_date", { ascending: true }),
+    client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId)
+      .order("activity_date", { ascending: false }).limit(SNAPSHOT_ROW_LIMIT),
     client.from("exam_schedule").select("id,user_id,subject,assessment_type,scheduled_date,note").eq("user_id", userId).order("scheduled_date", { ascending: true }),
     preferencesPromise,
-    client.from("question_reinforcement").select("user_id,question_id,reinforcement_level,updated_at").eq("user_id", userId),
+    loadQuestionReinforcement(client, userId),
     client.from("question_attempts").select(QUESTION_ATTEMPT_COLUMNS).eq("user_id", userId)
       .order("answered_at", { ascending: false }).limit(1000),
   ]);
@@ -153,7 +172,7 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
   return {
     profile: profile.data as Profile | null,
     grades: (grades.data ?? []) as GradeRecord[],
-    activity: (activity.data ?? []) as DailyActivity[],
+    activity: ((activity.data ?? []) as DailyActivity[]).reverse(),
     exams: (exams.data ?? []) as ExamSchedule[],
     preferences: preferences.data as UserPreferences | null,
     reinforcement: (reinforcement.error ? [] : reinforcement.data ?? []) as QuestionReinforcement[],

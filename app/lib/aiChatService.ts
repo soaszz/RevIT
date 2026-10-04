@@ -20,6 +20,8 @@ export type AiMessage = {
 
 const CHAT_FIELDS = "id,user_id,title,created_at,updated_at";
 const MESSAGE_FIELDS = "id,chat_id,role,content,created_at";
+const CHAT_PAGE_SIZE = 50;
+const MESSAGE_PAGE_SIZE = 100;
 
 function cleanTitle(value: string) {
   return value.replace(/\s+/g, " ").trim().replace(/[?.!,;:]+$/, "");
@@ -37,14 +39,16 @@ export function chatTitleFromFirstMessage(message: string) {
   return title.length > 80 ? `${title.slice(0, 77).trimEnd()}…` : title;
 }
 
-export async function loadAiChats(client: SupabaseClient, userId: string) {
+export async function loadAiChats(client: SupabaseClient, userId: string, offset = 0) {
   const { data, error } = await client
     .from("ai_chats")
     .select(CHAT_FIELDS)
     .eq("user_id", userId)
-    .order("updated_at", { ascending: false });
+    .order("updated_at", { ascending: false })
+    .range(offset, offset + CHAT_PAGE_SIZE);
   if (error) throw new Error(error.message);
-  return (data ?? []) as AiChat[];
+  const rows = (data ?? []) as AiChat[];
+  return { items: rows.slice(0, CHAT_PAGE_SIZE), hasMore: rows.length > CHAT_PAGE_SIZE };
 }
 
 export async function createAiChat(client: SupabaseClient, userId: string, title = "New chat") {
@@ -57,15 +61,20 @@ export async function createAiChat(client: SupabaseClient, userId: string, title
   return data as AiChat;
 }
 
-export async function loadAiMessages(client: SupabaseClient, chatId: string) {
+export async function loadAiMessages(client: SupabaseClient, chatId: string, offset = 0) {
   const { data, error } = await client
     .from("ai_messages")
     .select(MESSAGE_FIELDS)
     .eq("chat_id", chatId)
-    .order("created_at", { ascending: true })
-    .order("id", { ascending: true });
+    .order("created_at", { ascending: false })
+    .order("id", { ascending: false })
+    .range(offset, offset + MESSAGE_PAGE_SIZE);
   if (error) throw new Error(error.message);
-  return (data ?? []) as AiMessage[];
+  const rows = (data ?? []) as AiMessage[];
+  return {
+    items: rows.slice(0, MESSAGE_PAGE_SIZE).reverse(),
+    hasMore: rows.length > MESSAGE_PAGE_SIZE,
+  };
 }
 
 export async function saveAiMessage(

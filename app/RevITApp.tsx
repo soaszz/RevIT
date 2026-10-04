@@ -395,6 +395,10 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const [chatHistoryLoaded, setChatHistoryLoaded] = useState(false);
   const [chatHistoryLoading, setChatHistoryLoading] = useState(false);
   const [chatMessagesLoading, setChatMessagesLoading] = useState(false);
+  const [chatHistoryHasMore, setChatHistoryHasMore] = useState(false);
+  const [chatMessagesHasMore, setChatMessagesHasMore] = useState(false);
+  const [chatHistoryLoadingMore, setChatHistoryLoadingMore] = useState(false);
+  const [chatMessagesLoadingMore, setChatMessagesLoadingMore] = useState(false);
   const [chatActionPending, setChatActionPending] = useState(false);
   const [chatError, setChatError] = useState("");
   const [profile, setProfile] = useState<LearnerProfile>(DEFAULT_PROFILE);
@@ -752,9 +756,11 @@ useEffect(() => {
       setChatHistoryLoading(true);
       setChatError("");
       try {
-        const chats = await loadAiChats(createClient(), initialUser!.id);
+        const page = await loadAiChats(createClient(), initialUser!.id);
         if (cancelled) return;
+        const chats = page.items;
         setAiChats(chats);
+        setChatHistoryHasMore(page.hasMore);
         setActiveChatId((current) => (
           current && chats.some((chat) => chat.id === current) ? current : chats[0]?.id ?? null
         ));
@@ -787,9 +793,10 @@ useEffect(() => {
       setChatMessagesLoading(true);
       setChatError("");
       try {
-        const storedMessages = await loadAiMessages(createClient(), activeChatId!);
+        const page = await loadAiMessages(createClient(), activeChatId!);
         if (cancelled) return;
-        setMessages(storedMessages.map(({ id, role, content }) => ({ id, role, content })));
+        setMessages(page.items.map(({ id, role, content }) => ({ id, role, content })));
+        setChatMessagesHasMore(page.hasMore);
         setLoadedChatId(activeChatId);
       } catch {
         if (!cancelled) {
@@ -1719,6 +1726,7 @@ useEffect(() => {
       setActiveChatId(null);
       setLoadedChatId(null);
       setMessages([]);
+      setChatMessagesHasMore(false);
       return;
     }
 
@@ -1729,6 +1737,7 @@ useEffect(() => {
       setActiveChatId(chat.id);
       setLoadedChatId(chat.id);
       setMessages([]);
+      setChatMessagesHasMore(false);
     } catch {
       setChatError("A new chat could not be created. Please try again.");
     } finally {
@@ -1740,8 +1749,46 @@ useEffect(() => {
     if (pending || chatActionPending || chatId === activeChatId) return;
     setChatError("");
     setMessages([]);
+    setChatMessagesHasMore(false);
     setLoadedChatId(null);
     setActiveChatId(chatId);
+  }
+
+  async function loadOlderChats() {
+    if (!cloudEnabled || !initialUser || chatHistoryLoadingMore || !chatHistoryHasMore) return;
+    setChatHistoryLoadingMore(true);
+    try {
+      const page = await loadAiChats(createClient(), initialUser.id, aiChats.length);
+      setAiChats((current) => {
+        const existing = new Set(current.map((chat) => chat.id));
+        return [...current, ...page.items.filter((chat) => !existing.has(chat.id))];
+      });
+      setChatHistoryHasMore(page.hasMore);
+    } catch {
+      setChatError("Older conversations could not be loaded. Please try again.");
+    } finally {
+      setChatHistoryLoadingMore(false);
+    }
+  }
+
+  async function loadOlderMessages() {
+    if (!activeChatId || chatMessagesLoadingMore || !chatMessagesHasMore) return;
+    setChatMessagesLoadingMore(true);
+    try {
+      const page = await loadAiMessages(createClient(), activeChatId, messages.length);
+      setMessages((current) => {
+        const existing = new Set(current.map((message) => message.id));
+        return [
+          ...page.items.filter((message) => !existing.has(message.id)).map(({ id, role, content }) => ({ id, role, content })),
+          ...current,
+        ];
+      });
+      setChatMessagesHasMore(page.hasMore);
+    } catch {
+      setChatError("Older messages could not be loaded. Please try again.");
+    } finally {
+      setChatMessagesLoadingMore(false);
+    }
   }
 
   async function removeAiChat(chat: AiChat) {
@@ -1757,6 +1804,7 @@ useEffect(() => {
         if (activeChatId === chat.id) {
           const nextChatId = remaining[0]?.id ?? null;
           setMessages([]);
+          setChatMessagesHasMore(false);
           setLoadedChatId(null);
           setActiveChatId(nextChatId);
         }
@@ -3042,15 +3090,24 @@ useEffect(() => {
                     <div className="chat-history-state"><strong>History is available with an account.</strong><p>Sign in to keep RevIT AI conversations across pages and devices.</p></div>
                   ) : aiChats.length === 0 ? (
                     <div className="chat-history-state"><strong>No saved conversations yet.</strong><p>Start a new chat or ask a question to create one.</p>{chatError && <button type="button" onClick={() => { setChatError(""); setChatHistoryLoaded(false); }}>Try again</button>}</div>
-                  ) : aiChats.map((chat) => (
-                    <div className={`chat-history-item ${chat.id === activeChatId ? "active" : ""}`} key={chat.id}>
-                      <button className="chat-history-open" type="button" onClick={() => openAiChat(chat.id)} disabled={chatBusy} aria-current={chat.id === activeChatId ? "true" : undefined}>
-                        <strong>{chat.title}</strong>
-                        <time dateTime={chat.updated_at}>{new Date(chat.updated_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</time>
-                      </button>
-                      <button className="chat-history-delete" type="button" onClick={() => void removeAiChat(chat)} disabled={chatBusy} aria-label={`Delete ${chat.title}`}>×</button>
-                    </div>
-                  ))}
+                  ) : (
+                    <>
+                      {aiChats.map((chat) => (
+                        <div className={`chat-history-item ${chat.id === activeChatId ? "active" : ""}`} key={chat.id}>
+                          <button className="chat-history-open" type="button" onClick={() => openAiChat(chat.id)} disabled={chatBusy} aria-current={chat.id === activeChatId ? "true" : undefined}>
+                            <strong>{chat.title}</strong>
+                            <time dateTime={chat.updated_at}>{new Date(chat.updated_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</time>
+                          </button>
+                          <button className="chat-history-delete" type="button" onClick={() => void removeAiChat(chat)} disabled={chatBusy} aria-label={`Delete ${chat.title}`}>×</button>
+                        </div>
+                      ))}
+                      {chatHistoryHasMore && (
+                        <button className="chat-load-older" type="button" onClick={() => void loadOlderChats()} disabled={chatHistoryLoadingMore}>
+                          {chatHistoryLoadingMore ? "Loading…" : "Load older conversations"}
+                        </button>
+                      )}
+                    </>
+                  )}
                 </div>
               </aside>
 
@@ -3070,6 +3127,11 @@ useEffect(() => {
                     </>
                   ) : (
                     <div className="chat-log">
+                      {chatMessagesHasMore && (
+                        <button className="chat-load-older" type="button" onClick={() => void loadOlderMessages()} disabled={chatMessagesLoadingMore}>
+                          {chatMessagesLoadingMore ? "Loading…" : "Load older messages"}
+                        </button>
+                      )}
                       {messages.map((message) => (
                         <article className={`chat-message ${message.role}`} key={message.id}>
                           <span className="message-role">{message.role === "user" ? "You" : "RevIT AI"}</span>

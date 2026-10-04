@@ -19,8 +19,6 @@ import { createClient } from "../lib/supabase/client";
 import { MorphingInfinity } from "./loading-ui/morphing-infinity";
 import styles from "./LeaderboardPage.module.css";
 
-const PAGE_SIZE = 50;
-
 function initials(name: string) {
   return name.split(/\s+/).filter(Boolean).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R";
 }
@@ -87,16 +85,15 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
   const [period, setPeriod] = useState<LeaderboardPeriod>("weekly");
   const [metric, setMetric] = useState<LeaderboardMetric>("questions");
   const [subjectId, setSubjectId] = useState<string | null>(null);
-  const [offset, setOffset] = useState(0);
   const [rows, setRows] = useState<LeaderboardRow[]>([]);
   const [position, setPosition] = useState<CurrentLeaderboardPosition | null>(null);
   const [loading, setLoading] = useState(cloudEnabled);
   const [error, setError] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
 
-  const selectPeriod = (value: LeaderboardPeriod) => { setPeriod(value); setOffset(0); };
-  const selectMetric = (value: LeaderboardMetric) => { setMetric(value); setOffset(0); };
-  const selectSubject = (value: string | null) => { setSubjectId(value); setOffset(0); };
+  const selectPeriod = (value: LeaderboardPeriod) => setPeriod(value);
+  const selectMetric = (value: LeaderboardMetric) => setMetric(value);
+  const selectSubject = (value: string | null) => setSubjectId(value);
   const retry = useCallback(() => setReloadKey((current) => current + 1), []);
 
   const availableSubjects = useMemo(() => {
@@ -122,8 +119,6 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
           metric,
           subjectId,
           book: selectedBook,
-          limit: PAGE_SIZE,
-          offset,
           attempts,
         });
         if (cancelled) return;
@@ -137,13 +132,10 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
     }
     void load();
     return () => { cancelled = true; };
-  }, [attempts, cloudEnabled, leaderboardOptIn, metric, offset, period, reloadKey, selectedBook, subjectId]);
+  }, [attempts, cloudEnabled, leaderboardOptIn, metric, period, reloadKey, selectedBook, subjectId]);
 
   const selectedSubject = subjects.find((subject) => subject.id === subjectId) ?? null;
   const timezone = position?.periodTimezone ?? rows[0]?.periodTimezone ?? "Asia/Manila";
-  const rangeStart = offset + 1;
-  const rangeEnd = offset + rows.length;
-
   if (!cloudEnabled) {
     return (
       <section className={styles.unavailable}>
@@ -168,7 +160,6 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
               onClick={() => {
                 setSelectedBook("all");
                 setSubjectId(null);
-                setOffset(0);
               }}
             >
               All Books
@@ -180,7 +171,6 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
               onClick={() => {
                 setSelectedBook("Harr");
                 setSubjectId(null);
-                setOffset(0);
               }}
             >
               Harr
@@ -192,7 +182,6 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
               onClick={() => {
                 setSelectedBook("Ciulla");
                 setSubjectId(null);
-                setOffset(0);
               }}
             >
               Ciulla
@@ -258,7 +247,7 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
         <section className={styles.boardCard} aria-labelledby="leaderboard-list-title" aria-busy={loading}>
           <div className={styles.boardHeading}>
             <div><p>{selectedSubject ? `${selectedSubject.name}${selectedBook === "all" && selectedSubject.book ? ` (${selectedSubject.book})` : ""}` : "Overall"} · {selectedBook === "all" ? "All Books" : `${selectedBook} Edition`} · {periodLabel(period)}</p><h2 id="leaderboard-list-title">{metricHeading(metric)}</h2></div>
-            <span>{offset === 0 ? "Top 50" : `Ranks ${rangeStart}–${Math.max(rangeStart, rangeEnd)}`}</span>
+            <span>Top 10</span>
           </div>
 
           {loading ? (
@@ -280,17 +269,10 @@ export default function LeaderboardPage({ cloudEnabled, leaderboardOptIn, subjec
             </div>
           )}
 
-          {!loading && !error && (offset > 0 || rows.length === PAGE_SIZE) && (
-            <div className={styles.pagination}>
-              <button type="button" disabled={offset === 0} onClick={() => setOffset((current) => Math.max(0, current - PAGE_SIZE))}>Previous 50</button>
-              <span>{rows.length ? `${rangeStart}–${rangeEnd}` : "No more results"}</span>
-              <button type="button" disabled={rows.length < PAGE_SIZE} onClick={() => setOffset((current) => current + PAGE_SIZE)}>Next 50</button>
-            </div>
-          )}
         </section>
 
         {position && !loading && !error ? <CurrentPosition position={position} metric={metric} period={period} onOpenSettings={onOpenSettings} /> : (
-          <section className={styles.positionCard}><div className={styles.cardHeading}><div><p>Your position</p><h2>{loading ? "Loading…" : "Unavailable"}</h2></div></div><p className={styles.positionNote}>{error ? "Retry the ranking query to load your private position." : "Your rank is calculated separately from the Top 50 list."}</p></section>
+          <section className={styles.positionCard}><div className={styles.cardHeading}><div><p>Your position</p><h2>{loading ? "Loading…" : "Unavailable"}</h2></div></div><p className={styles.positionNote}>{error ? "Retry the ranking query to load your private position." : "Your rank is shown separately from the Top 10 list."}</p></section>
         )}
       </div>
     </div>

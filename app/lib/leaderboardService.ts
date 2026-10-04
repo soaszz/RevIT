@@ -33,6 +33,11 @@ type CurrentPositionRecord = {
   period_timezone: string;
 };
 
+type LeaderboardSnapshotRecord = {
+  rows: LeaderboardRowRecord[];
+  current_position: CurrentPositionRecord | null;
+};
+
 function asNumber(value: number | string | null | undefined) {
   const parsed = Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -194,25 +199,11 @@ function applyLocalStats(
     position.eligible = position.eligible || localStats.eligible;
     position.questionsNeeded = localStats.questionsNeeded;
 
-    let foundInRows = false;
     for (const row of rows) {
       if (row.isCurrentUser) {
-        foundInRows = true;
         row.answeredCount = localStats.answeredCount;
         row.metricValue = localStats.metricValue;
       }
-    }
-
-    if (!foundInRows && position.optedIn && position.eligible) {
-      rows.push({
-        rank: rows.length + 1,
-        displayName: position.displayName,
-        avatarUrl: position.avatarUrl,
-        metricValue: position.metricValue,
-        answeredCount: position.answeredCount,
-        isCurrentUser: true,
-        periodTimezone: position.periodTimezone,
-      });
     }
 
     rows.sort((a, b) => b.metricValue - a.metricValue);
@@ -232,8 +223,6 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
   metric: LeaderboardMetric;
   subjectId: string | null;
   book?: ReviewerBook | "all" | null;
-  limit?: number;
-  offset?: number;
   attempts?: QuestionAttempt[];
 }) {
   const bookParam = input.book && input.book !== "all" ? input.book : null;
@@ -245,14 +234,24 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
   };
 
   try {
-    const [leaderboard, currentPosition] = await Promise.all([
-      client.rpc("get_leaderboard", {
-        ...parametersWithBook,
-        p_limit: input.limit ?? 50,
-        p_offset: input.offset ?? 0,
-      }),
-      client.rpc("get_current_user_leaderboard_position", parametersWithBook),
-    ]);
+    const snapshot = await client.rpc("get_leaderboard_snapshot", parametersWithBook);
+    let leaderboard;
+    let currentPosition;
+
+    if (!snapshot.error) {
+      const payload = snapshot.data as LeaderboardSnapshotRecord;
+      leaderboard = { data: payload?.rows ?? [], error: null };
+      currentPosition = { data: payload?.current_position ?? null, error: null };
+    } else {
+      [leaderboard, currentPosition] = await Promise.all([
+        client.rpc("get_leaderboard", {
+          ...parametersWithBook,
+          p_limit: 10,
+          p_offset: 0,
+        }),
+        client.rpc("get_current_user_leaderboard_position", parametersWithBook),
+      ]);
+    }
 
     const failure = leaderboard.error ?? currentPosition.error;
     if (!failure) {
@@ -368,8 +367,8 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
       const [fallbackLb, fallbackPos] = await Promise.all([
         client.rpc("get_leaderboard", {
           ...legacyParams,
-          p_limit: input.limit ?? 50,
-          p_offset: input.offset ?? 0,
+          p_limit: 10,
+          p_offset: 0,
         }),
         client.rpc("get_current_user_leaderboard_position", legacyParams),
       ]);

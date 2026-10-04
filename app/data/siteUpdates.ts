@@ -13,6 +13,21 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-9-1",
+    version: "v1.9.1",
+    date: "October 4, 2026",
+    type: "minor",
+    title: "Faster Leaderboards and Smoother AI Chat History",
+    summary: "Made rankings load significantly faster with Top 10 leaderboards, improved AI chat loading with support for older messages, and optimized cloud progress sync.",
+    tags: ["Leaderboards", "Performance", "AI", "Sync"],
+    highlights: [
+      "Sped up Leaderboard loading times by retrieving Top 10 rankings and your personal stats in a single fast request.",
+      "AI conversations now load faster, with an option to load older chats and messages on demand.",
+      "Optimized cloud sync for study history and question reinforcement items.",
+      "Added automated database cleanup and performance indexes for smoother background processing."
+    ]
+  },
+  {
     id: "update-v1-9-0",
     version: "v1.9.0",
     date: "October 4, 2026",
