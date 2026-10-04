@@ -1,7 +1,7 @@
 "use client";
 
 import type { Factor } from "@supabase/supabase-js";
-import { type FormEvent, useRef, useState, useEffect } from "react";
+import { type FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import PublicThemeToggle from "../components/PublicThemeToggle";
 import TurnstileChallenge, { type TurnstileChallengeHandle } from "../components/auth/TurnstileChallenge";
@@ -13,6 +13,9 @@ type Mode = "login" | "register";
 type StatusType = "error" | "success" | "info";
 
 const safeNextPath = (next: string) => next.startsWith("/") && !next.startsWith("//") ? next : "/overview";
+const LAST_SIGN_IN_METHOD_KEY = "revit:lastSignInMethod";
+const subscribeToLastSignInMethod = () => () => {};
+const getLastSignInMethod = () => typeof window !== "undefined" ? localStorage.getItem(LAST_SIGN_IN_METHOD_KEY) : null;
 
 class AuthInputError extends Error {}
 
@@ -29,6 +32,17 @@ function getErrorMessage(error: unknown, fallback: string) {
     }
   }
   return fallback;
+}
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+    </svg>
+  );
 }
 
 function AuthFooter() {
@@ -54,6 +68,8 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   const [status, setStatus] = useState("");
   const [statusType, setStatusType] = useState<StatusType>("error");
   const [pending, setPending] = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
+  const googleRecentlyUsed = useSyncExternalStore(subscribeToLastSignInMethod, () => getLastSignInMethod() === "google", () => false);
   const [mfaFactorId, setMfaFactorId] = useState("");
   const [mfaCode, setMfaCode] = useState("");
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
@@ -64,15 +80,18 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.location.search.includes("clear_session=true")) {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("clear_session") === "true") {
       createClient().auth.signOut({ scope: "local" }).catch(() => {});
       localStorage.removeItem("revit-remember-until");
       localStorage.removeItem("revit-session-policy");
       sessionStorage.removeItem("revit-session-only");
       window.history.replaceState({}, document.title, window.location.pathname);
       showStatus("Your session has expired. Please sign in again.", "info");
-    } else if (window.location.search.includes("session_unavailable=true")) {
+    } else if (params.get("session_unavailable") === "true") {
       showStatus("Account service is temporarily unavailable. Refresh shortly; your session remains saved.", "info");
+    } else if (params.has("oauth_error")) {
+      showStatus("Google sign-in could not be completed. No account changes were made.");
     }
   }, []);
 
@@ -163,8 +182,30 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
       localStorage.setItem("revit-session-policy", "session-only");
       sessionStorage.setItem("revit-session-only", "active");
     }
+    localStorage.setItem(LAST_SIGN_IN_METHOD_KEY, "password");
     router.replace(safeNextPath(next));
     router.refresh();
+  }
+
+  async function continueWithGoogle() {
+    setGooglePending(true);
+    showStatus("");
+    try {
+      const callback = new URL("/auth/callback", window.location.origin);
+      callback.searchParams.set("flow", "google");
+      callback.searchParams.set("next", safeNextPath(next));
+      const { error } = await createClient().auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: callback.toString(),
+          queryParams: { prompt: "select_account" },
+        },
+      });
+      if (error) throw error;
+    } catch {
+      showStatus("Google sign-in could not start. Check your connection and try again.");
+      setGooglePending(false);
+    }
   }
 
   async function register(token: string) {
@@ -255,7 +296,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
           captchaToken: token && token !== "disabled_bypass" ? token : undefined,
         },
       });
-      if (error) { console.error("Login failed:", error); throw error; }
+      if (error) throw error;
 
       setFailedAttempts(0);
       setLockoutUntil(null);
@@ -330,9 +371,18 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
         <button type="button" role="tab" aria-selected={mode === "register"} className={mode === "register" ? "active" : ""} onClick={() => switchMode("register")} disabled={pending}>Sign up</button>
       </div>
 
+      <div className="oauth-option">
+        {googleRecentlyUsed && <span className="oauth-recent">Recently used</span>}
+        <button className="google-auth-button" type="button" onClick={() => void continueWithGoogle()} disabled={pending || googlePending}>
+          <span className="google-mark" aria-hidden="true"><GoogleIcon /></span>
+          {googlePending ? "Connecting to Google..." : "Continue with Google"}
+        </button>
+      </div>
+      <div className="auth-divider"><span>or</span></div>
+
       <div className="auth-fields">
-        <label className="auth-field"><span>Email</span><input type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
-        {mode === "register" && <label className="auth-field"><span>Username</span><input autoComplete="username" placeholder="your_username" minLength={3} maxLength={24} pattern="[A-Za-z0-9_]{3,24}" aria-describedby="username-help" value={username} onChange={(event) => setUsername(event.target.value)} required /><small id="username-help">3–24 letters, numbers, or underscores</small></label>}
+        <label className="auth-field"><span>Email</span><input type="email" autoComplete="email" placeholder="revit@email.com" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
+        {mode === "register" && <label className="auth-field"><span>Username</span><input autoComplete="username" placeholder="revit" minLength={3} maxLength={24} pattern="[A-Za-z0-9_]{3,24}" aria-describedby="username-help" value={username} onChange={(event) => setUsername(event.target.value)} required /><small id="username-help">3–24 letters, numbers, or underscores</small></label>}
         <PasswordField id="password" label="Password" value={password} onChange={setPassword} autoComplete={mode === "login" ? "current-password" : "new-password"} />
         {mode === "register" && <PasswordField id="confirm-password" label="Confirm password" value={confirmPassword} onChange={setConfirmPassword} autoComplete="new-password" />}
       </div>

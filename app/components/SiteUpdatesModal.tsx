@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import Notification3 from "./Notification3";
-import { SITE_UPDATES, type SiteUpdate, type UpdateType } from "../data/siteUpdates";
+import { SITE_UPDATES, type UpdateType } from "../data/siteUpdates";
 
 const STORAGE_KEY = "revit-read-updates-v1";
 const POPUP_DISMISSED_KEY = "revit-updates-popup-dismissed-v1";

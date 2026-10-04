@@ -13,49 +13,59 @@ Shared working memory for Codex, Antigravity, Claude, and other repository agent
 
 ## Current Objective
 
-Ship the follow-up mobile PWA fixes: faster installation, consistent `RevIT` app naming, mobile metadata, and removal of the cloud migration warning shown inside the installed app.
+Add Google sign-in and safe existing-account identity linking through Supabase Auth while preserving every existing user UUID and owned record.
 
 ## Current Status
 
-- Follow-up implementation complete in working tree but not pushed.
-- Previous `v1.8.0` release is already on `origin/main`.
-- Supabase schema, tables, RLS policies, Auth settings, and Edge Functions were not changed.
-- User may switch to Antigravity for review and push.
+- Implementation complete in working tree; not pushed.
+- Email/password authentication remains.
+- Google is the only added social provider.
+- No database migrations or RLS changes.
+- Supabase and Google Cloud dashboard setup is still required.
+- Live OAuth account testing is still required after provider setup.
+- Earlier login panel spacing/shadow fixes remain in the working tree.
+- Onboarding final step and collapsed sidebar branding now use the new 3D RevIT smiling frog mascot.
+- Implemented uniform neumorphic alphabet avatars across dark and light modes.
 
 ## Main Changes
 
-- Changed installed app name to exactly `RevIT`.
-- Added Apple/mobile web-app metadata and a proper 180px touch icon.
-- Reduced blocking service-worker installation to the manifest and required icons.
-- Moved full offline-shell chunk caching to background warm-up after activation.
-- Removed duplicate resource re-downloads and eager reviewer-image precaching.
-- Removed the visible cloud migration failure banner; local history remains preserved and migration can retry later.
-- Stopped auth timeout retries from overlapping an already-running refresh request.
-- Stopped offline queue flushes after the first transient failure to avoid repeated Supabase errors during outages.
-- Removed unreliable Supabase writes during `beforeunload`; queued data remains safely stored for the next sync.
-- Prevented theme changes from calling Supabase while the connection is offline.
+- Added Continue with Google to login and signup.
+- Google sign-in and linking always request the Google account picker.
+- Added PKCE callback handling for Google login and manual identity linking.
+- Added verified callback completion before storing revit:lastSignInMethod.
+- Added Recently used above the Google button.
+- Added Account Settings sign-in methods sourced from Supabase identities.
+- Added Connect Google through auth.linkIdentity.
+- Reopens Security settings after successful or failed linking.
+- Added focused Google auth regression tests.
+- Did not add identity unlinking because final-method lockout safety was not established.
 
 ## Important Paths
 
-- `app/RevITApp.tsx`
-- `app/lib/cloudService.ts`
-- `app/lib/xpService.ts`
-- `app/lib/supabase/retryAuth.ts`
-- `app/components/PwaRegistration.tsx`
-- `app/manifest.ts`
-- `app/layout.tsx`
-- `public/sw.js`
-- `public/revit-180.png`
+- app/auth/AuthPanel.tsx
+- app/auth/callback/route.ts
+- app/auth/oauth-complete/page.tsx
+- app/auth/oauth-complete/OAuthCompleteClient.tsx
+- app/components/AccountSettings.tsx
+- app/RevITApp.tsx
+- app/globals.css
+- tests/google-auth.test.ts
 
 ## Validation
 
-- `npm run security:secrets`: passed (0 leaks).
-- `npx tsc --noEmit`: passed.
-- `npm test`: passed (`next build` + all 81 tests passing).
-- Turnstile active (`disableCaptcha = false`).
-- Updates tab entry: `v1.8.1` added.
+- npx tsc --noEmit: passed.
+- Google auth tests: 4 passed.
+- Reviewer regression tests: 16 passed.
+- Workspace secret pattern scan: passed; official script and full history scan were sandbox-blocked.
+- npm run build: code/CSS parse passed, then failed because Google Fonts network access is blocked.
+- npm run lint: passed cleanly (0 errors, 0 warnings).
+- next dev: sandbox blocked Next child-process spawn with EPERM.
+- Turnstile is currently bypassed in AuthPanel.tsx; restore before any push per repository rules.
 
-## Next Action
+## Next Actions
 
-1. Pushed to remote `origin main`.
-
+1. Configure Google Auth Platform and Supabase Google provider, URL allowlist, and manual linking.
+2. Run safe live tests for existing, linked, new, and Pro accounts.
+3. Re-enable Turnstile before push.
+4. Rerun secrets, typecheck, and full test suite in an environment with Git child-process and Google Fonts network access.
+5. Add Updates tab entry before push.

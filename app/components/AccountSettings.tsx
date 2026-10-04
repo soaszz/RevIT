@@ -1,6 +1,7 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import type { UserIdentity } from "@supabase/supabase-js";
+import { type FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Profile, UserPreferences } from "../lib/domain";
 import { savePreferences, saveProfile, uploadAvatar } from "../lib/cloudService";
@@ -8,17 +9,21 @@ import { AVATAR_ACCEPT, validateAvatarFile } from "../lib/avatarValidation";
 import { createClient } from "../lib/supabase/client";
 import MtapPreferenceControl from "./MtapPreferenceControl";
 
-export default function AccountSettings({ profile, preferences, email, onClose, onProfile, onPreferences, onMtapFeaturesChange }: {
+type AccountTab = "profile" | "personalization" | "privacy" | "security";
+
+export default function AccountSettings({ profile, preferences, email, initialTab = "profile", initialStatus = "", onClose, onProfile, onPreferences, onMtapFeaturesChange }: {
   profile: Profile;
   preferences: UserPreferences;
   email: string;
+  initialTab?: AccountTab;
+  initialStatus?: string;
   onClose: () => void;
   onProfile: (profile: Profile) => void;
   onPreferences: (preferences: UserPreferences) => void;
   onMtapFeaturesChange: (enabled: boolean) => Promise<void>;
 }) {
   const router = useRouter();
-  const [tab, setTab] = useState<"profile" | "personalization" | "privacy" | "security">("profile");
+  const [tab, setTab] = useState<AccountTab>(initialTab);
   const [firstName, setFirstName] = useState(profile.first_name);
   const [username, setUsername] = useState(profile.username);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -27,8 +32,24 @@ export default function AccountSettings({ profile, preferences, email, onClose, 
   const [newPassword, setNewPassword] = useState("");
   const [signOutOthers, setSignOutOthers] = useState(true);
   const [leaderboardOptIn, setLeaderboardOptIn] = useState(preferences.leaderboard_opt_in);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(initialStatus);
   const [pending, setPending] = useState(false);
+  const [identities, setIdentities] = useState<UserIdentity[] | null>(null);
+
+  useEffect(() => {
+    if (tab !== "security") return;
+    let active = true;
+    void createClient().auth.getUser().then((result: { data: { user: { identities?: UserIdentity[] } | null }; error: unknown }) => {
+      if (!active) return;
+      if (result.error || !result.data.user) {
+        setStatus("Sign-in methods could not be loaded. Please try again.");
+        setIdentities([]);
+        return;
+      }
+      setIdentities(result.data.user.identities ?? []);
+    });
+    return () => { active = false; };
+  }, [tab]);
 
   async function chooseAvatar(file?: File) {
     if (!file) return;
@@ -93,6 +114,26 @@ export default function AccountSettings({ profile, preferences, email, onClose, 
     finally { setPending(false); }
   }
 
+  async function connectGoogle() {
+    setPending(true);
+    setStatus("");
+    try {
+      const callback = new URL("/auth/callback", window.location.origin);
+      callback.searchParams.set("flow", "link-google");
+      const { error } = await createClient().auth.linkIdentity({
+        provider: "google",
+        options: {
+          redirectTo: callback.toString(),
+          queryParams: { prompt: "select_account" },
+        },
+      });
+      if (error) throw error;
+    } catch {
+      setStatus("Google could not be connected. It may already belong to another account.");
+      setPending(false);
+    }
+  }
+
   async function signOut() {
     setPending(true); setStatus("");
     try {
@@ -129,7 +170,20 @@ export default function AccountSettings({ profile, preferences, email, onClose, 
           {status && <p className="form-status" role="status">{status}</p>}
           <div className="profile-modal-actions"><button className="text-button quiet" type="button" onClick={onClose}>Cancel</button><button className="primary-button" type="submit" disabled={pending}>{pending ? "Saving…" : "Save privacy"}</button></div>
         </form> : <div className="security-stack">
-          <form onSubmit={changePassword} className="account-form">
+          <section className="sign-in-methods" aria-labelledby="sign-in-methods-title">
+            <div><p className="eyebrow">Sign-in methods</p><h3 id="sign-in-methods-title">Connected accounts</h3></div>
+            <article className="sign-in-method">
+              <div><strong>Email &amp; Password</strong><span>{identities?.some((identity) => identity.provider === "email") ? email : "Not connected"}</span></div>
+              <b>{identities === null ? "Checking..." : identities.some((identity) => identity.provider === "email") ? "Connected" : "Not connected"}</b>
+            </article>
+            <article className="sign-in-method">
+              <div><strong>Google</strong><span>{identities?.find((identity) => identity.provider === "google")?.identity_data?.email ?? "Not connected"}</span></div>
+              {identities?.some((identity) => identity.provider === "google")
+                ? <b>Connected</b>
+                : <button className="secondary-button" type="button" onClick={() => void connectGoogle()} disabled={pending || identities === null}>{pending ? "Connecting..." : "Connect Google"}</button>}
+            </article>
+          </section>
+          {identities?.some((identity) => identity.provider === "email") && <form onSubmit={changePassword} className="account-form">
             <p className="eyebrow">Password</p>
             <p className="security-copy">Signed in as {email}. Confirm your current password before changing it.</p>
             <div className="account-fields-stack">
@@ -138,7 +192,7 @@ export default function AccountSettings({ profile, preferences, email, onClose, 
             </div>
             <label className="check-label"><input type="checkbox" checked={signOutOthers} onChange={(event) => setSignOutOthers(event.target.checked)} /><span>Sign out other devices after changing</span></label>
             <button className="primary-button" type="submit" disabled={pending}>Change password</button>
-          </form>
+          </form>}
           {status && <p className="form-status" role="status">{status}</p>}
         </div>}
         <footer className="account-modal-footer">

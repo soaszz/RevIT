@@ -1,7 +1,7 @@
 "use client";
 
 import katex from "katex";
-import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   calculateExpression,
   calculatorExpressionToLatex,
@@ -347,11 +347,14 @@ export default function ScientificCalculator() {
     }
   }, [cursorIndex, timeline.present]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
     setIsRevealed(false);
-    clearHideTimer();
-  };
+    if (hideTimerRef.current) {
+      clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -361,7 +364,7 @@ export default function ScientificCalculator() {
     };
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [open]);
+  }, [open, handleClose]);
 
   useEffect(() => {
     if (!open || !inputRef.current) return;

@@ -30,6 +30,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
       });
     } catch {}
 
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/auth";
   }
 

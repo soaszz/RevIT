@@ -19,6 +19,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
       });
     } catch {}
 
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.href = "/auth";
   }
 

@@ -33,7 +33,7 @@ export default function MobileNavDock({
   onOpenFeedback,
   onOpenProfile,
   wrongCount = 0,
-  unreadCount = 0,
+  unreadCount: _unreadCount = 0,
 }: MobileNavDockProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
 

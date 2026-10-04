@@ -10,16 +10,16 @@
 }
 
 .dialog {
-  width: min(920px, 100%);
-  min-height: min(560px, calc(100svh - 40px));
+  width: min(880px, 100%);
+  min-height: min(510px, calc(100svh - 40px));
   max-height: calc(100svh - 40px);
   display: grid;
-  grid-template-columns: minmax(270px, 0.72fr) minmax(430px, 1.28fr);
+  grid-template-columns: minmax(290px, 0.78fr) minmax(420px, 1.22fr);
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 22px;
   background: var(--paper);
-  box-shadow: 0 28px 80px rgba(5, 27, 22, 0.16);
+  box-shadow: 0 24px 70px rgba(5, 27, 22, 0.14);
 }
 
 .brandPanel {
@@ -28,7 +28,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: clamp(28px, 4vw, 42px);
+  padding: 30px 32px;
   background: #0d2822;
   color: #f2faf7;
 }
@@ -43,8 +43,8 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  width: 124px;
-  height: 33px;
+  width: 168px;
+  height: 45px;
   flex-shrink: 0;
 }
 
@@ -56,28 +56,9 @@
   max-width: none;
 }
 
-.frog {
-  position: relative;
-  display: block;
-  width: 30px;
-  height: 29px;
-  margin-left: -8px;
-  overflow: hidden;
-  filter: none;
-}
-
-.frog img {
-  position: absolute;
-  top: -22px;
-  left: -21px;
-  width: 72px;
-  height: 72px;
-  max-width: none;
-}
-
 .brandCopy {
   margin-block: auto;
-  padding-block: 32px;
+  padding-block: 16px 20px;
 }
 
 .brandCopy > p,
@@ -93,35 +74,39 @@
 .brandCopy h2 {
   margin: 0;
   color: #fff;
-  font-size: clamp(35px, 4.4vw, 48px);
+  font-size: clamp(30px, 3.4vw, 42px);
   font-weight: 760;
-  line-height: 0.98;
-  letter-spacing: -0.055em;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
 }
 
 .brandCopy > span {
   display: block;
-  max-width: 310px;
-  margin-top: 20px;
+  max-width: 320px;
+  margin-top: 14px;
   color: #b8ccc6;
   font-size: 11px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .assurance {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
+  display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   padding-top: 20px;
   border-top: 1px solid #29443e;
 }
 
 .assuranceIcon {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 34px;
   height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  flex-shrink: 0;
   border: 1px solid #42635c;
   border-radius: 10px;
   background: #122f29;
@@ -131,6 +116,7 @@
 .assuranceIcon svg {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.7;
@@ -140,20 +126,19 @@
 
 .assurance p {
   margin: 0;
+  min-width: 0;
+  flex: 1;
 }
 
-.assurance strong,
-.assurance span {
+.assurance p strong {
   display: block;
-}
-
-.assurance strong {
   color: #eef8f5;
   font-size: 10px;
   font-weight: 720;
 }
 
-.assurance p > span {
+.assurance p span {
+  display: block;
   margin-top: 4px;
   color: #9eb9b2;
   font-size: 9px;
@@ -166,7 +151,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding: clamp(28px, 4.2vw, 46px);
+  padding: 30px 34px;
   background: var(--paper);
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
@@ -175,16 +160,9 @@
 .utilityBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
-  margin-bottom: clamp(25px, 5vh, 42px);
-}
-
-.utilityBar > span {
-  color: var(--muted);
-  font-size: 9px;
-  font-weight: 650;
-  letter-spacing: 0.02em;
+  margin-bottom: 20px;
 }
 
 .themeToggle {
@@ -457,8 +435,8 @@
   }
 
   .wordmark {
-    width: 112px;
-    height: 30px;
+    width: 140px;
+    height: 38px;
   }
 
   .wordmark img {
@@ -470,17 +448,6 @@
     object-fit: contain;
   }
 
-  .frog {
-    width: 27px;
-    height: 26px;
-  }
-
-  .frog img {
-    top: -20px;
-    left: -20px;
-    width: 66px;
-    height: 66px;
-  }
 
   .brandCopy {
     padding: 25px 0 0;
@@ -499,13 +466,9 @@
   }
 
   .utilityBar {
-    align-items: flex-start;
+    align-items: center;
+    justify-content: flex-end;
     margin-bottom: 25px;
-  }
-
-  .utilityBar > span {
-    max-width: 140px;
-    line-height: 1.45;
   }
 
   .heading h1 {

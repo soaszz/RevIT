@@ -77,7 +77,6 @@ import {
   loadLocalProgression,
   markCurrentLevelSeen,
   queueCloudProgressEvents,
-  recordCloudProgressEvents,
   recordLocalProgressEvents,
   syncLocalProgressionFromCloud,
   shouldShowLevelUp,
@@ -148,7 +147,7 @@ function RevITLogo() {
   return (
     <>
       <span className="brand-logo brand-logo-full" aria-hidden="true"><Image src="/icons/neu/revit-wordmark.png" alt="RevIT" width={1086} height={362} priority /></span>
-      <span className="brand-frog-head" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={2000} height={2000} unoptimized /></span>
+      <span className="brand-frog-head" aria-hidden="true"><Image src="/revit-frog.png" alt="" width={308} height={242} unoptimized /></span>
       
     </>
   );
@@ -401,6 +400,8 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const [profile, setProfile] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileDraft, setProfileDraft] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [accountInitialTab, setAccountInitialTab] = useState<"profile" | "security">("profile");
+  const [accountInitialStatus, setAccountInitialStatus] = useState("");
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [updatesModalOpen, setUpdatesModalOpen] = useState(false);
   const { readIds, unreadCount, markAllRead, toggleRead, hasNewForPopup, dismissPopup } = useSiteNotifications();
@@ -509,6 +510,23 @@ useEffect(() => {
     if (!initialUser || offlineMode) return;
     localStorage.setItem("revit-offline-user", JSON.stringify(initialUser));
   }, [initialUser, offlineMode]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("account") !== "security") return;
+    setAccountInitialTab("security");
+    setAccountInitialStatus(params.get("google_linked") === "true"
+      ? "Google is connected to this RevIT account."
+      : params.has("oauth_error")
+        ? "Google could not be connected. No account changes were made."
+        : "");
+    setProfileOpen(true);
+    params.delete("account");
+    params.delete("google_linked");
+    params.delete("oauth_error");
+    const query = params.toString();
+    window.history.replaceState({}, document.title, window.location.pathname + (query ? "?" + query : ""));
+  }, []);
 
   useEffect(() => {
     const preferencesReady = storageReady && (!cloudEnabled || !cloudLoading);
@@ -1021,7 +1039,6 @@ useEffect(() => {
   const overallCorrect = attempts.filter((attempt) => attempt.correct).length;
   const overallAccuracy = percent(overallCorrect, attempts.length);
   const practicedTopics = topicStats.filter((topic) => topic.attempts > 0);
-  const strongestTopic = [...practicedTopics].sort((a, b) => b.accuracy - a.accuracy || b.attempts - a.attempts)[0];
   const weakestTopic = [...practicedTopics].sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts)[0];
   const currentQuestion = questionById.get(sessionQuestionIds[sessionIndex]);
   const currentChoiceOrder = currentQuestion
@@ -1339,7 +1356,7 @@ useEffect(() => {
     openView("assistant");
   }
 
-  function applyProgressionUpdate(update: ProgressionUpdate) {
+  const applyProgressionUpdate = useCallback((update: ProgressionUpdate) => {
     const previousLevel = levelProgress(progression.totalXp).level;
     const nextLevel = levelProgress(update.snapshot.totalXp).level;
     setProgression(update.snapshot);
@@ -1347,7 +1364,7 @@ useEffect(() => {
     if (progressionReady && nextLevel > previousLevel && shouldShowLevelUp(progressionOwnerKey, nextLevel)) {
       setLevelUp(nextLevel);
     }
-  }
+  }, [progression.totalXp, progressionOwnerKey, progressionReady]);
 
   const flushBatchedCloudSync = useCallback(async () => {
     if (!cloudAvailable || !initialUser || isSyncingRef.current) return;
@@ -1368,7 +1385,7 @@ useEffect(() => {
       isSyncingRef.current = false;
       setCloudSyncing(false);
     }
-  }, [cloudAvailable, initialUser, progression.totalXp, progressionReady, progressionOwnerKey]);
+  }, [applyProgressionUpdate, cloudAvailable, initialUser, progressionOwnerKey]);
 
   const scheduleBatchedCloudSync = useCallback((immediate = false) => {
     if (!cloudAvailable || !initialUser) return;
@@ -1596,6 +1613,8 @@ useEffect(() => {
     }
     setProfileDraft(profile);
     setProfileError("");
+    setAccountInitialTab("profile");
+    setAccountInitialStatus("");
     setProfileOpen(true);
   }
 
@@ -1955,7 +1974,6 @@ useEffect(() => {
   const accountProfile = cloudProfile ?? (initialUser
     ? localProfileToCloud(initialUser.id, initialUser.username ?? `learner_${initialUser.id.slice(0, 8)}`, initialUser.username?.trim() || DEFAULT_PROFILE.name, "")
     : null);
-  const activeNavItem = availableNavItems.find((item) => item.id === activeView) ?? availableNavItems[0];
   const activeAiChat = aiChats.find((chat) => chat.id === activeChatId) ?? null;
   const chatBusy = pending || chatActionPending || chatMessagesLoading;
   const currentLevel = levelProgress(progression.totalXp);
@@ -3111,7 +3129,7 @@ useEffect(() => {
             </section>
           </div>
         )}
-        {profileOpen && cloudAvailable && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} onMtapFeaturesChange={updateMtapFeatures} />}
+        {profileOpen && cloudAvailable && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} initialTab={accountInitialTab} initialStatus={accountInitialStatus} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} onMtapFeaturesChange={updateMtapFeatures} />}
         {cloudAvailable && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} onMtapChoose={updateMtapFeatures} />}
         {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>

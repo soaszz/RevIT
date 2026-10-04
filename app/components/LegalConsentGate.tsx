@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Profile } from "../lib/domain";
 import { acceptLegalConsent } from "../lib/cloudService";
-import { LEGAL_EFFECTIVE_DATE } from "../lib/legal";
 import { createClient } from "../lib/supabase/client";
 import PublicThemeToggle from "./PublicThemeToggle";
 import styles from "./LegalConsentGate.module.css";
@@ -69,14 +68,11 @@ export default function LegalConsentGate({
             <span className={styles.wordmark} aria-hidden="true">
               <Image src="/icons/neu/revit-wordmark.png" alt="" width={1086} height={362} priority />
             </span>
-            <span className={styles.frog} aria-hidden="true">
-              <Image src="/revit-frog.png" alt="" width={2000} height={2000} priority />
-            </span>
           </div>
 
           <div className={styles.brandCopy}>
             <p>Account agreement</p>
-            <h2>Review It<br />Thoroughly.</h2>
+            <h2>Review It<br />Thoroughly</h2>
             <span>Your study workspace stays protected while RevIT confirms the agreement connected to your account.</span>
           </div>
 
@@ -93,7 +89,6 @@ export default function LegalConsentGate({
 
         <div className={styles.contentPanel}>
           <header className={styles.utilityBar}>
-            <span>Current documents · {LEGAL_EFFECTIVE_DATE}</span>
             <PublicThemeToggle className={styles.themeToggle} />
           </header>
 

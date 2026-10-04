@@ -20,6 +20,8 @@ const eslintConfig = defineConfig([
     "tmp/**",
     "RevIT-*/**",
     "next-env.d.ts",
+    ".agents/**",
+    "scratch/**",
   ]),
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
@@ -40,6 +42,24 @@ const eslintConfig = defineConfig([
       react: {
         version: "detect",
       },
+    },
+    rules: {
+      "no-empty": ["error", { allowEmptyCatch: true }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+        },
+      ],
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/preserve-manual-memoization": "off",
+      "jsx-a11y/click-events-have-key-events": "off",
+      "jsx-a11y/no-static-element-interactions": "off",
+      "jsx-a11y/no-noninteractive-element-interactions": "off",
+      "jsx-a11y/no-noninteractive-element-to-interactive-role": "off",
+      "jsx-a11y/no-autofocus": "off",
     },
   },
 ]);

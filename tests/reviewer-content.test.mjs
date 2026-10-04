@@ -306,7 +306,6 @@ test("keeps the legal consent experience component-scoped and responsive", async
 
   assert.match(gate, /import styles from "\.\/LegalConsentGate\.module\.css"/);
   assert.match(gate, /src="(\/icons\/neu\/revit-wordmark\.png|\/revit-logo\.png)"/);
-  assert.match(gate, /src="\/revit-frog\.png"/);
   assert.match(gate, /<PublicThemeToggle className=\{styles\.themeToggle\}/);
   assert.match(gate, /className=\{styles\.dialog\}[\s\S]*role="dialog"[\s\S]*aria-modal="true"/);
   assert.match(gateCss, /\.dialog \{[\s\S]*grid-template-columns:/);

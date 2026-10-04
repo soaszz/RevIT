@@ -39,7 +39,7 @@ export default function ForgotPanel({ turnstileSiteKey }: { turnstileSiteKey: st
         <p>Enter your email. For privacy, the confirmation is the same whether or not an account exists.</p>
       </div>
       <div className="auth-fields">
-        <label className="auth-field"><span>Email</span><input type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
+        <label className="auth-field"><span>Email</span><input type="email" autoComplete="email" placeholder="revit@email.com" value={email} onChange={(event) => setEmail(event.target.value)} required /></label>
       </div>
       {!disableCaptcha && <TurnstileChallenge ref={turnstileRef} siteKey={turnstileSiteKey} action="recovery" onTokenChange={setCaptchaToken} onUnavailable={() => setStatus("The security check could not load. Please try again.")} />}
       {status && <p className="form-status" role="alert">{status}</p>}

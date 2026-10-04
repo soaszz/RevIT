@@ -109,14 +109,15 @@ export default function FeedbackModal({ profile, email, turnstileSiteKey, onClos
             </p>
 
             <form onSubmit={handleSubmit} style={{ display: "grid", gap: "16px" }}>
-              <label style={{ display: "grid", gap: "8px" }}>
+              <div style={{ display: "grid", gap: "8px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "13px", fontWeight: "600", color: "var(--ink)" }}>Your message</span>
+                  <label htmlFor="feedback-message" style={{ fontSize: "13px", fontWeight: "600", color: "var(--ink)" }}>Your message</label>
                   <span style={{ fontSize: "12px", color: message.length > MAX_CHARS ? "var(--red)" : "var(--muted)" }}>
                     {message.length} / {MAX_CHARS}
                   </span>
                 </div>
                 <textarea
+                  id="feedback-message"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="What's on your mind?"
@@ -129,7 +130,7 @@ export default function FeedbackModal({ profile, email, turnstileSiteKey, onClos
                     fontSize: "14px", resize: "vertical"
                   }}
                 />
-              </label>
+              </div>
 
               {(!disableCaptcha && turnstileSiteKey) && (
                 <TurnstileChallenge

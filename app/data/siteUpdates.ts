@@ -13,6 +13,22 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-9-0",
+    version: "v1.9.0",
+    date: "October 4, 2026",
+    type: "major",
+    title: "Sign in with Google, 3D Mascot, and Cleaner Avatars",
+    summary: "You can now sign in or create an account with Google, connect your existing account in Settings, and enjoy our updated 3D smiling mascot and cleaner profile icons.",
+    tags: ["Account", "Google Sign In", "Design", "Avatars"],
+    highlights: [
+      "Added Continue with Google so you can sign in or sign up with a single click.",
+      "Connect your Google account inside Account Settings to sign in with either email or Google.",
+      "Updated the RevIT mascot to our new 3D smiling frog across the app and onboarding.",
+      "Refreshed profile letter icons with a cleaner, uniform dark-mode design and clearer text.",
+      "Cleaned up login screen spacing and input placeholders for a smoother experience."
+    ]
+  },
+  {
     id: "update-v1-8-1",
     version: "v1.8.1",
     date: "October 3, 2026",

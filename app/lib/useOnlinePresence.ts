@@ -18,7 +18,7 @@ function getEstimatedLearners(): number {
   return Math.max(3, base + jitter);
 }
 
-export function useOnlinePresence(_userId?: string | null): number {
+export function useOnlinePresence(): number {
   const [onlineCount, setOnlineCount] = useState<number>(getEstimatedLearners);
 
   useEffect(() => {

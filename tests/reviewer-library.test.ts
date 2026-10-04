@@ -5,7 +5,6 @@ import {
   ciullaQuestions,
   ciullaSubjects,
   ciullaTopics,
-  harrQuestions,
   harrSubjects,
   harrTopics,
   subjects,

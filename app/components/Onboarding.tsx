@@ -97,8 +97,8 @@ export default function Onboarding({
           <>
             <div>
               <p className="eyebrow">Step 1 of 3</p>
-              <h1 id="onboarding-title">Who's reviewing today?</h1>
-              <p>Let's set up your identity before building your study plan.</p>
+              <h1 id="onboarding-title">Who&apos;s reviewing today?</h1>
+              <p>Let&apos;s set up your identity before building your study plan.</p>
             </div>
             <form onSubmit={(e) => { e.preventDefault(); }}>
 
@@ -153,7 +153,7 @@ export default function Onboarding({
                  <li>Unlocks the dedicated <strong>Grades tab</strong> for score tracking.</li>
                  <li>Groups subjects organically under <strong>MTAP 1</strong> and <strong>Other Majors</strong>.</li>
               </ul>
-              <span style={{ display: "block", marginTop: "12px", fontSize: "11px", color: "var(--muted)" }}>All other study tools remain exactly the same. Don't worry, <strong>you can always completely toggle this later in Account Settings</strong>.</span>
+              <span style={{ display: "block", marginTop: "12px", fontSize: "11px", color: "var(--muted)" }}>All other study tools remain exactly the same. Don&apos;t worry, <strong>you can always completely toggle this later in Account Settings</strong>.</span>
             </div>
 
             <div style={{ display: "grid", gap: "10px", marginTop: "8px" }}>
@@ -181,31 +181,31 @@ export default function Onboarding({
         {step === 3 && (
           <div style={{ display: "grid", gap: "22px" }}>
             <div style={{ textAlign: "center", display: "grid", justifyItems: "center", gap: "12px" }}>
-              <div style={{ position: "relative", width: "80px", height: "80px", margin: "0 auto", marginTop: "4px", filter: "drop-shadow(0 7px 13px rgba(24, 117, 98, .16))" }}>
-                <Image src="/revit-frog.png" alt="RevIT Mascot" fill style={{ objectFit: "contain" }} priority />
+              <div style={{ position: "relative", width: "92px", height: "72px", margin: "0 auto", marginTop: "4px", filter: "drop-shadow(0 8px 18px rgba(24, 117, 98, .22))" }}>
+                <Image src="/icons/neu/revit-frog-mascot.png" alt="RevIT Mascot" fill style={{ objectFit: "contain" }} priority unoptimized />
               </div>
               <div>
                 <p className="eyebrow">Step 3 of 3</p>
                 <h1 id="onboarding-title" style={{ fontSize: "28px", margin: "4px 0" }}>{greeting}, {firstName.split(" ")[0]}!</h1>
               </div>
-              <p style={{ margin: "0", color: "var(--muted)", fontSize: "14px" }}>You're all set. Here's a quick look at what you can do inside RevIT:</p>
+              <p style={{ margin: "0", color: "var(--muted)", fontSize: "14px" }}>You&apos;re all set. Here&apos;s a quick look at what you can do inside RevIT:</p>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", width: "100%", marginBottom: "4px" }}>
               <div style={{ display: "flex", gap: "12px", alignItems: "start", background: "var(--surface)", border: "1px solid var(--line)", padding: "14px", borderRadius: "14px", boxShadow: "0 2px 8px rgba(0,0,0,0.02)" }}>
-                <div style={{ width: "24px", flexShrink: 0, marginTop: "2px" }}><Image src="/icons/mcqs.svg" alt="MCQs" width={24} height={24} style={{ opacity: 0.8 }} /></div>
+                <div style={{ width: "24px", flexShrink: 0, marginTop: "2px" }}><Image src="/icons/neu/review-library.png" alt="" width={24} height={24} /></div>
                 <div><strong style={{ display: "block", fontSize: "13px", marginBottom: "4px", color: "var(--ink)" }}>Structured Practice</strong><span style={{ display: "block", fontSize: "11px", color: "var(--muted)", lineHeight: 1.5 }}>Practice thousands of organized MCQs by subject.</span></div>
               </div>
               <div style={{ display: "flex", gap: "12px", alignItems: "start", background: "var(--surface)", border: "1px solid var(--line)", padding: "14px", borderRadius: "14px", boxShadow: "0 2px 8px rgba(0,0,0,0.02)" }}>
-                <div style={{ width: "24px", flexShrink: 0, marginTop: "2px" }}><Image src="/icons/weakness.svg" alt="Analytics" width={24} height={24} style={{ opacity: 0.8 }} /></div>
+                <div style={{ width: "24px", flexShrink: 0, marginTop: "2px" }}><Image src="/icons/neu/weakness.png" alt="" width={24} height={24} /></div>
                 <div><strong style={{ display: "block", fontSize: "13px", marginBottom: "4px", color: "var(--ink)" }}>Analytics</strong><span style={{ display: "block", fontSize: "11px", color: "var(--muted)", lineHeight: 1.5 }}>Pinpoint your weakest subjects to focus your review.</span></div>
               </div>
               <div style={{ display: "flex", gap: "12px", alignItems: "start", background: "var(--surface)", border: "1px solid var(--line)", padding: "14px", borderRadius: "14px", boxShadow: "0 2px 8px rgba(0,0,0,0.02)" }}>
-                <div style={{ width: "24px", flexShrink: 0, marginTop: "2px" }}><Image src="/icons/medtech-ai.svg" alt="AI" width={24} height={24} style={{ opacity: 0.8 }} /></div>
+                <div style={{ width: "24px", flexShrink: 0, marginTop: "2px" }}><Image src="/icons/neu/revit-ai.png" alt="" width={24} height={24} /></div>
                 <div><strong style={{ display: "block", fontSize: "13px", marginBottom: "4px", color: "var(--ink)" }}>MedTech AI</strong><span style={{ display: "block", fontSize: "11px", color: "var(--muted)", lineHeight: 1.5 }}>Get instant, educational AI explanations for any question.</span></div>
               </div>
               <div style={{ display: "flex", gap: "12px", alignItems: "start", background: "var(--surface)", border: "1px solid var(--line)", padding: "14px", borderRadius: "14px", boxShadow: "0 2px 8px rgba(0,0,0,0.02)" }}>
-                <div style={{ width: "24px", flexShrink: 0, marginTop: "2px" }}><Image src="/icons/progress.svg" alt="Progress" width={24} height={24} style={{ opacity: 0.8 }} /></div>
+                <div style={{ width: "24px", flexShrink: 0, marginTop: "2px" }}><Image src="/icons/neu/progress.png" alt="" width={24} height={24} /></div>
                 <div><strong style={{ display: "block", fontSize: "13px", marginBottom: "4px", color: "var(--ink)" }}>Achievements</strong><span style={{ display: "block", fontSize: "11px", color: "var(--muted)", lineHeight: 1.5 }}>Earn XP, track study streaks, and level up as you learn.</span></div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import type { ReviewTimerDuration } from "../lib/reviewTimer";
 import type { ReviewMode, QuestionAttempt } from "../lib/domain";
