@@ -2017,8 +2017,9 @@ useEffect(() => {
     description: "Record assessments by subject and use deterministic calculations calibrated for NU MOA Students to review weighted results and possible outcomes.",
   } : baseHeading;
   const selectedTopicNames = selectedTopicIds.map((id) => topicById.get(id)?.name).filter(Boolean);
-  const profileInitials = profile.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R";
-  const avatarStyle = profile.photoDataUrl ? { backgroundImage: `url(${JSON.stringify(profile.photoDataUrl)})` } : undefined;
+  const profileInitials = (cloudProfile?.first_name || profile.name).split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R";
+  const activeAvatarUrl = cloudProfile?.avatar_url || profile.photoDataUrl;
+  const avatarStyle = activeAvatarUrl ? { backgroundImage: `url(${JSON.stringify(activeAvatarUrl)})` } : undefined;
   const accountProfile = cloudProfile ?? (initialUser
     ? localProfileToCloud(initialUser.id, initialUser.username ?? `learner_${initialUser.id.slice(0, 8)}`, initialUser.username?.trim() || DEFAULT_PROFILE.name, "")
     : null);
@@ -2093,7 +2094,7 @@ useEffect(() => {
           </button>
           <div className="profile-card">
             <button className="profile" type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
-              <span className={`avatar ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle}>{profile.photoDataUrl ? "" : profileInitials}</span>
+              <span className={`avatar ${activeAvatarUrl ? "has-photo" : ""}`} style={avatarStyle}>{activeAvatarUrl ? "" : profileInitials}</span>
               <span className="profile-copy"><strong>{cloudProfile?.first_name || profile.name}</strong><small>{cloudEnabled ? "Profile & security" : "Customize name and photo"}</small></span>
             </button>
             <button className="profile-level" type="button" onClick={() => setAchievementsOpen(true)} aria-label="Open achievements">
@@ -2137,8 +2138,8 @@ useEffect(() => {
               <span className="theme-symbol light-symbol" aria-hidden="true">☼</span>
               <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
             </button>
-            <button className={`avatar mobile-profile ${profile.photoDataUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
-              {profile.photoDataUrl ? "" : profileInitials}
+            <button className={`avatar mobile-profile ${activeAvatarUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
+              {activeAvatarUrl ? "" : profileInitials}
             </button>
           </div>
         </header>

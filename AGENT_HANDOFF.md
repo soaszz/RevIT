@@ -27,7 +27,8 @@ Reduce database growth and leaderboard load while keeping current user data and 
 - Live OAuth account testing is still required after provider setup.
 - Earlier login panel spacing/shadow fixes remain in the working tree.
 - Onboarding final step and collapsed sidebar branding now use the new 3D RevIT smiling frog mascot.
-- Implemented uniform neumorphic alphabet avatars across dark and light modes.
+- Implemented uniform neumorphic alphabet avatars with cream RevIT icon background (#FAF2CC to #EFE2B3, #D8C795 border, #105540 emerald text).
+- Fixed sidebar profile card and mobile header avatar rendering cloudProfile.avatar_url photo.
 - AI chats load 50 at a time and messages 100 at a time with Load older controls.
 - Cloud activity loads newest 1,000 days; reinforcement rows load in pages up to 10,000.
 
