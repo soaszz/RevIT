@@ -83,7 +83,11 @@ export default function ResumeSessionModal({
 
   if (!isOpen || !mounted || !session) return null;
 
-  const progressPercent = Math.min(100, Math.round(((session.index + 1) / Math.max(session.targetCount, 1)) * 100));
+  const wrongCount = (session.attempts ?? []).filter((a) => !a.correct).length;
+  const dynamicTarget = session.strictWrongOnly
+    ? session.targetCount
+    : Math.max(session.targetCount + wrongCount, session.questionIds.length);
+  const progressPercent = Math.min(100, Math.round(((session.index + 1) / Math.max(dynamicTarget, 1)) * 100));
 
   const modal = (
     <div
@@ -142,7 +146,7 @@ export default function ResumeSessionModal({
             {session.primaryTopicName}
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "var(--muted)", marginTop: "10px", marginBottom: "6px" }}>
-            <span>Question {session.index + 1} of {session.targetCount}</span>
+            <span>Question {session.index + 1} of {dynamicTarget}</span>
             <span>{progressPercent}% completed</span>
           </div>
           <div style={{ width: "100%", height: "6px", borderRadius: "99px", background: "color-mix(in srgb, var(--line) 80%, transparent)", overflow: "hidden" }}>

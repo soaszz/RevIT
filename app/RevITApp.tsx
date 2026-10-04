@@ -1055,15 +1055,15 @@ useEffect(() => {
   const sessionRequiresFullCoverage = !sessionStrictWrongOnly && sessionTargetCount > 0 && sessionTargetCount === sessionPoolIds.length;
   const sessionHasUnseenQuestions = sessionRequiresFullCoverage
     && sessionPoolIds.some((id) => !sessionQuestionIds.includes(id));
+  const sessionWrongCount = sessionAttempts.filter((attempt) => !attempt.correct).length;
+  const sessionDynamicTarget = sessionStrictWrongOnly
+    ? sessionTargetCount
+    : Math.max(sessionTargetCount + sessionWrongCount, sessionQuestionIds.length);
   const sessionCanFinish = sessionStrictWrongOnly
     ? sessionQuestionIds.length > 0 && sessionAttempts.length >= sessionQuestionIds.length
-    : sessionAttempts.length >= sessionTargetCount && !sessionHasUnseenQuestions;
+    : sessionAttempts.length >= sessionDynamicTarget && !sessionHasUnseenQuestions;
   const sessionUniqueQuestionCount = new Set(sessionQuestionIds).size;
-  const sessionProgressCount = sessionStrictWrongOnly
-    ? Math.min(sessionIndex + 1, sessionTargetCount)
-    : sessionRequiresFullCoverage
-    ? sessionUniqueQuestionCount
-    : Math.min(sessionIndex + 1, sessionTargetCount);
+  const sessionProgressCount = Math.min(sessionIndex + 1, sessionDynamicTarget);
 
   function toggleTopic(topicId: string) {
     setSelectedTopicIds((current) => current.includes(topicId)
@@ -2833,7 +2833,7 @@ useEffect(() => {
             ) : currentQuestion ? (
               <section className="quiz-card">
                 <div className="quiz-topline">
-                  <div><span>{sessionRequiresFullCoverage ? `Question ${sessionIndex + 1} · ${sessionUniqueQuestionCount} of ${sessionPoolIds.length} concepts` : `Question ${sessionIndex + 1} of ${sessionTargetCount}`}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
+                  <div><span>{`Question ${sessionIndex + 1} of ${sessionDynamicTarget}`}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
                   <div className="quiz-topline-actions" style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
                     <button
                       className="secondary-button timeout-button"
@@ -2852,7 +2852,7 @@ useEffect(() => {
                     <button className="secondary-button" type="button" onClick={leaveSession} style={{ whiteSpace: "nowrap" }}>Exit session</button>
                   </div>
                 </div>
-                <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionTargetCount, 1)) * 100)}%` }} /></div>
+                <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionDynamicTarget, 1)) * 100)}%` }} /></div>
                 <div key={`${currentQuestion.id}-${sessionIndex}`}>
                   <p className="question-source">{currentQuestion.book ? `${currentQuestion.book} · ` : ""}{subjectById.get(currentQuestion.subjectId)?.name}</p>
                   {currentQuestion.caseStudy && (

@@ -19,6 +19,9 @@ Reduce database growth and leaderboard load while keeping current user data and 
 
 - Database scaling implementation and migration pushed to origin/main (v1.9.1).
 - Database scaling migration (`202610040016_database_scaling.sql`) applied live to Supabase.
+- Fixed 400 error loop in `record_question_attempt` via migration `202610040017_sync_attempt_question_metadata.sql` (applied live). Reconciles changed question metadata instead of throwing error 22023.
+- Implemented dynamic session question total in reviewer (`Question X of DynamicTotal`) so denominator expands as wrong answers trigger repeat questions.
+- Applied database performance & security hygiene migration `202610040018_database_performance_and_security_hygiene.sql` (applied live). Added covering FK indexes, optimized feedback RLS policies with cached `(select auth.uid())`, and locked search_path on trigger function.
 - `pg_cron` enabled in live Supabase; `revit-ai-request-usage-cleanup` scheduled hourly.
 - Email/password authentication remains.
 - Google is the only added social provider.

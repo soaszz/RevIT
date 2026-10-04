@@ -13,6 +13,21 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-9-2",
+    version: "v1.9.2",
+    date: "October 4, 2026",
+    type: "minor",
+    title: "Dynamic Question Numbering and Sync Reliability",
+    summary: "Updated reviewer numbering to adapt dynamically when questions repeat, fixed question sync retry loops, and optimized database security and indexing.",
+    tags: ["Reviewer", "Practice", "Performance", "Sync"],
+    highlights: [
+      "The reviewer progress counter now adjusts dynamically (e.g. 10 of 21) when missed questions repeat for reinforcement.",
+      "Progress bar and session completion smoothly scale with dynamic repeat questions.",
+      "Fixed question attempt cloud sync so updated question categories no longer cause sync errors.",
+      "Optimized database performance with foreign key covering indexes and locked function security paths."
+    ]
+  },
+  {
     id: "update-v1-9-1",
     version: "v1.9.1",
     date: "October 4, 2026",
