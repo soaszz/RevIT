@@ -8,6 +8,7 @@ import PwaRegistration from "./components/PwaRegistration";
 import "katex/dist/katex.min.css";
 import "./globals.css";
 import "./neumorphism.css";
+import "./settings.css";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],

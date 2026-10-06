@@ -37,6 +37,20 @@ export function normalizeStudyPlans(value: unknown): StudyPlan[] {
       const block = rawBlock as Partial<StudyPlanBlock>;
       if (typeof block.id !== "string" || !TIME_PATTERN.test(block.startTime ?? "") || !TIME_PATTERN.test(block.endTime ?? "") || typeof block.activity !== "string" || !block.activity.trim()) return [];
       const addedToCalendar = Boolean(block.addedToCalendar);
+      const validKinds = ["class", "study", "exam", "deadline", "task"];
+      const rawKind = typeof block.eventKind === "string" ? block.eventKind.toLowerCase() : null;
+      const eventKind = rawKind && validKinds.includes(rawKind) ? (rawKind as StudyPlanBlock["eventKind"]) : "study";
+      const recurrenceDays = Array.isArray(block.recurrenceDays) ? block.recurrenceDays.filter((d) => typeof d === "number" && d >= 0 && d <= 6) : null;
+      const attachments = Array.isArray(block.attachments) ? block.attachments.flatMap((att) => {
+        if (!att || typeof att !== "object" || typeof att.id !== "string" || typeof att.name !== "string") return [];
+        return [{
+          id: att.id,
+          name: att.name,
+          size: typeof att.size === "number" ? att.size : 0,
+          mimeType: typeof att.mimeType === "string" ? att.mimeType : "application/octet-stream",
+        }];
+      }) : [];
+
       return [{
         id: block.id,
         startTime: block.startTime!,
@@ -49,6 +63,16 @@ export function normalizeStudyPlans(value: unknown): StudyPlan[] {
         addedToCalendar,
         calendarEventId: addedToCalendar && typeof block.calendarEventId === "string" ? block.calendarEventId : null,
         completed: Boolean(block.completed),
+        eventKind,
+        room: cleanOptional(block.room),
+        instructor: cleanOptional(block.instructor),
+        targetCount: typeof block.targetCount === "number" && block.targetCount > 0 ? block.targetCount : null,
+        targetType: block.targetType === "mcq" || block.targetType === "flashcard" || block.targetType === "pages" ? block.targetType : null,
+        recurrenceDays,
+        recurrenceEnd: typeof block.recurrenceEnd === "string" && DATE_PATTERN.test(block.recurrenceEnd) ? block.recurrenceEnd : null,
+        dueDate: typeof block.dueDate === "string" && DATE_PATTERN.test(block.dueDate) ? block.dueDate : null,
+        dueTime: typeof block.dueTime === "string" && TIME_PATTERN.test(block.dueTime) ? block.dueTime : null,
+        attachments,
       }];
     }) : [];
     const now = new Date().toISOString();
@@ -146,3 +170,78 @@ export function moveStudyBlock(blocks: StudyPlanBlock[], blockId: string, direct
   [next[index], next[target]] = [next[target], next[index]];
   return next;
 }
+
+/**
+ * Given a date (YYYY-MM-DD), returns the 7 days of its Monday-to-Sunday week.
+ */
+export function getWeekDates(anchorDate: string): string[] {
+  const [year, month, day] = anchorDate.split("-").map(Number);
+  const anchor = new Date(Date.UTC(year, month - 1, day, 12));
+  // 0 is Sunday, 1 is Monday, etc. We want Monday as start of week.
+  const dayOfWeek = anchor.getUTCDay();
+  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  const monday = new Date(anchor.getTime() + diffToMonday * 86400000);
+
+  const dates: string[] = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday.getTime() + i * 86400000);
+    dates.push(d.toISOString().slice(0, 10));
+  }
+  return dates;
+}
+
+export type ExpandedPlannerItem = {
+  planId: string;
+  planTitle: string;
+  planDate: string;
+  isVirtualOccurrence: boolean;
+  block: StudyPlanBlock;
+};
+
+/**
+ * Returns all direct and recurring occurrences of planner blocks for a specific date (YYYY-MM-DD).
+ */
+export function getExpandedItemsForDate(plans: StudyPlan[], targetDate: string): ExpandedPlannerItem[] {
+  const [tYear, tMonth, tDay] = targetDate.split("-").map(Number);
+  const targetDayOfWeek = new Date(Date.UTC(tYear, tMonth - 1, tDay, 12)).getUTCDay();
+
+  const items: ExpandedPlannerItem[] = [];
+
+  for (const plan of plans) {
+    for (const block of plan.blocks) {
+      // 1. Direct match on plan date
+      if (plan.date === targetDate) {
+        items.push({
+          planId: plan.id,
+          planTitle: plan.title,
+          planDate: plan.date,
+          isVirtualOccurrence: false,
+          block,
+        });
+        continue;
+      }
+
+      // 2. Recurring match (e.g. CLASS recurring weekly on specific days)
+      if (
+        block.recurrenceDays &&
+        block.recurrenceDays.includes(targetDayOfWeek) &&
+        plan.date <= targetDate &&
+        (!block.recurrenceEnd || block.recurrenceEnd >= targetDate)
+      ) {
+        items.push({
+          planId: plan.id,
+          planTitle: plan.title,
+          planDate: targetDate,
+          isVirtualOccurrence: true,
+          block: {
+            ...block,
+            id: `${block.id}_rec_${targetDate}`,
+          },
+        });
+      }
+    }
+  }
+
+  return items.sort((a, b) => a.block.startTime.localeCompare(b.block.startTime));
+}
+

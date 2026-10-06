@@ -1,3 +1,5 @@
+import type { SubscriptionEntitlement } from "./entitlements";
+
 export const SUBJECTS = ["Hematology", "Clinical Chemistry", "Bacteriology", "AUBF"] as const;
 export type GradeSubject = (typeof SUBJECTS)[number];
 
@@ -54,7 +56,21 @@ export type Profile = {
   terms_version: string | null;
   privacy_accepted_at: string | null;
   privacy_version: string | null;
+  plan?: "free" | "pro";
+  pro_started_at?: string | null;
+  pro_expires_at?: string | null;
 };
+
+export function isEffectivePro(
+  profile: Pick<Profile, "plan" | "pro_expires_at"> | null | undefined,
+): boolean {
+  return Boolean(
+    profile
+    && profile.plan === "pro"
+    && profile.pro_expires_at
+    && new Date(profile.pro_expires_at).getTime() > Date.now(),
+  );
+}
 
 export type GradeRecord = GradeValues & {
   id?: string;
@@ -84,6 +100,16 @@ export type ExamSchedule = {
 export const STUDY_PLAN_CATEGORIES = ["Study", "Break", "Exam", "Event", "Other"] as const;
 export type StudyPlanCategory = (typeof STUDY_PLAN_CATEGORIES)[number];
 
+export const PLANNER_EVENT_KINDS = ["class", "study", "exam", "deadline", "task"] as const;
+export type PlannerEventKind = (typeof PLANNER_EVENT_KINDS)[number];
+
+export type PlannerAttachmentMeta = {
+  id: string;
+  name: string;
+  size: number;
+  mimeType: string;
+};
+
 /**
  * Local-first planner records deliberately use stable UUIDs and timestamps so
  * they can later be copied to Supabase without changing the UI data model.
@@ -100,6 +126,17 @@ export type StudyPlanBlock = {
   addedToCalendar: boolean;
   calendarEventId: string | null;
   completed: boolean;
+  // Extended academic planner properties (backward compatible):
+  eventKind?: PlannerEventKind;
+  room?: string | null;
+  instructor?: string | null;
+  targetCount?: number | null;
+  targetType?: "mcq" | "flashcard" | "pages" | null;
+  recurrenceDays?: number[] | null; // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  recurrenceEnd?: string | null;   // YYYY-MM-DD
+  dueDate?: string | null;          // For deadlines & tasks
+  dueTime?: string | null;          // For deadlines & tasks
+  attachments?: PlannerAttachmentMeta[];
 };
 
 export type StudyPlan = {
@@ -174,6 +211,8 @@ export type CloudSnapshot = {
   reinforcement: QuestionReinforcement[];
   attempts: QuestionAttempt[];
   attemptHistoryAvailable: boolean;
+  entitlement: SubscriptionEntitlement;
+  customGradebooks?: CustomGradebook[];
 };
 
 export type AchievementConditionType =
@@ -213,4 +252,41 @@ export type ProgressMetrics = {
   aiMessages: number;
   streakDays: number;
   examsCreated: number;
+};
+
+export type GradebookTemplateType = "nu_moa_mtap1" | "custom";
+
+export type CustomGradeAssessment = {
+  id: string;
+  categoryId: string;
+  name: string;
+  score: number | null;
+  maxScore: number;
+  position: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type CustomGradeCategory = {
+  id: string;
+  gradebookId: string;
+  name: string;
+  weight: number;
+  position: number;
+  assessments: CustomGradeAssessment[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type CustomGradebook = {
+  id: string;
+  userId: string;
+  name: string;
+  subjectCode: string | null;
+  templateType: GradebookTemplateType;
+  passingGrade: number;
+  position: number;
+  categories: CustomGradeCategory[];
+  createdAt?: string;
+  updatedAt?: string;
 };

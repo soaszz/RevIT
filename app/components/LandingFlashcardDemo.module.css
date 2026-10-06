@@ -1,0 +1,226 @@
+.wrapper {
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.stage {
+  perspective: 1200px;
+  width: 100%;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  min-height: 380px;
+  border-radius: 22px;
+  transform-style: preserve-3d;
+  transition: transform .34s cubic-bezier(0.2, 0.8, 0.25, 1);
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 4px;
+}
+
+.cardFlipped {
+  transform: rotateY(180deg);
+}
+
+.face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: clamp(24px, 4vw, 36px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: var(--neu-raised);
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.faceFront {
+  transform: rotateY(0deg);
+  border-color: color-mix(in srgb, var(--green) 30%, var(--line));
+}
+
+.faceBack {
+  transform: rotateY(180deg);
+  border-color: color-mix(in srgb, var(--green) 45%, var(--line));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--green-soft) 40%, var(--paper)) 0%, var(--paper) 100%);
+}
+
+.topline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.subjectPill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 7px;
+  padding: 4px 9px;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.topicText {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.modeBadge,
+.sideBadge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 4px 10px;
+  font-size: 10.5px;
+  font-weight: 650;
+  flex-shrink: 0;
+}
+
+.modeBadge {
+  background: var(--surface-soft);
+  color: var(--muted);
+}
+
+.sideBadge {
+  background: var(--green-soft);
+  color: var(--green-dark);
+  border-color: color-mix(in srgb, var(--green) 30%, var(--line));
+}
+
+.questionContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1;
+  padding-block: 14px;
+}
+
+.prompt {
+  margin: 0;
+  font-size: clamp(19px, 2.4vw, 24px);
+  line-height: 1.35;
+  font-weight: 650;
+  letter-spacing: -.025em;
+  color: var(--ink);
+}
+
+.answerContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  flex: 1;
+  text-align: left;
+}
+
+.sectionKicker {
+  display: block;
+  color: var(--green-dark);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  margin-bottom: 4px;
+}
+
+.answerTitle {
+  margin: 0;
+  font-size: clamp(16px, 2vw, 19px);
+  line-height: 1.4;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.015em;
+}
+
+.explanationBlock {
+  padding-top: 10px;
+  border-top: 1px solid color-mix(in srgb, var(--green) 22%, var(--line));
+}
+
+.explanationText {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.bottomBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.hintText {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.flipButton {
+  min-height: 38px;
+  padding: 8px 16px;
+  font-size: 12px;
+  border-radius: 9px;
+  pointer-events: auto;
+}
+
+@media (max-width: 580px) {
+  .card {
+    min-height: 420px;
+  }
+  .bottomBar {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .flipButton {
+    width: 100%;
+    justify-content: center;
+  }
+  .hintText {
+    text-align: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+    transform: none;
+  }
+  .cardFlipped .faceFront {
+    display: none;
+  }
+  .cardFlipped .faceBack {
+    transform: none;
+    display: flex;
+  }
+  .faceBack {
+    display: none;
+  }
+}

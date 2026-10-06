@@ -2,15 +2,24 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
-  ciullaQuestions,
-  ciullaSubjects,
-  ciullaTopics,
   harrSubjects,
   harrTopics,
   subjects,
   topics,
+  type ReviewerQuestion,
+  type Subject,
+  type Topic,
 } from "../app/content/reviewerContent";
 import { buildSubjectSections, filterSubjectsBySearch } from "../app/lib/reviewerLibrary";
+
+const rawCiulla = JSON.parse(await readFile(new URL("../app/content/ciullaContent.json", import.meta.url), "utf8")) as {
+  subjects: Subject[];
+  topics: Topic[];
+  questions: ReviewerQuestion[];
+};
+const ciullaSubjects: Subject[] = rawCiulla.subjects.map((s) => ({ ...s, book: "Ciulla" }));
+const ciullaTopics: Topic[] = rawCiulla.topics.map((t) => ({ ...t, book: "Ciulla" }));
+const ciullaQuestions: ReviewerQuestion[] = rawCiulla.questions.map((q) => ({ ...q, book: "Ciulla" }));
 
 test("standard RevIT keeps every subject in one All Majors collection", () => {
   const sections = buildSubjectSections(subjects, false);
@@ -75,7 +84,8 @@ test("NU RevIT groups Ciulla subjects under MTAP 1 and Other Majors", () => {
 });
 
 test("NU RevIT groups combined subjects under MTAP 1 and Other Majors", () => {
-  const sections = buildSubjectSections(subjects, true);
+  const combinedSubjects = [...harrSubjects, ...ciullaSubjects];
+  const sections = buildSubjectSections(combinedSubjects, true);
   const mtapOne = sections.find((section) => section.title === "MTAP 1");
   const otherMajors = sections.find((section) => section.title === "Other Majors");
 

@@ -1,6 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   CloudSnapshot,
+  CustomGradeAssessment,
+  CustomGradeCategory,
+  CustomGradebook,
   DailyActivity,
   ExamSchedule,
   GradeRecord,
@@ -12,11 +15,26 @@ import type {
 } from "./domain";
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "./legal";
 import { validateAvatarFile } from "./avatarValidation";
+import { FREE_ENTITLEMENT, type SubscriptionEntitlement } from "./entitlements";
 
 const PROFILE_COLUMNS = "id,username,first_name,avatar_url,onboarding_complete,terms_accepted_at,terms_version,privacy_accepted_at,privacy_version";
 
 function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Cloud sync failed.";
+}
+
+export function isMissingGradebooksTableError(error: { code?: string; message?: string } | null | undefined) {
+  if (!error) return false;
+  const msg = error.message?.toLowerCase() ?? "";
+  return error.code === "PGRST205"
+    || error.code === "42P01"
+    || error.code === "404"
+    || msg.includes("gradebooks")
+    || false;
+}
+
+export function universalGradebooksStorageKey(userId?: string | null) {
+  return `revit-universal-gradebooks-v1:${userId ?? "local"}`;
 }
 
 export function isMissingQuestionReinforcementTableError(error: { code?: string; message?: string } | null | undefined) {
@@ -100,6 +118,26 @@ const SNAPSHOT_ROW_LIMIT = 1000;
 const REINFORCEMENT_PAGE_LIMIT = 1000;
 const REINFORCEMENT_MAX_ROWS = 10000;
 
+type EntitlementRow = {
+  stored_plan?: unknown;
+  effective_plan?: unknown;
+  pro_started_at?: unknown;
+  pro_expires_at?: unknown;
+  server_now?: unknown;
+};
+
+function subscriptionEntitlement(value: unknown): SubscriptionEntitlement {
+  const row = (Array.isArray(value) ? value[0] : value) as EntitlementRow | null;
+  if (!row) return FREE_ENTITLEMENT;
+  return {
+    storedPlan: row.stored_plan === "pro" ? "pro" : "free",
+    effectivePlan: row.effective_plan === "pro" ? "pro" : "free",
+    proStartedAt: typeof row.pro_started_at === "string" ? row.pro_started_at : null,
+    proExpiresAt: typeof row.pro_expires_at === "string" ? row.pro_expires_at : null,
+    serverNow: typeof row.server_now === "string" ? row.server_now : null,
+  };
+}
+
 async function loadQuestionReinforcement(client: SupabaseClient, userId: string) {
   const rows: QuestionReinforcement[] = [];
   for (let offset = 0; offset < REINFORCEMENT_MAX_ROWS; offset += REINFORCEMENT_PAGE_LIMIT) {
@@ -116,6 +154,16 @@ async function loadQuestionReinforcement(client: SupabaseClient, userId: string)
 }
 
 export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
+  if (client.auth && typeof client.auth.getSession === "function") {
+    const { data: sessionData } = await client.auth.getSession();
+    if (!sessionData?.session) {
+      const { data: refreshed } = await client.auth.refreshSession().catch(() => ({ data: { session: null } }));
+      if (!refreshed?.session) {
+        throw new Error("AUTH_SESSION_EXPIRED");
+      }
+    }
+  }
+
   const preferencesPromise = (async () => {
     const mtap = await client.from("user_preferences")
       .select("user_id,timezone,theme,leaderboard_opt_in,mtap_features_enabled,mtap_onboarding_completed")
@@ -150,8 +198,9 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
       } : null,
     };
   })();
-  const [profile, grades, activity, exams, preferences, reinforcement, attempts] = await Promise.all([
-    client.from("profiles").select(PROFILE_COLUMNS).eq("id", userId).maybeSingle(),
+  const [profile, grades, activity, exams, preferences, reinforcement, attempts, entitlement, customGradebooks] = await Promise.all([
+    client.from("profiles").select(`${PROFILE_COLUMNS},plan,pro_started_at,pro_expires_at`).eq("id", userId).maybeSingle()
+      .then((res) => res.error ? client.from("profiles").select(PROFILE_COLUMNS).eq("id", userId).maybeSingle() : res),
     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
     client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId)
       .order("activity_date", { ascending: false }).limit(SNAPSHOT_ROW_LIMIT),
@@ -160,6 +209,8 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     loadQuestionReinforcement(client, userId),
     client.from("question_attempts").select(QUESTION_ATTEMPT_COLUMNS).eq("user_id", userId)
       .order("answered_at", { ascending: false }).limit(1000),
+    client.rpc("get_my_entitlement"),
+    loadCustomGradebooks(client, userId).catch(() => []),
   ]);
   const failure = [profile, grades, activity, exams, preferences].find((result) => result.error)?.error;
   if (failure) throw new Error(failure.message);
@@ -169,6 +220,12 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
   if (attempts.error && !isMissingQuestionAttemptsTableError(attempts.error)) {
     throw new Error(attempts.error.message);
   }
+  const isMissingEntitlementRpc = entitlement.error && (
+    entitlement.error.code === "PGRST202"
+    || entitlement.error.code === "42883"
+    || (entitlement.error.message?.toLowerCase().includes("get_my_entitlement") ?? false)
+  );
+  if (entitlement.error && !isMissingEntitlementRpc) throw new Error(entitlement.error.message);
   return {
     profile: profile.data as Profile | null,
     grades: (grades.data ?? []) as GradeRecord[],
@@ -178,6 +235,8 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     reinforcement: (reinforcement.error ? [] : reinforcement.data ?? []) as QuestionReinforcement[],
     attempts: (attempts.error ? [] : attempts.data ?? []).map((row) => questionAttemptFromRow(row as QuestionAttemptRow)),
     attemptHistoryAvailable: !attempts.error,
+    entitlement: subscriptionEntitlement(entitlement.data),
+    customGradebooks: (customGradebooks ?? []) as CustomGradebook[],
   };
 }
 
@@ -484,4 +543,221 @@ export function localProfileToCloud(userId: string, username: string, name: stri
 
 export function subjectForReviewer(subjectId: string): GradeSubject {
   return subjectId.toLowerCase().includes("bact") ? "Bacteriology" : "Hematology";
+}
+
+/* ==========================================================================
+   Universal Gradebook Cloud Operations
+   ========================================================================== */
+
+export async function loadCustomGradebooks(client: SupabaseClient, userId: string): Promise<CustomGradebook[]> {
+  try {
+    const { data: books, error: booksError } = await client
+      .from("gradebooks")
+      .select("id,user_id,name,subject_code,template_type,passing_grade,position,created_at,updated_at")
+      .eq("user_id", userId)
+      .order("position", { ascending: true });
+
+    if (booksError) {
+      if (isMissingGradebooksTableError(booksError)) return [];
+      throw new Error(booksError.message);
+    }
+    if (!books || books.length === 0) return [];
+
+    const bookIds = books.map((b) => b.id);
+    const { data: categories, error: catsError } = await client
+      .from("grade_categories")
+      .select("id,gradebook_id,name,weight,position,created_at,updated_at")
+      .in("gradebook_id", bookIds)
+      .order("position", { ascending: true });
+
+    if (catsError) throw new Error(catsError.message);
+
+    const categoryIds = (categories ?? []).map((c) => c.id);
+    let assessments: any[] = [];
+    if (categoryIds.length > 0) {
+      const { data: assessData, error: assessError } = await client
+        .from("grade_assessments")
+        .select("id,category_id,name,score,max_score,position,created_at,updated_at")
+        .in("category_id", categoryIds)
+        .order("position", { ascending: true });
+      if (assessError) throw new Error(assessError.message);
+      assessments = assessData ?? [];
+    }
+
+    return books.map((b) => {
+      const bookCats = (categories ?? [])
+        .filter((c) => c.gradebook_id === b.id)
+        .map((c) => ({
+          id: c.id,
+          gradebookId: c.gradebook_id,
+          name: c.name,
+          weight: Number(c.weight),
+          position: c.position,
+          assessments: assessments
+            .filter((a) => a.category_id === c.id)
+            .map((a) => ({
+              id: a.id,
+              categoryId: a.category_id,
+              name: a.name,
+              score: a.score !== null ? Number(a.score) : null,
+              maxScore: Number(a.max_score),
+              position: a.position,
+              createdAt: a.created_at,
+              updatedAt: a.updated_at,
+            })),
+          createdAt: c.created_at,
+          updatedAt: c.updated_at,
+        }));
+
+      return {
+        id: b.id,
+        userId: b.user_id,
+        name: b.name,
+        subjectCode: b.subject_code,
+        templateType: b.template_type,
+        passingGrade: Number(b.passing_grade),
+        position: b.position,
+        categories: bookCats,
+        createdAt: b.created_at,
+        updatedAt: b.updated_at,
+      };
+    });
+  } catch (error) {
+    if (isMissingGradebooksTableError(error as any)) return [];
+    throw error;
+  }
+}
+
+export async function saveCustomGradebook(
+  client: SupabaseClient,
+  userId: string,
+  gradebook: {
+    id?: string;
+    name: string;
+    subjectCode?: string | null;
+    templateType?: "nu_moa_mtap1" | "custom";
+    passingGrade?: number;
+    position?: number;
+  },
+): Promise<CustomGradebook> {
+  const payload = {
+    ...(gradebook.id ? { id: gradebook.id } : {}),
+    user_id: userId,
+    name: gradebook.name,
+    subject_code: gradebook.subjectCode ?? null,
+    template_type: gradebook.templateType ?? "custom",
+    passing_grade: gradebook.passingGrade ?? 75,
+    position: gradebook.position ?? 0,
+  };
+
+  const { data, error } = await client
+    .from("gradebooks")
+    .upsert(payload)
+    .select("id,user_id,name,subject_code,template_type,passing_grade,position,created_at,updated_at")
+    .single();
+
+  if (error) throw new Error(error.message);
+  return {
+    id: data.id,
+    userId: data.user_id,
+    name: data.name,
+    subjectCode: data.subject_code,
+    templateType: data.template_type,
+    passingGrade: Number(data.passing_grade),
+    position: data.position,
+    categories: [],
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+  };
+}
+
+export async function deleteCustomGradebook(client: SupabaseClient, userId: string, id: string): Promise<void> {
+  const { error } = await client.from("gradebooks").delete().eq("id", id).eq("user_id", userId);
+  if (error) throw new Error(error.message);
+}
+
+export async function saveCustomCategory(
+  client: SupabaseClient,
+  category: {
+    id?: string;
+    gradebookId: string;
+    name: string;
+    weight: number;
+    position?: number;
+  },
+): Promise<CustomGradeCategory> {
+  const payload = {
+    ...(category.id ? { id: category.id } : {}),
+    gradebook_id: category.gradebookId,
+    name: category.name,
+    weight: category.weight,
+    position: category.position ?? 0,
+  };
+
+  const { data, error } = await client
+    .from("grade_categories")
+    .upsert(payload)
+    .select("id,gradebook_id,name,weight,position,created_at,updated_at")
+    .single();
+
+  if (error) throw new Error(error.message);
+  return {
+    id: data.id,
+    gradebookId: data.gradebook_id,
+    name: data.name,
+    weight: Number(data.weight),
+    position: data.position,
+    assessments: [],
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+  };
+}
+
+export async function deleteCustomCategory(client: SupabaseClient, id: string): Promise<void> {
+  const { error } = await client.from("grade_categories").delete().eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function saveCustomAssessment(
+  client: SupabaseClient,
+  assessment: {
+    id?: string;
+    categoryId: string;
+    name: string;
+    score: number | null;
+    maxScore: number;
+    position?: number;
+  },
+): Promise<CustomGradeAssessment> {
+  const payload = {
+    ...(assessment.id ? { id: assessment.id } : {}),
+    category_id: assessment.categoryId,
+    name: assessment.name,
+    score: assessment.score !== null && !Number.isNaN(assessment.score) ? assessment.score : null,
+    max_score: assessment.maxScore,
+    position: assessment.position ?? 0,
+  };
+
+  const { data, error } = await client
+    .from("grade_assessments")
+    .upsert(payload)
+    .select("id,category_id,name,score,max_score,position,created_at,updated_at")
+    .single();
+
+  if (error) throw new Error(error.message);
+  return {
+    id: data.id,
+    categoryId: data.category_id,
+    name: data.name,
+    score: data.score !== null ? Number(data.score) : null,
+    maxScore: Number(data.max_score),
+    position: data.position,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+  };
+}
+
+export async function deleteCustomAssessment(client: SupabaseClient, id: string): Promise<void> {
+  const { error } = await client.from("grade_assessments").delete().eq("id", id);
+  if (error) throw new Error(error.message);
 }

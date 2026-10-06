@@ -33,6 +33,13 @@ import StudyPlanner, { TodayStudyPlan } from "./components/StudyPlanner";
 import WeaknessDashboard from "./components/WeaknessDashboard";
 import SiteNotificationTrigger from "./components/SiteNotificationTrigger";
 import SiteUpdatesModal, { useSiteNotifications } from "./components/SiteUpdatesModal";
+import PlanAnnouncementModal, {
+  type PlanModalVariant,
+  GIFTED_PRO_USERS,
+  GIFTED_PRO_USER_IDS,
+} from "./components/PlanAnnouncementModal";
+
+export { GIFTED_PRO_USERS, GIFTED_PRO_USER_IDS };
 import {
   deleteExam as deleteCloudExam,
   flushQuestionAttemptQueue,
@@ -49,7 +56,7 @@ import {
   saveGrade as saveCloudGrade,
   savePreferences,
 } from "./lib/cloudService";
-import type { DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, StudyPlan, UserPreferences } from "./lib/domain";
+import type { CustomGradebook, DailyActivity, ExamSchedule, GradeRecord, Profile, QuestionAttempt, QuestionDifficulty, ReviewMode, StudyPlan, UserPreferences } from "./lib/domain";
 import type { ProgressEvent, ProgressionUpdate } from "./lib/xpService";
 import {
   chooseAdaptiveQuestion,
@@ -95,14 +102,26 @@ import {
 } from "./lib/aiChatService";
 import { AVATAR_ACCEPT, validateAvatarFile } from "./lib/avatarValidation";
 import {
-  questionById,
-  questions,
-  subjectById,
-  subjects,
-  topicById,
-  topics,
+  FREE_ENTITLEMENT,
+  canAccessFeature as canAccessSubscriptionFeature,
+  canAccessQuestionBank,
+  getAiLimits,
+  isProActive,
+  type SubscriptionEntitlement,
+} from "./lib/entitlements";
+import {
+  questionById as freeQuestionById,
+  questions as freeQuestions,
+  subjectById as freeSubjectById,
+  subjects as freeSubjects,
+  topicById as freeTopicById,
+  topics as freeTopics,
   type ReviewerBook,
+  type ReviewerQuestion,
+  type Subject,
+  type Topic,
 } from "./content/reviewerContent";
+import { clearCiullaReviewerCache, fetchCiullaReviewer } from "./lib/premiumReviewerService";
 
 type View = "overview" | "library" | "progress" | "leaderboards" | "weakness" | "planner" | "grades" | "assistant";
 type Attempt = QuestionAttempt;
@@ -180,9 +199,9 @@ const viewCopy: Record<View, { eyebrow: string; title: string; description: stri
     description: "Use your question history, first attempts, difficulty, and retention data to plan focused follow-up practice.",
   },
   planner: {
-    eyebrow: "Study scheduling",
-    title: "Study Planner",
-    description: "Build daily plans, track completed sessions, and choose which study blocks appear in your RevIT calendar.",
+    eyebrow: "Academic planning",
+    title: "Planner",
+    description: "Organize your recurring classes, planned study sessions, upcoming exams, deadlines, and tasks.",
   },
   grades: {
     eyebrow: "Grade tracking",
@@ -224,7 +243,7 @@ function normalizeAttempts(value: unknown): Attempt[] {
     if (!raw || typeof raw !== "object") return [];
     const input = raw as Partial<Attempt> & { id?: string; selectedAnswer?: number; correct?: boolean; timestamp?: string };
     if (typeof input.questionId !== "string" || typeof input.correct !== "boolean" || typeof input.timestamp !== "string") return [];
-    const question = questionById.get(input.questionId);
+    const question = freeQuestionById.get(input.questionId);
     const topicId = typeof input.topicId === "string" ? input.topicId : question?.topicId ?? "uncategorized";
     const subjectId = typeof input.subjectId === "string" ? input.subjectId : question?.subjectId ?? "uncategorized";
     return [{
@@ -232,8 +251,8 @@ function normalizeAttempts(value: unknown): Attempt[] {
       questionId: input.questionId,
       topicId,
       subjectId,
-      topicName: typeof input.topicName === "string" && input.topicName.trim() ? input.topicName : topicById.get(topicId)?.name ?? "Uncategorized",
-      subjectName: typeof input.subjectName === "string" && input.subjectName.trim() ? input.subjectName : subjectById.get(subjectId)?.name ?? "Uncategorized",
+      topicName: typeof input.topicName === "string" && input.topicName.trim() ? input.topicName : freeTopicById.get(topicId)?.name ?? "Uncategorized",
+      subjectName: typeof input.subjectName === "string" && input.subjectName.trim() ? input.subjectName : freeSubjectById.get(subjectId)?.name ?? "Uncategorized",
       subtopic: typeof input.subtopic === "string" && input.subtopic.trim() ? input.subtopic : question?.subtopic ?? "Uncategorized",
       difficulty: normalizedDifficulty(input.difficulty ?? question?.difficulty),
       selectedAnswer: typeof input.selectedAnswer === "number" ? input.selectedAnswer : null,
@@ -314,7 +333,7 @@ function mergeLocalAttemptActivity(attempts: Attempt[], existing: DailyActivity[
     const current = map.get(key) ?? { activity_date: key, questions_answered: 0, correct_answers: 0, review_count: 0, subjects_studied: [] };
     current.questions_answered += 1;
     current.correct_answers += attempt.correct ? 1 : 0;
-    const subject = subjectById.get(attempt.subjectId)?.name ?? attempt.subjectId;
+    const subject = freeSubjectById.get(attempt.subjectId)?.name ?? attempt.subjectName ?? attempt.subjectId;
     current.subjects_studied = [...new Set([...current.subjects_studied, subject])];
     map.set(key, current);
   }
@@ -342,6 +361,15 @@ function activityAfterEvent(current: DailyActivity[], activityDate: string, inpu
 export type InitialUser = { id: string; email: string; username?: string };
 
 export default function RevITApp({ initialUser = null, cloudEnabled = false, offlineMode = false, turnstileSiteKey }: { initialUser?: InitialUser | null; cloudEnabled?: boolean; offlineMode?: boolean; turnstileSiteKey?: string }) {
+  const [reviewerContent, setReviewerContent] = useState<{ subjects: Subject[]; topics: Topic[]; questions: ReviewerQuestion[] }>({
+    subjects: freeSubjects,
+    topics: freeTopics,
+    questions: freeQuestions,
+  });
+  const { subjects, topics, questions } = reviewerContent;
+  const subjectById = useMemo(() => new Map(subjects.map((subject) => [subject.id, subject])), [subjects]);
+  const topicById = useMemo(() => new Map(topics.map((topic) => [topic.id, topic])), [topics]);
+  const questionById = useMemo(() => new Map(questions.map((question) => [question.id, question])), [questions]);
   const router = useRouter();
   const online = useOnlineStatus();
   const cloudAvailable = cloudEnabled && online && !offlineMode;
@@ -401,6 +429,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const [chatMessagesLoadingMore, setChatMessagesLoadingMore] = useState(false);
   const [chatActionPending, setChatActionPending] = useState(false);
   const [chatError, setChatError] = useState("");
+  const [aiDailyUsed, setAiDailyUsed] = useState<number | null>(null);
   const [profile, setProfile] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileDraft, setProfileDraft] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -412,6 +441,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const [profileError, setProfileError] = useState("");
   const [cloudProfile, setCloudProfile] = useState<Profile | null>(null);
   const [grades, setGrades] = useState<GradeRecord[]>([]);
+  const [customGradebooks, setCustomGradebooks] = useState<CustomGradebook[]>([]);
   const [activity, setActivity] = useState<DailyActivity[]>([]);
   const [exams, setExams] = useState<ExamSchedule[]>([]);
   const [studyPlans, setStudyPlans] = useState<StudyPlan[]>([]);
@@ -427,13 +457,19 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const [cloudLoading, setCloudLoading] = useState(cloudEnabled && !offlineMode);
   const [cloudSyncing, setCloudSyncing] = useState(false);
   const [cloudError, setCloudError] = useState("");
+  const [premiumContentLoading, setPremiumContentLoading] = useState(false);
+  const [premiumContentError, setPremiumContentError] = useState("");
   const [attemptHistoryAvailable, setAttemptHistoryAvailable] = useState(!cloudEnabled || offlineMode);
+  const [entitlement, setEntitlement] = useState<SubscriptionEntitlement>(FREE_ENTITLEMENT);
   const [isInitializing, setIsInitializing] = useState(true);
   const [sessionPolicyReady, setSessionPolicyReady] = useState(!cloudEnabled || offlineMode);
   const [themeReady, setThemeReady] = useState(false);
   const [confirmConfig, setConfirmConfig] = useState<{isOpen: boolean, action?: () => void, title?: string, message?: string, confirmLabel?: string}>({ isOpen: false });
   const [recentSession, setRecentSession] = useState<SavedRecentSession | null>(null);
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
+  const [planAnnouncementOpen, setPlanAnnouncementOpen] = useState(false);
+  const [planAnnouncementVariant, setPlanAnnouncementVariant] = useState<PlanModalVariant>("general");
+  const [planAnnouncementPreviewUser, setPlanAnnouncementPreviewUser] = useState<string | null>(null);
 
   function requestConfirm(title: string, message: string, confirmLabel: string, onConfirm: () => void) {
     setConfirmConfig({ isOpen: true, title, message, confirmLabel, action: () => {
@@ -514,6 +550,123 @@ useEffect(() => {
     if (!initialUser || offlineMode) return;
     localStorage.setItem("revit-offline-user", JSON.stringify(initialUser));
   }, [initialUser, offlineMode]);
+
+  // Existing users login modal (Free vs Pro) & Gifted Early Access modal (Pro until 2028)
+  useEffect(() => {
+    // 1. Immediate Preview override for cedrictv20@gmail.com or ?preview_modal
+    try {
+      const userEmail = initialUser?.email?.toLowerCase() || (() => {
+        try {
+          const raw = localStorage.getItem("revit-offline-user") || localStorage.getItem("revit-auth-user");
+          if (raw) return JSON.parse(raw)?.email?.toLowerCase();
+        } catch {}
+        return "";
+      })();
+      const isCedric = userEmail === "cedrictv20@gmail.com";
+      const params = new URLSearchParams(window.location.search);
+      const forcePreview = params.get("preview_modal");
+
+      if (isCedric || forcePreview) {
+        const previewTarget = forcePreview || "fia";
+        if (previewTarget === "fia") {
+          setPlanAnnouncementVariant("gift");
+          setPlanAnnouncementPreviewUser("bb717bd1-3473-487c-9658-1c6d239ed4d4");
+        } else if (previewTarget === "mich") {
+          setPlanAnnouncementVariant("gift");
+          setPlanAnnouncementPreviewUser("e85207e0-ce9b-4f96-93d2-879ff55d12ee");
+        } else if (previewTarget === "baby") {
+          setPlanAnnouncementVariant("gift");
+          setPlanAnnouncementPreviewUser("b5e8693f-4f7a-401f-8bdf-844169e75450");
+        } else if (previewTarget === "general") {
+          setPlanAnnouncementVariant("general");
+          setPlanAnnouncementPreviewUser(null);
+        } else {
+          setPlanAnnouncementVariant("gift");
+          setPlanAnnouncementPreviewUser("bb717bd1-3473-487c-9658-1c6d239ed4d4");
+        }
+        setPlanAnnouncementOpen(true);
+        return;
+      }
+    } catch {}
+
+    if (cloudLoading) return;
+    // Strictly existing users only: skip if brand new user who hasn't finished onboarding
+    if (cloudProfile && !cloudProfile.onboarding_complete) return;
+    if (!preferences.mtap_onboarding_completed) return;
+
+    const currentUserId = initialUser?.id ?? "local";
+    const isGifted = GIFTED_PRO_USER_IDS.includes(currentUserId);
+    const storageKey = isGifted
+      ? `revit_pro_gift_modal_seen_${currentUserId}`
+      : `revit_plan_announcement_seen_${currentUserId}`;
+
+    try {
+      // Check if user has already seen this announcement
+      const hasSeen = localStorage.getItem(storageKey);
+      if (!hasSeen) {
+        setPlanAnnouncementVariant(isGifted ? "gift" : "general");
+        setPlanAnnouncementPreviewUser(isGifted ? currentUserId : null);
+        setPlanAnnouncementOpen(true);
+      }
+    } catch {
+      // Fallback
+    }
+  }, [cloudLoading, initialUser?.id, initialUser?.email, cloudProfile?.onboarding_complete, preferences.mtap_onboarding_completed]);
+
+  // Global window trigger for immediate testing / approval:
+  // e.g. window.openPlanModal("fia"), ("mich"), ("baby"), ("gift"), or ("general")
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvt = event as CustomEvent<{ variant?: PlanModalVariant; recipient?: string }>;
+      const v = customEvt.detail?.variant || "general";
+      setPlanAnnouncementVariant(v);
+      if (customEvt.detail?.recipient) {
+        setPlanAnnouncementPreviewUser(customEvt.detail.recipient);
+      }
+      setPlanAnnouncementOpen(true);
+    };
+    window.addEventListener("open-plan-announcement", handler);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).openPlanModal = (target?: string) => {
+      if (target === "fia") {
+        setPlanAnnouncementVariant("gift");
+        setPlanAnnouncementPreviewUser("bb717bd1-3473-487c-9658-1c6d239ed4d4");
+      } else if (target === "mich") {
+        setPlanAnnouncementVariant("gift");
+        setPlanAnnouncementPreviewUser("e85207e0-ce9b-4f96-93d2-879ff55d12ee");
+      } else if (target === "baby") {
+        setPlanAnnouncementVariant("gift");
+        setPlanAnnouncementPreviewUser("b5e8693f-4f7a-401f-8bdf-844169e75450");
+      } else if (target === "gift") {
+        setPlanAnnouncementVariant("gift");
+        setPlanAnnouncementPreviewUser("bb717bd1-3473-487c-9658-1c6d239ed4d4");
+      } else {
+        setPlanAnnouncementVariant("general");
+        setPlanAnnouncementPreviewUser(null);
+      }
+      setPlanAnnouncementOpen(true);
+    };
+    return () => {
+      window.removeEventListener("open-plan-announcement", handler);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (window as any).openPlanModal;
+    };
+  }, []);
+
+  const handleClosePlanAnnouncement = () => {
+    setPlanAnnouncementOpen(false);
+    const userEmail = initialUser?.email?.toLowerCase();
+    if (userEmail === "cedrictv20@gmail.com") return;
+
+    const currentUserId = initialUser?.id ?? "local";
+    const isGifted = GIFTED_PRO_USER_IDS.includes(currentUserId);
+    const storageKey = isGifted
+      ? `revit_pro_gift_modal_seen_${currentUserId}`
+      : `revit_plan_announcement_seen_${currentUserId}`;
+    try {
+      localStorage.setItem(storageKey, "true");
+    } catch {}
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -688,6 +841,21 @@ useEffect(() => {
   }, [cloudEnabled, initialUser, offlineMode, router]);
 
   useEffect(() => {
+    function handleSessionExpired() {
+      isSyncingRef.current = true;
+      if (syncTimerRef.current) {
+        clearTimeout(syncTimerRef.current);
+        syncTimerRef.current = null;
+      }
+      void createClient().auth.signOut({ scope: "local" })
+        .catch(() => undefined)
+        .finally(() => router.replace("/auth?clear_session=true"));
+    }
+    window.addEventListener("revit:session_expired", handleSessionExpired);
+    return () => window.removeEventListener("revit:session_expired", handleSessionExpired);
+  }, [router]);
+
+  useEffect(() => {
     if (!cloudEnabled || !initialUser || !sessionPolicyReady || offlineMode) return;
     let cancelled = false;
     async function load() {
@@ -699,7 +867,19 @@ useEffect(() => {
         const fallbackName = initialUser!.username?.trim() || DEFAULT_PROFILE.name;
         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, fallbackName, "");
         const nextPreferences = normalizeUserPreferences(snapshot.preferences ?? preferences, preferences.timezone);
-        setCloudProfile(nextProfile); setGrades(snapshot.grades); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences);
+        const userEntitlement = snapshot.entitlement;
+        const isGiftedUser = GIFTED_PRO_USER_IDS.includes(initialUser!.id);
+        const giftedUserConfig = isGiftedUser ? GIFTED_PRO_USERS[initialUser!.id] : undefined;
+        const effectiveEntitlement: SubscriptionEntitlement = isGiftedUser
+          ? {
+              storedPlan: "pro",
+              effectivePlan: "pro",
+              proStartedAt: userEntitlement.proStartedAt || new Date().toISOString(),
+              proExpiresAt: giftedUserConfig?.expiresAt || "2028-12-31T23:59:59Z",
+              serverNow: userEntitlement.serverNow || new Date().toISOString(),
+            }
+          : userEntitlement;
+        setCloudProfile(nextProfile); setGrades(snapshot.grades); if (snapshot.customGradebooks) setCustomGradebooks(snapshot.customGradebooks); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences); setEntitlement(effectiveEntitlement);
         setAttempts((current) => mergeAttempts(snapshot.attempts, current));
         setAttemptHistoryAvailable(snapshot.attemptHistoryAvailable);
         setReinforcementLevels((current) => ({
@@ -732,9 +912,17 @@ useEffect(() => {
           if (!cancelled) setProgressionError("Progression could not be loaded. It will retry when the connection recovers.");
         });
       } catch (error) {
-        if (!cancelled) setCloudError(error instanceof Error && error.message === "Request timed out."
-          ? "Cloud data took too long to respond. Please try again."
-          : "Cloud data could not be loaded. Please try again.");
+        if (!cancelled) {
+          if (error instanceof Error && error.message === "AUTH_SESSION_EXPIRED") {
+            void createClient().auth.signOut({ scope: "local" })
+              .catch(() => undefined)
+              .finally(() => router.replace("/auth?clear_session=true"));
+            return;
+          }
+          setCloudError(error instanceof Error && error.message === "Request timed out."
+            ? "Cloud data took too long to respond. Please try again."
+            : "Cloud data could not be loaded. Please try again.");
+        }
       } finally {
         if (!cancelled) {
           setProgressionReady(true);
@@ -934,6 +1122,68 @@ useEffect(() => {
     setActiveFlashcardTopics(topics ?? []);
   }, []);
 
+  const proActive = isProActive(entitlement);
+
+  useEffect(() => {
+    if (!proActive || !entitlement.proExpiresAt || !entitlement.serverNow) return;
+    const expiresAt = Date.parse(entitlement.proExpiresAt);
+    const checkedAt = Date.parse(entitlement.serverNow);
+    if (!Number.isFinite(expiresAt) || !Number.isFinite(checkedAt)) return;
+
+    const clientExpiry = Date.now() + Math.max(0, expiresAt - checkedAt);
+    let timeout: number | undefined;
+    const expireWhenDue = () => {
+      const remaining = clientExpiry - Date.now();
+      if (remaining > 0) {
+        timeout = window.setTimeout(expireWhenDue, Math.min(remaining, 2_147_483_647));
+        return;
+      }
+      clearCiullaReviewerCache();
+      setEntitlement((current) => ({ ...current, effectivePlan: "free" }));
+    };
+    expireWhenDue();
+    return () => { if (timeout !== undefined) window.clearTimeout(timeout); };
+  }, [entitlement.proExpiresAt, entitlement.serverNow, proActive]);
+
+  useEffect(() => {
+    if (!proActive || !cloudEnabled || offlineMode) {
+      setReviewerContent({ subjects: freeSubjects, topics: freeTopics, questions: freeQuestions });
+      setPremiumContentLoading(false);
+      setPremiumContentError("");
+      return;
+    }
+    let cancelled = false;
+    setPremiumContentLoading(true);
+    setPremiumContentError("");
+    void fetchCiullaReviewer().then((result) => {
+      if (cancelled) return;
+      if (result.status === "success") {
+        setReviewerContent({
+          subjects: [...freeSubjects, ...result.data.subjects],
+          topics: [...freeTopics, ...result.data.topics],
+          questions: [...freeQuestions, ...result.data.questions],
+        });
+      } else {
+        setPremiumContentError(result.status === "pro_required"
+          ? "Your Pro entitlement could not be verified. Refresh and try again."
+          : "The Pro reviewer library could not be loaded. Please try again.");
+      }
+    }).finally(() => { if (!cancelled) setPremiumContentLoading(false); });
+    return () => { cancelled = true; };
+  }, [cloudEnabled, offlineMode, proActive]);
+
+  useEffect(() => {
+    if (proActive || selectedBook === "Harr") return;
+    handleBookChange("Harr");
+  // handleBookChange only updates local selection state.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [proActive, selectedBook]);
+
+  useEffect(() => {
+    if (proActive || progressBook === "Harr") return;
+    setProgressBook("Harr");
+  }, [proActive, progressBook]);
+
   const selectedQuestions = useMemo(
     () => questions.filter((question) => selectedTopicIds.includes(question.topicId)),
     [selectedTopicIds],
@@ -1028,6 +1278,16 @@ useEffect(() => {
 
   const progressOverallCorrect = progressAttempts.filter((attempt) => attempt.correct).length;
   const progressOverallAccuracy = percent(progressOverallCorrect, progressAttempts.length);
+  const progressSubjectStats = useMemo(() => {
+    const grouped = new Map<string, { attempts: number; correct: number }>();
+    for (const attempt of progressAttempts) {
+      const current = grouped.get(attempt.subjectName) ?? { attempts: 0, correct: 0 };
+      current.attempts += 1;
+      current.correct += attempt.correct ? 1 : 0;
+      grouped.set(attempt.subjectName, current);
+    }
+    return [...grouped.entries()].map(([name, value]) => ({ name, ...value, accuracy: percent(value.correct, value.attempts) }));
+  }, [progressAttempts]);
   const progressPracticedTopics = progressTopicStats.filter((topic) => topic.attempts > 0);
   const progressStrongestTopic = [...progressPracticedTopics].sort((a, b) => b.accuracy - a.accuracy || b.attempts - a.attempts)[0];
   const progressWeakestTopic = [...progressPracticedTopics].sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts)[0];
@@ -1096,6 +1356,7 @@ useEffect(() => {
   }
 
   function handleBookChange(newBook: ReviewerBook | "all") {
+    if (newBook !== "Harr" && !canAccessQuestionBank("Ciulla", entitlement)) return;
     setSelectedBook(newBook);
     try {
       localStorage.setItem("revit-selected-book-v1", newBook);
@@ -1898,6 +2159,11 @@ useEffect(() => {
           messages: outboundMessages.length > 0 ? outboundMessages : [{ role: "user", content: cleanQuestion }],
         }),
       });
+      const dailyLimitHeader = Number(response.headers.get("X-RateLimit-Limit-Day"));
+      const dailyRemainingHeader = Number(response.headers.get("X-RateLimit-Remaining-Day"));
+      if (Number.isInteger(dailyLimitHeader) && Number.isInteger(dailyRemainingHeader)) {
+        setAiDailyUsed(Math.max(0, dailyLimitHeader - dailyRemainingHeader));
+      }
       let data: {
         answer?: string;
         citations?: string[];
@@ -2067,7 +2333,7 @@ useEffect(() => {
               <span className={`nav-icon ${item.id === "assistant" ? "nav-icon-ai" : ""}`} aria-hidden="true">
                 <Image src={item.icon} alt="" width={512} height={512} unoptimized />
               </span>
-              <span className="nav-label">{item.label}</span>
+              <span className="nav-label">{item.id === "planner" ? "Planner" : item.label}</span>
             </button>
           ))}
         </nav>
@@ -2077,9 +2343,9 @@ useEffect(() => {
             <span className="theme-symbol dark-symbol" aria-hidden="true">☾</span>
             <span className="sidebar-control-copy"><strong>Appearance</strong><small>Light / dark</small></span>
           </button>
-          <Link className="sidebar-support" href="/support" title={sidebarCollapsed ? "Support RevIT" : undefined}>
+          <Link className="sidebar-support" href="/pricing" title={sidebarCollapsed ? "Pro Subscription" : undefined}>
             <span className="sidebar-support-frog" aria-hidden="true"><Image src="/icons/neu/support.png" alt="" width={42} height={42} unoptimized style={{ width: "auto", height: "auto", borderRadius: "10px", objectFit: "cover" }} /></span>
-            <span className="sidebar-support-copy"><strong>Support RevIT</strong><span>Help support continued development</span></span>
+            <span className="sidebar-support-copy"><strong>Pro Subscription</strong><span>Contact us to subscribe</span></span>
             <span className="sidebar-support-arrow" aria-hidden="true">›</span>
           </Link>
           <button
@@ -2353,6 +2619,10 @@ useEffect(() => {
           <Flashcards
             isNuRevit={preferences.mtap_features_enabled}
             selectedBook={selectedBook}
+            proActive={proActive}
+            subjects={subjects}
+            topics={topics}
+            questions={questions}
             onSelectBook={handleBookChange}
             onReviewingChange={handleFlashcardReviewingChange}
             onRequestConfirm={requestConfirm}
@@ -2762,9 +3032,10 @@ useEffect(() => {
                         onChange={(event) => handleBookChange(event.target.value as ReviewerBook | "all")}
                       >
                         <option value="Harr">Harr (999 MCQs)</option>
-                        <option value="Ciulla">Ciulla (1,884 MCQs)</option>
-                        <option value="all">All Books (2,883 MCQs)</option>
+                        <option value="Ciulla" disabled={!proActive}>Ciulla (1,884 MCQs){proActive ? "" : " · Pro"}</option>
+                        <option value="all" disabled={!proActive}>All Books (2,883 MCQs){proActive ? "" : " · Pro"}</option>
                       </select>
+                      {!proActive && <p className="security-copy"><span className="source-pill">PRO</span> Ciulla and combined libraries are available with RevIT Pro. <Link className="pro-inline-link" href="/pricing">Learn about Pro →</Link></p>}
                     </div>
                     <div className="selection-controls">
                       <button className="text-button" type="button" onClick={() => setSelectedTopicIds(currentBookTopics.map((topic) => topic.id))}>Select all</button>
@@ -2932,7 +3203,8 @@ useEffect(() => {
                     key={b}
                     type="button"
                     className={progressBook === b ? "active" : ""}
-                    onClick={() => setProgressBook(b)}
+                    onClick={() => { if (b === "Harr" || proActive) setProgressBook(b); }}
+                    disabled={b !== "Harr" && !proActive}
                   >
                     {b === "all" ? "All Books (Combined)" : `${b} Edition`}
                   </button>
@@ -2950,33 +3222,61 @@ useEffect(() => {
                 <p>{progressAttempts.length ? `${progressOverallCorrect} correct answers` : "No attempts yet"}</p>
               </article>
               <article className="metric-card">
+                <div className="metric-label"><span>Questions answered</span><small>Basic progress</small></div>
+                <strong>{progressAttempts.length}</strong>
+                <p>{progressOverallCorrect} correct</p>
+              </article>
+              <article className="metric-card">
+                <div className="metric-label"><span>Incorrect answers</span><small>Basic progress</small></div>
+                <strong>{Math.max(0, progressAttempts.length - progressOverallCorrect)}</strong>
+                <p>Review these topics again when ready.</p>
+              </article>
+              {canAccessSubscriptionFeature("advancedProgress", entitlement) && <article className="metric-card">
                 <div className="metric-label">
                   <span>Strongest topic</span>
                   <small>{progressStrongestTopic?.attempts ?? 0} attempts</small>
                 </div>
                 <strong className="metric-name">{progressStrongestTopic?.name ?? "Not enough data"}</strong>
                 <p>{progressStrongestTopic ? `${progressStrongestTopic.accuracy}% accuracy` : "Complete your first review."}</p>
-              </article>
-              <article className="metric-card">
+              </article>}
+              {canAccessSubscriptionFeature("advancedProgress", entitlement) && <article className="metric-card">
                 <div className="metric-label">
                   <span>Needs review</span>
                   <small>{progressWeakestTopic?.attempts ?? 0} attempts</small>
                 </div>
                 <strong className="metric-name">{progressWeakestTopic?.name ?? "Not enough data"}</strong>
                 <p>{progressWeakestTopic ? `${progressWeakestTopic.accuracy}% accuracy` : "Topic guidance appears after practice."}</p>
-              </article>
+              </article>}
             </section>
 
-            <LibrarySearch
+            {!canAccessSubscriptionFeature("advancedProgress", entitlement) && (
+              <>
+                <section className="analytics-card">
+                  <div className="section-heading"><div><p className="eyebrow">Basic subject performance</p><h2>Performance by subject</h2></div></div>
+                  <div className="analytics-list">
+                    {progressSubjectStats.map((subject) => <div className="analytics-row" key={subject.name}><div><strong>{subject.name}</strong><small>{subject.correct} of {subject.attempts} correct</small></div><span>{subject.accuracy}%</span></div>)}
+                    {!progressSubjectStats.length && <p>No subject activity yet.</p>}
+                  </div>
+                </section>
+                <section className="pro-locked-state">
+                  <span className="source-pill">PRO</span>
+                  <h2>Advanced Progress</h2>
+                  <p>Unlock detailed topic analytics, repeated-mistake insights, trends, and study recommendations.</p>
+                  <Link className="secondary-button" href="/pricing">Learn about RevIT Pro</Link>
+                </section>
+              </>
+            )}
+
+            {canAccessSubscriptionFeature("advancedProgress", entitlement) && <LibrarySearch
               id="progress-search"
               isNuRevit={preferences.mtap_features_enabled}
               value={progressSearch}
               resultCount={visibleProgressSubjects.length}
               emptyHelperText="Find a subject or topic in your progress"
               onChange={setProgressSearch}
-            />
+            />}
 
-            <div className="progress-grid">
+            {canAccessSubscriptionFeature("advancedProgress", entitlement) && <div className="progress-grid">
               {visibleProgressSubjects.map((subject) => {
                 const unifiedSubj = subject as UnifiedSubject;
                 const query = progressSearch.trim().toLowerCase();
@@ -3026,7 +3326,7 @@ useEffect(() => {
                   </section>
                 );
               })}
-            </div>
+            </div>}
             {!progressAttempts.length && <div className="empty-progress"><h2>Your progress starts with one answer</h2><p>Choose any topic combination. RevIT autosaves every answer {cloudEnabled ? "to your account" : "on this device"} and updates this page immediately.</p><button className="primary-button" type="button" onClick={() => openView("library")}>Start a review</button></div>}
           </div>
         )}
@@ -3042,18 +3342,28 @@ useEffect(() => {
           />
         ))}
 
-        {activeView === "weakness" && (
+        {activeView === "weakness" && (canAccessSubscriptionFeature("weaknessAnalytics", entitlement) ? (
           <WeaknessDashboard
             attempts={attempts}
             loading={cloudLoading}
             historyAvailable={attemptHistoryAvailable}
             cloudEnabled={cloudEnabled}
+            subjects={subjects}
+            topics={topics}
+            questions={questions}
             onOpenReviewer={() => openView("library")}
             onReviewWithAi={reviewTopicWithAi}
             onPractice={practiceWeakTopic}
             onViewMistakes={viewTopicMistakes}
           />
-        )}
+        ) : (
+          <section className="pro-locked-state">
+            <span className="source-pill">PRO</span>
+            <h2>Weakness Analytics</h2>
+            <p>Identify repeated mistakes and topics that need more review. Your study history remains safe.</p>
+            <Link className="secondary-button" href="/pricing">Learn about RevIT Pro</Link>
+          </section>
+        ))}
 
         {activeView === "planner" && (
           <StudyPlanner
@@ -3067,7 +3377,17 @@ useEffect(() => {
           />
         )}
 
-        {activeView === "grades" && gradesEnabled && <GradesPage grades={grades} onSave={persistGrade} showSimulator={gradeSimulatorEnabled} />}
+        {activeView === "grades" && gradesEnabled && (
+          <GradesPage
+            grades={grades}
+            onSave={persistGrade}
+            showSimulator={gradeSimulatorEnabled}
+            mtapFeaturesEnabled={preferences.mtap_features_enabled}
+            initialCustomGradebooks={customGradebooks}
+            userId={initialUser?.id}
+            cloudClient={cloudEnabled && initialUser ? createClient() : null}
+          />
+        )}
 
         {activeView === "assistant" && (!online ? <CloudOfflineState feature="RevIT AI" /> : (
           <div className="assistant-page">
@@ -3115,7 +3435,7 @@ useEffect(() => {
               <div className="assistant-card assistant-card-wide">
                 <div className="assistant-header">
                   <div><span className="ai-mark" style={{ overflow: "hidden", padding: 0 }}><Image src="/icons/revit-ai.png" alt="" width={32} height={32} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></span><div><h2>RevIT AI</h2><p><i />{activeAiChat?.title ?? "Groq educational support"}</p></div></div>
-                  {cloudEnabled && <span className="history-status">{activeChatId ? "Saved" : "Ready"}</span>}
+                  {cloudEnabled && <span className="history-status">{aiDailyUsed === null ? `${getAiLimits(entitlement).dailyRequests}/day` : `${aiDailyUsed} / ${getAiLimits(entitlement).dailyRequests} used today`}</span>}
                 </div>
                 {chatError && <div className="chat-error" role="alert"><span>{chatError}</span><button type="button" onClick={() => setChatError("")} aria-label="Dismiss chat error">×</button></div>}
                 <div className={`chat-body ${messages.length ? "chat-active" : ""}`} aria-live="polite">
@@ -3192,7 +3512,7 @@ useEffect(() => {
             </section>
           </div>
         )}
-        {profileOpen && cloudAvailable && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} email={initialUser.email} initialTab={accountInitialTab} initialStatus={accountInitialStatus} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} onMtapFeaturesChange={updateMtapFeatures} />}
+        {profileOpen && cloudAvailable && accountProfile && initialUser && <AccountSettings profile={accountProfile} preferences={preferences} entitlement={entitlement} email={initialUser.email} initialTab={accountInitialTab} initialStatus={accountInitialStatus} onClose={() => setProfileOpen(false)} onProfile={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); setProfileOpen(false); }} onPreferences={setPreferences} onMtapFeaturesChange={updateMtapFeatures} />}
         {cloudAvailable && cloudProfile && !cloudProfile.onboarding_complete && !cloudLoading && !cloudError && <Onboarding profile={cloudProfile} onComplete={(updated) => { setCloudProfile(updated); setProfile({ name: updated.first_name, photoDataUrl: updated.avatar_url ?? "" }); }} onMtapChoose={updateMtapFeatures} />}
         {!preferences.mtap_onboarding_completed && (!cloudEnabled || Boolean(cloudProfile?.onboarding_complete)) && !cloudLoading && !cloudError && <MtapOnboarding onChoose={updateMtapFeatures} />}
       </section>
@@ -3219,6 +3539,18 @@ useEffect(() => {
         readIds={readIds}
         onMarkAllRead={markAllRead}
         onToggleRead={toggleRead}
+      />
+      <PlanAnnouncementModal
+        isOpen={planAnnouncementOpen}
+        variant={planAnnouncementVariant}
+        onClose={handleClosePlanAnnouncement}
+        onExplorePricing={() => {
+          window.location.assign("/pricing");
+        }}
+        onToggleVariant={(next) => setPlanAnnouncementVariant(next)}
+        proExpiresAt={initialUser?.id && GIFTED_PRO_USERS[initialUser.id] ? GIFTED_PRO_USERS[initialUser.id].expiresAt : (entitlement.proExpiresAt || "2028-12-31T23:59:59Z")}
+        recipientGreeting={initialUser?.id ? GIFTED_PRO_USERS[initialUser.id]?.greeting : undefined}
+        previewRecipientKey={planAnnouncementPreviewUser}
       />
           <CustomConfirm
         isOpen={confirmConfig.isOpen}
@@ -3261,7 +3593,7 @@ function SessionSummary({ attempts, onDone, cloudEnabled }: { attempts: Attempt[
         {topicIds.map((topicId) => {
           const topicAttempts = attempts.filter((attempt) => attempt.topicId === topicId);
           const topicCorrect = topicAttempts.filter((attempt) => attempt.correct).length;
-          return <div key={topicId}><span>{topicById.get(topicId)?.name}</span><strong>{topicCorrect}/{topicAttempts.length} · {percent(topicCorrect, topicAttempts.length)}%</strong></div>;
+          return <div key={topicId}><span>{topicAttempts[0]?.topicName ?? "Topic"}</span><strong>{topicCorrect}/{topicAttempts.length} · {percent(topicCorrect, topicAttempts.length)}%</strong></div>;
         })}
       </div>
       <button className="primary-button" type="button" onClick={onDone}>Return to topic selection</button>

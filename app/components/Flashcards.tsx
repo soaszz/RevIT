@@ -1,13 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
-  questions,
-  subjectById,
-  subjects,
-  topicById,
-  topics,
+  questions as freeQuestions,
+  subjects as freeSubjects,
+  topics as freeTopics,
   type ReviewerBook,
+  type ReviewerQuestion,
+  type Subject,
+  type Topic,
 } from "../content/reviewerContent";
 import { buildFlashcardDeck, shuffleFlashcards, type Flashcard } from "../lib/flashcards";
 import {
@@ -51,16 +53,26 @@ function getBookBadgeStyle(book: "Harr" | "Ciulla" | string, extraStyle?: React.
 export default function Flashcards({
   isNuRevit,
   selectedBook: controlledBook,
+  proActive = false,
+  subjects = freeSubjects,
+  topics = freeTopics,
+  questions = freeQuestions,
   onSelectBook,
   onReviewingChange,
   onRequestConfirm,
 }: {
   isNuRevit: boolean;
   selectedBook?: ReviewerBook | "all";
+  proActive?: boolean;
+  subjects?: Subject[];
+  topics?: Topic[];
+  questions?: ReviewerQuestion[];
   onSelectBook?: (book: ReviewerBook | "all") => void;
   onReviewingChange?: (reviewing: boolean, topics?: string[]) => void;
   onRequestConfirm?: (title: string, message: string, confirmLabel: string, action: () => void) => void;
 }) {
+  const subjectById = useMemo(() => new Map(subjects.map((subject) => [subject.id, subject])), [subjects]);
+  const topicById = useMemo(() => new Map(topics.map((topic) => [topic.id, topic])), [topics]);
   const [internalBook, setInternalBook] = useState<ReviewerBook | "all">(() => {
     if (typeof window === "undefined") return "Harr";
     try {
@@ -758,9 +770,10 @@ export default function Flashcards({
               onChange={(event) => handleBookChange(event.target.value as ReviewerBook | "all")}
             >
               <option value="Harr">Harr (999 cards)</option>
-              <option value="Ciulla">Ciulla (1,884 cards)</option>
-              <option value="all">All Books (2,883 cards)</option>
+              <option value="Ciulla" disabled={!proActive}>Ciulla (1,884 cards){proActive ? "" : " · Pro"}</option>
+              <option value="all" disabled={!proActive}>All Books (2,883 cards){proActive ? "" : " · Pro"}</option>
             </select>
+            {!proActive && <p className="security-copy"><span className="source-pill">PRO</span> Ciulla flashcards are available with RevIT Pro. <Link className="pro-inline-link" href="/pricing">Learn about Pro →</Link></p>}
           </div>
           <div className="selection-controls">
             <button className="text-button" type="button" onClick={() => setSelectedTopicIds(currentBookTopics.map((topic) => topic.id))}>Select all</button>

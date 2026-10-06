@@ -5,12 +5,13 @@ import { join } from "node:path";
 
 const projectFile = (path: string) => readFileSync(join(process.cwd(), path), "utf8");
 
-test("the low-priority library card is replaced by a frog-backed Support RevIT action", () => {
+test("desktop and mobile navigation open the Pro subscription information", () => {
   const app = projectFile("app/RevITApp.tsx");
   assert.doesNotMatch(app, /<p>Official library<\/p>/);
-  assert.match(app, /className="sidebar-support" href="\/support"/);
+  assert.match(app, /className="sidebar-support" href="\/(pro|pricing)"/);
   assert.match(app, /sidebar-support-frog[\s\S]*\/(revit-support\.svg|revit-frog\.png|support\.png)/);
-  assert.match(app, /href="\/support"|<MobileNavDock/);
+  assert.match(projectFile("app/components/MobileNavDock.tsx"), /href="\/(pro|pricing)"[\s\S]*Pro Subscription/);
+  assert.match(projectFile("app/pro/page.tsx"), /https:\/\/www.facebook.com\/revithoroughly/);
 });
 
 test("Support RevIT is informational and does not create payment or entitlement behavior", () => {

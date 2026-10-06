@@ -3,7 +3,6 @@
 import type { Factor } from "@supabase/supabase-js";
 import { type FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import PublicThemeToggle from "../components/PublicThemeToggle";
 import TurnstileChallenge, { type TurnstileChallengeHandle } from "../components/auth/TurnstileChallenge";
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "../lib/legal";
 import { createClient } from "../lib/supabase/client";
@@ -54,11 +53,11 @@ function AuthFooter() {
   );
 }
 
-export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { next?: string; turnstileSiteKey: string }) {
+export default function AuthPanel({ next = "/overview", turnstileSiteKey, initialMode = "login" }: { next?: string; turnstileSiteKey: string; initialMode?: Mode }) {
   const disableCaptcha = false;
   const router = useRouter();
   const turnstileRef = useRef<TurnstileChallengeHandle>(null);
-  const [mode, setMode] = useState<Mode>("login");
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -343,10 +342,9 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
   if (mfaFactorId) {
     return (
       <form className="auth-card" onSubmit={verifyMfa}>
-        <PublicThemeToggle className="auth-theme-toggle" />
         <div className="auth-heading">
           <p className="eyebrow">Two-factor authentication</p>
-          <h1>One more secure step.</h1>
+          <h2>One more secure step.</h2>
           <p>Enter the current code from your authenticator app.</p>
         </div>
         <label className="auth-field"><span>Authentication code</span><input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} value={mfaCode} onChange={(event) => setMfaCode(event.target.value.replace(/\D/g, ""))} required /></label>
@@ -359,16 +357,15 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey }: { ne
 
   return (
     <form className="auth-card" onSubmit={submit}>
-      <PublicThemeToggle className="auth-theme-toggle" />
       <div className="auth-heading">
         <p className="eyebrow">RevIT</p>
-        <h1>{mode === "login" ? "Welcome back" : "Create your RevIT account"}</h1>
+        <h2>{mode === "login" ? "Welcome back" : "Create your RevIT account"}</h2>
         <p>{mode === "login" ? "Continue your review and pick up where you left off." : "Build your review history, track your progress, and keep your study activity connected to your account."}</p>
       </div>
 
-      <div className="auth-tabs" role="tablist" aria-label="Account access">
-        <button type="button" role="tab" aria-selected={mode === "login"} className={mode === "login" ? "active" : ""} onClick={() => switchMode("login")} disabled={pending}>Sign in</button>
-        <button type="button" role="tab" aria-selected={mode === "register"} className={mode === "register" ? "active" : ""} onClick={() => switchMode("register")} disabled={pending}>Sign up</button>
+      <div className="auth-tabs" role="group" aria-label="Account access">
+        <button type="button" aria-pressed={mode === "login"} className={mode === "login" ? "active" : ""} onClick={() => switchMode("login")} disabled={pending}>Sign in</button>
+        <button type="button" aria-pressed={mode === "register"} className={mode === "register" ? "active" : ""} onClick={() => switchMode("register")} disabled={pending}>Sign up</button>
       </div>
 
       <div className="oauth-option">

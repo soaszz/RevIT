@@ -241,7 +241,9 @@ export async function POST(request: Request) {
     return json(
       {
         error: dailyLimitReached
-          ? `You have reached your ${reservation.dailyLimit}-question daily RevIT AI limit. Please try again after the UTC reset.`
+          ? reservation.tier === "free"
+            ? "You've reached today's RevIT AI limit. RevIT Pro includes a higher daily AI allowance."
+            : "You've reached today's RevIT AI limit. Your daily allowance will reset automatically."
           : `Too many RevIT AI requests. Please wait ${retryAfter} seconds and try again.`,
         tier: reservation.tier,
       },
@@ -260,8 +262,8 @@ export async function POST(request: Request) {
 
   let answer = "";
   let lastErrorStatus: number | null = null;
-  const configuredModel = process.env.GROQ_MODEL?.trim() || "qwen/qwen3.8-27b";
-  const candidateModels = Array.from(new Set([configuredModel, "qwen/qwen3.8-27b", "openai/gpt-oss-20b", "openai/gpt-oss-120b"]));
+  const GROQ_MODEL = "openai/gpt-oss-120b";
+  const candidateModels = [GROQ_MODEL];
   const groq = new Groq({ apiKey, maxRetries: 1, timeout: 25_000 });
 
   for (const model of candidateModels) {
@@ -289,7 +291,7 @@ export async function POST(request: Request) {
     await cancelReservation();
     safeLog("provider_request_failed", lastErrorStatus);
     return json(
-      { error: lastErrorStatus === 429 ? "RevIT AI is busy right now. Please try again shortly." : "RevIT AI is temporarily unavailable." },
+      { error: lastErrorStatus === 429 ? "RevIT AI is temporarily at capacity. Please try again shortly." : "RevIT AI is temporarily unavailable." },
       503,
       quotaHeaders,
     );

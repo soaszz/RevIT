@@ -6,6 +6,7 @@ import { saveProfile, uploadAvatar } from "../lib/cloudService";
 import { AVATAR_ACCEPT, validateAvatarFile } from "../lib/avatarValidation";
 import { createClient } from "../lib/supabase/client";
 import Image from "next/image";
+import { AI_LIMITS } from "../lib/entitlements";
 
 export default function Onboarding({
   profile,
@@ -96,7 +97,7 @@ export default function Onboarding({
         {step === 1 && (
           <>
             <div>
-              <p className="eyebrow">Step 1 of 3</p>
+              <p className="eyebrow">Step 1 of 4</p>
               <h1 id="onboarding-title">Who&apos;s reviewing today?</h1>
               <p>Let&apos;s set up your identity before building your study plan.</p>
             </div>
@@ -142,7 +143,7 @@ export default function Onboarding({
         {step === 2 && (
           <div className="mtap-onboarding-card">
             <div>
-              <p className="eyebrow">Step 2 of 3</p>
+              <p className="eyebrow">Step 2 of 4</p>
               <h1 id="onboarding-title">Personalize your experience</h1>
               <p>Are you currently an NU 4th year Medical Technology student taking MTAP?</p>
             </div>
@@ -179,13 +180,100 @@ export default function Onboarding({
         )}
 
         {step === 3 && (
+          <div style={{ display: "grid", gap: "18px" }}>
+            <div>
+              <p className="eyebrow">Step 3 of 4</p>
+              <h1 id="onboarding-title">RevIT Free &amp; Pro</h1>
+              <p>Every learner starts with essential study tools. Upgrade to Pro whenever you want deeper reviewer coverage.</p>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "12px", width: "100%" }}>
+              <div style={{ display: "flex", flexDirection: "column", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: "14px", padding: "16px", gap: "10px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span className="source-pill" style={{ fontSize: "9px" }}>FREE</span>
+                  <span style={{ fontSize: "10px", color: "var(--green-dark)", fontWeight: "700" }}>Active by default</span>
+                </div>
+                <div>
+                  <h3 style={{ margin: "2px 0 0", fontSize: "16px", fontWeight: "750", color: "var(--ink)" }}>RevIT Free</h3>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginTop: "4px" }}>
+                    <span style={{ fontSize: "20px", fontWeight: "800", color: "var(--ink)" }}>₱0</span>
+                    <span style={{ fontSize: "10px", color: "var(--muted)" }}>/ Free forever</span>
+                  </div>
+                </div>
+                <ul style={{ margin: "4px 0 0", padding: "0", listStyle: "none", display: "grid", gap: "8px", fontSize: "11px", color: "var(--ink)" }}>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <span>Harr question bank &amp; flashcards</span>
+                  </li>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <span>MCQ practice timer &amp; study planner</span>
+                  </li>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <span>Basic progress tracking &amp; streaks</span>
+                  </li>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <span>RevIT AI: {AI_LIMITS.free.dailyRequests} messages per day</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", background: "linear-gradient(180deg, var(--green-soft) 0%, var(--surface) 35%)", border: "1px solid color-mix(in srgb, var(--green) 50%, var(--line))", borderRadius: "14px", padding: "16px", gap: "10px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span className="source-pill" style={{ fontSize: "9px", background: "var(--green)", color: "#fff" }}>PRO ACCESS</span>
+                  <span style={{ fontSize: "10px", color: "var(--green-dark)", fontWeight: "700" }}>Recommended</span>
+                </div>
+                <div>
+                  <h3 style={{ margin: "2px 0 0", fontSize: "16px", fontWeight: "750", color: "var(--ink)" }}>RevIT Pro</h3>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginTop: "4px" }}>
+                    <span style={{ fontSize: "20px", fontWeight: "800", color: "var(--ink)" }}>₱49</span>
+                    <span style={{ fontSize: "10px", color: "var(--muted)" }}>/ Early Access</span>
+                  </div>
+                </div>
+                <ul style={{ margin: "4px 0 0", padding: "0", listStyle: "none", display: "grid", gap: "8px", fontSize: "11px", color: "var(--ink)" }}>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <strong>Everything in Free</strong>
+                  </li>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <span>Full Harr &amp; Ciulla (4th Ed.) libraries</span>
+                  </li>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <span>Weakness Analytics &amp; gap targeting</span>
+                  </li>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <span>RevIT AI: {AI_LIMITS.pro.dailyRequests} messages per day</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="mtap-onboarding-note" style={{ padding: "12px 14px" }}>
+              <span style={{ fontSize: "11px", color: "var(--muted)", lineHeight: 1.5 }}>
+                You start automatically on <strong>RevIT Free</strong>. Subscriptions are activated manually via Facebook Messenger whenever you wish to upgrade.
+              </span>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "10px", marginTop: "4px" }}>
+              <button type="button" className="primary-button wide" style={{ background: "transparent", border: "1px solid var(--line)", color: "var(--ink)" }} onClick={() => setStep(2)}>Back</button>
+              <button type="button" className="primary-button wide" onClick={() => setStep(4)}>Continue</button>
+            </div>
+          </div>
+        )}
+
+        {step === 4 && (
           <div style={{ display: "grid", gap: "22px" }}>
             <div style={{ textAlign: "center", display: "grid", justifyItems: "center", gap: "12px" }}>
               <div style={{ position: "relative", width: "92px", height: "72px", margin: "0 auto", marginTop: "4px", filter: "drop-shadow(0 8px 18px rgba(24, 117, 98, .22))" }}>
                 <Image src="/icons/neu/revit-frog-mascot.png" alt="RevIT Mascot" fill style={{ objectFit: "contain" }} priority unoptimized />
               </div>
               <div>
-                <p className="eyebrow">Step 3 of 3</p>
+                <p className="eyebrow">Step 4 of 4</p>
                 <h1 id="onboarding-title" style={{ fontSize: "28px", margin: "4px 0" }}>{greeting}, {firstName.split(" ")[0]}!</h1>
               </div>
               <p style={{ margin: "0", color: "var(--muted)", fontSize: "14px" }}>You&apos;re all set. Here&apos;s a quick look at what you can do inside RevIT:</p>
@@ -213,7 +301,7 @@ export default function Onboarding({
             {status && <p className="profile-error" style={{ textAlign: "center" }} role="alert">{status}</p>}
 
             <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "10px" }}>
-               <button type="button" className="primary-button wide" style={{ background: "transparent", border: "1px solid var(--line)", color: "var(--ink)" }} onClick={() => setStep(2)} disabled={pending}>Back</button>
+               <button type="button" className="primary-button wide" style={{ background: "transparent", border: "1px solid var(--line)", color: "var(--ink)" }} onClick={() => setStep(3)} disabled={pending}>Back</button>
                <button className="primary-button wide" type="button" onClick={() => void submitWithMtap()} disabled={pending}>{pending ? "Initializing dashboard…" : "Start Reviewing"}</button>
             </div>
           </div>

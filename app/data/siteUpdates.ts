@@ -13,6 +13,22 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-10-0",
+    version: "v1.10.0",
+    date: "October 6, 2026",
+    type: "major",
+    title: "RevIT Free vs Pro Plans, Ciulla 4th Edition, and Early Access VIP",
+    summary: "Introduced Free and Pro review access plans with dedicated comparison pricing, unlocked Ciulla 4th Edition question bank for Pro members, added Early Access gift perks, and updated Study Planner layout.",
+    tags: ["Plans", "Pro", "Reviewer", "Study Planner", "Account"],
+    highlights: [
+      "Added RevIT Free vs Pro plan comparison with dedicated pricing overview.",
+      "Unlocked the complete Ciulla Fourth Edition question bank for Pro subscribers.",
+      "Added Early Access Pro access perks and celebration announcement for longtime users.",
+      "Refined Study Planner timeline and responsive schedule views for smoother planning.",
+      "Improved Google account connection error messages with instant popup alerts in Account Settings."
+    ]
+  },
+  {
     id: "update-v1-9-2",
     version: "v1.9.2",
     date: "October 4, 2026",

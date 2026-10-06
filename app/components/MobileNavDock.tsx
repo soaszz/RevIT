@@ -49,9 +49,9 @@ export default function MobileNavDock({
     },
     {
       id: "planner",
-      label: "Study Planner",
+      label: "Planner",
       icon: "/icons/neu/study-planner.png",
-      desc: "Daily study targets & exam calendar",
+      desc: "Academic schedule, study & exams",
     },
     ...(gradesEnabled
       ? [
@@ -240,14 +240,14 @@ export default function MobileNavDock({
 
               <div className="mobile-sheet-secondary">
                 <a
-                  href="/support"
+                  href="/pricing"
                   className="mobile-sheet-sub-button"
                   onClick={() => setSheetOpen(false)}
                 >
                   <span className="mobile-sheet-sub-icon">
                     <Image src="/icons/neu/support.png" alt="" width={512} height={512} unoptimized />
                   </span>
-                  <span>Support RevIT</span>
+                  <span>Pro Subscription</span>
                 </a>
                 <button
                   type="button"

@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured, supabaseConfig, supabaseCookieOptions } from "./config";
 import { isTransientAuthError, retryAuthRequest } from "./retryAuth";
 
-const PUBLIC_PATHS = ["/auth", "/terms", "/privacy", "/offline", "/sw.js", "/manifest.webmanifest", "/icon", "/api/chat"];
+const PUBLIC_PATHS = ["/auth", "/terms", "/privacy", "/pricing", "/pro", "/subscription", "/subscriptions", "/offline", "/sw.js", "/manifest.webmanifest", "/icon", "/api/chat"];
 
 function isPublic(pathname: string) {
   return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
@@ -53,12 +53,6 @@ export async function updateSession(request: NextRequest, security: {
     const target = request.nextUrl.clone();
     target.pathname = "/auth";
     target.searchParams.set("next", pathname === "/" ? "/overview" : pathname);
-    return secure(NextResponse.redirect(target));
-  }
-  if (signedIn && pathname === "/auth" && request.nextUrl.searchParams.get("clear_session") !== "true") {
-    const target = request.nextUrl.clone();
-    target.pathname = "/overview";
-    target.search = "";
     return secure(NextResponse.redirect(target));
   }
   return secure(response);

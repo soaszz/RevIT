@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { questionById, subjectById, subjects, topics, type ReviewerBook } from "../content/reviewerContent";
+import { type ReviewerBook, type ReviewerQuestion, type Subject, type Topic } from "../content/reviewerContent";
 import type { QuestionAttempt } from "../lib/domain";
 import {
   buildAccuracyHistory,
@@ -21,6 +21,9 @@ type WeaknessDashboardProps = {
   loading: boolean;
   historyAvailable: boolean;
   cloudEnabled: boolean;
+  subjects: Subject[];
+  topics: Topic[];
+  questions: ReviewerQuestion[];
   onOpenReviewer: () => void;
   onReviewWithAi: (topic: TopicMastery) => void;
   onPractice: (topic: TopicMastery) => void;
@@ -66,11 +69,16 @@ export default function WeaknessDashboard({
   loading,
   historyAvailable,
   cloudEnabled,
+  subjects,
+  topics,
+  questions,
   onOpenReviewer,
   onReviewWithAi,
   onPractice,
   onViewMistakes,
 }: WeaknessDashboardProps) {
+  const subjectById = useMemo(() => new Map(subjects.map((subject) => [subject.id, subject])), [subjects]);
+  const questionById = useMemo(() => new Map(questions.map((question) => [question.id, question])), [questions]);
   const [bookFilter, setBookFilter] = useState<ReviewerBook | "all">("all");
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -100,7 +108,7 @@ export default function WeaknessDashboard({
     }
     const uncategorized = [...legacyGroups.values()].map((items) => calculateTopicMastery(items));
     return [...builtIn, ...uncategorized];
-  }, [attempts]);
+  }, [attempts, subjectById, topics]);
 
   const bookMasteries = useMemo(() => {
     if (bookFilter === "all") return topicMasteries;
@@ -126,7 +134,7 @@ export default function WeaknessDashboard({
   const availableSubjects = useMemo(() => {
     if (bookFilter === "all") return subjects;
     return subjects.filter((s) => s.book === bookFilter);
-  }, [bookFilter]);
+  }, [bookFilter, subjects]);
 
   const filteredTopics = useMemo(() => {
     const needle = search.trim().toLowerCase();

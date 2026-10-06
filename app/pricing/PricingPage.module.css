@@ -1,0 +1,398 @@
+@import "../pro/ProPage.module.css";
+
+/* Detailed comparison table */
+.comparisonSection {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+  padding: clamp(24px, 4vw, 38px);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comparisonHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.comparisonHeader h2 {
+  margin: 0;
+  font-size: clamp(22px, 2.6vw, 28px);
+  letter-spacing: -.03em;
+  color: var(--ink);
+}
+
+.comparisonHeader p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.compTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 11.5px;
+}
+
+.compTable th,
+.compTable td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.compTable th {
+  font-size: 11px;
+  font-weight: 750;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  background: var(--surface-soft);
+}
+
+.compTable th:first-child {
+  border-top-left-radius: 12px;
+  width: 44%;
+}
+
+.compTable th:nth-child(2) {
+  width: 28%;
+  text-align: center;
+}
+
+.compTable th:last-child {
+  border-top-right-radius: 12px;
+  width: 28%;
+  text-align: center;
+  color: var(--green);
+}
+
+.compCategoryRow td {
+  background: var(--surface-tint);
+  font-weight: 800;
+  font-size: 11px;
+  color: var(--ink);
+  letter-spacing: .02em;
+  padding-top: 15px;
+  padding-bottom: 9px;
+}
+
+.compFeatureName {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.compFeatureDesc {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.compCell {
+  text-align: center;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.compCellPro {
+  text-align: center;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.checkMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.crossMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .compTable {
+    min-width: 480px;
+  }
+}
+
+/* Account-aware Plan Card Variants */
+.proCardActive {
+  border: 1.5px solid var(--green);
+  background: var(--paper);
+  box-shadow: 0 0 24px -6px color-mix(in srgb, var(--green) 30%, transparent), 0 10px 24px -10px rgba(0, 0, 0, .2);
+}
+
+.freeCardDimmed {
+  opacity: 0.88;
+  border-color: var(--line);
+}
+
+.freeCardDimmed:hover {
+  opacity: 1;
+}
+
+/* Status Badges */
+.currentPlanBadge {
+  position: absolute;
+  top: -12px;
+  right: 28px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 4px 12px;
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-size: 9px;
+  font-weight: 780;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.activePlanBadge {
+  position: absolute;
+  top: -12px;
+  right: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--green) 40%, transparent);
+  border-radius: 99px;
+  padding: 4px 12px;
+  background: var(--green-soft);
+  color: var(--badge-ink);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.activePlanBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.expiredBadge {
+  position: absolute;
+  top: -12px;
+  right: 28px;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 4px 12px;
+  background: var(--input);
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 780;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+/* Active Status Block inside Card */
+.activeStatusBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--green) 8%, var(--surface-soft));
+  border: 1px solid color-mix(in srgb, var(--green) 30%, var(--line));
+}
+
+.activeStatusRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 750;
+  color: var(--green);
+  line-height: 1.3;
+}
+
+.activeStatusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+
+.activeExpiryLabel {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.activeExpiryDate {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+/* Expired Status Block */
+.expiredStatusBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+}
+
+.expiredNotice {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 750;
+  color: var(--muted);
+}
+
+.expiredDate {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Interactive Action Buttons */
+.activeRenewCta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--green) 35%, var(--line));
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: none;
+  box-shadow: var(--neu-small);
+  transition: background-color .15s ease, border-color .15s ease, transform .12s ease, color .15s ease;
+}
+
+.activeRenewCta:hover {
+  background: var(--sidebar-active);
+  border-color: var(--green);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.activeRenewCta:active {
+  box-shadow: var(--neu-inset);
+  transform: scale(.99);
+}
+
+.currentPlanCta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.currentPlanCta:hover {
+  background: var(--surface-tint);
+  color: var(--ink);
+}
+
+/* Feature Included Badge */
+.includedTag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: 99px;
+  font-size: 9.5px;
+  font-weight: 700;
+  background: var(--green-soft);
+  color: var(--badge-ink);
+  letter-spacing: .02em;
+}
+
+.tableActivePill {
+  display: block;
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+/* Skeletons */
+.skeletonPrice {
+  height: 82px;
+  border-radius: 14px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  margin-bottom: 24px;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeletonCta {
+  height: 44px;
+  border-radius: 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonPrice,
+  .skeletonCta {
+    animation: none;
+    opacity: 0.5;
+  }
+  .activeRenewCta,
+  .currentPlanCta {
+    transition: none !important;
+  }
+}

@@ -1,5 +1,4 @@
 import rawContent from "./reviewerContent.json";
-import ciullaRawContent from "./ciullaContent.json";
 
 export type ReviewerBook = "Harr" | "Ciulla";
 
@@ -70,29 +69,20 @@ const content = rawContent as {
   questions: ReviewerQuestion[];
 };
 
-const ciullaContent = ciullaRawContent as {
-  subjects: Subject[];
-  topics: Topic[];
-  questions: ReviewerQuestion[];
-};
-
 export const harrSubjects: Subject[] = content.subjects.map((s) => ({ ...s, book: "Harr" as ReviewerBook }));
 export const harrTopics: Topic[] = content.topics.map((t) => ({ ...t, book: "Harr" as ReviewerBook }));
 export const harrQuestions: ReviewerQuestion[] = content.questions.map((q) => ({ ...q, book: "Harr" as ReviewerBook }));
 
-export const ciullaSubjects: Subject[] = ciullaContent.subjects.map((s) => ({ ...s, book: "Ciulla" as ReviewerBook }));
-export const ciullaTopics: Topic[] = ciullaContent.topics.map((t) => ({ ...t, book: "Ciulla" as ReviewerBook }));
-export const ciullaQuestions: ReviewerQuestion[] = ciullaContent.questions.map((q) => ({ ...q, book: "Ciulla" as ReviewerBook }));
+export const allSubjects: Subject[] = harrSubjects;
+export const allTopics: Topic[] = harrTopics;
+export const allQuestions: ReviewerQuestion[] = harrQuestions;
 
-export const allSubjects: Subject[] = [...harrSubjects, ...ciullaSubjects];
-export const allTopics: Topic[] = [...harrTopics, ...ciullaTopics];
-export const allQuestions: ReviewerQuestion[] = [...harrQuestions, ...ciullaQuestions];
+export const subjects: Subject[] = harrSubjects;
+export const topics: Topic[] = harrTopics;
+export const questions: ReviewerQuestion[] = harrQuestions;
 
-export const subjects: Subject[] = allSubjects;
-export const topics: Topic[] = allTopics;
-export const questions: ReviewerQuestion[] = allQuestions;
+export const subjectById = new Map(harrSubjects.map((subject) => [subject.id, subject]));
+export const topicById = new Map(harrTopics.map((topic) => [topic.id, topic]));
+export const questionById = new Map(harrQuestions.map((question) => [question.id, question]));
 
-export const subjectById = new Map(allSubjects.map((subject) => [subject.id, subject]));
-export const topicById = new Map(allTopics.map((topic) => [topic.id, topic]));
-export const questionById = new Map(allQuestions.map((question) => [question.id, question]));
 

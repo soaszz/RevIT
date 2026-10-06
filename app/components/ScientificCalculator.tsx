@@ -563,18 +563,22 @@ export default function ScientificCalculator() {
     if (!panel) return;
     const rect = panel.getBoundingClientRect();
     const pointerId = event.pointerId;
+    const startX = event.clientX;
     const startY = event.clientY;
+    const originX = rect.left;
     const originY = rect.top;
     const panelWidth = rect.width;
     const panelHeight = rect.height;
-    const rightMargin = window.innerWidth <= 760 ? 10 : 20;
-    const fixedX = Math.max(PANEL_GUTTER, window.innerWidth - panelWidth - rightMargin);
 
     const move = (moveEvent: PointerEvent) => {
       if (moveEvent.pointerId !== pointerId) return;
+      const minX = PANEL_GUTTER;
+      const maxX = Math.max(minX, window.innerWidth - panelWidth - PANEL_GUTTER);
+      const minY = PANEL_GUTTER;
+      const maxY = Math.max(minY, window.innerHeight - panelHeight - PANEL_GUTTER);
       setPosition({
-        x: fixedX,
-        y: Math.min(Math.max(PANEL_GUTTER, originY + moveEvent.clientY - startY), Math.max(PANEL_GUTTER, window.innerHeight - panelHeight - PANEL_GUTTER)),
+        x: Math.min(Math.max(minX, originX + moveEvent.clientX - startX), maxX),
+        y: Math.min(Math.max(minY, originY + moveEvent.clientY - startY), maxY),
       });
     };
     const stop = (endEvent: PointerEvent) => {
@@ -591,7 +595,7 @@ export default function ScientificCalculator() {
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", stop);
     window.addEventListener("pointercancel", stop);
-    setPosition({ x: fixedX, y: rect.top });
+    setPosition({ x: originX, y: originY });
     setDragging(true);
     event.preventDefault();
   };
@@ -906,7 +910,7 @@ export default function ScientificCalculator() {
             <button type="button" className="function-key compact-key" onClick={() => append("Ans")}>Ans</button>
             <button type="button" className="equals-key" onClick={calculate}>=</button>
           </div>
-            <p className="calculator-drag-note" id="calculator-resize-instructions">Drag up/down along the right side<span className="calculator-resize-note"> · drag the lower-right corner to resize</span></p>
+            <p className="calculator-drag-note" id="calculator-resize-instructions">Drag header to reposition anywhere<span className="calculator-resize-note"> · drag the lower-right corner to resize</span></p>
             </div>
           <button className="calculator-resize-handle" type="button" onPointerDown={startResize} onKeyDown={resizeWithKeyboard} aria-label="Resize calculator" aria-describedby="calculator-resize-instructions" title="Drag to resize; use arrow keys for precise control"><span aria-hidden="true">↘</span></button>
         </section>

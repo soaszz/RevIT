@@ -73,6 +73,25 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/pro",
+        destination: "/pricing",
+        permanent: false,
+      },
+      {
+        source: "/subscription",
+        destination: "/pricing",
+        permanent: false,
+      },
+      {
+        source: "/subscriptions",
+        destination: "/pricing",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
