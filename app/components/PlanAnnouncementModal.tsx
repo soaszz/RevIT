@@ -45,15 +45,9 @@ export interface PlanAnnouncementModalProps {
   variant: PlanModalVariant;
   onClose: () => void;
   onExplorePricing: () => void;
-  /**
-   * Allows interactive toggling between General and Gift views
-   * so you can inspect and approve both modal designs.
-   */
-  allowPreviewToggle?: boolean;
-  onToggleVariant?: (next: PlanModalVariant) => void;
   proExpiresAt?: string | null;
   recipientGreeting?: string;
-  previewRecipientKey?: string | null;
+  recipientUserId?: string | null;
 }
 
 export default function PlanAnnouncementModal({
@@ -61,24 +55,10 @@ export default function PlanAnnouncementModal({
   variant,
   onClose,
   onExplorePricing,
-  allowPreviewToggle = true,
-  onToggleVariant,
   proExpiresAt,
   recipientGreeting,
-  previewRecipientKey,
+  recipientUserId,
 }: PlanAnnouncementModalProps) {
-  const [activeVariant, setActiveVariant] = useState<PlanModalVariant>(variant);
-  const [selectedPreviewUser, setSelectedPreviewUser] = useState<string | null>(
-    previewRecipientKey ?? (variant === "gift" ? Object.keys(GIFTED_PRO_USERS)[0] : null)
-  );
-
-  useEffect(() => {
-    setActiveVariant(variant);
-    if (previewRecipientKey !== undefined) {
-      setSelectedPreviewUser(previewRecipientKey);
-    }
-  }, [variant, previewRecipientKey]);
-
   // Close on Escape key
   useEffect(() => {
     if (!isOpen) return;
@@ -93,23 +73,15 @@ export default function PlanAnnouncementModal({
 
   if (!isOpen) return null;
 
-  const handleVariantSwitch = (target: PlanModalVariant) => {
-    setActiveVariant(target);
-    onToggleVariant?.(target);
-  };
-
-  const selectedUserConfig = selectedPreviewUser ? GIFTED_PRO_USERS[selectedPreviewUser] : undefined;
-  const effectiveExpiryDate = selectedUserConfig?.expiresAt || proExpiresAt || "2028-12-31T23:59:59Z";
+  const userConfig = recipientUserId ? GIFTED_PRO_USERS[recipientUserId] : undefined;
+  const effectiveExpiryDate = userConfig?.expiresAt || proExpiresAt || "2028-12-31T23:59:59Z";
 
   const formattedExpiry = new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
     new Date(effectiveExpiryDate)
   );
 
-  const durationDesc = selectedUserConfig?.durationDesc || "for over 2 years (through end of 2028)";
-
-  const currentGreeting = selectedUserConfig
-    ? selectedUserConfig.greeting
-    : (recipientGreeting ?? "");
+  const durationDesc = userConfig?.durationDesc || "for over 2 years (through end of 2028)";
+  const currentGreeting = recipientGreeting || userConfig?.greeting || "";
 
   return (
     <div
@@ -122,47 +94,10 @@ export default function PlanAnnouncementModal({
       aria-labelledby="plan-modal-title"
     >
       <div className={styles.card}>
-        {/* Developer / Approval Preview Switcher Bar */}
-        {allowPreviewToggle && (
-          <div className={styles.previewBar}>
-            <span className={styles.previewLabel}>
-              <span>👀</span> Preview Mode:
-            </span>
-            <div className={styles.previewToggleGroup}>
-              <button
-                type="button"
-                className={`${styles.previewToggleBtn} ${activeVariant === "general" ? styles.active : ""}`}
-                onClick={() => {
-                  handleVariantSwitch("general");
-                  setSelectedPreviewUser(null);
-                }}
-              >
-                Existing Users (Free vs Pro)
-              </button>
-              {Object.entries(GIFTED_PRO_USERS).map(([id, config]) => {
-                const isSelected = activeVariant === "gift" && selectedPreviewUser === id;
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    className={`${styles.previewToggleBtn} ${isSelected ? styles.active : ""}`}
-                    onClick={() => {
-                      handleVariantSwitch("gift");
-                      setSelectedPreviewUser(id);
-                    }}
-                  >
-                    Preview: {config.name} ({config.greeting})
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
         {/* ================================================================= */}
-        {/* VARIANT A: GIFTED EARLY ACCESS FRIENDS (Pro until 2028)          */}
+        {/* VARIANT A: GIFTED EARLY ACCESS FRIENDS (Pro until 2028 / 2099)    */}
         {/* ================================================================= */}
-        {activeVariant === "gift" ? (
+        {variant === "gift" ? (
           <>
             <header className={styles.header}>
               <div className={styles.headerMain}>

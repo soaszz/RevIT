@@ -469,7 +469,6 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
   const [planAnnouncementOpen, setPlanAnnouncementOpen] = useState(false);
   const [planAnnouncementVariant, setPlanAnnouncementVariant] = useState<PlanModalVariant>("general");
-  const [planAnnouncementPreviewUser, setPlanAnnouncementPreviewUser] = useState<string | null>(null);
 
   function requestConfirm(title: string, message: string, confirmLabel: string, onConfirm: () => void) {
     setConfirmConfig({ isOpen: true, title, message, confirmLabel, action: () => {
@@ -551,44 +550,8 @@ useEffect(() => {
     localStorage.setItem("revit-offline-user", JSON.stringify(initialUser));
   }, [initialUser, offlineMode]);
 
-  // Existing users login modal (Free vs Pro) & Gifted Early Access modal (Pro until 2028)
+  // Existing users login modal (Free vs Pro update) & Gifted VIP modal (for Fia, Mich, Claire)
   useEffect(() => {
-    // 1. Immediate Preview override for cedrictv20@gmail.com or ?preview_modal
-    try {
-      const userEmail = initialUser?.email?.toLowerCase() || (() => {
-        try {
-          const raw = localStorage.getItem("revit-offline-user") || localStorage.getItem("revit-auth-user");
-          if (raw) return JSON.parse(raw)?.email?.toLowerCase();
-        } catch {}
-        return "";
-      })();
-      const isCedric = userEmail === "cedrictv20@gmail.com";
-      const params = new URLSearchParams(window.location.search);
-      const forcePreview = params.get("preview_modal");
-
-      if (isCedric || forcePreview) {
-        const previewTarget = forcePreview || "fia";
-        if (previewTarget === "fia") {
-          setPlanAnnouncementVariant("gift");
-          setPlanAnnouncementPreviewUser("bb717bd1-3473-487c-9658-1c6d239ed4d4");
-        } else if (previewTarget === "mich") {
-          setPlanAnnouncementVariant("gift");
-          setPlanAnnouncementPreviewUser("e85207e0-ce9b-4f96-93d2-879ff55d12ee");
-        } else if (previewTarget === "baby") {
-          setPlanAnnouncementVariant("gift");
-          setPlanAnnouncementPreviewUser("b5e8693f-4f7a-401f-8bdf-844169e75450");
-        } else if (previewTarget === "general") {
-          setPlanAnnouncementVariant("general");
-          setPlanAnnouncementPreviewUser(null);
-        } else {
-          setPlanAnnouncementVariant("gift");
-          setPlanAnnouncementPreviewUser("bb717bd1-3473-487c-9658-1c6d239ed4d4");
-        }
-        setPlanAnnouncementOpen(true);
-        return;
-      }
-    } catch {}
-
     if (cloudLoading) return;
     // Strictly existing users only: skip if brand new user who hasn't finished onboarding
     if (cloudProfile && !cloudProfile.onboarding_complete) return;
@@ -605,59 +568,15 @@ useEffect(() => {
       const hasSeen = localStorage.getItem(storageKey);
       if (!hasSeen) {
         setPlanAnnouncementVariant(isGifted ? "gift" : "general");
-        setPlanAnnouncementPreviewUser(isGifted ? currentUserId : null);
         setPlanAnnouncementOpen(true);
       }
     } catch {
       // Fallback
     }
-  }, [cloudLoading, initialUser?.id, initialUser?.email, cloudProfile?.onboarding_complete, preferences.mtap_onboarding_completed]);
-
-  // Global window trigger for immediate testing / approval:
-  // e.g. window.openPlanModal("fia"), ("mich"), ("baby"), ("gift"), or ("general")
-  useEffect(() => {
-    const handler = (event: Event) => {
-      const customEvt = event as CustomEvent<{ variant?: PlanModalVariant; recipient?: string }>;
-      const v = customEvt.detail?.variant || "general";
-      setPlanAnnouncementVariant(v);
-      if (customEvt.detail?.recipient) {
-        setPlanAnnouncementPreviewUser(customEvt.detail.recipient);
-      }
-      setPlanAnnouncementOpen(true);
-    };
-    window.addEventListener("open-plan-announcement", handler);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).openPlanModal = (target?: string) => {
-      if (target === "fia") {
-        setPlanAnnouncementVariant("gift");
-        setPlanAnnouncementPreviewUser("bb717bd1-3473-487c-9658-1c6d239ed4d4");
-      } else if (target === "mich") {
-        setPlanAnnouncementVariant("gift");
-        setPlanAnnouncementPreviewUser("e85207e0-ce9b-4f96-93d2-879ff55d12ee");
-      } else if (target === "baby") {
-        setPlanAnnouncementVariant("gift");
-        setPlanAnnouncementPreviewUser("b5e8693f-4f7a-401f-8bdf-844169e75450");
-      } else if (target === "gift") {
-        setPlanAnnouncementVariant("gift");
-        setPlanAnnouncementPreviewUser("bb717bd1-3473-487c-9658-1c6d239ed4d4");
-      } else {
-        setPlanAnnouncementVariant("general");
-        setPlanAnnouncementPreviewUser(null);
-      }
-      setPlanAnnouncementOpen(true);
-    };
-    return () => {
-      window.removeEventListener("open-plan-announcement", handler);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (window as any).openPlanModal;
-    };
-  }, []);
+  }, [cloudLoading, initialUser?.id, cloudProfile?.onboarding_complete, preferences.mtap_onboarding_completed]);
 
   const handleClosePlanAnnouncement = () => {
     setPlanAnnouncementOpen(false);
-    const userEmail = initialUser?.email?.toLowerCase();
-    if (userEmail === "cedrictv20@gmail.com") return;
-
     const currentUserId = initialUser?.id ?? "local";
     const isGifted = GIFTED_PRO_USER_IDS.includes(currentUserId);
     const storageKey = isGifted
@@ -3547,10 +3466,9 @@ useEffect(() => {
         onExplorePricing={() => {
           window.location.assign("/pricing");
         }}
-        onToggleVariant={(next) => setPlanAnnouncementVariant(next)}
         proExpiresAt={initialUser?.id && GIFTED_PRO_USERS[initialUser.id] ? GIFTED_PRO_USERS[initialUser.id].expiresAt : (entitlement.proExpiresAt || "2028-12-31T23:59:59Z")}
         recipientGreeting={initialUser?.id ? GIFTED_PRO_USERS[initialUser.id]?.greeting : undefined}
-        previewRecipientKey={planAnnouncementPreviewUser}
+        recipientUserId={initialUser?.id}
       />
           <CustomConfirm
         isOpen={confirmConfig.isOpen}

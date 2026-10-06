@@ -13,6 +13,19 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-10-1",
+    version: "v1.10.1",
+    date: "October 6, 2026",
+    type: "minor",
+    title: "Plan Announcement Refinements",
+    summary: "Streamlined plan announcement displays and ensured early access gift notices appear only for approved recipients.",
+    tags: ["Plans", "Pro", "UI"],
+    highlights: [
+      "Polished the new Free vs Pro announcement modal with clean presentation.",
+      "Secured early access gift notices so they display directly to intended recipients."
+    ]
+  },
+  {
     id: "update-v1-10-0",
     version: "v1.10.0",
     date: "October 6, 2026",
