@@ -1,0 +1,38 @@
+[
+  {
+    "name": "typecheck",
+    "exitCode": 2,
+    "seconds": 5.2,
+    "log": "docs/phase3n/local-completion-sprint/typecheck.log"
+  },
+  {
+    "name": "lint",
+    "exitCode": 1,
+    "seconds": 13.9,
+    "log": "docs/phase3n/local-completion-sprint/lint.log"
+  },
+  {
+    "name": "build",
+    "exitCode": 0,
+    "seconds": 14.2,
+    "log": "docs/phase3n/local-completion-sprint/build.log"
+  },
+  {
+    "name": "unit",
+    "exitCode": 0,
+    "seconds": 5,
+    "log": "docs/phase3n/local-completion-sprint/unit.log"
+  },
+  {
+    "name": "reviewer-content",
+    "exitCode": 0,
+    "seconds": 0.2,
+    "log": "docs/phase3n/local-completion-sprint/reviewer-content.log"
+  },
+  {
+    "name": "secrets",
+    "exitCode": 0,
+    "seconds": 44.7,
+    "log": "docs/phase3n/local-completion-sprint/secrets.log"
+  }
+]

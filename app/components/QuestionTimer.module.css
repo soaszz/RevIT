@@ -2,21 +2,13 @@
   position: relative;
   isolation: isolate;
   flex: 0 0 auto;
-  width: 112px;
-  height: 112px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   color: var(--green);
-  box-shadow: var(--neu-small);
-}
-
-.timer::before {
-  position: absolute;
-  z-index: -1;
-  inset: 12px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--paper) 91%, var(--surface-tint));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 6%, transparent);
-  content: "";
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .timer svg {
@@ -29,7 +21,7 @@
 .track,
 .progress {
   fill: none;
-  stroke-width: 8;
+  stroke-width: 10;
 }
 
 .track {
@@ -39,7 +31,7 @@
 .progress {
   stroke: currentColor;
   stroke-linecap: round;
-  transition: none;
+  transition: stroke-dashoffset 0.25s linear;
 }
 
 .value {
@@ -50,23 +42,16 @@
   justify-items: center;
   color: var(--ink);
   line-height: 1;
+  pointer-events: none;
 }
 
-.value strong {
+.timeNumber {
   color: var(--ink);
-  font-size: 29px;
-  font-weight: 770;
-  letter-spacing: -.055em;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
-}
-
-.value small {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 7px;
-  font-weight: 720;
-  letter-spacing: .08em;
-  text-transform: uppercase;
+  line-height: 1;
 }
 
 .approaching {
@@ -78,26 +63,41 @@
 }
 
 .paused {
-  opacity: .72;
+  opacity: 0.72;
 }
 
-
-@media (max-width: 760px) {
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
   .timer {
-    width: 96px;
-    height: 96px;
+    width: 46px;
+    height: 46px;
   }
 
-  .value strong {
-    font-size: 26px;
+  .timeNumber {
+    font-size: 15px;
   }
 }
 
-@media (max-width: 520px) {
+/* Mobile (<= 480px, including Galaxy Z Flip 320-360px) */
+@media (max-width: 480px) {
   .timer {
-    order: -1;
-    align-self: center;
-    width: 92px;
-    height: 92px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .timeNumber {
+    font-size: 14px;
+  }
+}
+
+/* Narrow Foldable (<= 340px) */
+@media (max-width: 340px) {
+  .timer {
+    width: 40px;
+    height: 40px;
+  }
+
+  .timeNumber {
+    font-size: 13px;
   }
 }

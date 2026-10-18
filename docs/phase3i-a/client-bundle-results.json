@@ -1,0 +1,7 @@
+{
+  "clientAssets": 36,
+  "protectedQuestions": 2848,
+  "probes": 14914,
+  "hits": [],
+  "scope": "Generated .next/static JS/JSON/source maps; distinctive protected strings, choice arrays, matching keys, and registry markers. Harr/public-shared strings excluded. Pattern scan is not a proof against every possible encoding."
+}

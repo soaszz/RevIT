@@ -1,0 +1,38 @@
+[
+  {
+    "name": "typecheck",
+    "exitCode": 0,
+    "seconds": 4.2,
+    "log": "docs/phase3i-b/typecheck.log"
+  },
+  {
+    "name": "lint",
+    "exitCode": 0,
+    "seconds": 29.3,
+    "log": "docs/phase3i-b/lint.log"
+  },
+  {
+    "name": "build",
+    "exitCode": 0,
+    "seconds": 24.2,
+    "log": "docs/phase3i-b/build.log"
+  },
+  {
+    "name": "unit",
+    "exitCode": 0,
+    "seconds": 7.7,
+    "log": "docs/phase3i-b/unit.log"
+  },
+  {
+    "name": "reviewer-content",
+    "exitCode": 0,
+    "seconds": 0.4,
+    "log": "docs/phase3i-b/reviewer-content.log"
+  },
+  {
+    "name": "secrets",
+    "exitCode": 0,
+    "seconds": 38.5,
+    "log": "docs/phase3i-b/secrets.log"
+  }
+]

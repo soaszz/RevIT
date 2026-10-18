@@ -1,0 +1,15 @@
+scratch/phase3d/backups/app/components/LeaderboardPage.tsx(4,44): error TS2307: Cannot find module '../content/reviewerContent' or its corresponding type declarations.
+scratch/phase3d/backups/app/components/LeaderboardPage.tsx(5,38): error TS2307: Cannot find module '../lib/domain' or its corresponding type declarations.
+scratch/phase3d/backups/app/components/LeaderboardPage.tsx(17,8): error TS2307: Cannot find module '../lib/leaderboard' or its corresponding type declarations.
+scratch/phase3d/backups/app/components/LeaderboardPage.tsx(19,30): error TS2307: Cannot find module '../lib/supabase/client' or its corresponding type declarations.
+scratch/phase3d/backups/app/components/LeaderboardPage.tsx(20,40): error TS2307: Cannot find module '../lib/xpConfig' or its corresponding type declarations.
+scratch/phase3d/backups/app/components/LeaderboardPage.tsx(21,34): error TS2307: Cannot find module './loading-ui/morphing-infinity' or its corresponding type declarations.
+scratch/phase3d/backups/app/components/LeaderboardPage.tsx(348,39): error TS7006: Parameter 'option' implicitly has an 'any' type.
+scratch/phase3d/backups/app/components/LeaderboardPage.tsx(432,45): error TS7006: Parameter 'opt' implicitly has an 'any' type.
+scratch/phase3d/backups/app/lib/cloudService.ts(15,8): error TS2307: Cannot find module './domain' or its corresponding type declarations.
+scratch/phase3d/backups/app/lib/cloudService.ts(16,64): error TS2307: Cannot find module './legal' or its corresponding type declarations.
+scratch/phase3d/backups/app/lib/cloudService.ts(17,36): error TS2307: Cannot find module './avatarValidation' or its corresponding type declarations.
+scratch/phase3d/backups/app/lib/cloudService.ts(18,64): error TS2307: Cannot find module './entitlements' or its corresponding type declarations.
+scratch/phase3d/backups/app/lib/leaderboardService.ts(2,35): error TS2307: Cannot find module '../content/reviewerContent' or its corresponding type declarations.
+scratch/phase3d/backups/app/lib/leaderboardService.ts(3,38): error TS2307: Cannot find module './domain' or its corresponding type declarations.
+scratch/phase3d/backups/app/lib/leaderboardService.ts(9,8): error TS2307: Cannot find module './leaderboard' or its corresponding type declarations.

@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-15",
+  "reference": "docs/phase3d/content-integrity.json",
+  "checks": [
+    {
+      "file": "app/content/reviewerContent.json",
+      "questions": 1593,
+      "sha256": "81f2ebf9a1db5d9e3fc50bb3353eb0f0a6a025c78416c78a8eade1c8b502537d",
+      "unchanged": true,
+      "protectedIdsUnchanged": true,
+      "protectedCount": 32
+    },
+    {
+      "file": "app/content/ciullaContent.json",
+      "questions": 1890,
+      "sha256": "eb8dacb6dd5f70aae064cc99b742cc1e3f1ac013b5e000d6842761f926b2954d",
+      "unchanged": true,
+      "protectedIdsUnchanged": true,
+      "protectedCount": 13
+    },
+    {
+      "file": "app/content/rodakContent.json",
+      "questions": 491,
+      "sha256": "bef8e50d3a23c467e4bf7613d5332a87c6699da61d6c291778a86d368c3ab070",
+      "unchanged": true,
+      "protectedIdsUnchanged": true,
+      "protectedCount": 2
+    },
+    {
+      "file": "app/content/strasingerContent.json",
+      "questions": 467,
+      "sha256": "69a2feb7911a111e9fe3a35f83d0d2c7d2124c291971a8b3da3e848c2a435601",
+      "unchanged": true,
+      "protectedIdsUnchanged": true,
+      "protectedCount": 42
+    }
+  ],
+  "assetCount": 38,
+  "assetsUnchanged": true
+}

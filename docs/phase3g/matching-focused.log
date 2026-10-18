@@ -1,0 +1,17 @@
+✔ exact 16-ID allowlist matches canonical matching structures and Phase 3E evidence (2.7804ms)
+✔ normalization covers 21, 108, 22875, values above smallint, small matching codes, and NULL (0.3977ms)
+✔ ordinary 0 and 3 pass through; direct Rodak payloads preserve correctness, stable IDs and metadata (0.8256ms)
+✔ future Strasinger sender uses NULL with mocked capability; real cloud-sync flag remains disabled (156.4979ms)
+✔ legacy matching queues survive failures and missing acknowledgments, then retry once successfully (0.9289ms)
+✔ restored local history migrates through the same boundary and only marks acknowledged completion (0.4523ms)
+✔ NULL cloud answers preserve analytics, leaderboard counts and mistake repetition without changing local scoring (21.7062ms)
+✔ RPC patch changes only the exact-ID validation condition and keeps pre-feature rollback and security hardening (5.1619ms)
+✔ actual local merge keeps encoded responses over cloud NULL; skip source contains no attempt write (7.8704ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1142.0673

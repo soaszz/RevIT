@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "entryFiles": 426,
+  "exactAuthorizedEdits": 9,
+  "unexpected": [],
+  "allMigrationsUnchanged": true,
+  "allExistingRollbacksUnchanged": true,
+  "historicalReportsUnchanged": true,
+  "componentSourceMarkupAndStylesUnchanged": true,
+  "canonicalGraderUnchanged": true,
+  "historicalDocumentationBytesPreserved": true
+}

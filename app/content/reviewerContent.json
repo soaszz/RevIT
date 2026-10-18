@@ -2858,7 +2858,8 @@
         "fileName": "Clinical Chemistry.pdf",
         "page": 30,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "clinical-chemistry-6-2-014",
@@ -3318,7 +3319,8 @@
         "fileName": "Clinical Chemistry.pdf",
         "page": 37,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "clinical-chemistry-6-2-037",
@@ -5778,7 +5780,8 @@
         "fileName": "Clinical Chemistry.pdf",
         "page": 79,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "clinical-chemistry-6-4-020",
@@ -10438,7 +10441,8 @@
         "fileName": "Clinical Chemistry.pdf",
         "page": 156,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "clinical-chemistry-6-8-018",
@@ -12418,7 +12422,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 1,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "hematology-1-1-002",
@@ -13058,7 +13063,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 9,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "hematology-1-1-034",
@@ -13098,7 +13104,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 9,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "hematology-1-2-001",
@@ -14378,7 +14385,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 28,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "hematology-1-6-001",
@@ -14738,7 +14746,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 34,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "hematology-1-6-019",
@@ -15078,7 +15087,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 40,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "hematology-1-7-012",
@@ -15278,7 +15288,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 42,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "hematology-1-7-022",
@@ -16241,7 +16252,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 67,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-1-024",
@@ -16321,7 +16333,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 68,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-1-028",
@@ -17421,7 +17434,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 86,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-2-053",
@@ -18581,7 +18595,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 108,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-4-029",
@@ -18881,7 +18896,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 115,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-5-002",
@@ -18901,7 +18917,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 115,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-5-003",
@@ -18941,7 +18958,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 116,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-5-005",
@@ -19021,7 +19039,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 116,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-5-009",
@@ -19201,7 +19220,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 119,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-5-018",
@@ -19701,7 +19721,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 128,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-5-043",
@@ -19721,7 +19742,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 128,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-5-044",
@@ -20141,7 +20163,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 135,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-6-009",
@@ -20161,7 +20184,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 135,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-6-010",
@@ -20381,7 +20405,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 139,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-6-021",
@@ -20701,7 +20726,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 145,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-7-010",
@@ -20781,7 +20807,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 146,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-7-014",
@@ -20901,7 +20928,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 148,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-7-020",
@@ -21021,7 +21049,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 150,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-7-026",
@@ -21201,7 +21230,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 153,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-8-009",
@@ -21521,7 +21551,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 159,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-8-025",
@@ -21541,7 +21572,8 @@
         "fileName": "HEMA AND BACTE.pdf",
         "page": 159,
         "kind": "Official supplied MCQ reviewer"
-      }
+      },
+      "disableShuffle": true
     },
     {
       "id": "bacteriology-8-8-026",

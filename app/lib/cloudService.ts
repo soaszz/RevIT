@@ -16,6 +16,8 @@ import type {
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "./legal";
 import { validateAvatarFile } from "./avatarValidation";
 import { FREE_ENTITLEMENT, type SubscriptionEntitlement } from "./entitlements";
+import { isCloudSyncAllowedForQuestion } from "./cloudSyncGate";
+import { normalizeCloudSelectedAnswer } from "./matchingAttemptPersistence";
 
 const PROFILE_COLUMNS = "id,username,first_name,avatar_url,onboarding_complete,terms_accepted_at,terms_version,privacy_accepted_at,privacy_version";
 
@@ -198,7 +200,7 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
       } : null,
     };
   })();
-  const [profile, grades, activity, exams, preferences, reinforcement, attempts, entitlement, customGradebooks] = await Promise.all([
+  const [profile, grades, activity, exams, preferences, reinforcement, attempts, entitlement, customGradebooks, pendingActivation] = await Promise.all([
     client.from("profiles").select(`${PROFILE_COLUMNS},plan,pro_started_at,pro_expires_at`).eq("id", userId).maybeSingle()
       .then((res) => res.error ? client.from("profiles").select(PROFILE_COLUMNS).eq("id", userId).maybeSingle() : res),
     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
@@ -211,6 +213,18 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
       .order("answered_at", { ascending: false }).limit(1000),
     client.rpc("get_my_entitlement"),
     loadCustomGradebooks(client, userId).catch(() => []),
+    Promise.resolve(
+      client
+        .from("pro_activation_notifications")
+        .select("id,source,plan,duration_days,pro_expires_at,custom_message,created_at")
+        .eq("user_id", userId)
+        .is("acknowledged_at", null)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+    )
+      .then((res: any) => (res?.error ? null : res?.data))
+      .catch(() => null),
   ]);
   const failure = [profile, grades, activity, exams, preferences].find((result) => result.error)?.error;
   if (failure) throw new Error(failure.message);
@@ -233,14 +247,36 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     exams: (exams.data ?? []) as ExamSchedule[],
     preferences: preferences.data as UserPreferences | null,
     reinforcement: (reinforcement.error ? [] : reinforcement.data ?? []) as QuestionReinforcement[],
-    attempts: (attempts.error ? [] : attempts.data ?? []).map((row) => questionAttemptFromRow(row as QuestionAttemptRow)),
+    attempts: (attempts.error ? [] : attempts.data ?? []).map((row: any) => questionAttemptFromRow(row as QuestionAttemptRow)),
     attemptHistoryAvailable: !attempts.error,
     entitlement: subscriptionEntitlement(entitlement.data),
     customGradebooks: (customGradebooks ?? []) as CustomGradebook[],
+    pendingActivation: pendingActivation as any,
   };
 }
 
+export async function acknowledgeProActivation(client: SupabaseClient, notificationId: string) {
+  try {
+    const { error } = await client
+      .from("pro_activation_notifications")
+      .update({ acknowledged_at: new Date().toISOString() })
+      .eq("id", notificationId);
+    if (error) {
+      await fetch("/api/notifications/acknowledge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notificationId }),
+      }).catch(() => {});
+    }
+  } catch {
+    // Non-blocking
+  }
+}
+
 export async function saveQuestionAttempt(client: SupabaseClient, attempt: QuestionAttempt) {
+  if (!isCloudSyncAllowedForQuestion(attempt.questionId, attempt.subjectId, attempt.topicId)) {
+    throw new Error("Strasinger cloud synchronization is disabled.");
+  }
   const { data, error } = await client.rpc("record_question_attempt", {
     p_id: attempt.id,
     p_question_id: attempt.questionId,
@@ -250,7 +286,7 @@ export async function saveQuestionAttempt(client: SupabaseClient, attempt: Quest
     p_topic_name: attempt.topicName,
     p_subtopic: attempt.subtopic,
     p_difficulty: attempt.difficulty,
-    p_selected_answer: attempt.selectedAnswer,
+    p_selected_answer: normalizeCloudSelectedAnswer(attempt.questionId, attempt.selectedAnswer),
     p_is_correct: attempt.correct,
     p_review_mode: attempt.reviewMode,
     p_session_id: attempt.sessionId,
@@ -275,14 +311,15 @@ export async function migrateLocalQuestionAttempts(
     localStorage.setItem(marker, "complete");
     return;
   }
-  for (const attempt of [...unmigrated].sort((a, b) => a.timestamp.localeCompare(b.timestamp))) {
+  const eligible = unmigrated.filter((a) => isCloudSyncAllowedForQuestion(a.questionId, a.subjectId, a.topicId));
+  for (const attempt of [...eligible].sort((a, b) => a.timestamp.localeCompare(b.timestamp))) {
     try {
       await saveQuestionAttempt(client, attempt);
     } catch {
       return;
     }
   }
-  localStorage.setItem(marker, "complete");
+  if (eligible.length === unmigrated.length) localStorage.setItem(marker, "complete");
 }
 
 function questionAttemptQueueKey(userId: string) {
@@ -290,6 +327,7 @@ function questionAttemptQueueKey(userId: string) {
 }
 
 export function queueQuestionAttempt(userId: string, attempt: QuestionAttempt) {
+  if (!isCloudSyncAllowedForQuestion(attempt.questionId, attempt.subjectId, attempt.topicId)) return;
   try {
     const key = questionAttemptQueueKey(userId);
     const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as QuestionAttempt[];
@@ -315,6 +353,7 @@ function reinforcementQueueKey(userId: string) {
 }
 
 export function queueQuestionReinforcement(userId: string, questionId: string, reinforcementLevel: number) {
+  if (!isCloudSyncAllowedForQuestion(questionId)) return;
   try {
     const key = reinforcementQueueKey(userId);
     const queued = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, number>;
@@ -340,6 +379,10 @@ export async function flushQuestionReinforcementQueue(client: SupabaseClient, us
   const entries = Object.entries(queued);
   for (let index = 0; index < entries.length; index += 1) {
     const [questionId, reinforcementLevel] = entries[index];
+    if (!isCloudSyncAllowedForQuestion(questionId)) {
+      failed.add(questionId);
+      continue;
+    }
     try { await saveQuestionReinforcement(client, userId, questionId, reinforcementLevel); }
     catch {
       entries.slice(index).forEach(([remainingQuestionId]) => failed.add(remainingQuestionId));
@@ -359,6 +402,11 @@ export async function flushQuestionAttemptQueue(client: SupabaseClient, userId: 
   const queued = JSON.parse(localStorage.getItem(key) ?? "[]") as QuestionAttempt[];
   const failed = new Set<string>();
   for (let index = 0; index < queued.length; index += 1) {
+    const attempt = queued[index];
+    if (!isCloudSyncAllowedForQuestion(attempt.questionId, attempt.subjectId, attempt.topicId)) {
+      failed.add(attempt.id);
+      continue;
+    }
     try { await saveQuestionAttempt(client, queued[index]); }
     catch {
       queued.slice(index).forEach((attempt) => failed.add(attempt.id));
@@ -446,6 +494,9 @@ export async function saveQuestionReinforcement(
   questionId: string,
   reinforcementLevel: number,
 ) {
+  if (!isCloudSyncAllowedForQuestion(questionId)) {
+    throw new Error("Strasinger cloud synchronization is disabled.");
+  }
   if (reinforcementLevel <= 0) {
     const { error } = await client.from("question_reinforcement")
       .delete().eq("user_id", userId).eq("question_id", questionId);
@@ -491,7 +542,8 @@ export async function migrateLocalActivity(
 ) {
   const marker = `revit-cloud-migrated-v1:${userId}`;
   if (localStorage.getItem(marker) === "complete") return;
-  for (const attempt of attempts) {
+  const eligible = attempts.filter((a) => isCloudSyncAllowedForQuestion(a.questionId, a.subjectId));
+  for (const attempt of eligible) {
     const date = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" })
       .format(new Date(attempt.timestamp));
     if (!attempt.id) continue;
@@ -503,7 +555,7 @@ export async function migrateLocalActivity(
       subject: subjectName(attempt.subjectId),
     });
   }
-  localStorage.setItem(marker, "complete");
+  if (eligible.length === attempts.length) localStorage.setItem(marker, "complete");
 }
 
 export function queueActivity(input: Parameters<typeof recordActivity>[1]) {

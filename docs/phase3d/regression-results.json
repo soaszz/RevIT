@@ -1,0 +1,38 @@
+[
+  {
+    "name": "lint",
+    "exitCode": 0,
+    "seconds": 18,
+    "log": "docs/phase3d/lint.log"
+  },
+  {
+    "name": "unit",
+    "exitCode": 0,
+    "seconds": 4.5,
+    "log": "docs/phase3d/unit.log"
+  },
+  {
+    "name": "reviewer-content",
+    "exitCode": 0,
+    "seconds": 0.4,
+    "log": "docs/phase3d/reviewer-content.log"
+  },
+  {
+    "name": "secrets",
+    "exitCode": 0,
+    "seconds": 28.8,
+    "log": "docs/phase3d/secrets.log"
+  },
+  {
+    "name": "typecheck",
+    "exitCode": 0,
+    "seconds": 3.7,
+    "log": "docs/phase3d/typecheck.log"
+  },
+  {
+    "name": "build",
+    "exitCode": 0,
+    "seconds": 11.5,
+    "log": "docs/phase3d/build.log"
+  }
+]

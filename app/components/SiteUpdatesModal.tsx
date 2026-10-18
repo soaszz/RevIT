@@ -200,21 +200,8 @@ export default function SiteUpdatesModal({
         <footer className="updates-footer">
           <div className="updates-footer-copy">
             <span>RevIT Platform {SITE_UPDATES[0]?.version ?? "v1.7.3"}</span>
-            <span className="footer-dot">•</span>
-            <span>Continuously updated for Philippine MTAP &amp; Board review</span>
           </div>
           <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-            <button
-              type="button"
-              className="text-button quiet"
-              style={{ fontSize: "11px", padding: "4px 8px" }}
-              onClick={() => {
-                onClose();
-                window.dispatchEvent(new CustomEvent("open-plan-announcement", { detail: { variant: "general" } }));
-              }}
-            >
-              Preview Plans Modal
-            </button>
             <button type="button" className="secondary-button" onClick={onClose}>
               Close
             </button>

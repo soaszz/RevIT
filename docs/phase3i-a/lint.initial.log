@@ -1,0 +1,174 @@
+
+> revit-site@0.1.0 lint
+> eslint . --ignore-pattern dist --ignore-pattern .next
+
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\RevITApp.tsx
+     8:28   warning  'XpProgress' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+    11:8    warning  'Flashcards' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+    15:8    warning  'LibrarySearch' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    28:8    warning  'MobileReviewBar' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+    33:8    warning  'StudyCalendar' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    89:10   warning  'ALL_MAJORS_CATEGORY' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+    89:97   warning  'MTAP_1_CATEGORY' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+    89:114  warning  'OTHER_MAJORS_CATEGORY' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+    89:142  warning  'UnifiedSubject' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   149:3    warning  'CIULLA_TOTAL_QUESTIONS' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   155:3    warning  'RODAK_TOTAL_QUESTIONS' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   161:3    warning  'STRASINGER_TOTAL_QUESTIONS' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   326:10   warning  'getBookBadgeStyle' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   382:7    warning  'chatSuggestions' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                              @typescript-eslint/no-unused-vars
+   397:10   warning  'toneFor' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   457:10   warning  'expandedSubjectIds' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                           @typescript-eslint/no-unused-vars
+   458:10   warning  'expandedBookEditionKeys' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   678:10   warning  'premiumContentLoading' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   679:10   warning  'premiumContentError' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                          @typescript-eslint/no-unused-vars
+   863:6    warning  React Hook useEffect has a missing dependency: 'cloudProfile'. Either include it or remove the dependency array                                                                                                                                                         react-hooks/exhaustive-deps
+   996:6    warning  React Hook useEffect has missing dependencies: 'questionById' and 'topicById'. Either include them or remove the dependency array                                                                                                                                       react-hooks/exhaustive-deps
+  1239:6    warning  React Hook useEffect has a missing dependency: 'subjectById'. Either include it or remove the dependency array                                                                                                                                                          react-hooks/exhaustive-deps
+  1337:9    warning  'handleFlashcardReviewingChange' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                               @typescript-eslint/no-unused-vars
+  1512:6    warning  React Hook useMemo has missing dependencies: 'subjects' and 'topics'. Either include them or remove the dependency array                                                                                                                                                react-hooks/exhaustive-deps
+  1529:6    warning  React Hook useMemo has a missing dependency: 'topics'. Either include it or remove the dependency array                                                                                                                                                                 react-hooks/exhaustive-deps
+  1536:9    warning  'subjectSections' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  1587:7    warning  React Hook useMemo has a missing dependency: 'topics'. Either include it or remove the dependency array                                                                                                                                                                 react-hooks/exhaustive-deps
+  1625:9    warning  'sessionUniqueQuestionCount' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  1660:12   warning  'toggleSubjectExpanded' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  1668:12   warning  'toggleBookEditionExpanded' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  1870:6    warning  React Hook useEffect has a missing dependency: 'clearRecentSession'. Either include it or remove the dependency array                                                                                                                                                   react-hooks/exhaustive-deps
+  2810:9    warning  'selectedTopicNames' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  2817:9    warning  'activeAiChat' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+  2822:9    warning  'currentSessionTopicNames' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                     @typescript-eslint/no-unused-vars
+  2823:9    warning  'currentSessionSubjects' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  4371:11   warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\admin\AdminPanel.tsx
+   57:22  warning  'setCustomDays' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+   95:17  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  130:19  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  154:17  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  337:17  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  371:19  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  394:17  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  410:19  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+  439:9   warning  'isNoteUnchanged' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  803:72  warning  Unexpected any. Specify a different type                                                    @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\api\admin\note\route.ts
+  18:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\api\admin\search\route.ts
+  34:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\api\admin\subscription\route.ts
+    9:71  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   30:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\api\admin\user\route.ts
+  35:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\api\internal\revit-control\note\route.ts
+  17:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  32:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\api\internal\revit-control\subscription\route.ts
+  17:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  50:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\api\notifications\acknowledge\route.ts
+  15:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\Flashcards.tsx
+   68:3   warning  'onSelectBook' is defined but never used. Allowed unused args must match /^_/u                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  655:78  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination
+  676:44  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination  @next/next/no-location-assign-relative-destination
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\GradesPage.tsx
+   18:3  warning  'calculateGrade' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                   @typescript-eslint/no-unused-vars
+  248:9  warning  The 'activeSimCategories' conditional could make the dependencies of useEffect Hook (at line 260) change on every render. To fix this, wrap the initialization of 'activeSimCategories' in its own useMemo() Hook  react-hooks/exhaustive-deps
+  248:9  warning  The 'activeSimCategories' conditional could make the dependencies of useMemo Hook (at line 268) change on every render. To fix this, wrap the initialization of 'activeSimCategories' in its own useMemo() Hook    react-hooks/exhaustive-deps
+  248:9  warning  The 'activeSimCategories' conditional could make the dependencies of useMemo Hook (at line 279) change on every render. To fix this, wrap the initialization of 'activeSimCategories' in its own useMemo() Hook    react-hooks/exhaustive-deps
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\LandingFlashcardDemo.tsx
+  14:9  warning  'cardId' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\MatchingQuestion.tsx
+  49:19  warning  'isWrong' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\PlanAnnouncementModal.tsx
+  3:21  warning  'useState' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\ProActivationModal.tsx
+  52:6  warning  React Hook useEffect has a missing dependency: 'handleDismiss'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\ProgressPage.tsx
+    3:8   warning  'React' is defined but never used. Allowed unused vars must match /^_/u                 @typescript-eslint/no-unused-vars
+  722:21  warning  'unifiedSubj' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\ReviewLibrary.tsx
+  3:8  warning  'React' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\SidebarTooltip.tsx
+  3:8  warning  'React' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\StudyActivityHeatmap.tsx
+   5:40  warning  'dateKeyInTimeZone' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  48:3   warning  'timeZone' is defined but never used. Allowed unused args must match /^_/u            @typescript-eslint/no-unused-vars
+  50:3   warning  'onViewFullCalendar' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\StudyCalendar.tsx
+  16:57  warning  'intensityFor' is defined but never used. Allowed unused vars must match /^_/u               @typescript-eslint/no-unused-vars
+  99:9   warning  'selectedPractice' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\StudyPlanner.tsx
+     6:3   warning  'STUDY_PLAN_CATEGORIES' is defined but never used. Allowed unused vars must match /^_/u                         @typescript-eslint/no-unused-vars
+    29:8   warning  'ExpandedPlannerItem' is defined but never used. Allowed unused vars must match /^_/u                           @typescript-eslint/no-unused-vars
+    43:3   warning  'TIMETABLE_START_HOUR' is defined but never used. Allowed unused vars must match /^_/u                          @typescript-eslint/no-unused-vars
+    44:3   warning  'TIMETABLE_HOURS' is defined but never used. Allowed unused vars must match /^_/u                               @typescript-eslint/no-unused-vars
+   264:6   warning  React Hook useEffect has a missing dependency: 'plannerMode'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   419:9   warning  'ensurePlanForDate' is assigned a value but never used. Allowed unused vars must match /^_/u                    @typescript-eslint/no-unused-vars
+  1839:99  warning  Unexpected any. Specify a different type                                                                        @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\progression\MissionsModal.tsx
+  3:8  warning  'React' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\progression\ProgressionSummaryCard.tsx
+  3:8  warning  'React' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\components\progression\ProgressionToast.tsx
+  3:8  warning  'React' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\lib\admin\adminService.ts
+   87:57   warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  201:17   warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  215:72   warning  'profileErr' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  215:114  warning  'histErr' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  250:79   warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  274:17   warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\lib\aiGradeAssistant.ts
+  14:8  warning  'GradeSubject' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  15:8  warning  'GradeValues' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\lib\cloudService.ts
+  226:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  250:69  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  254:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  628:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  678:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\lib\gradeCalculator.ts
+  264:9  warning  'targetSummary' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\lib\progression\progressionEngine.ts
+  4:37  warning  'levelTitle' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\app\pricing\PricingContent.tsx
+  82:9  warning  'isLoggedOut' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts
+  22:5  error  Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+
+✖ 105 problems (1 error, 104 warnings)
+

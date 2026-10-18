@@ -1,0 +1,17 @@
+✔ trusted adapter requires authenticated identity and rejects forged fields (519.4206ms)
+✔ canonical grading, attribution, digest and matching NULL are server derived (457.5711ms)
+✔ unknown IDs, invalid matching, skip, duplicates and unsupported versions fail before writes (287.146ms)
+✔ Free cannot create Pro sessions; Strasinger is blocked even for Pro (262.4445ms)
+✔ expired Pro, expired session, account switching and missing ownership retain pending work (93.8471ms)
+✔ durable identical retry returns original acknowledgment; legacy and changed responses conflict (110.8252ms)
+✔ missing/false acknowledgment and database conflicts are never reported as durable success (132.3471ms)
+✔ Rodak adapter resolves all 34 exact chapter mappings without source invention (208.959ms)
+✔ migration and rollback fail closed and preserve prior files (static checks only) (315.8859ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3178.0052

@@ -1,0 +1,228 @@
+.matchingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  min-width: 0;
+  margin-top: 12px;
+}
+
+.bankSection,
+.statementsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+
+.countMeta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.bankGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.bankCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 70%, transparent);
+  min-width: 0;
+}
+
+.bankLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--green);
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.bankText {
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.statementList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.statementCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper) 50%, transparent);
+  min-width: 0;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.cardCorrect {
+  border-color: color-mix(in srgb, var(--green) 40%, var(--line));
+  background: color-mix(in srgb, var(--green-soft) 25%, var(--paper));
+}
+
+.cardWrong {
+  border-color: color-mix(in srgb, var(--danger) 40%, var(--line));
+  background: color-mix(in srgb, var(--danger) 8%, var(--paper));
+}
+
+.statementContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.statementIndex {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--muted);
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+
+.statementText {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.statementControl {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  width: 100%;
+}
+
+.selectInput {
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--input);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.selectInput:focus-visible {
+  border-color: var(--green);
+  outline: 2px solid var(--green);
+  outline-offset: 1px;
+}
+
+.selectInput:disabled {
+  opacity: 0.85;
+  cursor: default;
+}
+
+.feedbackRow {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.feedbackCorrect {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--green);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.feedbackWrong {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--danger);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 680px) {
+  .statementCard {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .statementControl {
+    width: 100%;
+  }
+
+  .bankGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .matchingContainer {
+    gap: 16px;
+  }
+
+  .statementCard {
+    padding: 8px 10px;
+  }
+
+  .statementText {
+    font-size: 0.86rem;
+  }
+
+  .selectInput {
+    font-size: 0.84rem;
+    padding: 6px 10px;
+  }
+}

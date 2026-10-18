@@ -1,0 +1,17 @@
+{
+  "supabase/migrations/202610160027_trusted_cutover_and_attempt_numbering.sql": "aff77404186a13eedde3c1ebe0475f43202d7339bc49f4cd811745dee4148589",
+  "supabase/migrations/202610170028_atomic_study_completion.sql": "0e3ab7f493080f252ca95dfb4a983e0566ba1d67f29ba107d662ee207796f049",
+  "supabase/rollbacks/202610170028_atomic_study_completion_rollback.sql": "883b6b333547d77e62896a6031acd8cfe15d06a69bb37722619a37f4e567ee27",
+  "supabase/tests/atomic_study_completion_fixture.sql": "66eb9e0961f06b825acec2dc2e8f204e311e99a3f68ab8d525c7a438383e26e0",
+  "supabase/tests/atomic_study_completion_verification.sql": "67e7931b45aae8093a24980a6587df3c3c1c0f0e0dba5031f4411391f233c28d",
+  "supabase/tests/atomic_study_completion_snapshot.sql": "ef426699a3e34e4c177edc40783874ead06d0106cc7ce152f360d6dc97323cab",
+  "scripts/phase3o/staging-validation.mjs": "48ac7d47e865a56a4ed41b5a5cb2466a3a3d545b0a392a86b8423a75c613de8a",
+  "docs/phase3n/phase3n-n/COVERAGE_READ_ONLY_RECHECK.psql": "b2ea404c69abdcc2a60a7e18b6e0936d9ccb29618866d2c850caeda00ba62f97",
+  "docs/phase3n/phase3n-n/automated-read-only-handshake.mjs": "a1ee786f6bff0024ce4d88455132fbf6c710f155f09d21cc3d9bd1067d881712",
+  "docs/phase3n/phase3n-n/EXECUTION_PACK.md": "8ca23d28ced6a84c5d603629fffeceaf387c7b44810f5449d40c26f170c03a90",
+  "docs/phase3n/phase3n-n/execute-scenarios-6-12.mjs": "cf5ffd0915a750b82d5d6d6c1a84fd61517b0e8a49b67e7c0a7c23df410921ff",
+  "scratch/phase3n-m2-cli-workspace/bin/supabase.exe": "e0216601cb495fab7f583dd1dd53a4954c40d73726ffcb35f7b5429eda795bf6",
+  "scratch/phase3n-n2-evidence/coverage-readonly-Catalog-20261016T150743557Z-768ad107.log": "9695110c72a9e8e6a9405012e2aaeef3521456aac4bfffaec0d90b380359f756",
+  "scratch/phase3n-n2-evidence/archives/recovered-6d2d9276-20261017T043455238Z-4e19355f-3564-471d-a433-ed0b892777b4/baseline.json": "13e97505f6d89e8acb14890a4afdb1941eb7d61882f1cd814aa93fa9010c8545",
+  "scratch/phase3n-n2-evidence/archives/recovered-6d2d9276-20261017T043455238Z-4e19355f-3564-471d-a433-ed0b892777b4/manifest.json": "d2bc9d38e616b05908377974cd334744abac9962c3c85a8220577a1b48be680e"
+}

@@ -6,7 +6,7 @@ import { isTransientAuthError, retryAuthRequest } from "./retryAuth";
 const PUBLIC_PATHS = ["/auth", "/terms", "/privacy", "/pricing", "/pro", "/subscription", "/subscriptions", "/offline", "/sw.js", "/manifest.webmanifest", "/icon", "/api/chat"];
 
 function isPublic(pathname: string) {
-  return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  return pathname.startsWith("/api/") || PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 }
 
 export async function updateSession(request: NextRequest, security: {

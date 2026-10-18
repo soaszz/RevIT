@@ -1,0 +1,51 @@
+{
+  "created": [
+    "docs/phase3n/phase3n-k/REPORT.md",
+    "docs/phase3n/phase3n-k/authorized-changes.json",
+    "docs/phase3n/phase3n-k/baseline.json",
+    "docs/phase3n/phase3n-k/build.initial.log",
+    "docs/phase3n/phase3n-k/build.log",
+    "docs/phase3n/phase3n-k/content-integrity.json",
+    "docs/phase3n/phase3n-k/cutover.log",
+    "docs/phase3n/phase3n-k/files.json",
+    "docs/phase3n/phase3n-k/focused-results.json",
+    "docs/phase3n/phase3n-k/focused.log",
+    "docs/phase3n/phase3n-k/focused.red.log",
+    "docs/phase3n/phase3n-k/genuine-font-build.json",
+    "docs/phase3n/phase3n-k/integration.log",
+    "docs/phase3n/phase3n-k/lint.log",
+    "docs/phase3n/phase3n-k/preservation-results.json",
+    "docs/phase3n/phase3n-k/privilege-checklist.sql",
+    "docs/phase3n/phase3n-k/regression-results.json",
+    "docs/phase3n/phase3n-k/reviewer-content.log",
+    "docs/phase3n/phase3n-k/secret-detector-baseline.sha256",
+    "docs/phase3n/phase3n-k/secret-history-stream.log",
+    "docs/phase3n/phase3n-k/secrets.initial.log",
+    "docs/phase3n/phase3n-k/secrets.log",
+    "docs/phase3n/phase3n-k/typecheck.initial.log",
+    "docs/phase3n/phase3n-k/typecheck.log",
+    "docs/phase3n/phase3n-k/unit.log",
+    "scripts/phase3n/cutover-checks.mjs",
+    "scripts/phase3n/cutover-no-network.cjs",
+    "supabase/migrations/202610160027_trusted_cutover_and_attempt_numbering.sql",
+    "supabase/rollbacks/202610160027_trusted_cutover_and_attempt_numbering_rollback.sql",
+    "tests/secret-history-stream.test.ts",
+    "tests/trusted-cutover.test.ts"
+  ],
+  "modified": [
+    "AGENT_HANDOFF.md",
+    "STATUS.md",
+    "app/RevITApp.tsx",
+    "app/lib/server/trustedStudyPersistence.ts",
+    "app/lib/trustedStudyClient.ts",
+    "app/lib/xpService.ts",
+    "scripts/check-secrets.mjs",
+    "scripts/phase3n/assert-preserved.mjs",
+    "tests/trusted-integration.test.ts"
+  ],
+  "generatedArtifacts": [
+    ".next/**",
+    "tsconfig.tsbuildinfo"
+  ],
+  "temporaryWorkspace": "scratch/phase3n-k/; entry backups and troubleshooting only."
+}

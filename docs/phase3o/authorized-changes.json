@@ -1,0 +1,52 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "af2e5e03a91539b7f50788c128de566e7dac95f798f7403f55bc2efe6a08a889",
+    "after": "db9af612a4ff704195ec5aa41a41ba63286f9718eb53486708b748ebb7882ccc",
+    "reason": "Authorized Phase 3O atomic rewards/completion integration; exact chain, no exemption."
+  },
+  "app/lib/server/trustedStudyPersistence.ts": {
+    "before": "107af0454318f7e019c566f6198df916ce52eecdc6b627c51dff5ac34f9fa8fb",
+    "after": "58126cd4ce7c3acbae9ae466e864a0589e005e489c13ebd1ca3bb83df50042f0",
+    "reason": "Authorized Phase 3O atomic rewards/completion integration; exact chain, no exemption."
+  },
+  "app/lib/server/trustedStudyRoutes.ts": {
+    "before": "b8b1e68137c7a9a2dfed1b4713aba68388eea7b09b2702eedf4e6a218a91b843",
+    "after": "2154d1972bacbff99795a77339b3b215e18eaecc0814d26e4607c11b37986740",
+    "reason": "Authorized Phase 3O atomic rewards/completion integration; exact chain, no exemption."
+  },
+  "app/lib/trustedStudyClient.ts": {
+    "before": "4155053acd2d3de9fb0428183205f32c6d550a3926d2902e8aa3068449bf1cdc",
+    "after": "f442cc14baa89bc876821e63ca9cfe45f43e7ce740944be57934b8d6cdfda77f",
+    "reason": "Authorized Phase 3O atomic rewards/completion integration; exact chain, no exemption."
+  },
+  "app/content/strasingerContent.json": {
+    "before": "69a2feb7911a111e9fe3a35f83d0d2c7d2124c291971a8b3da3e848c2a435601",
+    "after": "6e9a566e1cc6b1fd17cd4536c45c8004c0733fa37f7cd6cbd7d0f1bbdc84fc4a",
+    "reason": "Approved Clinical Microscopy subject display-label rename and terminal newline; inverse rename without the terminal newline exactly reproduces the original hash. Questions, IDs and answers unchanged."
+  },
+  "app/content/strasingerMetadata.ts": {
+    "before": "4d3c33ce0740a31342fcf46ca99cd2856ba595c696a56166a571d3211e50dca1",
+    "after": "ee2f2af55d7828ba429ae177287b0fa905fd5916b975c34e22fd4648c727418c",
+    "reason": "Approved Clinical Microscopy subject display-label rename only; inverse rename exactly reproduces the original hash."
+  },
+  "app/lib/reviewerLibrary.ts": {
+    "before": "ff1e3b5014a17c734c10ee38b0fa3a18d8fd9265e79a0001230e55229d0b2c54",
+    "after": "cf51945235428a517a7c401507cf89f97750797e067d8cfb4948b01951b4fd97",
+    "reason": "Approved Clinical Microscopy subject display-label rename only; inverse rename exactly reproduces the original hash."
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "63a0132ccf1d9db75e9da5d7b4d4be88a9e846a51ae4f443edb636dae338e044",
+    "after": "00c151484028e1ae54155f62d9bf194c7bfed01d7232d739ab214be1db36ff45",
+    "reason": "Approved v1.12.0 release entry and Rodak release-date correction from October 11 to October 18, 2026; removing only that entry and reversing that date exactly reproduces the original hash."
+  },
+  "app/globals.css": {
+    "before": "58440483d522aec7c013ba4693874408272ecc23c766b7a7d152a2d12ff09863",
+    "after": "df84249f3ab5e9badea7d900ebbd0379fc87cbe5d8ac7a87c2d6221362e59b00",
+    "reason": "Approved dark selected-tab fill change from #233e36 to #090D0C only; reversing that exact declaration reproduces the original hash."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "503febbaf53dbe55ad9afdc6b08f9d7dee546d26672b244c5dcdaff79c8b719c",
+    "after": "07e785b70dc9c89a82afb7bbd60e17dbd0ebf1013b3ff4d14f45d8e68e2d9d8e",
+    "reason": "Authorized Phase 3O atomic rewards/completion integration; exact chain, no exemption."
+  }
+}

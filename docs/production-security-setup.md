@@ -32,9 +32,14 @@ After changing a `NEXT_PUBLIC_` value, redeploy because Next.js embeds public va
 
 ## 3. Deployment and provider controls
 
-- Deploy through Vercel's HTTPS endpoint and attach only HTTPS custom domains. Vercel redirects platform-domain HTTP traffic to HTTPS; the application also sends HSTS in production.
+- `SUPABASE_SERVICE_ROLE_KEY`: Server-only Supabase service-role key used strictly for authenticated administrative operations (admin user search, subscription mutations, private notes). Never expose to the browser or commit to Git.
+- `REVIT_ADMIN_USER_IDS`: Comma-separated list of immutable Supabase user UUIDs authorized to access the administration panel.
+- `REVIT_ADMIN_PATH`: Administrative route path (defaults to `/admin`, production URL: `https://revit-med.vercel.app/admin`, local URL: `http://localhost:3000/admin`). Never linked from public navigation.
+
+> **Development Guideline**: All RevIT UI changes must consider desktop, tablet, iPhone, Android, and narrow foldable-screen layouts. Supabase operations must remain efficient, with no unnecessary polling, duplicate requests, or excessive logging.
+
 - Restrict the Groq key to this application or project if the provider exposes scopes, set provider-side spend/usage alerts, and rotate it immediately if it is ever copied into Git, logs, a browser bundle, a screenshot, or a support ticket.
-- Do not add `SUPABASE_SERVICE_ROLE_KEY` to the RevIT deployment unless a future server-only billing/admin endpoint actually requires it. Current runtime code does not need it.
+- Set `SUPABASE_SERVICE_ROLE_KEY` in server-only deployment environment variables for the private administration panel.
 - Keep production source maps private. `productionBrowserSourceMaps` is not enabled.
 
 ## 4. Post-deployment verification

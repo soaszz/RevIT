@@ -1,0 +1,14 @@
+{
+  "app/RevITApp.tsx": "ca200b41f0c4fe74ce258423a992c4c9b8905d3a98ca290de190f28043c7cd1f",
+  "app/lib/cloudSyncGate.ts": "345846ce48c917b06fec2bce0313b7b176c450ebcd839596264e7a7a13ae0575",
+  "app/lib/matchingQuestion.ts": "7fe06489e5cd3a7a1aebcbd8bb3811403b0e6eb39e0b14d4d35773ed1b32b466",
+  "app/lib/domain.ts": "10fe63b3ea845bc4b24c533c1355303647b9fe2c58c74434e5f10041a2ec21d8",
+  "app/lib/weaknessAnalytics.ts": "6a4b38688016563cf9584c07f86060c64459cc92c5bdf345edd5c9cafb02dc3d",
+  "app/lib/leaderboardService.ts": "cfbe71f5dc6790eff8d6fb8a5c3b7dd7aa305db78a6dc8564b0cb4dfa924b70b",
+  "app/lib/entitlements.ts": "c37561705c99786e9ce564ae67b0bfe219b3e873947faadfcb7df72d66ab82db",
+  "app/api/reviewer/strasinger/route.ts": "c99d0375bb1b4f18c5219d739bc7d3f3427dc4befba05bfe376edf94380c5d5c",
+  "app/lib/xpService.ts": "9868e764c1026acb23226d6bb6b8606824964cacb1cec719fc02d1d094b349ec",
+  "supabase/migrations/202610150024_leaderboard_helper_privileges.sql": "faacf60ac6c6feb04655e8ad3ef14c83e1cd5d56f6c46fe1741d9845fe43ea94",
+  "supabase/rollbacks/202610130023_strasinger_book_edition_support_rollback.sql": "9f3267ee90a26112d68b8e57edaa47f0111e9eca36906620e00f10d07bd03a36",
+  "supabase/rollback/202610130023_strasinger_book_edition_support_rollback.sql": "9f3267ee90a26112d68b8e57edaa47f0111e9eca36906620e00f10d07bd03a36"
+}

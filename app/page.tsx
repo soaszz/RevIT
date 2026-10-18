@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { isSupabaseConfigured } from "./lib/supabase/config";
 import { createClient } from "./lib/supabase/server";
 import { isTransientAuthError, retryAuthRequest } from "./lib/supabase/retryAuth";
+import { trustedStudyTransportEnabled } from "./lib/server/trustedStudyGate";
 
 export default async function Home() {
   const turnstileSiteKey = process.env.VITE_TURNSTILE_SITE_KEY ?? "";
@@ -23,7 +24,7 @@ export default async function Home() {
   if (error || !userData.user) redirect("/auth?clear_session=true");
   if (!userData.user.email_confirmed_at) redirect("/auth/verify");
   if (assurance?.nextLevel === "aal2" && assurance.currentLevel !== "aal2") redirect("/auth/mfa?next=/overview");
-  return <RevITApp cloudEnabled turnstileSiteKey={turnstileSiteKey} initialUser={{
+  return <RevITApp cloudEnabled trustedStudyTransport={trustedStudyTransportEnabled()} turnstileSiteKey={turnstileSiteKey} initialUser={{
     id: userData.user.id,
     email: userData.user.email ?? "",
     username: typeof userData.user.user_metadata.username === "string" ? userData.user.user_metadata.username : undefined,

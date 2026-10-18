@@ -2188,7 +2188,8 @@
         "page": 8,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-cc-60",
@@ -2234,7 +2235,8 @@
         "page": 8,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-cc-62",
@@ -4465,7 +4467,8 @@
         "page": 19,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-cc-160",
@@ -4511,7 +4514,8 @@
         "page": 20,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-cc-162",
@@ -8048,7 +8052,8 @@
         "page": 37,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-cc-315",
@@ -22400,7 +22405,8 @@
         "page": 278,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-bb-35",
@@ -23653,7 +23659,8 @@
         "page": 288,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-bb-106",
@@ -24294,7 +24301,8 @@
         "page": 292,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-bb-141",
@@ -37727,7 +37735,8 @@
         "page": 476,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-mol-15",
@@ -41224,7 +41233,8 @@
         "page": 525,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-calc-56",
@@ -41247,7 +41257,8 @@
         "page": 525,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-calc-57",
@@ -41270,7 +41281,8 @@
         "page": 525,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-calc-58",
@@ -41546,7 +41558,8 @@
         "page": 547,
         "kind": "Ciulla Success in Clinical Laboratory Science"
       },
-      "book": "Ciulla"
+      "book": "Ciulla",
+      "disableShuffle": true
     },
     {
       "id": "ciulla-genlab-11",

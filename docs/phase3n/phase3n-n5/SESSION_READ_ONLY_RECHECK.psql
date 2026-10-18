@@ -1,0 +1,70 @@
+-- PREPARATION ONLY. Five independent interactive owner-login psql processes O/A/B/C/D.
+-- Separate authorization and privately verified staging connections required; never run in N5.
+-- Define n5_label as revit-n5-O/A/B/C/D with psql -v. No default or guessed PID.
+\set ON_ERROR_STOP on
+\set VERBOSITY verbose
+\pset pager off
+\if :{?n5_label}
+\else
+\echo MISSING_N5_LABEL
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+BEGIN READ ONLY;
+SET LOCAL statement_timeout='15s'; SET LOCAL lock_timeout='3s';
+SET LOCAL idle_in_transaction_session_timeout='120s';
+SELECT :'n5_label' IN('revit-n5-O','revit-n5-A','revit-n5-B','revit-n5-C','revit-n5-D')
+ AND current_user='postgres' AND session_user='postgres' AS n5_ok \gset
+\if :n5_ok
+\else
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+SELECT :'n5_label' IN('revit-n5-B','revit-n5-C') AS n5_worker \gset
+SELECT set_config('application_name',:'n5_label',true);
+SELECT pg_backend_pid() AS n5_initial_pid \gset
+\if :n5_worker
+SET LOCAL ROLE service_role;
+\endif
+SELECT pg_backend_pid(),current_user,session_user,current_setting('transaction_read_only'),
+ current_setting('transaction_isolation'),current_setting('application_name'),count(*) AS session_rows FROM public.study_sessions;
+SELECT current_user=CASE WHEN :'n5_worker'::boolean THEN 'service_role' ELSE 'postgres' END
+ AND session_user='postgres' AND current_setting('transaction_read_only')='on'
+ AND current_setting('transaction_isolation')='read committed'
+ AND current_setting('application_name')= :'n5_label' AS n5_boundary_ok \gset
+\if :n5_boundary_ok
+\else
+ROLLBACK;
+\echo ROLE_OR_SESSION_BOUNDARY_FAILED_STOP
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+-- Granted AccessShareLock on study_sessions is held until ROLLBACK, not a lock race.
+\prompt 'Barrier 1: capture M monitor now, then press Enter: ' n5_release
+ROLLBACK;
+BEGIN READ ONLY;
+SET LOCAL statement_timeout='15s'; SET LOCAL lock_timeout='3s';
+SET LOCAL idle_in_transaction_session_timeout='120s';
+SELECT set_config('application_name',:'n5_label',true);
+SELECT pg_backend_pid()= :n5_initial_pid AND current_user='postgres' AND session_user='postgres' AS n5_ok \gset
+\if :n5_ok
+\else
+ROLLBACK;
+\echo BACKEND_OR_OWNER_CHANGED_STOP
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+\if :n5_worker
+SET LOCAL ROLE service_role;
+\endif
+SELECT pg_backend_pid(),current_user,session_user,current_setting('transaction_read_only'),
+ current_setting('transaction_isolation'),current_setting('application_name'),count(*) AS session_rows FROM public.study_sessions;
+SELECT current_user=CASE WHEN :'n5_worker'::boolean THEN 'service_role' ELSE 'postgres' END
+ AND session_user='postgres' AND current_setting('transaction_read_only')='on'
+ AND current_setting('transaction_isolation')='read committed'
+ AND current_setting('application_name')= :'n5_label' AS n5_boundary_ok \gset
+\if :n5_boundary_ok
+\else
+ROLLBACK;
+\echo ROLE_OR_SESSION_BOUNDARY_FAILED_STOP
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+\prompt 'Barrier 2: capture M monitor again, then press Enter: ' n5_release
+ROLLBACK;
+\echo N5_SESSION_RECHECK_COMPLETE

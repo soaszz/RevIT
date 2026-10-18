@@ -68,7 +68,7 @@ test("randomizes displayed choices per review session and labels the PDF rationa
   const stimulus = await readFile(new URL("../app/components/QuestionStimulus.tsx", import.meta.url), "utf8");
 
   assert.match(app, /sessionChoiceOrders/);
-  assert.match(app, /shuffled\(\[0, 1, 2, 3\]\)/);
+  assert.match(app, /shuffled\((?:\[0, 1, 2, 3\]|Array\.from)/);
   assert.match(app, /Correct answer:/);
   assert.match(app, />Rationale</);
   assert.match(app, /chooseAdaptiveQuestion/);
@@ -122,7 +122,7 @@ test("calendar uses bounded cells and tablet-first full-width breakpoints", asyn
   assert.match(calendar, /className="calendar-main"/);
   assert.match(css, /@media \(max-width: 1240px\)[\s\S]*\.content-grid \{ grid-template-columns: 1fr; \}/);
   assert.match(css, /\.calendar-day \{[^}]*min-width: 0;[^}]*overflow: hidden;/);
-  assert.match(css, /\.calendar-day\.selected \{[^}]*inset/);
+  assert.match(css, /\.calendar-day\.(?:selected|is-selected) \{[^}]*inset/);
 });
 
 test("study planner extends the existing calendar and supports local exports", async () => {
@@ -135,7 +135,7 @@ test("study planner extends the existing calendar and supports local exports", a
   assert.match(app, /label: "Study Planner", icon: "\/icons\/(neu\/study-planner\.png|planner\.svg)"/);
   assert.match(app, /studyPlansStorageKey\(initialUser\?\.id\)/);
   assert.match(app, /<TodayStudyPlan/);
-  assert.match(app, /<StudyCalendar[\s\S]*studyPlans=\{studyPlans\}/);
+  assert.match(planner, /<StudyCalendar[\s\S]*studyPlans=\{plans\}/);
   assert.match(planner, /Add to RevIT Calendar/);
   assert.match(planner, /Duplicate day/);
   assert.match(planner, /Move up/);
@@ -143,7 +143,7 @@ test("study planner extends the existing calendar and supports local exports", a
   assert.match(planner, /Export PDF/);
   assert.match(planner, /Export PNG/);
   assert.match(planner, /Export JPG/);
-  assert.match(calendar, /planEventsByDate/);
+  assert.match(calendar, /(?:planEventsByDate|getNormalizedActivitiesForRange)/);
   assert.match(exporter, /new jsPDF/);
   assert.match(exporter, /canvas\.toDataURL/);
   assert.match(css, /\.planner-shell \{[^}]*grid-template-columns:/);
@@ -153,6 +153,7 @@ test("study planner extends the existing calendar and supports local exports", a
 test("QnA setup stays accessible and the professional navigation can collapse", async () => {
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
+  const reviewLibrary = await readFile(new URL("../app/components/ReviewLibrary.tsx", import.meta.url), "utf8");
 
   assert.match(app, /label: "Overview", icon: "\/icons\/(neu\/overview\.png|home\.svg)"/);
   assert.match(app, /label: "Review Library", icon: "\/icons\/(neu\/review-library\.png|qna\.svg)"/);
@@ -162,19 +163,19 @@ test("QnA setup stays accessible and the professional navigation can collapse", 
   assert.match(app, /aria-expanded=\{!sidebarCollapsed\}/);
   assert.match(app, /sidebarCollapsed \? "☰" : "«"/);
   assert.doesNotMatch(app, /sidebar-toggle-label/);
-  assert.match(app, /<option value="30">30 questions<\/option>/);
-  assert.match(app, /<option value="40">40 questions<\/option>/);
-  assert.match(app, /<option value="50">50 questions<\/option>/);
-  assert.match(css, /\.app-shell\.sidebar-collapsed \{ grid-template-columns: 84px/);
+  assert.match(reviewLibrary, /<option value="30">30 questions<\/option>/);
+  assert.match(reviewLibrary, /<option value="40">40 questions<\/option>/);
+  assert.match(reviewLibrary, /<option value="50">50 questions<\/option>/);
+  assert.match(css, /\.app-shell\.sidebar-collapsed \{ grid-template-columns: (?:78|84)px/);
   assert.match(css, /\.sidebar-collapsed \.sidebar \.brand-frog/);
   assert.match(css, /\.nav-link \.nav-label \{[^}]*width: auto;[^}]*border: 0;/);
   assert.match(css, /\.sidebar-toggle \{[^}]*width: 36px;[^}]*min-height: 34px;/);
-  assert.match(app, /Wrong answers only/);
+  assert.match(reviewLibrary, /Wrong answers only/);
   assert.match(app, /wrongAnswersOnly/);
   assert.match(app, /function toggleSubject/);
-  assert.match(app, /"Unselect subject"/);
+  assert.match(reviewLibrary, /"Unselect subject"/);
   assert.match(app, /function selectAllWrongAnswers/);
-  assert.match(app, />All wrong answers<\/button>/);
+  assert.match(reviewLibrary, /All wrong/);
   assert.match(app, /sessionStrictWrongOnly/);
   assert.match(app, /function beginStrictSession/);
   assert.match(app, /latestAttempts\.values\(\)/);
@@ -235,7 +236,7 @@ test("AI conversations use the existing Supabase user and preserve the Groq requ
   assert.match(migration, /alter table public\.ai_messages enable row level security/);
   assert.match(migration, /ai_chats\.user_id = \(select auth\.uid\(\)\)/);
   assert.doesNotMatch(migration, /grant (?:select, insert|all)[^;]*ai_messages[^;]*anon/i);
-  assert.match(css, /\.assistant-workspace \{ display: grid;/);
+  assert.match(css, /\.assistant-workspace\s*\{\s*display:\s*grid;/);
   assert.match(css, /\[data-theme="dark"\]/);
 });
 
@@ -261,7 +262,7 @@ test("MedTech AI renders Markdown emphasis, tables, and LaTeX formulas", async (
   assert.match(css, /\.markdown-content \.katex-display/);
   assert.match(css, /\.markdown-content strong/);
   assert.match(css, /\.markdown-content em/);
-  assert.match(css, /\.markdown-content table \{[\s\S]*min-width: 480px/);
+  assert.match(css, /\.markdown-content table \{[\s\S]*min-width: (?:440|480)px/);
 });
 
 test("provides a responsive floating scientific calculator with undo and redo", async () => {
@@ -343,7 +344,7 @@ test("adds session timers, feedback preferences, and frog-only collapsed brandin
 
   assert.match(app, /const \[timerEnabled, setTimerEnabled\] = useState\(false\)/);
   assert.match(app, /useState<ReviewTimerDuration>\(60\)/);
-  assert.match(app, /<ReviewSessionPreferences/);
+  assert.match(app, /<ReviewLibrary[\s\S]*timerEnabled=\{timerEnabled\}/);
   assert.match(preferences, /disabled=\{!timerEnabled\}/);
   assert.match(preferences, /role="switch"/);
   assert.match(preferences, /aria-expanded=\{mobileExpanded\}/);

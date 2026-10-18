@@ -46,11 +46,14 @@ test("loadCloudSnapshot refreshes session when expired before querying tables", 
       const builder: Record<string, unknown> = {};
       builder.select = () => builder;
       builder.eq = () => builder;
+      builder.is = () => builder;
       builder.order = () => builder;
-      builder.limit = async () => ({ data: [], error: null });
-      builder.range = async () => ({ data: [], error: null });
+      builder.limit = () => Object.assign(Promise.resolve({ data: [], error: null }), builder);
+      builder.range = () => Object.assign(Promise.resolve({ data: [], error: null }), builder);
       builder.maybeSingle = async () => ({ data: null, error: null });
       builder.single = async () => ({ data: null, error: null });
+      builder.then = (onfulfilled: (val: unknown) => unknown, onrejected?: (err: unknown) => unknown) =>
+        Promise.resolve({ data: [], error: null }).then(onfulfilled, onrejected);
       return builder;
     },
     rpc: async () => ({ data: null, error: null }),

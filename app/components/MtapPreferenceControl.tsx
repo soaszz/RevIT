@@ -17,8 +17,8 @@ export default function MtapPreferenceControl({ enabled, onChange }: {
     try {
       await onChange(enabledNext);
       setStatus(enabledNext
-        ? "NU Revit is enabled. Grades are available, and subjects are grouped under MTAP 1 and Other Majors."
-        : "Standard RevIT is enabled. Grades are hidden, every subject remains available, and your existing data is preserved.");
+        ? "NU Revit is enabled. NU MOA MTAP 1 preset and categorization are active."
+        : "Standard RevIT is enabled. Custom gradebooks and all subjects remain available.");
     } catch {
       setError(true);
       setStatus("MTAP preference could not be saved. Please try again.");
@@ -33,11 +33,11 @@ export default function MtapPreferenceControl({ enabled, onChange }: {
         <p className="eyebrow">Personalization</p>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
           <h3 id="mtap-features-label" style={{ margin: 0 }}>MTAP Features</h3>
-          <span style={{ fontSize: "9.5px", padding: "3px 8px", borderRadius: "99px", background: "var(--green-soft)", color: "var(--green-dark)", border: "1px solid color-mix(in srgb, var(--green) 35%, transparent)", fontWeight: 750, letterSpacing: "0.03em" }}>
+          <span style={{ fontSize: "11px", color: "var(--green)", fontWeight: 700, letterSpacing: "0.03em" }}>
             NU MOA MTAP
           </span>
         </div>
-        <p>Show or hide the Grades tab for National University MTAP preparation. Calibrated for <strong style={{ color: "var(--green)", fontWeight: 750 }}>National University MOA MTAP</strong> students. Both modes keep the full searchable subject library.</p>
+        <p>Enable NU MOA MTAP 1 course grouping and grading preset. When disabled, custom gradebooks and the full searchable subject library remain available for all learners.</p>
       </div>
       <label className="mtap-switch">
         <input

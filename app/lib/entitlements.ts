@@ -30,6 +30,8 @@ export const QUESTION_BANKS: Readonly<Record<Lowercase<ReviewerBook>, {
 }>> = Object.freeze({
   harr: { id: "harr", label: "Harr", requiredPlan: "free" },
   ciulla: { id: "ciulla", label: "Ciulla", requiredPlan: "pro" },
+  rodak: { id: "rodak", label: "Rodak", requiredPlan: "pro" },
+  strasinger: { id: "strasinger", label: "Strasinger", requiredPlan: "pro" },
 });
 
 export const AI_LIMITS: Readonly<Record<SubscriptionPlan, {

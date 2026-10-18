@@ -266,11 +266,11 @@ export default function AccountSettings({ profile, preferences, entitlement, ema
           <button type="button" onClick={onClose} aria-label="Close settings">×</button>
         </div>
 
-        <div className="auth-tabs account-tabs" style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", minHeight: "44px" }}>
-          <button className={tab === "profile" ? "active" : ""} type="button" style={{ minHeight: "36px" }} onClick={() => { setTab("profile"); setStatus(""); }}>Profile</button>
-          <button className={tab === "personalization" ? "active" : ""} type="button" style={{ minHeight: "36px" }} onClick={() => { setTab("personalization"); setStatus(""); }}>Personalization</button>
-          <button className={tab === "privacy" ? "active" : ""} type="button" style={{ minHeight: "36px" }} onClick={() => { setTab("privacy"); setStatus(""); }}>Privacy</button>
-          <button className={tab === "security" ? "active" : ""} type="button" style={{ minHeight: "36px" }} onClick={() => { setTab("security"); setStatus(""); }}>Security</button>
+        <div className="auth-tabs account-tabs">
+          <button className={tab === "profile" ? "active" : ""} type="button" onClick={() => { setTab("profile"); setStatus(""); }}>Profile</button>
+          <button className={tab === "personalization" ? "active" : ""} type="button" onClick={() => { setTab("personalization"); setStatus(""); }}>Personalization</button>
+          <button className={tab === "privacy" ? "active" : ""} type="button" onClick={() => { setTab("privacy"); setStatus(""); }}>Privacy</button>
+          <button className={tab === "security" ? "active" : ""} type="button" onClick={() => { setTab("security"); setStatus(""); }}>Security</button>
         </div>
 
         {tab === "profile" ? (
@@ -401,6 +401,15 @@ export default function AccountSettings({ profile, preferences, entitlement, ema
             {status && <p className="form-status" role="status">{status}</p>}
 
             <div className="profile-modal-actions">
+              <button
+                className="danger-button"
+                type="button"
+                style={{ marginRight: "auto" }}
+                onClick={() => void signOut()}
+                disabled={pending}
+              >
+                {pending ? "Signing out…" : "Sign out"}
+              </button>
               <button
                 className="text-button quiet"
                 type="button"
@@ -681,25 +690,6 @@ export default function AccountSettings({ profile, preferences, entitlement, ema
               </form>
             )}
 
-            <section className="settings-danger-zone" aria-labelledby="danger-zone-title">
-              <div className="settings-section-header">
-                <p className="eyebrow" id="danger-zone-title" style={{ color: "var(--danger)" }}>Danger zone</p>
-              </div>
-              <div className="settings-danger-surface">
-                <div className="settings-danger-info">
-                  <span className="settings-danger-title">Sign out of this session</span>
-                  <span className="settings-danger-desc">Sign out of your RevIT account on this device.</span>
-                </div>
-                <button
-                  className="danger-button account-signout"
-                  type="button"
-                  onClick={() => void signOut()}
-                  disabled={pending}
-                >
-                  {pending ? "Signing out…" : "Sign out"}
-                </button>
-              </div>
-            </section>
 
             {status && <p className="form-status" role="status">{status}</p>}
           </div>

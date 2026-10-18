@@ -67,8 +67,12 @@ export function calculateStreak(activity: DailyActivity[], todayKey: string) {
 export function buildMonthGrid(year: number, monthIndex: number) {
   const first = new Date(Date.UTC(year, monthIndex, 1));
   const startOffset = first.getUTCDay();
+  const daysInMonth = new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
+  const totalDaysNeeded = startOffset + daysInMonth;
+  const totalRows = totalDaysNeeded <= 28 ? 4 : totalDaysNeeded <= 35 ? 5 : 6;
+  const cellCount = totalRows * 7;
   const start = new Date(Date.UTC(year, monthIndex, 1 - startOffset));
-  return Array.from({ length: 42 }, (_, index) => {
+  return Array.from({ length: cellCount }, (_, index) => {
     const date = new Date(start.getTime() + index * DAY_MS);
     return {
       key: date.toISOString().slice(0, 10),

@@ -198,9 +198,9 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
               <div className={styles.planPriceBlock}>
                 <div className={styles.planPriceRow}>
                   <span className={styles.planPriceAmount}>₱49</span>
-                  <span className={styles.planPricePeriod}>/ Early Access</span>
+                  <span className={styles.planPricePeriod}>/ month</span>
                 </div>
-                <p className={styles.planPriceNote}>Introductory price · Subject to change</p>
+                <p className={styles.planPriceNote}>Early bird price · Monthly access</p>
               </div>
               <ul>
                 <li>Everything in Free, plus:</li>
@@ -211,8 +211,8 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
                 <li>Advanced study recommendations</li>
                 <li><strong>{AI_LIMITS.pro.dailyRequests} RevIT AI messages per day</strong></li>
               </ul>
-              <a className={`primary-button ${styles.primary}`} href={proContact} target="_blank" rel="noopener noreferrer" aria-label="Learn About Pro on Facebook (opens in a new tab)">
-                Subscribe on Facebook <span aria-hidden="true">↗</span>
+              <a className={`primary-button ${styles.primary}`} href={proContact} target="_blank" rel="noopener noreferrer" aria-label="Get RevIT Pro on Facebook (opens in a new tab)">
+                Get RevIT Pro on Facebook <span aria-hidden="true">↗</span>
               </a>
               <p className={styles.contactNote}>
                 Want to see the full breakdown? <Link href="/pricing">View complete plan comparison →</Link>

@@ -1,0 +1,12 @@
+✔ numbering model preserves legacy gaps, allocates repeats and re-acknowledges stable IDs without allocating again (1.4434ms)
+✔ serialized model allocates concurrent cross-session repeats; conflicting UUID or slot cannot consume numbering (0.625ms)
+✔ model rolls back entire failed batch and rejects integer exhaustion without rewriting history (0.217ms)
+✔ proposed SQL fences each transaction, preserves legacy writers/history and allocates under compatible locks (1.2783ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 43.4402

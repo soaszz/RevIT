@@ -1,0 +1,1165 @@
+/* ReviewLibrary.module.css - Responsive UI UX Pro Max styling for RevIT Review Library */
+
+.libraryShell {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-bottom: calc(110px + env(safe-area-inset-bottom, 24px));
+  box-sizing: border-box;
+}
+
+/* ─── Top Control Strip: Mode Selector & Kicker ─── */
+.topControlStrip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.modeSwitcherWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── Search & Category Filter Toolbar ─── */
+.searchToolbar {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 8px 14px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  box-sizing: border-box;
+}
+
+.searchInputWrap {
+  flex: 1 1 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 180px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  color: var(--muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 8px 30px 8px 32px;
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-size: 12px;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--green);
+}
+
+.searchClearBtn {
+  position: absolute;
+  right: 8px;
+  border: none !important;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.searchClearBtn:hover {
+  color: var(--ink);
+}
+
+.categoryChips {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.categoryChipBtn {
+  border: none !important;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.categoryChipBtn:hover {
+  color: var(--ink);
+  background: var(--surface-tint);
+}
+
+.categoryChipBtn.active {
+  background: var(--green-soft);
+  color: var(--green-dark);
+}
+
+/* ─── Two-Column Layout (Desktop) ─── */
+.libraryLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* Left Column: Subjects */
+.subjectList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.subjectCategory {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.categoryHeading {
+  margin-bottom: 4px;
+}
+
+.categoryKicker {
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 2px;
+}
+
+.categoryTitle {
+  font-size: 18px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.categoryDescription {
+  font-size: 11.5px;
+  color: var(--muted);
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
+/* ─── Subject Card (Compact Design) ─── */
+.subjectCard {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.subjectCard:hover {
+  border-color: color-mix(in srgb, var(--green) 35%, var(--line));
+}
+
+.subjectCard.isExpanded {
+  border-color: color-mix(in srgb, var(--green) 45%, var(--line));
+}
+
+.subjectCardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.subjectCardHeader:hover {
+  background: color-mix(in srgb, var(--surface-tint) 50%, transparent);
+}
+
+.subjectHeaderLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.subjectTitle {
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.subjectMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.subjectMeta {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+  margin: 0;
+}
+
+.subjectSelectionBadge {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--green-dark);
+  background: var(--green-soft);
+  padding: 1px 7px;
+  border-radius: 6px;
+  line-height: 1.3;
+}
+
+.subjectSelectionBadge.allSelected {
+  background: color-mix(in srgb, var(--green) 22%, transparent);
+  color: var(--green);
+}
+
+.subjectHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.selectSubjectBtn {
+  border: none !important;
+  background: transparent;
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 6px;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+
+.selectSubjectBtn:hover {
+  opacity: 0.85;
+}
+
+.chevronIcon {
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.22s ease, color 0.15s ease;
+}
+
+.chevronIcon.open {
+  transform: rotate(180deg);
+  color: var(--green);
+}
+
+/* ─── Expanded Subject Body ─── */
+.subjectBody {
+  padding: 14px 18px 16px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-sizing: border-box;
+}
+
+/* In-Card Book Edition Tabs (Image 1) */
+.editionNavRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.editionTabs {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--surface-soft);
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.editionTabBtn {
+  border: none !important;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.editionTabBtn:hover {
+  color: var(--ink);
+  background: var(--surface-tint);
+}
+
+.editionTabBtn.active {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.editionTabCount {
+  color: var(--muted);
+  font-weight: 500;
+  margin-left: 3px;
+}
+
+.editionProPill {
+  margin-left: 5px;
+  font-size: 8.5px;
+  font-weight: 800;
+  color: var(--amber);
+  text-transform: uppercase;
+}
+
+.proLockBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  margin: 8px 0 10px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--amber-soft) 45%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--amber) 25%, var(--line));
+  font-size: 11.5px;
+  color: var(--ink);
+}
+
+.proLockBanner p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.proUpgradeBtn {
+  border: none !important;
+  background: transparent;
+  color: var(--amber);
+  font-size: 11.5px;
+  font-weight: 750;
+  cursor: pointer;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.topicRowLocked {
+  opacity: 0.72;
+  cursor: pointer;
+}
+
+/* Subheader: Questions available & Select all for edition */
+.editionSubheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 2px 6px;
+  border-bottom: 1px solid var(--line);
+}
+
+.editionAvailableText {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+  margin: 0;
+}
+
+.selectAllEditionBtn {
+  border: none !important;
+  background: transparent;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 4px;
+  transition: color 0.15s ease;
+}
+
+.selectAllEditionBtn:hover {
+  color: var(--green);
+}
+
+/* Topic Rows List */
+.topicList {
+  display: flex;
+  flex-direction: column;
+}
+
+.topicRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 2px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.12s ease;
+}
+
+.topicRow:last-child {
+  border-bottom: none;
+}
+
+.topicRow:hover {
+  background: color-mix(in srgb, var(--surface-tint) 40%, transparent);
+}
+
+.topicRowLeft {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.topicCheckbox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: var(--green);
+  cursor: pointer;
+}
+
+.topicInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.topicName {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ink);
+  line-height: 1.3;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.topicQuestionsCount {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Card Bottom Action Bar (Image 1) */
+.subjectBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.subjectSelectedCountText {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 0;
+}
+
+.selectAllSubjectBtn {
+  border: none !important;
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.selectAllSubjectBtn:hover {
+  background: var(--surface-tint);
+  color: var(--green);
+}
+
+/* ─── Right Column: Desktop Sticky Session Setup Sidebar ─── */
+.sessionSidebar {
+  position: sticky;
+  top: 20px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.sidebarHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebarHeaderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.setupKicker {
+  font-size: 9.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0;
+}
+
+.readyIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.readyDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  flex-shrink: 0;
+}
+
+.sidebarTitle {
+  font-size: 16px;
+  font-weight: 750;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin: 1px 0 0;
+}
+
+/* Selected Sources */
+.sourcesBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sourceBadges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sourceTag {
+  font-size: 11.5px;
+  font-weight: 750;
+  color: var(--green);
+}
+
+.sourceNone {
+  font-size: 11px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.availableQuestionsText {
+  font-size: 10.5px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* Selection Actions */
+.selectionActionsRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.selectionTextBtn {
+  border: none !important;
+  background: transparent;
+  padding: 2px 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.selectionTextBtn:hover {
+  opacity: 0.8;
+}
+
+.selectionTextBtn.quiet {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.selectionTextBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Subtle divider */
+.setupDivider {
+  height: 1px;
+  background: var(--line);
+  margin: 0;
+  border: none;
+}
+
+/* Compact Row (Wrong Answers Only & Timer) */
+.setupRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 26px;
+}
+
+.setupRowLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.setupIcon {
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+/* Toggle Switch (No button border, clean accessible switch) */
+.setupSwitch {
+  border: none !important;
+  width: 38px;
+  height: 22px;
+  border-radius: 12px;
+  background: var(--surface-soft);
+  position: relative;
+  cursor: pointer;
+  padding: 2px;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+  display: block;
+}
+
+.setupSwitchActive {
+  background: var(--green) !important;
+}
+
+.setupSwitchThumb {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.setupSwitchActive .setupSwitchThumb {
+  transform: translateX(16px);
+  background: var(--accent-ink, #07261f);
+}
+
+/* Questions this session */
+.setupFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.setupFieldLabel {
+  font-size: 10px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0;
+}
+
+.setupSelect {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 7px 10px;
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease;
+}
+
+.setupSelect:focus {
+  outline: none;
+  border-color: var(--green);
+}
+
+/* Question Timer Block */
+.setupTimerBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.segmentedControl {
+  display: flex;
+  background: var(--surface-soft);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.segmentBtn {
+  flex: 1 1 0;
+  border: none !important;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.segmentBtn:hover {
+  color: var(--ink);
+}
+
+.segmentActive {
+  background: var(--paper) !important;
+  color: var(--green) !important;
+  font-weight: 750;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* Start Review Primary Button */
+.startReviewBtn {
+  border: none !important;
+  background: var(--green) !important;
+  color: var(--accent-ink, #07261f) !important;
+  font-size: 12.5px;
+  font-weight: 750;
+  padding: 11px 16px;
+  border-radius: 9px !important;
+  cursor: pointer;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  box-shadow: 0 4px 14px rgba(23, 107, 91, 0.2);
+  margin-top: 2px;
+}
+
+.startReviewBtn:hover {
+  opacity: 0.94;
+}
+
+.startReviewBtn:active {
+  transform: scale(0.985);
+}
+
+.startReviewBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ─── Sticky Mobile Review Bar ─── */
+.mobileStickyBar {
+  display: none;
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: calc(68px + env(safe-area-inset-bottom, 16px));
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  padding: 9px 12px;
+  z-index: 95;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.mobileBarInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.mobileBarHeaderRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mobileBarTopicCount {
+  font-size: 12.5px;
+  font-weight: 750;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.mobileReadyBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 750;
+  color: var(--green);
+}
+
+.mobileBarSubtext {
+  font-size: 10.5px;
+  color: var(--muted);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobileBarActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mobileSetupBtn {
+  border: none !important;
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 7px 11px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.15s ease;
+}
+
+.mobileSetupBtn:hover {
+  background: var(--surface-tint);
+}
+
+.mobileStartReviewBtn {
+  border: none !important;
+  background: var(--green) !important;
+  color: var(--accent-ink, #07261f) !important;
+  font-size: 11.5px;
+  font-weight: 750;
+  padding: 7px 13px;
+  border-radius: 8px !important;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.mobileStartReviewBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─── Mobile Session Setup Bottom Sheet ─── */
+.bottomSheetOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bottomSheetContainer {
+  width: 100%;
+  max-width: 480px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  box-shadow: 0 -8px 36px rgba(0, 0, 0, 0.4);
+  max-height: calc(100svh - 32px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-sizing: border-box;
+  animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.bottomSheetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--line);
+  gap: 10px;
+}
+
+.bottomSheetTitleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.bottomSheetTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bottomSheetTitle {
+  font-size: 15px;
+  font-weight: 750;
+  color: var(--ink);
+  margin: 0;
+}
+
+.bottomSheetCloseBtn {
+  border: none !important;
+  background: transparent;
+  color: var(--muted);
+  padding: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.bottomSheetCloseBtn:hover {
+  color: var(--ink);
+}
+
+.bottomSheetBody {
+  padding: 14px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: calc(100svh - 160px);
+  box-sizing: border-box;
+}
+
+.bottomSheetFooter {
+  padding: 12px 18px calc(12px + env(safe-area-inset-bottom, 12px));
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+}
+
+/* ─── Responsive Breakpoints ─── */
+
+/* Large Tablets (961px to 1180px) */
+@media (max-width: 1180px) and (min-width: 861px) {
+  .libraryLayout {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 16px;
+  }
+
+  .sessionSidebar {
+    padding: 14px 12px;
+  }
+}
+
+/* Standard Tablets & Mobile (<= 860px) */
+@media (max-width: 860px) {
+  .topControlStrip {
+    justify-content: center;
+  }
+
+  .modeSwitcherWrapper {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .libraryLayout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 16px));
+  }
+
+  .sessionSidebar {
+    display: none;
+  }
+
+  .mobileStickyBar {
+    display: flex;
+  }
+}
+
+/* Mobile & Foldable (<= 480px) */
+@media (max-width: 480px) {
+  .searchToolbar {
+    padding: 6px 10px;
+    margin-bottom: 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .searchInputWrap {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .categoryChips {
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 2px;
+  }
+
+  .subjectCardHeader {
+    padding: 14px;
+  }
+
+  .subjectBody {
+    padding: 12px 14px 14px;
+  }
+
+  .topicRow {
+    padding: 10px 2px;
+  }
+
+  .mobileStickyBar {
+    left: 8px;
+    right: 8px;
+    padding: 8px 11px;
+  }
+
+  .mobileBarTopicCount {
+    font-size: 12px;
+  }
+
+  .mobileBarSubtext {
+    font-size: 10px;
+  }
+}
+
+/* Narrow Foldable Phones (Galaxy Z Flip, <= 360px) */
+@media (max-width: 360px) {
+  .mobileStickyBar {
+    left: 6px;
+    right: 6px;
+    padding: 7px 9px;
+    gap: 6px;
+  }
+
+  .mobileBarTopicCount {
+    font-size: 11px;
+  }
+
+  .mobileBarSubtext {
+    font-size: 9.5px;
+  }
+
+  .mobileSetupBtn {
+    padding: 6px 8px;
+    font-size: 10px;
+    gap: 3px;
+  }
+
+  .mobileStartReviewBtn {
+    padding: 6px 10px;
+    font-size: 10.5px;
+    gap: 3px;
+  }
+
+  .bottomSheetContainer {
+    max-height: calc(100svh - 20px);
+  }
+
+  .bottomSheetHeader {
+    padding: 12px 14px 10px;
+  }
+
+  .bottomSheetBody {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .bottomSheetFooter {
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 10px));
+  }
+}

@@ -1,0 +1,65 @@
+
+> revit-site@0.1.0 build
+> next build
+
+▲ Next.js 16.3.1 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 119ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.7s
+  Running TypeScript ...
+  Finished TypeScript in 5.2s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/20) ...
+  Generating static pages using 11 workers (5/20) 
+  Generating static pages using 11 workers (10/20) 
+  Generating static pages using 11 workers (15/20) 
+✓ Generating static pages using 11 workers (20/20) in 700ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /admin
+├ ƒ /api/admin/note
+├ ƒ /api/admin/search
+├ ƒ /api/admin/subscription
+├ ƒ /api/admin/user
+├ ƒ /api/chat
+├ ƒ /api/internal/revit-control/note
+├ ƒ /api/internal/revit-control/search
+├ ƒ /api/internal/revit-control/subscription
+├ ƒ /api/internal/revit-control/user
+├ ƒ /api/notifications/acknowledge
+├ ƒ /api/reviewer/ciulla
+├ ƒ /api/reviewer/rodak
+├ ƒ /api/reviewer/strasinger
+├ ƒ /api/study/attempts
+├ ƒ /api/study/sessions
+├ ƒ /auth
+├ ƒ /auth/callback
+├ ƒ /auth/capture
+├ ƒ /auth/forgot
+├ ƒ /auth/mfa
+├ ƒ /auth/oauth-complete
+├ ƒ /auth/reset
+├ ƒ /auth/verify
+├ ○ /icon
+├ ƒ /internal/revit-control
+├ ○ /manifest.webmanifest
+├ ƒ /offline
+├ ƒ /pricing
+├ ƒ /privacy
+├ ƒ /pro
+├ ƒ /support
+└ ƒ /terms
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+(node:30956) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)

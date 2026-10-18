@@ -1,0 +1,38 @@
+[
+  {
+    "name": "reviewer-content",
+    "exitCode": 0,
+    "seconds": 0.2,
+    "log": "docs/phase3n/phase3n-k/reviewer-content.log"
+  },
+  {
+    "name": "build",
+    "exitCode": 0,
+    "seconds": 8.9,
+    "log": "docs/phase3n/phase3n-k/build.log"
+  },
+  {
+    "name": "typecheck",
+    "exitCode": 0,
+    "seconds": 2.5,
+    "log": "docs/phase3n/phase3n-k/typecheck.log"
+  },
+  {
+    "name": "lint",
+    "exitCode": 0,
+    "seconds": 13.2,
+    "log": "docs/phase3n/phase3n-k/lint.log"
+  },
+  {
+    "name": "unit",
+    "exitCode": 0,
+    "seconds": 4.4,
+    "log": "docs/phase3n/phase3n-k/unit.log"
+  },
+  {
+    "name": "secrets",
+    "exitCode": 0,
+    "seconds": 42.6,
+    "log": "docs/phase3n/phase3n-k/secrets.log"
+  }
+]

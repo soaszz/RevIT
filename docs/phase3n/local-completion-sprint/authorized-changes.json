@@ -1,0 +1,47 @@
+{
+  "app/lib/trustedStudyClient.ts": {
+    "before": "4c678fbc4c77532a26d573b9d46e49130c98672b4ac06694f0b53b4800204b40",
+    "after": "4155053acd2d3de9fb0428183205f32c6d550a3926d2902e8aa3068449bf1cdc",
+    "reason": "Authorized consolidated local completion sprint."
+  },
+  "app/lib/server/trustedStudyPersistence.ts": {
+    "before": "d6e3e5c301fd2a9c1ebed3e62ac891136e75bf0616340b94db05184fca59dad5",
+    "after": "107af0454318f7e019c566f6198df916ce52eecdc6b627c51dff5ac34f9fa8fb",
+    "reason": "Authorized consolidated local completion sprint."
+  },
+  "app/lib/server/trustedStudyRoutes.ts": {
+    "before": "d9bc53e3c849f033f88fc677449b298a90cb12314d870a7e9870794312baab2f",
+    "after": "b8b1e68137c7a9a2dfed1b4713aba68388eea7b09b2702eedf4e6a218a91b843",
+    "reason": "Authorized consolidated local completion sprint."
+  },
+  "supabase/tests/trusted_cutover_verification.sql": {
+    "before": "7324305c8e0a777fb015f3d57531b42710030f37f9289e9f71d71369e577ca65",
+    "after": "9bab554f9b2665e82b85ca506f067a8c73800b59ec6a690d0c0463c712031e50",
+    "reason": "Authorized consolidated local completion sprint."
+  },
+  "tests/trusted-integration.test.ts": {
+    "before": "805f3a4ee55c2345ceda303d745c2592f41b1b4388452c6827a5a06b94c55993",
+    "after": "2e820adeaaa3d21a9fec1343fa2bf690951843b35d8f02d1f813e7382d0b510f",
+    "reason": "Authorized consolidated local completion sprint."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "182a8903c3f5aacf7ddc41edb3cb589e1291db7017916fc8b1427bfa6c0219e3",
+    "after": "503febbaf53dbe55ad9afdc6b08f9d7dee546d26672b244c5dcdaff79c8b719c",
+    "reason": "Authorized consolidated local completion sprint."
+  },
+  "AGENT_HANDOFF.md": {
+    "before": "2cceff646c9a5cb363d401e6804040155b4002440b9a7a7c82b4ec7cd7a2497e",
+    "after": "2ece9679aaa1d75765054cc7b3a5a4ac3bc8f860de5ddd16c3095606d5f02825",
+    "reason": "Authorized consolidated local completion sprint."
+  },
+  "STATUS.md": {
+    "before": "84c32c7c6140229893efd617084060a66e2942fa8cf65ea411fee8bba6505be6",
+    "after": "e10a2224e801f5f9f306d215fcfb36f964d6a6a67f2a9caee752f7d46cb5b33a",
+    "reason": "Authorized consolidated local completion sprint."
+  },
+  "docs/phase3n/REPORT.md": {
+    "before": "0cb8da51acfa088ac3ead36307ed09e78d78c468530eb6c3b6d732b1a52c2813",
+    "after": "4b490faa7f171874862c509579bacb2016fb138ce4a7091ec2b846e1f97d892d",
+    "reason": "Authorized consolidated local completion sprint."
+  }
+}

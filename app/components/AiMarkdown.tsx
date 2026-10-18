@@ -27,6 +27,13 @@ export default function AiMarkdown({ content }: { content: string }) {
         [rehypeSanitize, aiMarkdownSchema],
         [rehypeKatex, { throwOnError: false, strict: "ignore" }],
       ]}
+      components={{
+        table: ({ ...props }) => (
+          <div className="ai-markdown-table-wrap">
+            <table {...props} />
+          </div>
+        ),
+      }}
     >
       {normalizeAiMarkdown(content)}
     </ReactMarkdown>

@@ -1,0 +1,2 @@
+PASS: All 47 original Phase 1 target IDs remain protected.
+PASS: Structured comparison against original backups finds only 47 disableShuffle additions; no other record fields changed.

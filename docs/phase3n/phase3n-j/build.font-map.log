@@ -1,0 +1,66 @@
+
+> revit-site@0.1.0 build
+> next build
+
+▲ Next.js 16.3.1 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 33ms
+
+  Creating an optimized production build ...
+(node:66496) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Turbopack build encountered 1 warning:
+[next]/internal/font/google/c0b50b4cc604be4f-s.p.woff2
+Warning: Error while requesting resource
+There was an issue establishing a connection while requesting https://mock-font.invalid/test.woff2
+
+
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+[next]/internal/font/google/dm_sans_fb5c29f7.module.css:2:86
+Error: Module not found: Can't resolve '@vercel/turbopack-next/internal/font/google/font'
+  [90m1 |[0m ...
+[31m[1m>[0m [90m2 |[0m ...-style: normal; font-weight: [35m100[0m [35m1000[0m; src: url(@vercel/turbopack-next/internal/font/goo...
+  [90m  |[0m                                                [31m[1m^[0m
+  [90m3 |[0m ...
+  [90m4 |[0m ...
+  [90m5 |[0m ...
+
+Import map: Resolved by import map
+
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/dm_sans_fb5c29f7.module.css
+    [next]/internal/font/google/dm_sans_fb5c29f7.js
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[next]/internal/font/google/geist_mono_31187869.module.css:2:88
+Error: Module not found: Can't resolve '@vercel/turbopack-next/internal/font/google/font'
+  [90m1 |[0m ...
+[31m[1m>[0m [90m2 |[0m ...t-style: normal; font-weight: [35m100[0m [35m900[0m; src: url(@vercel/turbopack-next/internal/font/goo...
+  [90m  |[0m                                                [31m[1m^[0m
+  [90m3 |[0m ...
+  [90m4 |[0m ...
+  [90m5 |[0m ...
+
+Import map: Resolved by import map
+
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/geist_mono_31187869.module.css
+    [next]/internal/font/google/geist_mono_31187869.js
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> ([next]/internal/font/google/dm_sans_fb5c29f7.module.css:2:86)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> ([next]/internal/font/google/geist_mono_31187869.module.css:2:88)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)

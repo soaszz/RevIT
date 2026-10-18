@@ -12,8 +12,10 @@
 
 .account-modal .account-tabs,
 .account-modal .auth-tabs {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   gap: 5px;
   margin: 16px 0;
   padding: 4px;
@@ -22,12 +24,26 @@
   background: var(--surface-soft);
 }
 
+.account-modal .account-tabs::-webkit-scrollbar,
+.account-modal .auth-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 521px) {
+  .account-modal .account-tabs,
+  .account-modal .auth-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
 .account-modal .account-tabs button,
 .account-modal .auth-tabs button {
+  flex: 1 0 auto;
   min-height: 38px;
   border: 0;
   border-radius: 8px;
-  padding: 9px 8px;
+  padding: 9px 12px;
   background: transparent;
   color: var(--muted);
   font-size: 11px;
@@ -36,6 +52,14 @@
   text-align: center;
   cursor: pointer;
   transition: background-color .15s ease, color .15s ease, box-shadow .15s ease;
+}
+
+@media (min-width: 521px) {
+  .account-modal .account-tabs button,
+  .account-modal .auth-tabs button {
+    flex: unset;
+    padding: 9px 8px;
+  }
 }
 
 .account-modal .account-tabs button:hover:not(.active),
@@ -1172,17 +1196,56 @@
   margin-bottom: 20px;
 }
 
-.simulator-header h3 {
-  margin: 4px 0 6px;
-  font-size: 21px;
-  font-weight: 750;
-  color: var(--ink);
-  letter-spacing: -0.03em;
+.simulator-header-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
-.simulator-header p {
+.simulator-eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.simulator-interactive-tag {
+  font-size: 10px;
+  font-weight: 750;
+  color: var(--green);
+  letter-spacing: 0.02em;
+}
+
+.simulator-header h3 {
+  margin: 2px 0 4px;
+  font-size: clamp(20px, 2.2vw, 24px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.simulator-header p,
+.simulator-subtext {
   margin: 0;
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 580px;
+}
+
+.sim-subject-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.sim-subject-picker label {
   font-size: 11px;
+  font-weight: 700;
   color: var(--muted);
 }
 
@@ -1396,6 +1459,55 @@
   }
   .ladder-pills-row {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .assessment-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+  .assessment-name {
+    white-space: normal;
+    word-break: break-word;
+    font-size: 12px;
+  }
+  .assessment-score-inputs {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .grade-score-input.inline {
+    width: 68px;
+  }
+  .custom-category-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .category-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .universal-simulator-card {
+    padding: 16px 14px;
+  }
+  .simulator-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .simulator-header h3 {
+    font-size: 20px;
+  }
+  .simulator-subtext {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+  .sim-subject-picker {
+    width: 100%;
+    justify-content: flex-start;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
   }
 }
 

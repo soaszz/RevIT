@@ -1,0 +1,37 @@
+{
+  "app/lib/server/trustedStudyPersistence.ts": {
+    "before": "05d79700129d344494c78b981d3adb25f81b13e2b999ad7e81b0461b4625fe2b",
+    "after": "d6e3e5c301fd2a9c1ebed3e62ac891136e75bf0616340b94db05184fca59dad5",
+    "reason": "Phase 3N-K retry/reward boundary fixes, exact preservation chain and streaming full-history security scan."
+  },
+  "app/lib/trustedStudyClient.ts": {
+    "before": "8f7f836c3312d38ef14220bb6502bd9254172fd81166aaa8ecec61d63a22c4dc",
+    "after": "4c678fbc4c77532a26d573b9d46e49130c98672b4ac06694f0b53b4800204b40",
+    "reason": "Phase 3N-K retry/reward boundary fixes, exact preservation chain and streaming full-history security scan."
+  },
+  "app/lib/xpService.ts": {
+    "before": "9868e764c1026acb23226d6bb6b8606824964cacb1cec719fc02d1d094b349ec",
+    "after": "dffcb8ff39b925419be3a555fcf45f5f97c977dccec2c61c37af62b09b70e79a",
+    "reason": "Phase 3N-K retry/reward boundary fixes, exact preservation chain and streaming full-history security scan."
+  },
+  "app/RevITApp.tsx": {
+    "before": "4c9e97b5f835600cb6025528f01a3051c6d8e88e66b414904f2f3bb7c5f91dd4",
+    "after": "af2e5e03a91539b7f50788c128de566e7dac95f798f7403f55bc2efe6a08a889",
+    "reason": "Phase 3N-K retry/reward boundary fixes, exact preservation chain and streaming full-history security scan."
+  },
+  "tests/trusted-integration.test.ts": {
+    "before": "8a2f32c3b956c859974b9eedf1ef14df6e5ce85390bb54a9e766f2f6874cfda3",
+    "after": "805f3a4ee55c2345ceda303d745c2592f41b1b4388452c6827a5a06b94c55993",
+    "reason": "Phase 3N-K retry/reward boundary fixes, exact preservation chain and streaming full-history security scan."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "5552a8857867481c094b6731c905ec4cfe06520bceac76cd2131b2b499e090bb",
+    "after": "182a8903c3f5aacf7ddc41edb3cb589e1291db7017916fc8b1427bfa6c0219e3",
+    "reason": "Phase 3N-K retry/reward boundary fixes, exact preservation chain and streaming full-history security scan."
+  },
+  "scripts/check-secrets.mjs": {
+    "before": "e97791aeeb88e7e284f313d083defed88780c362345441078bf4b26d704474d7",
+    "after": "17adc1c041997cfff8d298b586816928eaa5a8970572ba4c42637a6dad642c7d",
+    "reason": "Phase 3N-K retry/reward boundary fixes, exact preservation chain and streaming full-history security scan."
+  }
+}

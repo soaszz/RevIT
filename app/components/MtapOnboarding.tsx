@@ -28,8 +28,8 @@ export default function MtapOnboarding({ onChoose }: {
           <p id="mtap-onboarding-description">Are you currently a National University student or studying at NU MOA, a 4th year Medical Technology student, and taking MTAP?</p>
         </div>
         <div className="mtap-onboarding-note">
-          <strong>Your choice only changes access to Grades.</strong>
-          <span>Choose Yes to show the Grades tab. Standard RevIT hides only Grades and presents every subject in one searchable list. NU Revit groups subjects under MTAP 1 and Other Majors; all other study tools remain available in both.</span>
+          <strong>Your choice customizes course presets and subject grouping.</strong>
+          <span>Choose Yes to enable the NU MOA MTAP 1 grading preset and category groupings. Standard RevIT presents custom gradebooks and all subjects in one searchable list; all other study tools remain available in both.</span>
         </div>
         {status && <p className="form-status error" role="alert">{status}</p>}
         <div className="mtap-onboarding-actions">

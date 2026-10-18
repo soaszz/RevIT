@@ -1,0 +1,107 @@
+✔ trusted adapter requires authenticated identity and rejects forged fields (230.5573ms)
+✔ canonical grading, attribution, digest and matching NULL are server derived (351.451ms)
+✔ unknown IDs, invalid matching, skip, duplicates and unsupported versions fail before writes (97.2085ms)
+✔ Free cannot create Pro sessions; Strasinger is blocked even for Pro (176.9864ms)
+✔ expired Pro, expired session, account switching and missing ownership retain pending work (85.5582ms)
+✖ durable identical retry returns original acknowledgment; legacy and changed responses conflict (87.027ms)
+✖ missing/false acknowledgment and database conflicts are never reported as durable success (84.1084ms)
+✔ Rodak adapter resolves all 34 exact chapter mappings without source invention (78.3775ms)
+✖ fallback writer defaults to createAdminServiceClient on server and executes service-role rpc (82.1796ms)
+✖ migration and rollback fail closed and preserve prior files (static checks only) (21.7496ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 6
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1557.6594
+
+✖ failing tests:
+
+test at tests\trusted-study.test.ts:138:1
+✖ durable identical retry returns original acknowledgment; legacy and changed responses conflict (87.027ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      {
+        attempt_number: 1,
+        competitive_at: '2026-10-15T01:00:00Z',
+        content_version: 'revit-grading-v1:harr:a4f1074a811fefd7aa2c74e0d5fbf7fe523bbcd1dad7f94d9e942d43ff670d7b',
+  ...
+        session_slot: 0,
+  +     status: 'already_accepted',
+  +     user_id: '11111111-1111-4111-8111-111111111111',
+  -     status: 'accepted',
+        verified_at: '2026-10-15T01:00:00Z'
+      }
+    ]
+  
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:143:10)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests\trusted-study.test.ts:150:1
+✖ missing/false acknowledgment and database conflicts are never reported as durable success (84.1084ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /PERSISTENCE_UNAVAILABLE/. Input:
+  
+  'Error: ATTEMPT_CONFLICT'
+  
+      at async TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:153:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: ATTEMPT_CONFLICT
+        at databaseError (eval at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:53:5), <anonymous>:41:15)
+        at Object.commitStudyBatch (eval at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:53:5), <anonymous>:127:9)
+        at async waitForActual (node:assert:615:5)
+        at async strict.rejects (node:assert:738:25)
+        at async TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:153:3)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    expected: /PERSISTENCE_UNAVAILABLE/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\trusted-study.test.ts:168:1
+✖ fallback writer defaults to createAdminServiceClient on server and executes service-role rpc (82.1796ms)
+  Error: TRUSTED_STUDY_DISABLED
+      at requireTrustedStudyWriter (eval at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:53:5), <anonymous>:15:15)
+      at Object.createStudySession (eval at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:53:5), <anonymous>:58:89)
+      at async TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:171:19)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests\trusted-study.test.ts:196:1
+✖ migration and rollback fail closed and preserve prior files (static checks only) (21.7496ms)
+  AssertionError [ERR_ASSERTION]: app/page.tsx
+  + actual - expected
+  
+  + '41a9afb4852395141d4e8eb0da5206b83b3272fab9b5200d3792b543fb895721'
+  - '572201aba2692ef19888b5de2a5175174aef3c8c4d17ab4193dcd9255be7aa63'
+  
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-study.test.ts:223:69)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '41a9afb4852395141d4e8eb0da5206b83b3272fab9b5200d3792b543fb895721',
+    expected: '572201aba2692ef19888b5de2a5175174aef3c8c4d17ab4193dcd9255be7aa63',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

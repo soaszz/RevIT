@@ -1,0 +1,50 @@
+{
+  "modified": [
+    "AGENT_HANDOFF.md",
+    "STATUS.md",
+    "app/lib/server/trustedStudyPersistence.ts",
+    "app/lib/server/trustedStudyRoutes.ts",
+    "app/lib/trustedStudyClient.ts",
+    "docs/phase3n/REPORT.md",
+    "scripts/phase3n/assert-preserved.mjs",
+    "supabase/tests/trusted_cutover_verification.sql",
+    "tests/trusted-integration.test.ts"
+  ],
+  "createdSourcePreparation": [
+    "app/lib/server/trustedStudyEffects.ts",
+    "supabase/tests/trusted_cutover_rollback_verification.sql",
+    "tests/trusted-effects.test.ts",
+    "tests/trusted-sql-preparation.test.ts",
+    "scripts/phase3n/completion-checks.mjs",
+    "scripts/phase3n/prepare-cutover-rollback.mjs"
+  ],
+  "createdReportsEvidence": [
+    "docs/phase3n/local-completion-sprint/REPORT.md",
+    "docs/phase3n/local-completion-sprint/STAGING_RUNBOOK.md",
+    "docs/phase3n/local-completion-sprint/authorized-changes.json",
+    "docs/phase3n/local-completion-sprint/baseline.json",
+    "docs/phase3n/local-completion-sprint/build.log",
+    "docs/phase3n/local-completion-sprint/content-integrity.json",
+    "docs/phase3n/local-completion-sprint/files.json",
+    "docs/phase3n/local-completion-sprint/focused-results.json",
+    "docs/phase3n/local-completion-sprint/focused.log",
+    "docs/phase3n/local-completion-sprint/focused.red-results.json",
+    "docs/phase3n/local-completion-sprint/focused.red.log",
+    "docs/phase3n/local-completion-sprint/genuine-font-build.json",
+    "docs/phase3n/local-completion-sprint/lint.initial.log",
+    "docs/phase3n/local-completion-sprint/lint.log",
+    "docs/phase3n/local-completion-sprint/preservation-results.json",
+    "docs/phase3n/local-completion-sprint/regression-results.json",
+    "docs/phase3n/local-completion-sprint/regression.initial-results.json",
+    "docs/phase3n/local-completion-sprint/reviewer-content.log",
+    "docs/phase3n/local-completion-sprint/secrets.log",
+    "docs/phase3n/local-completion-sprint/typecheck.initial.log",
+    "docs/phase3n/local-completion-sprint/typecheck.log",
+    "docs/phase3n/local-completion-sprint/unit.log"
+  ],
+  "generated": [
+    ".next/**",
+    "tsconfig.tsbuildinfo"
+  ],
+  "backups": "scratch/local-completion-sprint/backups/**"
+}

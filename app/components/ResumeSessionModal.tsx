@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
+import type { ReviewerBook } from "../content/reviewerContent";
 import type { ReviewTimerDuration } from "../lib/reviewTimer";
 import type { ReviewMode, QuestionAttempt } from "../lib/domain";
 
@@ -18,10 +19,11 @@ export type SavedRecentSession = {
   activeTimer: { enabled: boolean; duration: ReviewTimerDuration };
   selectedTopicIds?: string[];
   wrongAnswersOnly?: boolean;
-  book?: "Harr" | "Ciulla" | "all";
+  book?: ReviewerBook | "all";
   pausedAt: string;
   primaryTopicName: string;
   subjectName: string;
+  skippedIds?: string[];
 };
 
 type ResumeSessionModalProps = {

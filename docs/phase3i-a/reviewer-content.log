@@ -1,0 +1,24 @@
+✔ ships the validated ten-subject MCQ library with keyed rationales (25.5307ms)
+✔ randomizes displayed choices per review session and labels the PDF rationale (3.8169ms)
+✔ queues question attempts and batches cloud progression (1.7235ms)
+✔ passes Turnstile tokens to protected Supabase auth operations (1.8072ms)
+✔ hides two-factor setup from account settings without weakening existing sign-in checks (1.294ms)
+✔ calendar uses bounded cells and tablet-first full-width breakpoints (1.5052ms)
+✔ study planner extends the existing calendar and supports local exports (4.0606ms)
+✔ QnA setup stays accessible and the professional navigation can collapse (2.8857ms)
+✔ gradebook groups all subjects under assessment categories without number spinners (2.596ms)
+✔ uses RevIT and Groq branding while keeping the MedTech AI tab (2.5151ms)
+✔ AI conversations use the existing Supabase user and preserve the Groq request flow (2.9893ms)
+✔ MedTech AI renders Markdown emphasis, tables, and LaTeX formulas (2.9243ms)
+✔ provides a responsive floating scientific calculator with undo and redo (5.9752ms)
+✔ keeps the legal consent experience component-scoped and responsive (1.6733ms)
+✔ gates startup behind the branded initialization screen (3.6476ms)
+✔ adds session timers, feedback preferences, and frog-only collapsed branding (5.5056ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 251.6283

@@ -1,0 +1,209 @@
+✖ canonical registry covers all banks once, preserves source, and rejects unknown IDs (5.1673ms)
+✖ registry rejects duplicate, malformed and ambiguous definitions without key leakage (2.2975ms)
+✖ content versions are stable for identical content and change with grading keys (0.1974ms)
+✖ ordinary grading uses canonical indexes for two through seven choices (1.1718ms)
+✖ ordinary grading rejects malformed indexes and unknown IDs (0.2327ms)
+✖ all 16 matching IDs grade exact sequences with unchanged local scorer parity (0.9375ms)
+✖ matching rejects missing, extra, sparse, noninteger and encoded answers (0.5382ms)
+✖ strict request union rejects mixed variants and smuggled grading/security fields (0.5319ms)
+✖ explicit timeouts are incorrect for both canonical response types (0.7427ms)
+✖ isolated authenticated handler permits Harr Free and premium books only for server-verified Pro (1.0947ms)
+✖ handler denies unauthenticated/errors/forgery and never returns private errors or answer keys (0.4984ms)
+✖ foundation is server-only, has no HTTP route or persistence imports, preserves all prior source/content (0.3917ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 0
+ℹ fail 12
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1237.9675
+
+✖ failing tests:
+
+test at tests\answer-verification.test.ts:54:1
+✖ canonical registry covers all banks once, preserves source, and rejects unknown IDs (5.1673ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\server\answerVerification.ts'
+      at readFileSync (node:fs:621:20)
+      at load (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:33:37)
+      at verification (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:39:32)
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:55:15)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\server\\answerVerification.ts'
+  }
+
+test at tests\answer-verification.test.ts:71:1
+✖ registry rejects duplicate, malformed and ambiguous definitions without key leakage (2.2975ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    Comparison {
+  +   message: 'api.createCanonicalRegistry is not a function'
+  -   code: 'CONTENT_UNAVAILABLE',
+  -   message: 'Question content is unavailable.'
+    }
+  
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:85:35)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: api.createCanonicalRegistry is not a function
+        at assert.throws.code (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:85:52)
+        at getActual (node:assert:580:5)
+        at strict.throws (node:assert:728:24)
+        at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:85:35)
+        at Test.runInAsyncScope (node:async_hooks:226:14)
+        at Test.run (node:internal/test_runner/test:1402:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+        at Test.postRun (node:internal/test_runner/test:1542:19)
+        at Test.run (node:internal/test_runner/test:1467:12)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3),
+    expected: { code: 'CONTENT_UNAVAILABLE', message: 'Question content is unavailable.' },
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests\answer-verification.test.ts:92:1
+✖ content versions are stable for identical content and change with grading keys (0.1974ms)
+  TypeError: api.createCanonicalRegistry is not a function
+      at make (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:94:36)
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:95:17)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests\answer-verification.test.ts:102:1
+✖ ordinary grading uses canonical indexes for two through seven choices (1.1718ms)
+  TypeError: api.gradeAnswer is not a function
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:107:28)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests\answer-verification.test.ts:120:1
+✖ ordinary grading rejects malformed indexes and unknown IDs (0.2327ms)
+  TypeError: api.gradeAnswer is not a function
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:123:30)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests\answer-verification.test.ts:128:1
+✖ all 16 matching IDs grade exact sequences with unchanged local scorer parity (0.9375ms)
+  TypeError: api.gradeAnswer is not a function
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:135:32)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests\answer-verification.test.ts:146:1
+✖ matching rejects missing, extra, sparse, noninteger and encoded answers (0.5382ms)
+  TypeError: api.gradeAnswer is not a function
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:154:32)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests\answer-verification.test.ts:161:1
+✖ strict request union rejects mixed variants and smuggled grading/security fields (0.5319ms)
+  TypeError: api.gradeAnswer is not a function
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:165:30)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests\answer-verification.test.ts:177:1
+✖ explicit timeouts are incorrect for both canonical response types (0.7427ms)
+  TypeError: service(...).gradeAnswer is not a function
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:179:36)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests\answer-verification.test.ts:202:1
+✖ isolated authenticated handler permits Harr Free and premium books only for server-verified Pro (1.0947ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\server\gradingHandler.ts'
+      at readFileSync (node:fs:621:20)
+      at load (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:33:37)
+      at Object.handler (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:40:20)
+      at authFixture (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:198:94)
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:206:34)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\server\\gradingHandler.ts'
+  }
+
+test at tests\answer-verification.test.ts:217:1
+✖ handler denies unauthenticated/errors/forgery and never returns private errors or answer keys (0.4984ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\server\gradingHandler.ts'
+      at readFileSync (node:fs:621:20)
+      at load (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:33:37)
+      at Object.handler (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:40:20)
+      at authFixture (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:198:94)
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:219:32)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\server\\gradingHandler.ts'
+  }
+
+test at tests\answer-verification.test.ts:234:1
+✖ foundation is server-only, has no HTTP route or persistence imports, preserves all prior source/content (0.3917ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\server\answerVerification.ts'
+      at readFileSync (node:fs:621:20)
+      at read (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:15:32)
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\answer-verification.test.ts:236:20)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\server\\answerVerification.ts'
+  }

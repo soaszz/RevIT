@@ -1,0 +1,293 @@
+-- PREPARED ONLY. Separate augmentation; never invokes shared setup/concurrency blocks.
+-- No includes, temporary objects, RPCs, query text, auth row values or credential settings.
+\set ON_ERROR_STOP on
+\set VERBOSITY verbose
+\set ECHO none
+\pset pager off
+BEGIN READ ONLY;
+SET LOCAL statement_timeout='15s';
+SET LOCAL lock_timeout='3s';
+SET LOCAL idle_in_transaction_session_timeout='30s';
+SET LOCAL search_path=pg_catalog,public;
+\echo COVERAGE_SESSION_AND_EVENT_SETTINGS
+SELECT current_database(),version(),current_setting('server_version_num') AS server_version_num,
+ current_user,session_user,pg_backend_pid(),inet_server_addr(),inet_server_port(),
+ inet_client_addr(),inet_client_port(),current_setting('transaction_read_only') AS read_only,
+ current_setting('transaction_isolation') AS isolation,current_setting('default_transaction_read_only') AS default_read_only,
+ current_setting('session_replication_role') AS replication_role,
+ current_setting('event_triggers',true) AS event_triggers,pg_is_in_recovery();
+-- Fresh approved catalog contract, before any pg_temp helper creation.
+-- md5 is a normalized-definition drift check, not target authentication.
+
+WITH RECURSIVE expected(name,event,tags,signature,definition_md5) AS (VALUES
+ ('issue_graphql_placeholder','sql_drop',ARRAY['DROP EXTENSION']::text[],'extensions.set_graphql_placeholder()','f370151e9464a57aa228d1ed2ab4d44d'),
+ ('issue_pg_cron_access','ddl_command_end',ARRAY['CREATE EXTENSION']::text[],'extensions.grant_pg_cron_access()','83fd5bb1dbcdec0803a0f6850bfc01c3'),
+ ('issue_pg_graphql_access','ddl_command_end',ARRAY['CREATE EXTENSION']::text[],'extensions.grant_pg_graphql_access()','74a0af7dce99c5ca229364cf7034925a'),
+ ('issue_pg_net_access','ddl_command_end',ARRAY['CREATE EXTENSION']::text[],'extensions.grant_pg_net_access()','9b066bbc48eb98ab24b1427aad98bfa6'),
+ ('pgrst_ddl_watch','ddl_command_end',NULL::text[],'extensions.pgrst_ddl_watch()','5636b78e87c4fa9f6930340cefe67115'),
+ ('pgrst_drop_watch','sql_drop',NULL::text[],'extensions.pgrst_drop_watch()','6fb5a1ec0ed602a0e1d958a452efb104')
+), actual AS (
+ SELECT e.evtname::text AS name,e.evtevent::text AS event,e.evttags AS tags,
+ e.evtenabled,pg_get_userbyid(e.evtowner) AS owner,pg_get_userbyid(p.proowner) AS function_owner,
+ e.evtfoid,
+ md5(btrim(regexp_replace(replace(pg_get_functiondef(e.evtfoid),E'\r\n',E'\n'),
+ E'[ \t]+$', '', 'gn'),E' \t\r\n')) AS definition_md5
+ FROM pg_event_trigger e JOIN pg_proc p ON p.oid=e.evtfoid
+), reach(oid) AS (
+ SELECT unnest(ARRAY['auth.users'::regclass::oid,'public.study_sessions'::regclass::oid,'public.question_attempts'::regclass::oid])
+ UNION SELECT c.conrelid FROM pg_constraint c JOIN reach r ON r.oid=c.confrelid WHERE c.contype='f'
+), graph AS (
+ SELECT count(*) AS row_count,md5(jsonb_agg(jsonb_build_array(c.conname::text,n.nspname||'.'||child.relname,
+ pn.nspname||'.'||parent.relname,c.conkey::text,c.confkey::text,c.confdeltype::text,
+ c.confupdtype::text,c.condeferrable,c.condeferred,c.convalidated,pg_get_constraintdef(c.oid))
+ ORDER BY (n.nspname||'.'||child.relname) COLLATE "C",c.conname::text COLLATE "C")::text) AS fingerprint
+ FROM pg_constraint c JOIN pg_class child ON child.oid=c.conrelid
+ JOIN pg_namespace n ON n.oid=child.relnamespace JOIN pg_class parent ON parent.oid=c.confrelid
+ JOIN pg_namespace pn ON pn.oid=parent.relnamespace
+ WHERE c.contype='f' AND (c.confrelid IN(SELECT oid FROM reach) OR c.conrelid IN(SELECT oid FROM reach)
+ OR c.confrelid='public.trusted_study_config'::regclass OR c.conrelid='public.trusted_study_config'::regclass)
+), trigger_graph AS (
+ SELECT count(*) AS row_count,md5(jsonb_agg(jsonb_build_array(n.nspname||'.'||c.relname,t.tgname::text,t.tgisinternal,
+ t.tgconstraint::integer,t.tgenabled::text,pg_get_triggerdef(t.oid),p.oid::regprocedure::text,
+ pg_get_userbyid(p.proowner)::text,p.prosecdef,p.proconfig::text,
+ CASE WHEN NOT t.tgisinternal THEN md5(btrim(regexp_replace(replace(pg_get_functiondef(p.oid),E'\r\n',E'\n'),
+ E'[ \t]+$', '', 'gn'),E' \t\r\n')) END)
+ ORDER BY (n.nspname||'.'||c.relname) COLLATE "C",t.tgname::text COLLATE "C")::text) AS fingerprint
+ FROM pg_trigger t JOIN pg_proc p ON p.oid=t.tgfoid JOIN pg_class c ON c.oid=t.tgrelid
+ JOIN pg_namespace n ON n.oid=c.relnamespace
+ WHERE t.tgrelid IN(SELECT oid FROM reach) OR t.tgrelid='public.trusted_study_config'::regclass
+)
+SELECT current_user='postgres' AND session_user='postgres'
+ AND current_setting('transaction_read_only')='on' AND current_setting('transaction_isolation')='read committed'
+ AND current_setting('session_replication_role')='origin'
+ AND coalesce(current_setting('event_triggers',true),'missing')='on'
+ AND (SELECT fingerprint='c97fef3a674d6d2ae5ead3ebaf4c8f7d' FROM graph)
+ AND (SELECT fingerprint='cb4f6ac47d7a4454d97cef2c507d2e1a' FROM trigger_graph)
+ AND (SELECT count(*)=6 FROM actual) AND count(a.name)=6 AND
+ bool_and((a.event=x.event AND a.tags IS NOT DISTINCT FROM x.tags AND a.evtenabled='O'
+ AND a.owner='supabase_admin' AND a.function_owner='supabase_admin'
+ AND a.evtfoid=to_regprocedure(x.signature) AND a.definition_md5=x.definition_md5) IS TRUE)
+ AS coverage_catalog_ok,
+ (SELECT row_count FROM graph) AS fk_count,(SELECT fingerprint FROM graph) AS fk_md5,
+ (SELECT row_count FROM trigger_graph) AS trigger_count,(SELECT fingerprint FROM trigger_graph) AS trigger_md5
+ FROM expected x LEFT JOIN actual a USING(name) \gset
+\echo COVERAGE_ENGINE_FINGERPRINTS :fk_count :fk_md5 :trigger_count :trigger_md5
+\if :coverage_catalog_ok
+\else
+\echo COVERAGE_RECHECK_DRIFT_STOP_NO_OBJECTS
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+
+\echo COVERAGE_RELATION_GUARD
+WITH RECURSIVE reach(oid) AS (
+ SELECT unnest(ARRAY['auth.users'::regclass::oid,'public.study_sessions'::regclass::oid,'public.question_attempts'::regclass::oid])
+ UNION SELECT c.conrelid FROM pg_constraint c JOIN reach r ON r.oid=c.confrelid WHERE c.contype='f'
+)
+SELECT coalesce((SELECT array_agg(n.nspname||'.'||c.relname ORDER BY (n.nspname||'.'||c.relname) COLLATE "C")
+ FROM reach r JOIN pg_class c ON c.oid=r.oid JOIN pg_namespace n ON n.oid=c.relnamespace)=ARRAY[
+ 'auth.identities',
+ 'auth.mfa_amr_claims',
+ 'auth.mfa_challenges',
+ 'auth.mfa_factors',
+ 'auth.mfa_recovery_code_sets',
+ 'auth.mfa_recovery_codes',
+ 'auth.oauth_authorizations',
+ 'auth.oauth_consents',
+ 'auth.one_time_tokens',
+ 'auth.refresh_tokens',
+ 'auth.scim_users',
+ 'auth.sessions',
+ 'auth.users',
+ 'auth.webauthn_challenges',
+ 'auth.webauthn_credentials',
+ 'public.activity_events',
+ 'public.ai_chats',
+ 'public.ai_messages',
+ 'public.daily_activity',
+ 'public.exam_schedule',
+ 'public.grades',
+ 'public.profiles',
+ 'public.question_attempts',
+ 'public.question_reinforcement',
+ 'public.study_sessions',
+ 'public.user_achievements',
+ 'public.user_preferences',
+ 'public.user_progress'
+ ]::text[],false)
+ AND current_user='postgres' AND session_user='postgres'
+ AND coalesce((SELECT rolbypassrls FROM pg_roles WHERE rolname=current_user),false)
+ AND NOT EXISTS(SELECT FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+ WHERE (c.oid IN(SELECT oid FROM reach) OR c.oid='public.trusted_study_config'::regclass
+ OR c.oid=to_regclass('public.user_xp_transactions')) AND
+ (c.relkind<>'r' OR c.relpersistence<>'p' OR
+ pg_get_userbyid(c.relowner)<>CASE WHEN n.nspname='auth' THEN 'supabase_auth_admin' ELSE 'postgres' END))
+ AND NOT EXISTS(SELECT FROM pg_inherits WHERE inhparent IN(SELECT oid FROM reach)
+ OR inhrelid IN(SELECT oid FROM reach) OR inhparent IN('public.trusted_study_config'::regclass,to_regclass('public.user_xp_transactions'))
+ OR inhrelid IN('public.trusted_study_config'::regclass,to_regclass('public.user_xp_transactions')))
+ AS coverage_relations_ok \gset
+\if :coverage_relations_ok
+\else
+\echo COVERAGE_RELATION_DRIFT_STOP
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+\echo COVERAGE_REGISTRY_CONFIGURATION_PREPARED
+SELECT version,name FROM supabase_migrations.schema_migrations ORDER BY version;
+SELECT (SELECT count(*) FROM supabase_migrations.schema_migrations WHERE version='202610160027') AS version_27_entries,
+ (SELECT count(*) FROM supabase_migrations.schema_migrations WHERE version='202610160027' AND name='trusted_cutover_and_attempt_numbering') AS exact_27_entries;
+SELECT id,enabled,updated_at FROM public.trusted_study_config ORDER BY id;
+SELECT count(*) AS prepared_count FROM pg_prepared_xacts;
+SELECT ((SELECT count(*)=1 AND bool_and(id=1 AND enabled IS FALSE) FROM public.trusted_study_config)
+ AND NOT EXISTS(SELECT FROM pg_prepared_xacts)
+ AND (SELECT count(*)=1 FROM supabase_migrations.schema_migrations WHERE version='202610160027')
+ AND (SELECT count(*)=1 FROM supabase_migrations.schema_migrations WHERE version='202610160027' AND name='trusted_cutover_and_attempt_numbering'))
+ AS coverage_state_ok \gset
+\if :coverage_state_ok
+\else
+\echo COVERAGE_STATE_DRIFT_STOP
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+\echo COVERAGE_28_COUNTS_AND_OPTIONAL_XP
+WITH RECURSIVE reach(oid) AS (
+ SELECT unnest(ARRAY['auth.users'::regclass::oid,'public.study_sessions'::regclass::oid,'public.question_attempts'::regclass::oid])
+ UNION SELECT c.conrelid FROM pg_constraint c JOIN reach r ON r.oid=c.confrelid WHERE c.contype='f'
+)
+SELECT format('SELECT %L AS relation,count(*) AS row_count,1/((count(*)=0)::integer) AS empty_guard FROM %I.%I;',
+ n.nspname||'.'||c.relname,n.nspname,c.relname)
+FROM reach r JOIN pg_class c ON c.oid=r.oid JOIN pg_namespace n ON n.oid=c.relnamespace
+ORDER BY (n.nspname||'.'||c.relname) COLLATE "C" \gexec
+SELECT to_regclass('public.user_xp_transactions') AS optional_xp_relation;
+SELECT format('SELECT %L AS relation,count(*) AS row_count,1/((count(*)=0)::integer) AS empty_guard FROM %I.%I;',
+ n.nspname||'.'||c.relname,n.nspname,c.relname)
+FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
+WHERE c.oid=to_regclass('public.user_xp_transactions') \gexec
+\echo COVERAGE_FULL_FK_CONTRACT
+WITH RECURSIVE reach(oid) AS (
+ SELECT unnest(ARRAY['auth.users'::regclass::oid,'public.study_sessions'::regclass::oid,'public.question_attempts'::regclass::oid])
+ UNION SELECT c.conrelid FROM pg_constraint c JOIN reach r ON r.oid=c.confrelid WHERE c.contype='f'
+), scope(oid) AS (SELECT oid FROM reach UNION SELECT 'public.trusted_study_config'::regclass::oid)
+SELECT c.oid,c.conname,c.conrelid::regclass AS child,c.confrelid::regclass AS parent,
+ c.conkey,c.confkey,c.confmatchtype,c.confdeltype,c.confupdtype,c.convalidated,c.condeferrable,c.condeferred,
+ c.conislocal,c.coninhcount,c.connoinherit,c.conparentid,pg_get_constraintdef(c.oid) AS definition
+FROM pg_constraint c WHERE c.contype='f' AND
+ (c.conrelid IN(SELECT oid FROM scope) OR c.confrelid IN(SELECT oid FROM scope))
+ORDER BY c.conrelid::regclass::text COLLATE "C",c.conname::text COLLATE "C";
+\echo COVERAGE_FULL_METADATA
+SELECT (WITH RECURSIVE reach(oid) AS (
+ SELECT unnest(ARRAY['auth.users'::regclass::oid,'public.study_sessions'::regclass::oid,'public.question_attempts'::regclass::oid])
+ UNION SELECT c.conrelid FROM pg_constraint c JOIN reach r ON r.oid=c.confrelid WHERE c.contype='f'
+), scope(oid) AS (SELECT oid FROM reach UNION SELECT 'public.trusted_study_config'::regclass::oid)
+SELECT jsonb_build_object(
+ 'event_settings',jsonb_build_array(current_setting('event_triggers',true),current_setting('session_replication_role')),
+ 'event_functions',(SELECT jsonb_agg(jsonb_build_object('name',e.evtname,'function',e.evtfoid,
+ 'owner',p.proowner,'security_definer',p.prosecdef,'settings',p.proconfig,'acl_null',p.proacl IS NULL,
+ 'acl',ARRAY(SELECT z::text FROM unnest(p.proacl) z ORDER BY z::text),
+ 'effective',(SELECT jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) ORDER BY r)
+ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r)) ORDER BY e.evtname)
+ FROM pg_event_trigger e JOIN pg_proc p ON p.oid=e.evtfoid),
+ 'schemas',(SELECT jsonb_agg(jsonb_build_array(n.oid,n.nspname,n.nspowner,n.nspacl IS NULL,
+ ARRAY(SELECT z::text FROM unnest(n.nspacl) z ORDER BY z::text),
+ (SELECT jsonb_agg(jsonb_build_array(r,has_schema_privilege(r,n.oid,'USAGE'),has_schema_privilege(r,n.oid,'CREATE')) ORDER BY r)
+ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r)) ORDER BY n.oid)
+ FROM pg_namespace n WHERE n.oid IN(SELECT relnamespace FROM pg_class WHERE oid IN(SELECT oid FROM scope))),
+ 'relations',(SELECT jsonb_agg(jsonb_build_object('oid',c.oid,'name',c.oid::regclass::text,
+ 'kind',c.relkind,'persistence',c.relpersistence,'access_method',c.relam,'owner',c.relowner,
+ 'partition',c.relispartition,'replica_identity',c.relreplident,'options',c.reloptions,
+ 'rls',c.relrowsecurity,'force_rls',c.relforcerowsecurity,'acl_null',c.relacl IS NULL,
+ 'acl',ARRAY(SELECT z::text FROM unnest(c.relacl) z ORDER BY z::text),
+ 'columns',(SELECT jsonb_agg(jsonb_build_array(a.attnum,a.attname,a.atttypid,a.atttypmod,
+ a.attnotnull,a.attidentity,a.attgenerated,a.attacl IS NULL,
+ a.attcollation,a.attstorage,a.attcompression,a.attislocal,a.attinhcount,
+ ARRAY(SELECT z::text FROM unnest(a.attacl) z ORDER BY z::text),pg_get_expr(d.adbin,d.adrelid)) ORDER BY a.attnum)
+ FROM pg_attribute a LEFT JOIN pg_attrdef d ON d.adrelid=a.attrelid AND d.adnum=a.attnum
+ WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped),
+ 'effective',(SELECT jsonb_agg(jsonb_build_array(r,priv,has_table_privilege(r,c.oid,priv)) ORDER BY r,priv)
+ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r
+ CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER','MAINTAIN']) priv),
+ 'effective_columns',(SELECT jsonb_agg(jsonb_build_array(r,a.attnum,priv,has_column_privilege(r,c.oid,a.attnum,priv)) ORDER BY r,a.attnum,priv)
+ FROM pg_attribute a CROSS JOIN unnest(ARRAY['postgres','anon','authenticated','service_role']) r
+ CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','REFERENCES']) priv
+ WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped)) ORDER BY c.oid)
+ FROM pg_class c WHERE c.oid IN(SELECT oid FROM scope)),
+ 'constraints',(SELECT jsonb_agg(jsonb_build_array(oid,conrelid,confrelid,conname,contype,
+ convalidated,condeferrable,condeferred,pg_get_constraintdef(oid)) ORDER BY oid)
+ FROM pg_constraint WHERE conrelid IN(SELECT oid FROM scope) OR confrelid IN(SELECT oid FROM scope)),
+ 'indexes',(SELECT jsonb_agg(jsonb_build_array(indexrelid,indrelid,indisvalid,indisready,
+ pg_get_indexdef(indexrelid)) ORDER BY indexrelid) FROM pg_index WHERE indrelid IN(SELECT oid FROM scope)),
+ 'policies',(SELECT jsonb_agg(to_jsonb(p) ORDER BY polrelid,polname) FROM pg_policy p WHERE polrelid IN(SELECT oid FROM scope)),
+ 'triggers',(SELECT jsonb_agg(jsonb_build_array(t.oid,t.tgrelid,t.tgname,t.tgisinternal,t.tgconstraint,
+ t.tgenabled,pg_get_triggerdef(t.oid),t.tgfoid,p.proowner,p.prosecdef,p.proconfig,p.proacl IS NULL,
+ ARRAY(SELECT z::text FROM unnest(p.proacl) z ORDER BY z::text),
+ (SELECT jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) ORDER BY r)
+ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r),
+ CASE WHEN NOT t.tgisinternal THEN pg_get_functiondef(p.oid) END) ORDER BY t.tgrelid,t.tgname)
+ FROM pg_trigger t JOIN pg_proc p ON p.oid=t.tgfoid WHERE t.tgrelid IN(SELECT oid FROM scope)),
+ 'dependencies',(SELECT jsonb_agg(jsonb_build_array(d.refobjid,d.refobjsubid,d.classid,d.objid,d.objsubid,d.deptype)
+ ORDER BY d.refobjid,d.refobjsubid,d.classid,d.objid,d.objsubid,d.deptype) FROM pg_depend d
+ WHERE d.refclassid='pg_class'::regclass AND d.refobjid IN(SELECT oid FROM scope)),
+ 'inheritance',(SELECT jsonb_agg(to_jsonb(i) ORDER BY inhparent,inhrelid,inhseqno) FROM pg_inherits i
+ WHERE inhparent IN(SELECT oid FROM scope) OR inhrelid IN(SELECT oid FROM scope)),
+ 'role_attributes',(SELECT jsonb_agg(jsonb_build_array(rolname,rolsuper,rolinherit,rolcanlogin,rolbypassrls) ORDER BY rolname)
+ FROM pg_roles WHERE rolname IN('postgres','anon','authenticated','service_role','pg_read_all_stats')))) AS coverage_metadata;
+
+\echo COVERAGE_SCHEMA_DETAILS_AND_NAMED_ACLS
+WITH RECURSIVE reach(oid) AS (
+ SELECT unnest(ARRAY['auth.users'::regclass::oid,'public.study_sessions'::regclass::oid,'public.question_attempts'::regclass::oid])
+ UNION SELECT c.conrelid FROM pg_constraint c JOIN reach r ON r.oid=c.confrelid WHERE c.contype='f'
+), scope(oid) AS (SELECT oid FROM reach UNION SELECT 'public.trusted_study_config'::regclass::oid)
+SELECT c.oid::regclass AS relation,pg_get_userbyid(c.relowner) AS owner,
+ c.relkind,c.relpersistence,am.amname,c.relispartition,c.relreplident,c.reloptions,
+ c.relrowsecurity,c.relforcerowsecurity,c.relacl,
+ a.attnum,a.attname,format_type(a.atttypid,a.atttypmod) AS type,
+ a.attnotnull,a.attidentity,a.attgenerated,a.attisdropped,a.attislocal,a.attinhcount,
+ a.attstorage,a.attcompression,a.attcollation::regcollation AS collation,a.attacl,
+ pg_get_expr(d.adbin,d.adrelid) AS default_expression
+FROM pg_class c JOIN pg_attribute a ON a.attrelid=c.oid AND a.attnum>0
+LEFT JOIN pg_am am ON am.oid=c.relam LEFT JOIN pg_attrdef d ON d.adrelid=c.oid AND d.adnum=a.attnum
+WHERE c.oid IN(SELECT oid FROM scope) ORDER BY c.oid,a.attnum;
+\echo COVERAGE_TRUSTED_AND_LEGACY_ROUTINES
+SELECT p.oid::regprocedure AS signature,pg_get_userbyid(p.proowner) AS owner,
+ p.prokind,p.prosecdef,p.proleakproof,p.provolatile,p.proparallel,p.proconfig,p.proacl,
+ l.lanname,pg_get_function_identity_arguments(p.oid) AS identity_arguments,
+ pg_get_function_result(p.oid) AS result,pg_get_functiondef(p.oid) AS definition,
+ (SELECT jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) ORDER BY r)
+ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r) AS effective_execute
+FROM pg_proc p JOIN pg_language l ON l.oid=p.prolang
+WHERE p.pronamespace='public'::regnamespace AND p.proname IN
+ ('assert_trusted_study_enabled','create_verified_study_session','commit_verified_study_batch',
+ 'record_question_attempt','record_study_activity','record_progression_award',
+ 'check_and_unlock_achievements','leaderboard_metric_rows') ORDER BY p.proname,p.oid;
+\echo COVERAGE_EVENT_DEFINITIONS_AND_PRIVILEGES
+SELECT e.evtname,e.evtevent,e.evtenabled,e.evttags,pg_get_userbyid(e.evtowner) AS event_owner,
+ e.evtfoid::regprocedure AS callback,pg_get_userbyid(p.proowner) AS callback_owner,
+ p.prosecdef,p.proleakproof,p.provolatile,p.proparallel,p.proconfig,p.proacl,
+ pg_get_functiondef(p.oid) AS definition
+FROM pg_event_trigger e JOIN pg_proc p ON p.oid=e.evtfoid ORDER BY e.evtname;
+\echo COVERAGE_ALL_CALLBACKS_INCLUDING_INTERNAL
+WITH RECURSIVE reach(oid) AS (
+ SELECT unnest(ARRAY['auth.users'::regclass::oid,'public.study_sessions'::regclass::oid,'public.question_attempts'::regclass::oid])
+ UNION SELECT c.conrelid FROM pg_constraint c JOIN reach r ON r.oid=c.confrelid WHERE c.contype='f'
+), scope(oid) AS (SELECT oid FROM reach UNION SELECT 'public.trusted_study_config'::regclass::oid)
+SELECT DISTINCT p.oid::regprocedure AS signature,pg_get_userbyid(p.proowner) AS owner,
+ p.prokind,p.prosecdef,p.proleakproof,p.provolatile,p.proparallel,p.proconfig,p.proacl,
+ pg_get_functiondef(p.oid) AS definition
+FROM pg_trigger t JOIN pg_proc p ON p.oid=t.tgfoid WHERE t.tgrelid IN(SELECT oid FROM scope)
+ORDER BY signature;
+\echo COVERAGE_ROLE_MEMBERSHIPS_AND_CAPABILITIES
+SELECT r.oid,r.rolname,r.rolsuper,r.rolinherit,r.rolcreaterole,r.rolcreatedb,r.rolcanlogin,
+ r.rolreplication,r.rolbypassrls,r.rolconnlimit FROM pg_roles r
+WHERE r.rolname IN('postgres','anon','authenticated','service_role','pg_read_all_stats','supabase_admin','supabase_auth_admin') ORDER BY r.rolname;
+SELECT pg_get_userbyid(roleid) AS granted_role,pg_get_userbyid(member) AS member,
+ pg_get_userbyid(grantor) AS grantor,admin_option,inherit_option,set_option
+FROM pg_auth_members ORDER BY roleid,member,grantor;
+SELECT pg_has_role(current_user,'service_role','SET') AS can_set_service_role,
+ pg_has_role(current_user,'pg_read_all_stats','USAGE') AS stats_membership;
+-- No query text. Metadata visibility is not six-session or engine-lock evidence.
+SELECT pid,usename,backend_type,state,xact_start,wait_event_type,wait_event,
+ cardinality(pg_blocking_pids(pid)) AS blocking_pid_count FROM pg_stat_activity
+WHERE datname=current_database() ORDER BY pid;
+SELECT pid,locktype,mode,granted,database,relation FROM pg_locks
+WHERE pid=pg_backend_pid() ORDER BY locktype,mode,relation;
+SELECT current_setting('transaction_read_only') AS final_read_only,
+ current_setting('transaction_isolation') AS final_isolation,pg_backend_pid() AS final_pid;
+ROLLBACK;
+\echo COVERAGE_READ_ONLY_ROLLBACK_COMPLETE

@@ -16,9 +16,11 @@ export type LeaderboardMetric = (typeof LEADERBOARD_METRICS)[number]["id"];
 export type LeaderboardRow = {
   rank: number;
   displayName: string;
+  username?: string | null;
   avatarUrl: string | null;
   metricValue: number;
   answeredCount: number;
+  totalXp?: number;
   isCurrentUser: boolean;
   periodTimezone: string;
 };
@@ -26,9 +28,11 @@ export type LeaderboardRow = {
 export type CurrentLeaderboardPosition = {
   rank: number | null;
   displayName: string;
+  username?: string | null;
   avatarUrl: string | null;
   metricValue: number;
   answeredCount: number;
+  totalXp?: number;
   minimumRequired: number;
   questionsNeeded: number;
   eligible: boolean;

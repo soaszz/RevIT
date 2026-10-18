@@ -1,0 +1,1 @@
+app/lib/server/trustedStudyPersistence.ts(49,99): error TS2339: Property 'resumeOnly' does not exist on type 'never'.

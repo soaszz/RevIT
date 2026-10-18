@@ -9,7 +9,7 @@ import { calculateExpression, calculatorExpressionToLatex, calculatorExpressionW
 import { EMPTY_GRADES, type DailyActivity, type ExamSchedule, type GradeValues } from "../app/lib/domain";
 import { calculateGrade, calculateGuidance, calculateNextAssessmentTarget } from "../app/lib/gradeCalculator";
 import { buildMonthGrid, calculateStreak, dateKeyInTimeZone, intensityFor, upcomingExam } from "../app/lib/studyCalendar";
-import { ACHIEVEMENT_CATALOG, levelForXp, levelProgress, metricForCondition, xpThresholdForLevel, XP_REWARDS } from "../app/lib/xpConfig";
+import { ACHIEVEMENT_CATALOG, levelForXp, levelProgress, levelTitle, metricForCondition, xpThresholdForLevel, XP_REWARDS } from "../app/lib/xpConfig";
 
 function grades(values: Partial<GradeValues>): GradeValues { return { ...EMPTY_GRADES, ...values }; }
 
@@ -106,12 +106,30 @@ test("streaks preserve yesterday, stop at gaps, and calculate longest", () => {
   assert.equal(calculateStreak([activity("2026-08-18")], "2026-08-20").current, 0);
 });
 
-test("timezone aggregation and month grid handle boundary dates", () => {
+test("timezone aggregation and month grid handle boundary dates and adaptive rows", () => {
   assert.equal(dateKeyInTimeZone(new Date("2026-08-19T16:30:00Z"), "Asia/Manila"), "2026-08-20");
   assert.equal(dateKeyInTimeZone(new Date("2026-08-19T16:30:00Z"), "America/Los_Angeles"), "2026-08-19");
-  const grid = buildMonthGrid(2026, 7);
-  assert.equal(grid.length, 42);
-  assert.ok(grid.some((day) => day.key === "2026-08-01" && day.inMonth));
+
+  // 6-row month: August 2026 (starts Saturday, 31 days -> 37 days needed -> 42 cells)
+  const grid6 = buildMonthGrid(2026, 7);
+  assert.equal(grid6.length, 42);
+  assert.ok(grid6.some((day) => day.key === "2026-08-01" && day.inMonth));
+
+  // 4-row month: February 2026 (starts Sunday, 28 days -> 28 days needed -> 28 cells)
+  const grid4 = buildMonthGrid(2026, 1);
+  assert.equal(grid4.length, 28);
+  assert.equal(grid4[0].key, "2026-02-01");
+  assert.equal(grid4[0].inMonth, true);
+  assert.equal(grid4[27].key, "2026-02-28");
+  assert.equal(grid4[27].inMonth, true);
+
+  // 5-row month: September 2026 (starts Tuesday, 30 days -> 32 days needed -> 35 cells)
+  const grid5 = buildMonthGrid(2026, 8);
+  assert.equal(grid5.length, 35);
+  assert.equal(grid5[0].inMonth, false); // Sunday prior month (2026-08-30)
+  assert.equal(grid5[2].key, "2026-09-01");
+  assert.equal(grid5[2].inMonth, true);
+
   assert.equal(intensityFor(activity("2026-08-20")) > 0, true);
 });
 
@@ -171,9 +189,17 @@ test("level thresholds match V1 and continue with the same scalable curve", () =
   assert.equal(levelForXp(99), 1);
   assert.equal(levelForXp(100), 2);
   assert.equal(levelForXp(450), 4);
-  assert.equal(levelProgress(250).title, "Knowledge Builder");
+  assert.equal(levelProgress(250).title, "Tadpole");
   assert.equal(levelProgress(250).nextLevelXp, 450);
   assert.equal(levelProgress(250).xpNeeded, 200);
+  assert.equal(levelTitle(1), "Tadpole");
+  assert.equal(levelTitle(4), "Tadpole");
+  assert.equal(levelTitle(5), "Tree Frog");
+  assert.equal(levelTitle(75), "Giant Toad");
+  assert.equal(levelTitle(99), "Giant Toad");
+  assert.equal(levelTitle(100), "Ninja Toad");
+  assert.equal(levelTitle(500), "Supreme Toad Sage");
+  assert.equal(levelTitle(550), "Supreme Toad Sage");
 });
 
 test("all V1 action XP is centralized and achievement definitions are unique", () => {

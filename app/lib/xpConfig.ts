@@ -23,7 +23,34 @@ export const ACHIEVEMENT_CATALOG: Achievement[] = [
   { id: "10000000-0000-4000-8000-000000000011", name: "Dedicated Learner", description: "Complete 25 study sessions", icon: "25", xp_reward: 150, condition_type: "study_sessions", condition_value: 25 },
 ];
 
-const LEVEL_TITLES = ["New Explorer", "Curious Learner", "Knowledge Builder", "Skilled Reviewer", "Mastery in Motion"] as const;
+export interface FrogRankMilestone {
+  minLevel: number;
+  title: string;
+}
+
+export const FROG_RANK_MILESTONES: readonly FrogRankMilestone[] = [
+  { minLevel: 1, title: "Tadpole" },
+  { minLevel: 5, title: "Tree Frog" },
+  { minLevel: 10, title: "Glass Frog" },
+  { minLevel: 20, title: "Leopard Frog" },
+  { minLevel: 30, title: "Bullfrog" },
+  { minLevel: 40, title: "Horned Frog" },
+  { minLevel: 50, title: "Poison Dart Frog" },
+  { minLevel: 75, title: "Giant Toad" },
+  { minLevel: 100, title: "Ninja Toad" },
+  { minLevel: 125, title: "Warrior Toad" },
+  { minLevel: 150, title: "Guardian Toad" },
+  { minLevel: 175, title: "Elder Toad" },
+  { minLevel: 200, title: "Sage Toad" },
+  { minLevel: 250, title: "Great Toad" },
+  { minLevel: 300, title: "Toad Master" },
+  { minLevel: 350, title: "Ancient Toad" },
+  { minLevel: 400, title: "Legendary Toad" },
+  { minLevel: 450, title: "Great Toad Sage" },
+  { minLevel: 500, title: "Supreme Toad Sage" },
+] as const;
+
+export const LEVEL_TITLES = FROG_RANK_MILESTONES.map((m) => m.title);
 
 export type LevelProgress = {
   level: number;
@@ -47,8 +74,14 @@ export function levelForXp(totalXp: number) {
   return level;
 }
 
-export function levelTitle(level: number) {
-  return LEVEL_TITLES[level - 1] ?? "Dedicated Scholar";
+export function levelTitle(level: number): string {
+  const safeLevel = Math.max(1, Math.floor(level));
+  for (let i = FROG_RANK_MILESTONES.length - 1; i >= 0; i--) {
+    if (safeLevel >= FROG_RANK_MILESTONES[i].minLevel) {
+      return FROG_RANK_MILESTONES[i].title;
+    }
+  }
+  return "Tadpole";
 }
 
 export function levelProgress(totalXp: number): LevelProgress {

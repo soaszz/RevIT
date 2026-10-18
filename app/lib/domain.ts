@@ -100,7 +100,7 @@ export type ExamSchedule = {
 export const STUDY_PLAN_CATEGORIES = ["Study", "Break", "Exam", "Event", "Other"] as const;
 export type StudyPlanCategory = (typeof STUDY_PLAN_CATEGORIES)[number];
 
-export const PLANNER_EVENT_KINDS = ["class", "study", "exam", "deadline", "task"] as const;
+export const PLANNER_EVENT_KINDS = ["class", "study", "break", "exam", "deadline", "task"] as const;
 export type PlannerEventKind = (typeof PLANNER_EVENT_KINDS)[number];
 
 export type PlannerAttachmentMeta = {
@@ -202,6 +202,16 @@ export type UserPreferences = {
   mtap_onboarding_completed: boolean;
 };
 
+export type PendingActivationNotification = {
+  id: string;
+  source: "purchased" | "gift" | "prize";
+  plan: string;
+  duration_days: number | null;
+  pro_expires_at: string | null;
+  custom_message: string | null;
+  created_at: string;
+};
+
 export type CloudSnapshot = {
   profile: Profile | null;
   grades: GradeRecord[];
@@ -213,6 +223,7 @@ export type CloudSnapshot = {
   attemptHistoryAvailable: boolean;
   entitlement: SubscriptionEntitlement;
   customGradebooks?: CustomGradebook[];
+  pendingActivation?: PendingActivationNotification | null;
 };
 
 export type AchievementConditionType =

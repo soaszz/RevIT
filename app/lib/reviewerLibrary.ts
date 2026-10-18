@@ -34,8 +34,8 @@ export const CANONICAL_COMBINED_SUBJECTS: {
     id: "hematology",
     name: "Hematology",
     category: "MTAP 1",
-    description: "Physiology of blood, erythrocyte disorders, leukopoiesis, malignancies, and methodology from Harr and Ciulla.",
-    sourceSubjectIds: ["hematology", "ciulla-hematology"],
+    description: "Physiology of blood, erythrocyte disorders, leukopoiesis, malignancies, and methodology from Harr, Ciulla, and Rodak.",
+    sourceSubjectIds: ["hematology", "ciulla-hematology", "rodak-hematology"],
   },
   {
     id: "bacteriology",
@@ -46,10 +46,10 @@ export const CANONICAL_COMBINED_SUBJECTS: {
   },
   {
     id: "aubf",
-    name: "AUBF / Urinalysis & Body Fluids",
+    name: "Clinical Microscopy",
     category: "MTAP 1",
-    description: "Renal physiology, physical and chemical urinalysis, microscopic sediment examination, cerebrospinal fluid, and body fluids from Harr and Ciulla.",
-    sourceSubjectIds: ["aubf", "ciulla-urinalysis-and-body-fluids"],
+    description: "Renal physiology, physical and chemical urinalysis, microscopic sediment examination, cerebrospinal fluid, and body fluids from Harr, Ciulla, and Strasinger.",
+    sourceSubjectIds: ["aubf", "ciulla-urinalysis-and-body-fluids", "strasinger-aubf"],
   },
   {
     id: "immunohematology",

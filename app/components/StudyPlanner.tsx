@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent, useEffect, useMemo, useRef, useState, useCallback } from "react";
+import Image from "next/image";
 import {
   STUDY_PLAN_CATEGORIES,
   PLANNER_EVENT_KINDS,
@@ -9,7 +10,11 @@ import {
   type StudyPlan,
   type StudyPlanBlock,
   type StudyPlanCategory,
+  type DailyActivity,
+  type ExamSchedule,
+  type GradeRecord,
 } from "../lib/domain";
+import StudyCalendar from "./StudyCalendar";
 import {
   calculatePlannerAnalytics,
   duplicateStudyPlan,
@@ -30,8 +35,18 @@ import {
   deleteAttachment,
   MAX_ATTACHMENT_SIZE_BYTES,
 } from "../lib/plannerStorage";
+import {
+  getNormalizedActivitiesForDate,
+  layoutDayTimetable,
+  getTimetableRange,
+  formatTimetableHour,
+  TIMETABLE_START_HOUR,
+  TIMETABLE_HOURS,
+  TIMETABLE_HOUR_HEIGHT,
+  type NormalizedActivity,
+} from "../lib/plannerNormalization";
 
-type PlannerViewMode = "today" | "week" | "plans";
+export type PlannerViewMode = "today" | "week" | "calendar" | "plans";
 
 type ItemModalMode = {
   isOpen: boolean;
@@ -41,6 +56,7 @@ type ItemModalMode = {
 };
 
 type ItemFormDraft = {
+  date: string;
   activity: string;
   kind: PlannerEventKind;
   subject: string;
@@ -62,6 +78,7 @@ type ItemFormDraft = {
 };
 
 const DEFAULT_FORM_DRAFT: ItemFormDraft = {
+  date: "",
   activity: "",
   kind: "study",
   subject: "",
@@ -97,41 +114,35 @@ export function TodayStudyPlan({
   todayKey,
   timeZone,
   onOpenPlanner,
+  onStartReview,
 }: {
   plans: StudyPlan[];
   todayKey: string;
   timeZone: string;
   onOpenPlanner: (planId?: string) => void;
+  onStartReview?: () => void;
 }) {
   const todayItems = useMemo(() => getExpandedItemsForDate(plans, todayKey), [plans, todayKey]);
   const analytics = calculatePlannerAnalytics(plans, todayKey);
   const next = nextUpcomingStudyBlock(plans, todayKey, timeInTimeZone(new Date(), timeZone));
 
   return (
-    <section className="today-plan-card">
+    <section className="today-plan-card" aria-label="Today's Schedule">
       <div className="today-plan-heading">
-        <div>
-          <p className="eyebrow">Today&apos;s schedule</p>
-          <h2>{todayItems.length ? `${todayItems.length} academic event${todayItems.length === 1 ? "" : "s"}` : "Plan a focused study day"}</h2>
+        <div className="today-plan-title-with-icon">
+          <span className="today-plan-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 3v3M18 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" />
+              <path d="m8 13 2 2 5-5" />
+            </svg>
+          </span>
+          <h2>Today&apos;s Schedule</h2>
         </div>
-        <button className="text-button" type="button" onClick={() => onOpenPlanner(todayItems[0]?.planId)}>
-          Open planner
-        </button>
       </div>
-      <div className="today-plan-stats">
-        <span>
-          <strong>{hoursLabel(analytics.plannedMinutes)}</strong>study planned
-        </span>
-        <span>
-          <strong>{analytics.completedStudySessions}</strong>completed
-        </span>
-        <span>
-          <strong>{next ? formatStudyTime(next.block.startTime) : "—"}</strong>next session
-        </span>
-      </div>
+
       {todayItems.length ? (
         <div className="today-plan-list">
-          {todayItems.slice(0, 4).map(({ planId, block }) => (
+          {todayItems.slice(0, 3).map(({ planId, block }) => (
             <button type="button" key={block.id} onClick={() => onOpenPlanner(planId)}>
               <time>{formatStudyTime(block.startTime)}</time>
               <span>
@@ -143,21 +154,69 @@ export function TodayStudyPlan({
               </i>
             </button>
           ))}
-          {todayItems.length > 4 && <p>+{todayItems.length - 4} more block{todayItems.length - 4 === 1 ? "" : "s"} in Planner</p>}
+          {todayItems.length > 3 && <p className="today-plan-more-text">+{todayItems.length - 3} more block{todayItems.length - 3 === 1 ? "" : "s"} in Planner</p>}
         </div>
       ) : (
-        <div className="today-plan-empty">
-          <p>No academic activities scheduled for today yet.</p>
-          <button className="secondary-button" type="button" onClick={() => onOpenPlanner()}>
-            Add to today
-          </button>
+        <div className="today-plan-empty-body">
+          <div className="today-plan-empty-text-col">
+            <h3 className="today-plan-empty-title">No study sessions yet</h3>
+            <p className="today-plan-empty-desc">Plan a focused study day or start a quick review.</p>
+          </div>
+          <div className="schedule-illustration-slot" aria-hidden="true">
+            <Image
+              src="/schedule-frog-calendar.png"
+              alt="Frog with calendar"
+              width={320}
+              height={220}
+              style={{ objectFit: "contain", maxWidth: "100%", height: "auto" }}
+              unoptimized
+              priority
+            />
+          </div>
+          <div className="today-plan-empty-buttons">
+            <button
+              className="primary-button today-plan-review-btn"
+              type="button"
+              onClick={onStartReview ?? (() => onOpenPlanner())}
+              style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="5 3 19 12 5 21 5 3" />
+              </svg>
+              <span>Start 15-question review &ndash;</span>
+            </button>
+            <button
+              className="secondary-button today-plan-planner-btn"
+              type="button"
+              onClick={() => onOpenPlanner()}
+              style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>Open Planner</span>
+            </button>
+          </div>
         </div>
       )}
-      {next && next.plan.date !== todayKey && (
-        <p className="next-plan-note">
-          Next study session: {formatPlanDate(next.plan.date, "short")} at {formatStudyTime(next.block.startTime)} · {next.block.activity}
-        </p>
-      )}
+
+      <div className="today-plan-stats">
+        <span>
+          <strong>{hoursLabel(analytics.plannedMinutes)}</strong>
+          <small>study planned</small>
+        </span>
+        <span>
+          <strong>{analytics.completedStudySessions}</strong>
+          <small>completed</small>
+        </span>
+        <span>
+          <strong>{next ? formatStudyTime(next.block.startTime) : "—"}</strong>
+          <small>next session</small>
+        </span>
+      </div>
     </section>
   );
 }
@@ -170,6 +229,14 @@ export default function StudyPlanner({
   topicOptions,
   onChange,
   onSelectPlan,
+  activity = [],
+  exams = [],
+  grades = [],
+  timeZone = "Asia/Manila",
+  onSaveExam,
+  onDeleteExam,
+  initialViewMode,
+  onViewModeChange,
 }: {
   plans: StudyPlan[];
   selectedPlanId: string | null;
@@ -178,10 +245,30 @@ export default function StudyPlanner({
   topicOptions: string[];
   onChange: (plans: StudyPlan[]) => void;
   onSelectPlan: (id: string | null) => void;
+  activity?: DailyActivity[];
+  exams?: ExamSchedule[];
+  grades?: GradeRecord[];
+  timeZone?: string;
+  onSaveExam?: (exam: Omit<ExamSchedule, "id"> & { id?: string }) => Promise<void>;
+  onDeleteExam?: (id: string) => Promise<void>;
+  initialViewMode?: PlannerViewMode;
+  onViewModeChange?: (mode: PlannerViewMode) => void;
 }) {
-  // Top-level Navigation Mode: Today vs Week vs Plans
-  const [plannerMode, setPlannerMode] = useState<PlannerViewMode>("today");
+  // Top-level Navigation Mode: Today vs Week vs Calendar vs Plans
+  const [plannerMode, setPlannerModeState] = useState<PlannerViewMode>(initialViewMode || "today");
+
+  useEffect(() => {
+    if (initialViewMode && initialViewMode !== plannerMode) {
+      setPlannerModeState(initialViewMode);
+    }
+  }, [initialViewMode]);
+
+  const setPlannerMode = (mode: PlannerViewMode) => {
+    setPlannerModeState(mode);
+    onViewModeChange?.(mode);
+  };
   const [activeDate, setActiveDate] = useState<string>(defaultDate);
+  const [weekViewType, setWeekViewType] = useState<"timetable" | "agenda">("timetable");
 
   // Modal creation states
   const [itemModal, setItemModal] = useState<ItemModalMode>({
@@ -207,6 +294,16 @@ export default function StudyPlanner({
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
 
+  // Deduplicated subject & topic options for datalists
+  const uniqueSubjectOptions = useMemo(
+    () => Array.from(new Set(subjectOptions.filter(Boolean))),
+    [subjectOptions]
+  );
+  const uniqueTopicOptions = useMemo(
+    () => Array.from(new Set(topicOptions.filter(Boolean))),
+    [topicOptions]
+  );
+
   // Ordered list of plans
   const orderedPlans = useMemo(
     () => [...plans].sort((a, b) => a.date.localeCompare(b.date) || a.createdAt.localeCompare(b.createdAt)),
@@ -220,45 +317,98 @@ export default function StudyPlanner({
     if (orderedPlans[0]) onSelectPlan(orderedPlans[0].id);
   }, [onSelectPlan, orderedPlans, plans, selectedPlanId]);
 
-  // Expanded items for Today
-  const todayItems = useMemo(() => getExpandedItemsForDate(plans, defaultDate), [plans, defaultDate]);
+  // Auto-scroll today's card into view in week view
+  useEffect(() => {
+    if (plannerMode === "week") {
+      const timer = setTimeout(() => {
+        const todayEl = document.querySelector(".week-day-column.is-today");
+        if (todayEl) {
+          todayEl.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
+      }, 80);
+      return () => clearTimeout(timer);
+    }
+  }, [plannerMode, activeDate]);
 
-  // Week Dates & Matrix
+  // Normalized activities for Today (scheduled blocks, exams, and practice history)
+  const todayNormalized = useMemo(
+    () => getNormalizedActivitiesForDate(defaultDate, { plans, exams, activity, includeHistory: true }),
+    [plans, exams, activity, defaultDate],
+  );
+
+  const todayScheduled = useMemo(
+    () => todayNormalized.filter((item) => item.kind !== "practice_history"),
+    [todayNormalized],
+  );
+
+  const todayPractice = useMemo(
+    () => todayNormalized.find((item) => item.kind === "practice_history"),
+    [todayNormalized],
+  );
+
+  // Week Dates & Matrix using normalization
   const weekDates = useMemo(() => getWeekDates(activeDate), [activeDate]);
 
   const weekMatrix = useMemo(() => {
     return weekDates.map((dateStr) => {
-      const items = getExpandedItemsForDate(plans, dateStr);
+      const items = getNormalizedActivitiesForDate(dateStr, { plans, exams, includeHistory: false });
       return {
         date: dateStr,
         items,
       };
     });
-  }, [plans, weekDates]);
+  }, [plans, exams, weekDates]);
 
-  // Study progress analytics
+  const [mobileTimetableDate, setMobileTimetableDate] = useState<string>(defaultDate);
+
+  // Dynamic timetable hours computed across all scheduled items in the active week
+  const allWeekItems = useMemo(() => {
+    return weekMatrix.flatMap((col) => col.items);
+  }, [weekMatrix]);
+
+  const { startHour: weekStartHour, endHour: weekEndHour, hours: weekHours } = useMemo(() => {
+    return getTimetableRange(allWeekItems);
+  }, [allWeekItems]);
+
+  // Selected column for mobile single-day timetable view
+  const activeMobileCol = useMemo(() => {
+    const match = weekMatrix.find((c) => c.date === mobileTimetableDate);
+    if (match) return match;
+    const todayMatch = weekMatrix.find((c) => c.date === defaultDate);
+    return todayMatch ?? weekMatrix[0] ?? { date: defaultDate, items: [] };
+  }, [weekMatrix, mobileTimetableDate, defaultDate]);
+
+  // Study progress analytics across the week
   const studyProgress = useMemo(() => {
     let planned = 0;
     let completed = 0;
     weekMatrix.forEach((col) => {
       col.items.forEach((item) => {
-        if (item.block.eventKind === "study" || item.block.category === "Study") {
+        if (item.kind === "study" || item.category === "Study") {
           planned++;
-          if (item.block.completed) completed++;
+          if (item.completed) completed++;
         }
       });
     });
     return { planned, completed };
   }, [weekMatrix]);
 
-  // Upcoming items across the week
+  // Upcoming scheduled activities across plans and exams
   const upcomingItems = useMemo(() => {
-    const all = plans
-      .flatMap((p) => p.blocks.map((b) => ({ plan: p, block: b })))
-      .filter(({ plan, block }) => plan.date > defaultDate || (plan.date === defaultDate && !block.completed))
-      .sort((a, b) => a.plan.date.localeCompare(b.plan.date) || a.block.startTime.localeCompare(b.block.startTime));
-    return all.slice(0, 5);
-  }, [plans, defaultDate]);
+    const [year, month, day] = defaultDate.split("-").map(Number);
+    const startUtc = Date.UTC(year, month - 1, day);
+    const upcoming: NormalizedActivity[] = [];
+
+    for (let i = 0; i <= 14; i++) {
+      const dateKey = new Date(startUtc + i * 86_400_000).toISOString().slice(0, 10);
+      const items = getNormalizedActivitiesForDate(dateKey, { plans, exams, includeHistory: false });
+      const pending = items.filter((item) => dateKey > defaultDate || !item.completed);
+      upcoming.push(...pending);
+      if (upcoming.length >= 5) break;
+    }
+
+    return upcoming.slice(0, 5);
+  }, [plans, exams, defaultDate]);
 
   // Helper: Replace or update a plan
   const replacePlan = useCallback((plan: StudyPlan) => {
@@ -291,10 +441,19 @@ export default function StudyPlanner({
   }, [plans, replacePlan]);
 
   // Open Unified "+ Add" Modal
-  const openAddItemModal = (kind: PlannerEventKind = "study", block?: StudyPlanBlock, planId?: string) => {
+  const openAddItemModal = (
+    kind: PlannerEventKind = "study",
+    block?: StudyPlanBlock,
+    planId?: string,
+    initialDate?: string,
+    initialStartTime?: string,
+    initialEndTime?: string
+  ) => {
     setError("");
     setStatus("");
     setUploadError("");
+
+    const targetDate = initialDate || (planId ? plans.find((p) => p.id === planId)?.date : undefined) || (plannerMode === "today" ? defaultDate : activeDate);
 
     if (block) {
       setItemModal({
@@ -304,6 +463,7 @@ export default function StudyPlanner({
         targetPlanId: planId || selectedPlan?.id || null,
       });
       setDraft({
+        date: targetDate,
         activity: block.activity,
         kind: block.eventKind || "study",
         subject: block.subject || "",
@@ -328,12 +488,15 @@ export default function StudyPlanner({
         isOpen: true,
         kind,
         editingBlock: null,
-        targetPlanId: planId || selectedPlan?.id || null,
+        targetPlanId: planId || (selectedPlan?.date === targetDate ? selectedPlan.id : null),
       });
       setDraft({
         ...DEFAULT_FORM_DRAFT,
+        date: targetDate,
         kind,
-        category: kind === "class" ? "Event" : kind === "exam" ? "Exam" : "Study",
+        category: kind === "class" ? "Event" : kind === "exam" ? "Exam" : kind === "break" ? "Break" : "Study",
+        startTime: initialStartTime || DEFAULT_FORM_DRAFT.startTime,
+        endTime: initialEndTime || DEFAULT_FORM_DRAFT.endTime,
       });
     }
   };
@@ -406,15 +569,7 @@ export default function StudyPlanner({
       return;
     }
 
-    const targetDate = plannerMode === "today" ? defaultDate : activeDate;
-    let targetPlan = itemModal.targetPlanId
-      ? plans.find((p) => p.id === itemModal.targetPlanId)
-      : plans.find((p) => p.date === targetDate);
-
-    if (!targetPlan) {
-      targetPlan = ensurePlanForDate(targetDate);
-    }
-
+    const targetDate = draft.date || (plannerMode === "today" ? defaultDate : activeDate);
     const cleanBlockId = itemModal.editingBlock?.id ? itemModal.editingBlock.id.split("_rec_")[0] : crypto.randomUUID();
 
     const block: StudyPlanBlock = {
@@ -434,22 +589,54 @@ export default function StudyPlanner({
       instructor: draft.instructor.trim() || null,
       targetCount: draft.targetCount ? Number(draft.targetCount) : null,
       targetType: draft.targetCount ? draft.targetType : null,
-      recurrenceDays: draft.kind === "class" && draft.recurrenceDays.length > 0 ? draft.recurrenceDays : null,
-      recurrenceEnd: draft.kind === "class" && draft.recurrenceEnd ? draft.recurrenceEnd : null,
+      recurrenceDays: draft.kind === "class" && draft.recurrenceDays.length > 0 ? draft.recurrenceDays : (draft.recurrenceDays.length > 0 ? draft.recurrenceDays : (itemModal.editingBlock?.recurrenceDays ?? null)),
+      recurrenceEnd: draft.kind === "class" && draft.recurrenceEnd ? draft.recurrenceEnd : (draft.recurrenceEnd || itemModal.editingBlock?.recurrenceEnd || null),
       dueDate: draft.kind === "deadline" || draft.kind === "task" ? draft.dueDate || null : null,
       dueTime: draft.kind === "deadline" ? draft.dueTime || null : null,
-      attachments: draft.attachments,
+      attachments: draft.attachments.length > 0 ? draft.attachments : (itemModal.editingBlock?.attachments || []),
     };
 
-    const existingIndex = targetPlan.blocks.findIndex((b) => b.id === cleanBlockId);
-    let updatedBlocks: StudyPlanBlock[];
-    if (existingIndex >= 0) {
-      updatedBlocks = targetPlan.blocks.map((b) => (b.id === cleanBlockId ? block : b));
-    } else {
-      updatedBlocks = [...targetPlan.blocks, block];
+    let nextPlans = [...plans];
+
+    // If editing existing block, prevent duplicate records across plan containers:
+    // Strip cleanBlockId from any plan whose date is not targetDate
+    if (itemModal.editingBlock) {
+      nextPlans = nextPlans.map((p) => {
+        if (p.date !== targetDate && p.blocks.some((b) => b.id === cleanBlockId)) {
+          return {
+            ...p,
+            blocks: p.blocks.filter((b) => b.id !== cleanBlockId),
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        return p;
+      });
     }
 
-    replacePlan({ ...targetPlan, blocks: updatedBlocks });
+    let targetPlan = nextPlans.find((p) => p.date === targetDate);
+    if (!targetPlan) {
+      targetPlan = {
+        id: crypto.randomUUID(),
+        title: `Plan for ${formatPlanDate(targetDate, "short")}`,
+        date: targetDate,
+        blocks: [block],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      nextPlans.push(targetPlan);
+    } else {
+      const existingIndex = targetPlan.blocks.findIndex((b) => b.id === cleanBlockId);
+      const updatedBlocks = existingIndex >= 0
+        ? targetPlan.blocks.map((b) => (b.id === cleanBlockId ? block : b))
+        : [...targetPlan.blocks, block];
+      nextPlans = nextPlans.map((p) =>
+        p.id === targetPlan!.id
+          ? { ...targetPlan!, blocks: updatedBlocks, updatedAt: new Date().toISOString() }
+          : p
+      );
+    }
+
+    onChange(nextPlans);
     setItemModal({ isOpen: false, kind: "study", editingBlock: null, targetPlanId: null });
     setStatus(`${draft.kind.toUpperCase()} saved.`);
   };
@@ -551,14 +738,14 @@ export default function StudyPlanner({
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
               <p className="eyebrow" style={{ margin: 0 }}>Academic Planner</p>
-              <span className="state-pill" style={{ fontSize: "9px" }}>Local-only · Private</span>
+              <span style={{ fontSize: "11px", color: "var(--muted)", fontWeight: 650 }}>Local-only · Private</span>
             </div>
             <h2>Schedule &amp; Timetable</h2>
             <p>Schedule your classes, organize study sessions, and prepare for upcoming exams &amp; deadlines.</p>
           </div>
 
           <div className="planner-top-actions">
-            {/* View Mode Selector: Today | Week | Plans */}
+            {/* View Mode Selector: Today | Week | Calendar | Plans */}
             <div className="theme-segmented-control" role="tablist" aria-label="Planner view mode">
               <button
                 type="button"
@@ -577,6 +764,15 @@ export default function StudyPlanner({
                 onClick={() => setPlannerMode("week")}
               >
                 Week
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={plannerMode === "calendar"}
+                className={`theme-segment-btn ${plannerMode === "calendar" ? "active" : ""}`}
+                onClick={() => setPlannerMode("calendar")}
+              >
+                Calendar
               </button>
               <button
                 type="button"
@@ -620,10 +816,12 @@ export default function StudyPlanner({
                 <p className="eyebrow">Today&apos;s schedule</p>
                 <h3>{formatPlanDate(defaultDate, "long")}</h3>
               </div>
-              <span className="state-pill">{todayItems.length} item{todayItems.length === 1 ? "" : "s"}</span>
+              <span style={{ fontSize: "11.5px", color: "var(--muted)", fontWeight: 650 }}>
+                {todayScheduled.length} item{todayScheduled.length === 1 ? "" : "s"}
+              </span>
             </div>
 
-            {todayItems.length === 0 ? (
+            {todayScheduled.length === 0 ? (
               <div className="plan-empty">
                 <span aria-hidden="true" />
                 <h3>Your day is clear</h3>
@@ -634,38 +832,49 @@ export default function StudyPlanner({
               </div>
             ) : (
               <div className="today-timeline-list">
-                {todayItems.map(({ planId, block }) => {
-                  const kind = block.eventKind || "study";
+                {todayScheduled.map((item) => {
+                  const isFormalExam = item.kind === "formal_exam";
                   return (
-                    <article key={block.id} className={`planner-event-card kind-${kind} ${block.completed ? "is-completed" : ""}`}>
+                    <article key={item.id} className={`planner-event-card kind-${item.kind} ${item.completed ? "is-completed" : ""}`}>
                       <div className="event-time-col">
-                        <time>{formatStudyTime(block.startTime)}</time>
-                        <span>to</span>
-                        <time>{formatStudyTime(block.endTime)}</time>
+                        {item.startTime && item.endTime ? (
+                          <>
+                            <time>{formatStudyTime(item.startTime)}</time>
+                            <span>to</span>
+                            <time>{formatStudyTime(item.endTime)}</time>
+                          </>
+                        ) : (
+                          <time>{item.timeDisplay}</time>
+                        )}
                       </div>
 
                       <div className="event-body-col">
                         <div className="event-tag-row">
-                          <span className={`event-kind-badge kind-${kind}`}>
-                            {kind.toUpperCase()}
+                          <span className={`event-kind-badge kind-${item.kind}`}>
+                            {item.kind.toUpperCase()}
                           </span>
-                          {block.subject && <span className="event-subject-pill">{block.subject}</span>}
-                          {block.room && <span className="event-room-pill">Room {block.room}</span>}
-                          {block.targetCount && (
+                          {item.subject && <span className="event-subject-pill">{item.subject}</span>}
+                          {item.room && <span className="event-room-pill">Room {item.room}</span>}
+                          {item.targetCount && (
                             <span className="event-target-pill">
-                              Goal: {block.targetCount} {block.targetType}
+                              Goal: {item.targetCount} {item.targetType}
+                            </span>
+                          )}
+                          {item.addedToCalendar && (
+                            <span style={{ fontSize: "10px", color: "var(--green)", fontWeight: 700 }}>
+                              Pinned
                             </span>
                           )}
                         </div>
 
-                        <h4>{block.activity}</h4>
-                        {block.topic && <p className="event-topic-line">{block.topic}</p>}
-                        {block.notes && <p className="event-notes-line">{block.notes}</p>}
+                        <h4>{item.title}</h4>
+                        {item.topic && <p className="event-topic-line">{item.topic}</p>}
+                        {item.notes && <p className="event-notes-line">{item.notes}</p>}
 
-                        {/* Attachments pills */}
-                        {block.attachments && block.attachments.length > 0 && (
+                        {/* Attachments */}
+                        {item.attachments && item.attachments.length > 0 && (
                           <div className="event-attachments-strip">
-                            {block.attachments.map((att) => (
+                            {item.attachments.map((att) => (
                               <button
                                 key={att.id}
                                 type="button"
@@ -673,7 +882,10 @@ export default function StudyPlanner({
                                 onClick={() => handleOpenAttachment(att.id, att.name)}
                                 title="Click to open / view"
                               >
-                                📎 {att.name}
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ verticalAlign: "-1px", marginRight: "4px" }}>
+                                  <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                                </svg>
+                                {att.name}
                               </button>
                             ))}
                           </div>
@@ -681,34 +893,68 @@ export default function StudyPlanner({
                       </div>
 
                       <div className="event-action-col">
-                        <label className="event-complete-toggle">
-                          <input
-                            type="checkbox"
-                            checked={block.completed}
-                            onChange={() => toggleBlockCompleted(planId, block.id)}
-                          />
-                          <span>{block.completed ? "Done" : "Complete"}</span>
-                        </label>
+                        {!isFormalExam && item.planId && (
+                          <label className="event-complete-toggle">
+                            <input
+                              type="checkbox"
+                              checked={item.completed}
+                              onChange={() => toggleBlockCompleted(item.planId!, item.id)}
+                            />
+                            <span>{item.completed ? "Done" : "Complete"}</span>
+                          </label>
+                        )}
                         <div className="event-mini-btns">
-                          <button
-                            type="button"
-                            className="text-button-subtle"
-                            onClick={() => openAddItemModal(block.eventKind || "study", block, planId)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            type="button"
-                            className="text-button-subtle danger"
-                            onClick={() => handleDeleteItem(planId, block.id)}
-                          >
-                            ×
-                          </button>
+                          {item.rawBlock && (
+                            <button
+                              type="button"
+                              className="text-button-subtle"
+                              onClick={() => openAddItemModal(item.rawBlock!.eventKind || "study", item.rawBlock, item.planId ?? undefined)}
+                            >
+                              Edit
+                            </button>
+                          )}
+                          {item.rawBlock && item.planId && (
+                            <button
+                              type="button"
+                              className="text-button-subtle danger"
+                              onClick={() => handleDeleteItem(item.planId!, item.id)}
+                            >
+                              ×
+                            </button>
+                          )}
+                          {isFormalExam && item.rawExam && onDeleteExam && (
+                            <button
+                              type="button"
+                              className="text-button-subtle danger"
+                              onClick={() => void onDeleteExam(item.rawExam!.id)}
+                            >
+                              ×
+                            </button>
+                          )}
                         </div>
                       </div>
                     </article>
                   );
                 })}
+              </div>
+            )}
+
+            {/* Completed Practice History (Distinct Category - Requirement 3) */}
+            {todayPractice && (
+              <div style={{ marginTop: "18px", padding: "14px 18px", background: "var(--surface, rgba(255, 255, 255, 0.03))", borderRadius: "12px", border: "1px solid var(--line)" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
+                  <p className="eyebrow" style={{ margin: 0, color: "var(--green)" }}>Completed practice review</p>
+                  <span style={{ fontSize: "11px", color: "var(--muted)" }}>Study Session</span>
+                </div>
+                <h4 style={{ margin: "4px 0", fontSize: "15px" }}>{todayPractice.title}</h4>
+                <p style={{ margin: "2px 0 0", fontSize: "13px", color: "var(--muted)" }}>
+                  {todayPractice.timeDisplay} {todayPractice.subject ? `· ${todayPractice.subject}` : ""}
+                </p>
+                {todayPractice.notes && (
+                  <small style={{ color: "var(--muted)", display: "block", marginTop: "4px" }}>
+                    {todayPractice.notes}
+                  </small>
+                )}
               </div>
             )}
           </div>
@@ -742,15 +988,15 @@ export default function StudyPlanner({
                 <p className="upcoming-empty-note">No upcoming events ahead.</p>
               ) : (
                 <div className="upcoming-items-list">
-                  {upcomingItems.map(({ plan, block }) => (
-                    <div key={block.id} className="upcoming-item-row">
+                  {upcomingItems.map((item) => (
+                    <div key={item.id} className="upcoming-item-row">
                       <div className="upcoming-date-pill">
-                        {plan.date === defaultDate ? "Today" : formatPlanDate(plan.date, "short")}
+                        {item.date === defaultDate ? "Today" : formatPlanDate(item.date, "short")}
                       </div>
                       <div className="upcoming-details">
-                        <strong>{block.activity}</strong>
+                        <strong>{item.title}</strong>
                         <span>
-                          {formatStudyTime(block.startTime)} · {block.eventKind?.toUpperCase() || block.category}
+                          {item.timeDisplay} · {item.kind.toUpperCase()}
                         </span>
                       </div>
                     </div>
@@ -775,94 +1021,459 @@ export default function StudyPlanner({
                 {formatPlanDate(weekDates[0], "short")} – {formatPlanDate(weekDates[6], "short")}
               </h3>
             </div>
-            <div className="week-nav-controls">
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={() => {
-                  const d = new Date(`${weekDates[0]}T12:00:00Z`);
-                  d.setUTCDate(d.getUTCDate() - 7);
-                  setActiveDate(d.toISOString().slice(0, 10));
-                }}
-              >
-                ‹ Previous Week
-              </button>
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={() => setActiveDate(defaultDate)}
-              >
-                Current Week
-              </button>
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={() => {
-                  const d = new Date(`${weekDates[0]}T12:00:00Z`);
-                  d.setUTCDate(d.getUTCDate() + 7);
-                  setActiveDate(d.toISOString().slice(0, 10));
-                }}
-              >
-                Next Week ›
-              </button>
+
+            <div className="week-controls-cluster">
+              {/* Timetable / Agenda Switch (Requirement 4) */}
+              <div className="theme-segmented-control" role="group" aria-label="Week display format">
+                <button
+                  type="button"
+                  className={`theme-segment-btn ${weekViewType === "timetable" ? "active" : ""}`}
+                  onClick={() => setWeekViewType("timetable")}
+                >
+                  Timetable
+                </button>
+                <button
+                  type="button"
+                  className={`theme-segment-btn ${weekViewType === "agenda" ? "active" : ""}`}
+                  onClick={() => setWeekViewType("agenda")}
+                >
+                  Agenda
+                </button>
+              </div>
+
+              <div className="week-nav-controls">
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={() => {
+                    const d = new Date(`${weekDates[0]}T12:00:00Z`);
+                    d.setUTCDate(d.getUTCDate() - 7);
+                    setActiveDate(d.toISOString().slice(0, 10));
+                  }}
+                >
+                  ‹ Previous Week
+                </button>
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={() => setActiveDate(defaultDate)}
+                >
+                  Current Week
+                </button>
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={() => {
+                    const d = new Date(`${weekDates[0]}T12:00:00Z`);
+                    d.setUTCDate(d.getUTCDate() + 7);
+                    setActiveDate(d.toISOString().slice(0, 10));
+                  }}
+                >
+                  Next Week ›
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* 7-Day Responsive Matrix */}
-          <div className="week-matrix-grid">
-            {weekMatrix.map((col) => {
-              const isToday = col.date === defaultDate;
-              const [y, m, d] = col.date.split("-").map(Number);
-              const dayIdx = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
+          {/* VIEW 2A: DETAILED HOURLY TIMETABLE (Dynamic hours & Mobile Single-Day) */}
+          {weekViewType === "timetable" ? (
+            <div className="week-timetable-shell" aria-label="Hourly Timetable">
+              {/* DESKTOP & TABLET 7-COLUMN TIMETABLE VIEW (> 768px) */}
+              <div className="desktop-timetable-view">
+                <div className="timetable-scroll-container">
+                  <div className="timetable-grid-wrapper">
+                    {/* Header Row: 7 Weekday Columns */}
+                    <div className="timetable-header-row">
+                      <div className="timetable-time-corner">TIME</div>
+                      {weekMatrix.map((col) => {
+                        const isToday = col.date === defaultDate;
+                        const [y, m, d] = col.date.split("-").map(Number);
+                        const dayIdx = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
+                        return (
+                          <div key={col.date} className={`timetable-day-header ${isToday ? "is-today" : ""}`}>
+                            <span className="day-name">{DAY_LABELS[dayIdx]}</span>
+                            <strong className="day-number">{d}</strong>
+                            {isToday && <span className="today-badge">TODAY</span>}
+                          </div>
+                        );
+                      })}
+                    </div>
 
-              return (
-                <div key={col.date} className={`week-day-column ${isToday ? "is-today" : ""}`}>
-                  <div className="week-day-header">
-                    <span className="day-name">{DAY_LABELS[dayIdx]}</span>
-                    <strong className="day-number">{d}</strong>
-                    {isToday && <span className="today-badge">TODAY</span>}
+                    {/* Dedicated Untimed / All-Day Row (Untimed Activities, Deadlines, Formal Exams) */}
+                    <div className="timetable-untimed-row">
+                      <div className="timetable-untimed-label">All Day / Due</div>
+                      {weekMatrix.map((col) => {
+                        const { untimed } = layoutDayTimetable(col.items, weekStartHour, weekEndHour);
+                        return (
+                          <div key={col.date} className="timetable-untimed-cell">
+                            {untimed.length === 0 ? (
+                              <button
+                                type="button"
+                                className="quick-add-slot-btn"
+                                style={{ margin: "auto", width: "22px", height: "22px", fontSize: "13px" }}
+                                title={`+ Add task or untimed activity for ${col.date}`}
+                                onClick={() => openAddItemModal("task", undefined, undefined, col.date)}
+                              >
+                                +
+                              </button>
+                            ) : (
+                              untimed.map((item) => (
+                                <div
+                                  key={item.id}
+                                  className={`timetable-untimed-chip kind-${item.kind} ${item.completed ? "completed" : ""}`}
+                                  onClick={() => {
+                                    if (item.rawBlock) {
+                                      openAddItemModal(item.rawBlock.eventKind || "study", item.rawBlock, item.planId ?? undefined, item.date);
+                                    }
+                                  }}
+                                  title={`${item.title} (${item.timeDisplay})`}
+                                >
+                                  <strong style={{ fontSize: "10px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                                    {item.title}
+                                  </strong>
+                                  <span style={{ fontSize: "8.5px", color: "var(--muted)" }}>{item.timeDisplay}</span>
+                                </div>
+                              ))
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Hourly Timetable Grid Body (Dynamic Range: default 7 AM - 10 PM, expands earlier/later) */}
+                    <div className="timetable-body-row" style={{ height: `${weekHours.length * TIMETABLE_HOUR_HEIGHT}px` }}>
+                      {/* Sticky-like Left Hour Markers */}
+                      <div className="timetable-time-gutter" aria-hidden="true">
+                        {weekHours.map((hr) => {
+                          const displayHour = formatTimetableHour(hr);
+                          const topPx = (hr - weekStartHour) * TIMETABLE_HOUR_HEIGHT;
+                          return (
+                            <div
+                              key={hr}
+                              className="timetable-hour-label"
+                              style={{ top: `${topPx}px` }}
+                            >
+                              {displayHour}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* 7 Day Time Tracks with Side-by-Side Overlapping Events */}
+                      {weekMatrix.map((col) => {
+                        const isToday = col.date === defaultDate;
+                        const { timed } = layoutDayTimetable(col.items, weekStartHour, weekEndHour);
+
+                        return (
+                          <div
+                            key={col.date}
+                            className={`timetable-day-track ${isToday ? "is-today" : ""}`}
+                          >
+                            {/* Hour Horizontal Guides & Interactive Click Slots */}
+                            {weekHours.map((hr) => {
+                              const topPx = (hr - weekStartHour) * TIMETABLE_HOUR_HEIGHT;
+                              const startStr = `${String(hr % 24).padStart(2, "0")}:00`;
+                              const endStr = `${String((hr + 1) % 24).padStart(2, "0")}:00`;
+                              return (
+                                <div
+                                  key={hr}
+                                  className="timetable-hour-slot"
+                                  style={{ top: `${topPx}px`, height: `${TIMETABLE_HOUR_HEIGHT}px` }}
+                                  title={`Click to add activity at ${formatTimetableHour(hr)} on ${col.date}`}
+                                  onClick={() => openAddItemModal("study", undefined, undefined, col.date, startStr, endStr)}
+                                />
+                              );
+                            })}
+
+                            {/* Positioned Events (with Overlap Columns & Recurring Classes) */}
+                            {timed.map(({ activity: item, topPx, heightPx, widthPct, leftPct }) => {
+                              return (
+                                <div
+                                  key={item.id}
+                                  className={`timetable-event-block kind-${item.kind} ${item.completed ? "completed" : ""}`}
+                                  style={{
+                                    top: `${topPx}px`,
+                                    height: `${heightPx}px`,
+                                    left: `${leftPct}%`,
+                                    width: `calc(${widthPct}% - 4px)`,
+                                  }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (item.rawBlock) {
+                                      openAddItemModal(item.rawBlock.eventKind || "study", item.rawBlock, item.planId ?? undefined, item.date);
+                                    }
+                                  }}
+                                  title={`${item.title} (${item.timeDisplay})${item.room ? ` · Room ${item.room}` : ""}`}
+                                >
+                                  <span className="timetable-event-time">{item.timeDisplay}</span>
+                                  <strong className="timetable-event-name">{item.title}</strong>
+                                  {item.subject && (
+                                    <span className="timetable-event-sub">{item.subject}</span>
+                                  )}
+                                  {item.room && (
+                                    <span className="timetable-event-sub" style={{ opacity: 0.85 }}>
+                                      Room {item.room}
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
+                </div>
+              </div>
 
-                  <div className="week-events-stack">
-                    {col.items.length === 0 ? (
-                      <div className="week-empty-slot">
+              {/* MOBILE SINGLE-DAY TIMETABLE VIEW (<= 768px, zero horizontal scrolling) */}
+              <div className="mobile-timetable-view">
+                {/* 7-Day Day Selector Strip */}
+                <div className="mobile-timetable-strip" role="tablist" aria-label="Select day of week">
+                  {weekMatrix.map((col) => {
+                    const isSelected = col.date === activeMobileCol.date;
+                    const isToday = col.date === defaultDate;
+                    const [y, m, d] = col.date.split("-").map(Number);
+                    const dayIdx = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
+                    const hasItems = col.items.length > 0;
+
+                    return (
+                      <button
+                        key={col.date}
+                        type="button"
+                        role="tab"
+                        aria-selected={isSelected}
+                        className={`mobile-timetable-day-tab ${isSelected ? "selected" : ""} ${isToday ? "is-today" : ""}`}
+                        onClick={() => setMobileTimetableDate(col.date)}
+                      >
+                        <span className="mobile-tab-dayname">{DAY_LABELS[dayIdx]}</span>
+                        <strong className="mobile-tab-daynum">{d}</strong>
+                        {hasItems && <span className="mobile-tab-dot" aria-hidden="true" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Active Day Header & Quick Add */}
+                <div className="mobile-timetable-day-summary">
+                  <div>
+                    <strong>{formatPlanDate(activeMobileCol.date, "long")}</strong>
+                    <span className="mobile-day-meta">
+                      {activeMobileCol.items.length === 1 ? "1 activity" : `${activeMobileCol.items.length} activities`}
+                      {activeMobileCol.date === defaultDate && " · Today"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="theme-button-primary mobile-add-btn"
+                    onClick={() => openAddItemModal("study", undefined, undefined, activeMobileCol.date)}
+                  >
+                    + Add Activity
+                  </button>
+                </div>
+
+                {/* Untimed / All-Day Activities */}
+                {(() => {
+                  const { untimed } = layoutDayTimetable(activeMobileCol.items, weekStartHour, weekEndHour);
+                  return (
+                    <div className="mobile-timetable-untimed">
+                      <div className="mobile-untimed-header">
+                        <span>ALL DAY & DUE</span>
                         <button
                           type="button"
                           className="quick-add-slot-btn"
-                          onClick={() => {
-                            setActiveDate(col.date);
-                            openAddItemModal("study", undefined, undefined);
-                          }}
+                          title={`+ Add task or deadline for ${activeMobileCol.date}`}
+                          onClick={() => openAddItemModal("task", undefined, undefined, activeMobileCol.date)}
                         >
                           +
                         </button>
                       </div>
-                    ) : (
-                      col.items.map(({ planId, block }) => {
-                        const kind = block.eventKind || "study";
-                        return (
+                      {untimed.length === 0 ? (
+                        <div className="mobile-untimed-empty">No untimed activities or deadlines</div>
+                      ) : (
+                        <div className="mobile-untimed-list">
+                          {untimed.map((item) => (
+                            <div
+                              key={item.id}
+                              className={`timetable-untimed-chip kind-${item.kind} ${item.completed ? "completed" : ""}`}
+                              onClick={() => {
+                                if (item.rawBlock) {
+                                  openAddItemModal(item.rawBlock.eventKind || "study", item.rawBlock, item.planId ?? undefined, item.date);
+                                }
+                              }}
+                              title={`${item.title} (${item.timeDisplay})`}
+                            >
+                              <strong style={{ fontSize: "11px" }}>{item.title}</strong>
+                              <span style={{ fontSize: "9.5px", color: "var(--muted)" }}>{item.timeDisplay}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+
+                {/* Single-Day Hourly Timeline */}
+                {(() => {
+                  const { timed } = layoutDayTimetable(activeMobileCol.items, weekStartHour, weekEndHour);
+                  return (
+                    <div className="mobile-timeline-container" style={{ height: `${weekHours.length * TIMETABLE_HOUR_HEIGHT}px` }}>
+                      {/* Hour labels gutter */}
+                      <div className="timetable-time-gutter" aria-hidden="true">
+                        {weekHours.map((hr) => {
+                          const displayHour = formatTimetableHour(hr);
+                          const topPx = (hr - weekStartHour) * TIMETABLE_HOUR_HEIGHT;
+                          return (
+                            <div key={hr} className="timetable-hour-label" style={{ top: `${topPx}px` }}>
+                              {displayHour}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Single Day Time Track */}
+                      <div className="mobile-timeline-track">
+                        {weekHours.map((hr) => {
+                          const topPx = (hr - weekStartHour) * TIMETABLE_HOUR_HEIGHT;
+                          const startStr = `${String(hr % 24).padStart(2, "0")}:00`;
+                          const endStr = `${String((hr + 1) % 24).padStart(2, "0")}:00`;
+                          return (
+                            <div
+                              key={hr}
+                              className="timetable-hour-slot"
+                              style={{ top: `${topPx}px`, height: `${TIMETABLE_HOUR_HEIGHT}px` }}
+                              title={`Click to add activity at ${formatTimetableHour(hr)} on ${activeMobileCol.date}`}
+                              onClick={() => openAddItemModal("study", undefined, undefined, activeMobileCol.date, startStr, endStr)}
+                            />
+                          );
+                        })}
+
+                        {timed.map(({ activity: item, topPx, heightPx, widthPct, leftPct }) => (
                           <div
-                            key={block.id}
-                            className={`week-event-card kind-${kind} ${block.completed ? "completed" : ""}`}
-                            onClick={() => openAddItemModal(kind, block, planId)}
+                            key={item.id}
+                            className={`timetable-event-block kind-${item.kind} ${item.completed ? "completed" : ""}`}
+                            style={{
+                              top: `${topPx}px`,
+                              height: `${heightPx}px`,
+                              left: `${leftPct}%`,
+                              width: `calc(${widthPct}% - 4px)`,
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (item.rawBlock) {
+                                openAddItemModal(item.rawBlock.eventKind || "study", item.rawBlock, item.planId ?? undefined, item.date);
+                              }
+                            }}
+                            title={`${item.title} (${item.timeDisplay})${item.room ? ` · Room ${item.room}` : ""}`}
                           >
-                            <span className="week-event-time">{formatStudyTime(block.startTime)}</span>
-                            <strong className="week-event-name">{block.activity}</strong>
-                            {block.subject && <span className="week-event-sub">{block.subject}</span>}
+                            <span className="timetable-event-time">{item.timeDisplay}</span>
+                            <strong className="timetable-event-name">{item.title}</strong>
+                            {item.subject && (
+                              <span className="timetable-event-sub">{item.subject}</span>
+                            )}
+                            {item.room && (
+                              <span className="timetable-event-sub" style={{ opacity: 0.85 }}>
+                                Room {item.room}
+                              </span>
+                            )}
                           </div>
-                        );
-                      })
-                    )}
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          ) : (
+            /* VIEW 2B: 7-DAY RESPONSIVE AGENDA MATRIX */
+            <div className="week-matrix-grid">
+              {weekMatrix.map((col) => {
+                const isToday = col.date === defaultDate;
+                const [y, m, d] = col.date.split("-").map(Number);
+                const dayIdx = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay();
+
+                return (
+                  <div key={col.date} className={`week-day-column ${isToday ? "is-today" : ""}`}>
+                    <div className="week-day-header">
+                      <span className="day-name">{DAY_LABELS[dayIdx]}</span>
+                      <strong className="day-number">{d}</strong>
+                      {isToday && <span className="today-badge">TODAY</span>}
+                    </div>
+
+                    <div className="week-events-stack">
+                      {col.items.length === 0 ? (
+                        <div className="week-empty-slot">
+                          <button
+                            type="button"
+                            className="quick-add-slot-btn"
+                            onClick={() => {
+                              setActiveDate(col.date);
+                              openAddItemModal("study", undefined, undefined, col.date);
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
+                      ) : (
+                        col.items.map((item) => {
+                          return (
+                            <div
+                              key={item.id}
+                              className={`week-event-card kind-${item.kind} ${item.completed ? "completed" : ""}`}
+                              onClick={() => {
+                                if (item.rawBlock) {
+                                  openAddItemModal(item.rawBlock.eventKind || "study", item.rawBlock, item.planId ?? undefined, item.date);
+                                }
+                              }}
+                            >
+                              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "4px" }}>
+                                <span className={`event-kind-badge kind-${item.kind}`} style={{ fontSize: "8px", padding: "1px 5px" }}>
+                                  {item.kind.toUpperCase()}
+                                </span>
+                                <span className="week-event-time">{item.timeDisplay}</span>
+                              </div>
+                              <strong className="week-event-name">{item.title}</strong>
+                              {item.subject && <span className="week-event-sub">{item.subject}</span>}
+                              {item.room && <span className="week-event-sub" style={{ opacity: 0.85 }}>Room {item.room}</span>}
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
       {/* ====================================================================
-          VIEW 3: PLANS TAB (Goal-oriented Study Plans with Session Counts)
+          VIEW 3: CALENDAR VIEW (Complete Monthly Calendar & Assessments)
+          ==================================================================== */}
+      {plannerMode === "calendar" && (
+        <div className="planner-calendar-view" style={{ marginTop: "18px" }}>
+          <StudyCalendar
+            activity={activity}
+            exams={exams}
+            grades={grades}
+            studyPlans={plans}
+            timeZone={timeZone}
+            onSaveExam={onSaveExam ?? (async () => {})}
+            onDeleteExam={onDeleteExam ?? (async () => {})}
+            onOpenStudyPlan={(planId) => {
+              setPlannerMode("plans");
+              onSelectPlan(planId);
+            }}
+            onOpenItemModal={(kind, block, planId, date) => {
+              openAddItemModal(kind, block, planId, date);
+            }}
+          />
+        </div>
+      )}
+
+      {/* ====================================================================
+          VIEW 4: PLANS TAB (Goal-oriented Study Plans with Session Counts)
           ==================================================================== */}
       {plannerMode === "plans" && (
         <div className="planner-plans-container">
@@ -943,7 +1554,7 @@ export default function StudyPlanner({
                 <div className="plan-block-list">
                   {selectedPlan.blocks.map((block, index) => (
                     <article
-                      className={`plan-block category-${block.category.toLowerCase()} ${block.completed ? "completed" : ""}`}
+                      className={`plan-block kind-${block.eventKind || "study"} category-${block.category.toLowerCase()} ${block.completed ? "completed" : ""}`}
                       key={block.id}
                     >
                       <div className="plan-block-time">
@@ -955,8 +1566,14 @@ export default function StudyPlanner({
 
                       <div className="plan-block-copy">
                         <div className="plan-block-title">
-                          <span>{block.eventKind?.toUpperCase() || block.category}</span>
-                          {block.addedToCalendar && <i>In calendar</i>}
+                          <span className={`event-kind-badge kind-${block.eventKind || "study"}`}>
+                            {block.eventKind?.toUpperCase() || block.category}
+                          </span>
+                          {block.addedToCalendar && (
+                            <span style={{ fontSize: "10px", color: "var(--green)", fontWeight: 700 }}>
+                              Pinned
+                            </span>
+                          )}
                         </div>
                         <h3>{block.activity}</h3>
                         {(block.subject || block.topic) && (
@@ -980,7 +1597,7 @@ export default function StudyPlanner({
                         <button type="button" onClick={() => replacePlan({ ...selectedPlan, blocks: moveStudyBlock(selectedPlan.blocks, block.id, 1) })} disabled={index === selectedPlan.blocks.length - 1}>
                           Move down
                         </button>
-                        <button type="button" onClick={() => openAddItemModal(block.eventKind || "study", block, selectedPlan.id)}>
+                        <button type="button" onClick={() => openAddItemModal(block.eventKind || "study", block, selectedPlan.id, selectedPlan.date)}>
                           Edit
                         </button>
                         <button className="danger" type="button" onClick={() => handleDeleteItem(selectedPlan.id, block.id)}>
@@ -1021,7 +1638,7 @@ export default function StudyPlanner({
           ==================================================================== */}
       {itemModal.isOpen && (
         <div className="inline-modal" role="presentation">
-          <form onSubmit={handleSaveItem} aria-label={itemModal.editingBlock ? "Edit item" : "Add item"} style={{ width: "min(560px, 100%)", maxHeight: "90vh", overflowY: "auto" }}>
+          <form onSubmit={handleSaveItem} aria-label={itemModal.editingBlock ? "Edit item" : "Add item"} className="planner-item-modal-form">
             <div className="profile-modal-heading">
               <div>
                 <p className="eyebrow">Academic Planner</p>
@@ -1032,25 +1649,37 @@ export default function StudyPlanner({
               </button>
             </div>
 
-            {/* Event Kind Selector Tabs */}
-            <div className="theme-segmented-control" role="tablist" style={{ margin: "10px 0" }}>
-              {PLANNER_EVENT_KINDS.map((k) => (
+            <div className="planner-item-modal-body">
+              {/* Event Kind Selector Tabs */}
+              <div className="theme-segmented-control planner-kind-selector" role="tablist">
+                {PLANNER_EVENT_KINDS.map((k) => (
                 <button
                   key={k}
                   type="button"
                   role="tab"
                   aria-selected={draft.kind === k}
                   className={`theme-segment-btn ${draft.kind === k ? "active" : ""}`}
-                  onClick={() => setDraft((prev) => ({ ...prev, kind: k }))}
+                  onClick={() => setDraft((prev) => ({ ...prev, kind: k, category: k === "break" ? "Break" : k === "class" ? "Event" : k === "exam" ? "Exam" : prev.category }))}
                 >
                   {k.toUpperCase()}
                 </button>
               ))}
             </div>
 
+            {/* Scheduled Date Field */}
+            <label className="profile-name-field">
+              <span>Date</span>
+              <input
+                type="date"
+                value={draft.date}
+                onChange={(e) => setDraft((prev) => ({ ...prev, date: e.target.value }))}
+                required
+              />
+            </label>
+
             {/* Activity Title */}
             <label className="profile-name-field">
-              <span>{draft.kind === "class" ? "Class / Subject Name" : draft.kind === "exam" ? "Exam / Quiz Name" : "Activity Name"}</span>
+              <span>{draft.kind === "class" ? "Class / Subject Name" : draft.kind === "exam" ? "Exam / Quiz Name" : draft.kind === "break" ? "Break / Rest Name" : "Activity Name"}</span>
               <input
                 maxLength={100}
                 value={draft.activity}
@@ -1062,6 +1691,8 @@ export default function StudyPlanner({
                     ? "e.g. Bacteriology Midterm Exam"
                     : draft.kind === "deadline"
                     ? "e.g. Case Study Submission"
+                    : draft.kind === "break"
+                    ? "e.g. Lunch Break, Quick Rest, Coffee"
                     : "e.g. Review Gram Positive Bacteria"
                 }
                 required
@@ -1091,8 +1722,8 @@ export default function StudyPlanner({
                 />
               </label>
             </div>
-            <datalist id="planner-subjects-list">{subjectOptions.map((v) => <option value={v} key={v} />)}</datalist>
-            <datalist id="planner-topics-list">{topicOptions.map((v) => <option value={v} key={v} />)}</datalist>
+            <datalist id="planner-subjects-list">{uniqueSubjectOptions.map((v) => <option value={v} key={v} />)}</datalist>
+            <datalist id="planner-topics-list">{uniqueTopicOptions.map((v) => <option value={v} key={v} />)}</datalist>
 
             {/* Times (Start & End) for Class / Study / Exam */}
             {draft.kind !== "task" && (
@@ -1136,7 +1767,7 @@ export default function StudyPlanner({
                           width: "36px",
                           height: "36px",
                           borderRadius: "8px",
-                          border: "1px solid var(--line)",
+                          border: "none",
                           background: active ? "var(--green)" : "var(--surface-soft)",
                           color: active ? "var(--accent-ink)" : "var(--ink)",
                           fontWeight: 700,
@@ -1295,7 +1926,12 @@ export default function StudyPlanner({
                         fontSize: "11px",
                       }}
                     >
-                      <span>📎 {att.name}</span>
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                        </svg>
+                        {att.name}
+                      </span>
                       <button
                         type="button"
                         style={{ border: 0, background: "transparent", color: "var(--muted)", cursor: "pointer", fontSize: "14px" }}
@@ -1326,8 +1962,9 @@ export default function StudyPlanner({
             </label>
 
             {error && <p className="form-status" role="alert">{error}</p>}
+            </div>
 
-            <div className="profile-modal-actions" style={{ marginTop: "16px" }}>
+            <div className="profile-modal-actions planner-item-modal-footer">
               <button
                 className="text-button quiet"
                 type="button"

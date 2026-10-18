@@ -10,10 +10,12 @@ type MobileNavDockProps = {
   activeView: View;
   onSelectView: (view: View) => void;
   gradesEnabled: boolean;
+  proActive?: boolean;
   onOpenFeedback: () => void;
   onOpenProfile: () => void;
   wrongCount?: number;
   unreadCount?: number;
+  hidden?: boolean;
 };
 
 const LEFT_TABS: Array<{ id: View; label: string; icon: string }> = [
@@ -30,10 +32,12 @@ export default function MobileNavDock({
   activeView,
   onSelectView,
   gradesEnabled,
+  proActive = false,
   onOpenFeedback,
   onOpenProfile,
   wrongCount = 0,
   unreadCount: _unreadCount = 0,
+  hidden = false,
 }: MobileNavDockProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -45,7 +49,7 @@ export default function MobileNavDock({
       label: "Weakness Analytics",
       icon: "/icons/neu/weakness.png",
       desc: "Mistake bank & prioritized study",
-      badge: wrongCount > 0 ? `${wrongCount} missed` : undefined,
+      badge: !proActive ? "PRO" : (wrongCount > 0 ? `${wrongCount} missed` : undefined),
     },
     {
       id: "planner",
@@ -73,7 +77,7 @@ export default function MobileNavDock({
 
   return (
     <>
-      <nav className="mobile-dock" aria-label="Mobile Navigation">
+      <nav className={`mobile-dock ${hidden ? "mobile-dock-hidden" : ""}`} aria-label="Mobile Navigation">
         <div className="mobile-dock-inner">
           {LEFT_TABS.map((tab) => {
             const isActive = activeView === tab.id && !sheetOpen;
@@ -93,9 +97,9 @@ export default function MobileNavDock({
               >
                 {isActive && (
                   <motion.span
-                    layoutId="mobileActivePill"
-                    className="mobile-dock-pill"
-                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                    layoutId="mobileActiveCutout"
+                    className="mobile-dock-active-cutout"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
                 <span className="mobile-dock-icon">
@@ -117,9 +121,9 @@ export default function MobileNavDock({
           >
             {(isMoreActive || sheetOpen) && (
               <motion.span
-                layoutId="mobileActivePill"
-                className="mobile-dock-pill"
-                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                layoutId="mobileActiveCutout"
+                className="mobile-dock-active-cutout"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
               />
             )}
             <span className="mobile-dock-icon mobile-dock-more-icon">
@@ -152,9 +156,9 @@ export default function MobileNavDock({
               >
                 {isActive && (
                   <motion.span
-                    layoutId="mobileActivePill"
-                    className="mobile-dock-pill"
-                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                    layoutId="mobileActiveCutout"
+                    className="mobile-dock-active-cutout"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
                 <span className="mobile-dock-icon">

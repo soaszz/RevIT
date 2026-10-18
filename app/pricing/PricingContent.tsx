@@ -203,16 +203,17 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
               {formattedExpiry && <p className={styles.expiredDate}>Expired on {formattedExpiry}</p>}
               <div className={styles.priceRow} style={{ marginTop: "10px" }}>
                 <span className={styles.priceAmount}>₱49</span>
-                <span className={styles.pricePeriod}>/ Early Access</span>
+                <span className={styles.pricePeriod}>/ month</span>
               </div>
+              <p className={styles.priceNote}>Early bird price · Monthly access</p>
             </div>
           ) : (
             <div className={styles.priceBlock}>
               <div className={styles.priceRow}>
                 <span className={styles.priceAmount}>₱49</span>
-                <span className={styles.pricePeriod}>/ Early Access</span>
+                <span className={styles.pricePeriod}>/ month</span>
               </div>
-              <p className={styles.priceNote}>Introductory price · Subject to change</p>
+              <p className={styles.priceNote}>Early bird price · Monthly access</p>
             </div>
           )}
 
@@ -294,7 +295,7 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>Subscribe via Facebook</span>
+                <span>Get RevIT Pro on Facebook</span>
                 <span className="sr-only"> (opens in a new tab)</span>
                 <span aria-hidden="true">↗</span>
               </a>

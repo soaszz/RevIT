@@ -162,6 +162,16 @@ test("client bundle boundary: Ciulla content is strictly server-only and not imp
       /ciullaServerContent/i,
       `Client file ${clientFile} must NOT import ciullaServerContent!`,
     );
+    assert.doesNotMatch(
+      code,
+      /strasingerContent\.json/i,
+      `Client file ${clientFile} must NOT import strasingerContent.json!`,
+    );
+    assert.doesNotMatch(
+      code,
+      /strasingerServerContent/i,
+      `Client file ${clientFile} must NOT import strasingerServerContent!`,
+    );
   }
 
   // Verify server-only marker on server modules
@@ -172,4 +182,12 @@ test("client bundle boundary: Ciulla content is strictly server-only and not imp
   assert.match(ciullaRoute, /^import "server-only";/, "ciulla API route must be marked server-only");
   assert.match(ciullaRoute, /get_my_entitlement/, "Route must use database-time entitlement RPC");
   assert.match(ciullaRoute, /entitlement\.effective_plan !== "pro"/, "Route must require effective Pro");
+
+  const strasingerServer = readFileSync("app/lib/server/strasingerServerContent.ts", "utf8");
+  assert.match(strasingerServer, /^import "server-only";/, "strasingerServerContent must be marked server-only");
+
+  const strasingerRoute = readFileSync("app/api/reviewer/strasinger/route.ts", "utf8");
+  assert.match(strasingerRoute, /^import "server-only";/, "strasinger API route must be marked server-only");
+  assert.match(strasingerRoute, /get_my_entitlement/, "Route must use database-time entitlement RPC");
+  assert.match(strasingerRoute, /entitlement\.effective_plan !== "pro"/, "Route must require effective Pro");
 });

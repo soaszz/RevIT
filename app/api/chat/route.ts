@@ -83,7 +83,7 @@ Do not replace local clinical policies, manufacturer instructions, or profession
 For patient-specific questions, provide general educational context and recommend consultation with an appropriate qualified professional.
 For an apparent emergency, advise contacting local emergency services.`;
 
-function getRevItSystemInstructions(): string {
+function getRevItSystemInstructions(academicContext?: import("../../lib/aiRequest").AiAcademicContextPayload): string {
   const updatesSummary = SITE_UPDATES.slice(0, 6).map((update) => (
     `- Version ${update.version} (${update.date}) - "${update.title}": ${update.summary} Highlights: ${update.highlights.join("; ")}`
   )).join("\n");
@@ -125,10 +125,28 @@ ${updatesSummary}
 
 When the user asks questions about RevIT, its tools, navigation, available book editions, or what's new in recent updates, answer accurately using the platform knowledge above.`;
 
-  return MEDTECH_INSTRUCTIONS + siteKnowledge;
+  const personalizedContextBlock = academicContext ? `
+
+PERSONALIZED ACADEMIC CONTEXT (VERIFIED DETERMINISTIC CALCULATION):
+The student has granted explicit opt-in permission to use their Gradebook records for academic assistance.
+RevIT's deterministic calculation engine has computed the following verified details for their query:
+${academicContext.summaryText}
+
+ACADEMIC ASSISTANCE GUIDELINES:
+- Provide a clear, structured, and encouraging explanation of these exact numbers.
+- Do NOT invent hypothetical formulas or alter the component weights and scores given above.
+- Explain the deterministic required score (e.g., needed on the Final Exam to reach passing/target grade) and summarize current standing.
+- If the status is "impossible" or "already_secured", clearly explain why based on the calculated maximum possible grade and earned points.
+- Note that calculations are unofficial study guidance to help plan their review, while official grading rules remain set by their academic institution.` : "";
+
+  return MEDTECH_INSTRUCTIONS + siteKnowledge + personalizedContextBlock;
 }
 
-function demoAnswer(question: string) {
+function demoAnswer(question: string, academicContext?: import("../../lib/aiRequest").AiAcademicContextPayload) {
+  if (academicContext) {
+    return `**Deterministic Grade Guidance (${academicContext.subject})**\n\n${academicContext.summaryText}\n\n*Note: Running in demo mode without a configured Groq API key.*`;
+  }
+
   const normalized = question.toLowerCase();
 
   if (normalized.includes("update") || normalized.includes("feature") || normalized.includes("what's new") || normalized.includes("whats new") || normalized.includes("revit")) {
@@ -192,10 +210,11 @@ export async function POST(request: Request) {
 
   const apiKey = process.env.GROQ_API_KEY?.trim();
   const latestQuestion = messages.at(-1)!.content;
+  const academicContext = (messages as import("../../lib/aiRequest").ParsedAiRequest).academicContext;
   if (!isSupabaseConfigured()) {
     if (!apiKey) {
       return json({
-        answer: demoAnswer(latestQuestion),
+        answer: demoAnswer(latestQuestion, academicContext),
         citations: [],
         grounded: false,
         mode: "demo",
@@ -219,7 +238,7 @@ export async function POST(request: Request) {
 
   if (!apiKey) {
     return json({
-      answer: demoAnswer(latestQuestion),
+      answer: demoAnswer(latestQuestion, academicContext),
       citations: [],
       grounded: false,
       mode: "demo",
@@ -271,7 +290,7 @@ export async function POST(request: Request) {
       const completion = await groq.chat.completions.create({
         model,
         messages: [
-          { role: "system", content: getRevItSystemInstructions() },
+          { role: "system", content: getRevItSystemInstructions(academicContext) },
           ...messages.slice(-10),
         ],
         temperature: 0.2,

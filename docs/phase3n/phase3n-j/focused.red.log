@@ -1,0 +1,149 @@
+✖ disabled routes perform zero authentication, configuration or persistence requests (0.9502ms)
+✖ server gate defaults off, requires database configuration, and errors fail closed (0.218ms)
+✖ routes authenticate, reject account switches and Pro access, and reject forged fields (0.2504ms)
+✖ real server grader commits matching NULL, recognizes exact retries, rejects altered identity and response (0.2338ms)
+✖ disabled client makes zero requests and writes no storage; local attempt remains unchanged (0.4364ms)
+✖ queue retains HTTP-success without acknowledgment, network failures and conflicts; only authoritative statuses prune (0.2205ms)
+✖ restoration retains server binding and stable slots; account switching and expiry prevent replay (0.2277ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 0
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 249.6501
+
+✖ failing tests:
+
+test at tests\trusted-integration.test.ts:73:1
+✖ disabled routes perform zero authentication, configuration or persistence requests (0.9502ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\server\trustedStudyRoutes.ts'
+      at readFileSync (node:fs:621:20)
+      at run (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:31:37)
+      at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:35:10)
+      at routeFixture (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:62:18)
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:74:13)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\server\\trustedStudyRoutes.ts'
+  }
+
+test at tests\trusted-integration.test.ts:79:1
+✖ server gate defaults off, requires database configuration, and errors fail closed (0.218ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\server\trustedStudyGate.ts'
+      at readFileSync (node:fs:621:20)
+      at run (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:31:37)
+      at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:35:10)
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:80:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\server\\trustedStudyGate.ts'
+  }
+
+test at tests\trusted-integration.test.ts:93:1
+✖ routes authenticate, reject account switches and Pro access, and reject forged fields (0.2504ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\server\trustedStudyRoutes.ts'
+      at readFileSync (node:fs:621:20)
+      at run (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:31:37)
+      at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:35:10)
+      at routeFixture (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:62:18)
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:94:23)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\server\\trustedStudyRoutes.ts'
+  }
+
+test at tests\trusted-integration.test.ts:105:1
+✖ real server grader commits matching NULL, recognizes exact retries, rejects altered identity and response (0.2338ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\server\trustedStudyRoutes.ts'
+      at readFileSync (node:fs:621:20)
+      at run (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:31:37)
+      at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:35:10)
+      at routeFixture (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:62:18)
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:106:13)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\server\\trustedStudyRoutes.ts'
+  }
+
+test at tests\trusted-integration.test.ts:144:1
+✖ disabled client makes zero requests and writes no storage; local attempt remains unchanged (0.4364ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\trustedStudyClient.ts'
+      at readFileSync (node:fs:621:20)
+      at run (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:31:37)
+      at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:35:10)
+      at clientFixture (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:125:15)
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:145:13)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\trustedStudyClient.ts'
+  }
+
+test at tests\trusted-integration.test.ts:150:1
+✖ queue retains HTTP-success without acknowledgment, network failures and conflicts; only authoritative statuses prune (0.2205ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\trustedStudyClient.ts'
+      at readFileSync (node:fs:621:20)
+      at run (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:31:37)
+      at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:35:10)
+      at clientFixture (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:125:15)
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:152:15)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\trustedStudyClient.ts'
+  }
+
+test at tests\trusted-integration.test.ts:159:1
+✖ restoration retains server binding and stable slots; account switching and expiry prevent replay (0.2277ms)
+  Error: ENOENT: no such file or directory, open 'C:\Users\mypc\Desktop\Projects\RevIT\app\lib\trustedStudyClient.ts'
+      at readFileSync (node:fs:621:20)
+      at run (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:31:37)
+      at load (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:35:10)
+      at clientFixture (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:125:15)
+      at TestContext.<anonymous> (file:///C:/Users/mypc/Desktop/Projects/RevIT/tests/trusted-integration.test.ts:160:13)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\mypc\\Desktop\\Projects\\RevIT\\app\\lib\\trustedStudyClient.ts'
+  }

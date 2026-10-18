@@ -1,0 +1,25 @@
+✔ disabled routes perform zero authentication, configuration or persistence requests (106.1382ms)
+✔ server gate defaults off, requires database configuration, and errors fail closed (38.9144ms)
+✔ real database gate rejects missing rows, query errors and unavailable configuration without writes (5.8773ms)
+✔ routes authenticate, reject account switches and Pro access, and reject forged fields (433.6854ms)
+✔ real server grader commits matching NULL, recognizes exact retries, rejects altered identity and response (108.0454ms)
+✔ commits recheck current Pro; expiry, unknown IDs, invalid mappings, oversized batches and foreign pools fail closed (99.0325ms)
+✔ acknowledged stable IDs cannot be assigned a new slot after pruning or restoration (25.325ms)
+✔ unissued answered sessions request restoration only and cannot be newly issued (23.6259ms)
+✔ resume-only session requests cannot create new database rows (103.3116ms)
+✔ trusted startup reads progression without invoking achievement or reward writers (15.4345ms)
+✔ disabled client makes zero requests and writes no storage; local attempt remains unchanged (17.9289ms)
+✔ queue retains HTTP-success without acknowledgment, network failures and conflicts; only authoritative statuses prune (76.3019ms)
+✔ restoration retains server binding and stable slots; account switching and expiry prevent replay (32.435ms)
+✔ new client restores owned binding and unchanged pending payload; Strasinger emits no requests (27.5541ms)
+✔ browser transport imports no privileged modules; SQL deny grants and runtime gate remain separate (0.7494ms)
+✔ actual disabled completeQuestion retains feedback, reinforcement, local history and legacy cloud behavior (91.3503ms)
+✔ actual Skip defers question without recording or sending an attempt; all component JSX stays identical (28.8273ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1525.3547

@@ -1,0 +1,47 @@
+✔ V1 exposes exactly the requested periods and primary metrics (2.3121ms)
+✔ leaderboard values and accuracy progress are presented consistently (43.9293ms)
+✔ migration centralizes thresholds and does not accept a client XP amount (1.316ms)
+✔ exact 16-ID allowlist matches canonical matching structures and Phase 3E evidence (2.1383ms)
+✔ normalization covers 21, 108, 22875, values above smallint, small matching codes, and NULL (0.2679ms)
+✔ ordinary 0 and 3 pass through; direct Rodak payloads preserve correctness, stable IDs and metadata (1.0572ms)
+✔ future Strasinger sender uses NULL with mocked capability; real cloud-sync flag remains disabled (158.654ms)
+✔ legacy matching queues survive failures and missing acknowledgments, then retry once successfully (0.8636ms)
+✔ restored local history migrates through the same boundary and only marks acknowledged completion (0.4669ms)
+✔ NULL cloud answers preserve analytics, leaderboard counts and mistake repetition without changing local scoring (19.053ms)
+✔ RPC patch changes only the exact-ID validation condition and keeps pre-feature rollback and security hardening (4.8201ms)
+✖ actual local merge keeps encoded responses over cloud NULL; skip source contains no attempt write (14.6505ms)
+✔ both matching items retain original count and official pairs (2.0174ms)
+✔ matching answer encoding rejects incomplete and invalid selections (0.2589ms)
+✔ single-answer questions retain original scoring (0.2345ms)
+✔ Strasinger IDs without subject metadata never enter Harr leaderboard stats (24.5877ms)
+✔ disabled Strasinger sync covers direct writes, old queues, and local history migration (4.0694ms)
+✔ rollback restores all three local pre-migration definitions and retains helper restrictions (2.0179ms)
+✔ migration preserves signatures and both prefixes; separate hardening revokes both overloads (0.9549ms)
+✔ all 4441 question records, 47 repairs, 42 protections, and reviewer assets match entry hashes (67.0296ms)
+✔ actual Strasinger GET handler fails closed and only returns content to server-authorized Pro (82.3722ms)
+✔ Skip first question moves it to the end of the queue (7.8607ms)
+✔ Skip middle question navigates to next and defers middle question (1.3559ms)
+✔ Cannot skip final remaining unanswered question (prevents infinite skip loop) (0.2544ms)
+✔ Repeated skipping rotates through unanswered questions until answered (0.2517ms)
+✔ Matching and classification questions retain structure and zero shuffle (0.8365ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 25
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1497.31
+
+✖ failing tests:
+
+test at tests\matching-cloud-persistence.test.ts:210:1
+✖ actual local merge keeps encoded responses over cloud NULL; skip source contains no attempt write (14.6505ms)
+  TypeError: Cannot read properties of undefined (reading 'selectedAnswer')
+      at TestContext.<anonymous> (C:\Users\mypc\Desktop\Projects\RevIT\tests\matching-cloud-persistence.test.ts:218:58)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

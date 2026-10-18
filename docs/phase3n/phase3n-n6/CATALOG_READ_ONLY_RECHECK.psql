@@ -1,0 +1,8 @@
+-- PREPARATION ONLY. Requires separate read-only connection authorization.
+-- Fixed reviewed includes only. Never include EXECUTION_PACK.md or suite/setup SQL.
+\set ON_ERROR_STOP on
+\ir RELATION_READ_ONLY_GUARD.sql
+\ir ../phase3n-n5/READ_ONLY_RECHECK.sql
+\ir ../../../scratch/phase3n-n2-evidence/read-only-preflight.sql
+\ir SCHEMA_READ_ONLY_SUPPLEMENT.sql
+\echo N6_CATALOG_RECHECK_COMPLETE

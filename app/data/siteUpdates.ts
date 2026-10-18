@@ -13,6 +13,35 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-12-0",
+    version: "v1.12.0",
+    date: "October 18, 2026",
+    type: "major",
+    title: "New UI Look and Added Strasinger 7th Edition",
+    summary: "Updated RevIT's look, added Strasinger's Urinalysis and Body Fluids, 7th Edition for Pro members, and renamed the subject to Clinical Microscopy.",
+    tags: ["UI", "Books", "Strasinger", "Pro"],
+    highlights: [
+      "Updated RevIT's UI with a fresh look.",
+      "Added 467 practice questions across 17 chapters from Strasinger's Urinalysis and Body Fluids, 7th Edition for Pro members.",
+      "Changed the AUBF / Urinalysis & Body Fluids display name to Clinical Microscopy."
+    ]
+  },
+  {
+    id: "update-v1-11-0",
+    version: "v1.11.0",
+    date: "October 18, 2026",
+    type: "major",
+    title: "Added Rodak's Hematology 6th Edition",
+    summary: "Added Rodak's Hematology 6th Edition question bank with 491 practice questions, textbook explanations, figures, and study tables for Pro members.",
+    tags: ["Books", "Rodak", "Hematology", "Pro", "Reviewer"],
+    highlights: [
+      "Added 491 review questions across 42 chapters from Rodak's Hematology 6th Edition.",
+      "Included all textbook figures, diagrams, and reference comparison tables.",
+      "Added textbook page numbers and explanations for every question.",
+      "Available across review sessions, flashcards, progress tracking, and weakness analytics."
+    ]
+  },
+  {
     id: "update-v1-10-1",
     version: "v1.10.1",
     date: "October 6, 2026",

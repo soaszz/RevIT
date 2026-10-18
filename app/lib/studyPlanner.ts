@@ -37,7 +37,7 @@ export function normalizeStudyPlans(value: unknown): StudyPlan[] {
       const block = rawBlock as Partial<StudyPlanBlock>;
       if (typeof block.id !== "string" || !TIME_PATTERN.test(block.startTime ?? "") || !TIME_PATTERN.test(block.endTime ?? "") || typeof block.activity !== "string" || !block.activity.trim()) return [];
       const addedToCalendar = Boolean(block.addedToCalendar);
-      const validKinds = ["class", "study", "exam", "deadline", "task"];
+      const validKinds = ["class", "study", "break", "exam", "deadline", "task"];
       const rawKind = typeof block.eventKind === "string" ? block.eventKind.toLowerCase() : null;
       const eventKind = rawKind && validKinds.includes(rawKind) ? (rawKind as StudyPlanBlock["eventKind"]) : "study";
       const recurrenceDays = Array.isArray(block.recurrenceDays) ? block.recurrenceDays.filter((d) => typeof d === "number" && d >= 0 && d <= 6) : null;

@@ -29,12 +29,50 @@ function hasExactKeys(value: Record<string, unknown>, keys: string[]) {
   return actual.length === expected.length && actual.every((key, index) => key === expected[index]);
 }
 
-export function parseAiRequest(value: unknown): AiInputMessage[] {
-  if (!isPlainObject(value) || !hasExactKeys(value, ["messages"]) || !Array.isArray(value.messages)) {
+export type AiAcademicContextPayload = {
+  type: "grades";
+  subject: string;
+  targetGrade?: number;
+  currentAverage?: number | null;
+  requiredScore?: number | null;
+  status?: string;
+  summaryText: string;
+};
+
+export type ParsedAiRequest = AiInputMessage[] & {
+  academicContext?: AiAcademicContextPayload;
+};
+
+function isValidAcademicContext(value: unknown): value is AiAcademicContextPayload {
+  if (!isPlainObject(value)) return false;
+  if (value.type !== "grades") return false;
+  if (typeof value.subject !== "string" || value.subject.length > 100) return false;
+  if (typeof value.summaryText !== "string" || value.summaryText.length > 2500) return false;
+  return true;
+}
+
+export function parseAiRequest(value: unknown): ParsedAiRequest {
+  if (!isPlainObject(value)) {
+    throw new AiRequestError(400, "Please send a valid question.");
+  }
+
+  const keys = Object.keys(value);
+  const hasMessages = keys.includes("messages");
+  const hasOnlyAllowedKeys = keys.every((key) => key === "messages" || key === "academicContext");
+
+  if (!hasMessages || !hasOnlyAllowedKeys || !Array.isArray(value.messages)) {
     throw new AiRequestError(400, "Please send a valid question.");
   }
   if (value.messages.length < 1 || value.messages.length > AI_REQUEST_LIMITS.messages) {
     throw new AiRequestError(400, "Please send a valid question.");
+  }
+
+  let academicContext: AiAcademicContextPayload | undefined;
+  if ("academicContext" in value && value.academicContext !== undefined) {
+    if (!isValidAcademicContext(value.academicContext)) {
+      throw new AiRequestError(400, "Please send a valid question.");
+    }
+    academicContext = value.academicContext;
   }
 
   let totalCharacters = 0;
@@ -59,7 +97,17 @@ export function parseAiRequest(value: unknown): AiInputMessage[] {
   if (messages.at(-1)?.role !== "user" || totalCharacters > AI_REQUEST_LIMITS.totalCharacters) {
     throw new AiRequestError(400, "Please shorten the conversation and try again.");
   }
-  return messages;
+
+  if (academicContext) {
+    Object.defineProperty(messages, "academicContext", {
+      value: academicContext,
+      enumerable: false,
+      configurable: true,
+      writable: true,
+    });
+  }
+
+  return messages as ParsedAiRequest;
 }
 
 export async function readAiRequest(request: Request) {

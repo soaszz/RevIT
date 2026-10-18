@@ -1,0 +1,40 @@
+✔ maps existing local session to trusted plan without altering local session state (2.3926ms)
+✔ keeps local and server session IDs distinct and handles null server session (0.1857ms)
+✔ preserves original matching selections and reconstructs from polynomial expansion if needed (0.4022ms)
+✔ preserves stable attempt IDs across queue lifecycle (0.183ms)
+✔ handles queue status transitions according to server acknowledgment semantics (0.4196ms)
+✔ retains deferred attempts locally for retry and prunes only accepted items (0.3041ms)
+✔ isolates queues by account to prevent cross-user queue replay (0.2056ms)
+✔ handles session expiration without mutating local history (0.1959ms)
+✔ enforces fail-closed Strasinger cloud synchronization default (0.1842ms)
+✔ confirms client session adapter is pure in-memory and executes no RPC or DB writes (0.2857ms)
+✔ verifies 100% shadow grading parity between local and canonical server grading (177.1805ms)
+✔ disabled routes perform zero authentication, configuration or persistence requests (150.6895ms)
+✔ server gate defaults off, requires database configuration, and errors fail closed (60.1992ms)
+✔ real database gate rejects missing rows, query errors and unavailable configuration without writes (13.7146ms)
+✔ routes authenticate, reject account switches and Pro access, and reject forged fields (530.7829ms)
+✔ real server grader commits matching NULL, recognizes exact retries, rejects altered identity and response (95.036ms)
+✔ commits recheck current Pro; expiry, unknown IDs, invalid mappings, oversized batches and foreign pools fail closed (106.7894ms)
+✔ disabled client makes zero requests and writes no storage; local attempt remains unchanged (30.2762ms)
+✔ queue retains HTTP-success without acknowledgment, network failures and conflicts; only authoritative statuses prune (118.6168ms)
+✔ restoration retains server binding and stable slots; account switching and expiry prevent replay (35.5711ms)
+✔ actual disabled completeQuestion retains feedback, reinforcement, local history and legacy cloud behavior (69.6649ms)
+✔ actual Skip defers question without recording or sending an attempt; all component JSX stays identical (12.8327ms)
+✔ trusted adapter requires authenticated identity and rejects forged fields (376.8928ms)
+✔ canonical grading, attribution, digest and matching NULL are server derived (397.7528ms)
+✔ unknown IDs, invalid matching, skip, duplicates and unsupported versions fail before writes (113.5847ms)
+✔ Free cannot create Pro sessions; Strasinger is blocked even for Pro (242.4054ms)
+✔ expired Pro, expired session, account switching and missing ownership retain pending work (122.9465ms)
+✔ durable identical retry returns original acknowledgment; legacy and changed responses conflict (104.7075ms)
+✔ missing/false acknowledgment and database conflicts are never reported as durable success (87.561ms)
+✔ Rodak adapter resolves all 34 exact chapter mappings without source invention (81.7452ms)
+✔ fallback writer defaults to createAdminServiceClient on server and executes service-role rpc (82.7052ms)
+✔ migration and rollback fail closed and preserve prior files (static checks only) (42.6287ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2821.8903

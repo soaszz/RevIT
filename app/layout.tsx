@@ -75,7 +75,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
   return (
-    <html lang="en" data-theme="light" suppressHydrationWarning className={`${dmSans.variable} ${geistMono.variable}`}>
+    <html lang="en" data-theme="light" data-scroll-behavior="smooth" suppressHydrationWarning className={`${dmSans.variable} ${geistMono.variable}`}>
       <head>
         <script
           nonce={nonce}

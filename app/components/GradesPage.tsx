@@ -109,6 +109,7 @@ export default function GradesPage({
   const [activeMode, setActiveMode] = useState<"nu_preset" | "custom">(() => (
     mtapFeaturesEnabled ? "nu_preset" : "custom"
   ));
+  const effectiveMode = mtapFeaturesEnabled ? activeMode : "custom";
 
   // NU MTAP state
   const [matrix, setMatrix] = useState<GradeMatrix>(() => matrixFromRecords(grades));
@@ -243,7 +244,7 @@ export default function GradesPage({
   }, [matrix, simSubject]);
 
   // Determine active simulator categories & passing grade
-  const isNuSim = activeMode === "nu_preset";
+  const isNuSim = effectiveMode === "nu_preset";
   const activeSimCategories: UniversalCategoryInput[] = isNuSim
     ? nuSimCategories
     : (activeCustomBook?.categories ?? []);
@@ -566,9 +567,11 @@ export default function GradesPage({
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
               <p className="eyebrow" style={{ margin: 0 }}>Academic Gradebook</p>
-              <span className="grade-mode-badge">
-                {activeMode === "nu_preset" ? "NU MOA MTAP 1 Preset" : "Custom Gradebook"}
-              </span>
+              {mtapFeaturesEnabled && (
+                <span className="grade-mode-badge">
+                  {effectiveMode === "nu_preset" ? "NU MOA MTAP 1 Preset" : "Custom Gradebook"}
+                </span>
+              )}
             </div>
             <h2>Grades by category</h2>
             <p>
@@ -577,28 +580,30 @@ export default function GradesPage({
           </div>
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-            <div className="theme-segmented-control" role="tablist" aria-label="Gradebook mode">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeMode === "nu_preset"}
-                className={`theme-segment-btn ${activeMode === "nu_preset" ? "active" : ""}`}
-                onClick={() => setActiveMode("nu_preset")}
-              >
-                NU MOA · MTAP 1
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeMode === "custom"}
-                className={`theme-segment-btn ${activeMode === "custom" ? "active" : ""}`}
-                onClick={() => setActiveMode("custom")}
-              >
-                Custom Subjects ({customGradebooks.length})
-              </button>
-            </div>
+            {mtapFeaturesEnabled && (
+              <div className="theme-segmented-control" role="tablist" aria-label="Gradebook mode">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={effectiveMode === "nu_preset"}
+                  className={`theme-segment-btn ${effectiveMode === "nu_preset" ? "active" : ""}`}
+                  onClick={() => setActiveMode("nu_preset")}
+                >
+                  NU MOA · MTAP 1
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={effectiveMode === "custom"}
+                  className={`theme-segment-btn ${effectiveMode === "custom" ? "active" : ""}`}
+                  onClick={() => setActiveMode("custom")}
+                >
+                  Custom Subjects ({customGradebooks.length})
+                </button>
+              </div>
+            )}
             <span className="state-pill">
-              Pass mark {activeMode === "nu_preset" ? PASSING_GRADE : (activeCustomBook?.passingGrade ?? 75)}%
+              Pass mark {effectiveMode === "nu_preset" ? PASSING_GRADE : (activeCustomBook?.passingGrade ?? 75)}%
             </span>
           </div>
         </div>
@@ -609,19 +614,21 @@ export default function GradesPage({
             <div className="grade-simulator-summary">
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px" }}>
                 <span>Grade Simulator</span>
-                <span style={{ fontSize: "9px", padding: "2px 7px", borderRadius: "99px", background: "var(--green)", color: "var(--accent-ink)", fontWeight: 800, letterSpacing: "0.02em" }}>
-                  {activeMode === "nu_preset" ? "For NU MOA" : "Universal"}
-                </span>
+                {mtapFeaturesEnabled && (
+                  <span style={{ fontSize: "9px", padding: "2px 7px", borderRadius: "6px", background: "var(--green)", color: "var(--accent-ink)", fontWeight: 750, letterSpacing: "0.02em" }}>
+                    {effectiveMode === "nu_preset" ? "For NU MOA" : "Universal"}
+                  </span>
+                )}
               </div>
               <strong>
-                {activeMode === "nu_preset"
+                {effectiveMode === "nu_preset"
                   ? `${overallPercentage.toFixed(2)}%`
                   : customSummary?.currentPerformance !== null
                   ? `${customSummary?.currentPerformance.toFixed(1)}%`
                   : "—"}
               </strong>
               <small>
-                {activeMode === "nu_preset"
+                {effectiveMode === "nu_preset"
                   ? "Projected weighted grade calibrated for NU MOA Students"
                   : customSummary?.status ?? "Current Performance"}
               </small>
@@ -631,14 +638,14 @@ export default function GradesPage({
           <div>
             <span>Grades recorded</span>
             <strong>
-              {activeMode === "nu_preset"
+              {effectiveMode === "nu_preset"
                 ? `${completedEntries} / ${SUBJECTS.length * GRADE_FIELDS.length}`
                 : activeCustomBook
                 ? `${customSummary?.categorySummaries.reduce((sum, c) => sum + c.completedCount, 0)} assessments`
                 : "0"}
             </strong>
             <small>
-              {activeMode === "nu_preset"
+              {effectiveMode === "nu_preset"
                 ? "Across four subjects and five assessments"
                 : activeCustomBook
                 ? `${activeCustomBook.categories.length} grading categories`
@@ -649,14 +656,14 @@ export default function GradesPage({
           <div>
             <span>Points Secured</span>
             <strong>
-              {activeMode === "nu_preset"
+              {effectiveMode === "nu_preset"
                 ? `${overallPercentage.toFixed(1)} / 100%`
                 : customSummary
                 ? `${customSummary.earnedPoints.toFixed(1)} / 100%`
                 : "—"}
             </strong>
             <small>
-              {activeMode === "nu_preset"
+              {effectiveMode === "nu_preset"
                 ? `${SUBJECTS.length * GRADE_FIELDS.length - completedEntries} assessments remaining`
                 : customSummary?.isWeightValid
                 ? `${(100 - customSummary.completedWeight).toFixed(0)}% weight unassessed`
@@ -669,7 +676,7 @@ export default function GradesPage({
       {/* ====================================================================
           MODE 1: NU MOA MTAP 1 PRESET
           ==================================================================== */}
-      {activeMode === "nu_preset" && (
+      {effectiveMode === "nu_preset" && (
         <>
           <div className="grade-category-grid">
             {DISPLAY_FIELDS.map((field) => (
@@ -734,7 +741,7 @@ export default function GradesPage({
       {/* ====================================================================
           MODE 2: UNIVERSAL CUSTOM GRADEBOOKS
           ==================================================================== */}
-      {activeMode === "custom" && (
+      {effectiveMode === "custom" && (
         <div className="custom-gradebook-container">
           {/* Subject Navigation Bar */}
           <div className="subject-nav-bar">
@@ -765,17 +772,26 @@ export default function GradesPage({
           {/* Empty State: No subjects yet */}
           {customGradebooks.length === 0 && (
             <section className="gradebook-empty-state">
-              <div className="empty-state-icon" aria-hidden="true">📚</div>
+              <svg className="empty-state-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-0.5-.05" />
+                <path d="M6 2v20" />
+              </svg>
               <h3>Set up your gradebook</h3>
-              <p>Choose how your grades are calculated. Track coursework with custom categories or use the built-in NU MOA preset.</p>
+              <p>
+                {mtapFeaturesEnabled
+                  ? "Choose how your grades are calculated. Track coursework with custom categories or use the built-in NU MOA preset."
+                  : "Track coursework, set category weights, and calculate target final exam scores across all your subjects."}
+              </p>
               <div className="empty-state-actions">
-                <button
-                  type="button"
-                  className="secondary-button"
-                  onClick={() => setActiveMode("nu_preset")}
-                >
-                  Use NU MOA · MTAP 1 Preset
-                </button>
+                {mtapFeaturesEnabled && (
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    onClick={() => setActiveMode("nu_preset")}
+                  >
+                    Use NU MOA · MTAP 1 Preset
+                  </button>
+                )}
                 <button
                   type="button"
                   className="primary-button"
@@ -943,19 +959,19 @@ export default function GradesPage({
       {showSimulator && activeSimCategories.length > 0 && (
         <section className="universal-simulator-card" aria-labelledby="grade-simulator-heading">
           <div className="simulator-header">
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div className="simulator-header-copy">
+              <div className="simulator-eyebrow-row">
                 <p className="eyebrow" style={{ margin: 0 }}>What-If &amp; Target Planning</p>
-                <span className="state-pill" style={{ fontSize: "9px" }}>Interactive</span>
+                <span className="simulator-interactive-tag">• Interactive</span>
               </div>
               <h3 id="grade-simulator-heading">Grade Simulator</h3>
-              <p>Simulate target score requirements or explore how a hypothetical grade impacts your projected final standing.</p>
+              <p className="simulator-subtext">Simulate target score requirements or explore how a hypothetical grade impacts your projected final standing.</p>
             </div>
 
             {/* If in NU mode, allow picking which of the 4 subjects to simulate */}
             {isNuSim && (
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <label htmlFor="sim-subject-select" style={{ fontSize: "11px", fontWeight: 700, color: "var(--muted)" }}>
+              <div className="sim-subject-picker">
+                <label htmlFor="sim-subject-select">
                   Subject:
                 </label>
                 <select

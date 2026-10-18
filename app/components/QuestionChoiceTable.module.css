@@ -1,0 +1,11 @@
+.scroll { width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; overscroll-behavior-inline: contain; }
+.table { min-width: 560px; width: 100%; border-collapse: collapse; color: var(--ink); background: var(--paper); font-size: 14px; }
+.table th, .table td { padding: 9px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: normal; overflow-wrap: anywhere; }
+.table thead th { background: var(--surface-tint); font-weight: 700; }
+.table tbody th { width: 68px; }
+.select { min-width: 44px; min-height: 44px; border: 0; border-radius: 8px; background: transparent; color: var(--ink); font: inherit; font-weight: 800; cursor: pointer; }
+.select[aria-pressed="true"] { background: var(--green-soft); color: var(--green-dark); }
+.select:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+.correct { background: var(--green-soft); }
+.incorrect { background: color-mix(in srgb, var(--danger) 12%, var(--paper)); }
+@media (max-width: 640px) { .table { font-size: 13px; } .table th, .table td { padding: 8px 10px; } }

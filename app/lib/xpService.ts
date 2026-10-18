@@ -148,6 +148,10 @@ export async function loadCloudProgression(client: SupabaseClient, userId: strin
   return { snapshot: await loadCloudProgressionRows(client, userId), newlyUnlocked };
 }
 
+export async function loadCloudProgressionReadOnly(client: SupabaseClient, userId: string): Promise<ProgressionUpdate> {
+  return { snapshot: await loadCloudProgressionRows(client, userId), newlyUnlocked: [] };
+}
+
 export async function recordCloudProgressEvents(client: SupabaseClient, userId: string, events: ProgressEvent[]): Promise<ProgressionUpdate> {
   for (const event of events) {
     const { error } = await client.rpc("record_study_activity", {

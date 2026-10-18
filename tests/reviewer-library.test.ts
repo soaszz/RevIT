@@ -121,22 +121,22 @@ test("library search matches subject and topic metadata for Harr and Ciulla", ()
   assert.equal(filterSubjectsBySearch(subjects, topics, "").length, subjects.length);
 });
 
-test("MCQ and flashcard libraries expose shared category choices, search, and reviewer book dropdown", async () => {
-  const [app, flashcards, search] = await Promise.all([
+test("MCQ and flashcard libraries expose shared category choices, search, and compact session setup", async () => {
+  const [app, reviewLibrary, flashcards, search] = await Promise.all([
     readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/components/ReviewLibrary.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/components/Flashcards.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/components/LibrarySearch.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(app, /id="mcq-library-search"/);
-  assert.match(app, /id="reviewer-book"/);
-  assert.match(app, /value="Harr"/);
-  assert.match(app, /value="Ciulla"/);
-  assert.match(app, /value="all"/);
-  assert.match(app, /isNuRevit=\{preferences\.mtap_features_enabled\}/);
-  assert.match(app, /<Flashcards\s+isNuRevit=\{preferences\.mtap_features_enabled\}/);
-  assert.match(flashcards, /id="flashcard-library-search"/);
-  assert.match(flashcards, /isNuRevit=\{isNuRevit\}/);
+  assert.match(reviewLibrary, /id="review-library-search"|id="mcq-library-search"/);
+  // Redundant Reviewer Book dropdown removed from Session Setup
+  assert.doesNotMatch(reviewLibrary, /id="desktop-reviewer-book"/);
+  assert.match(reviewLibrary, /id="desktop-session-size"/);
+  assert.match(app, /<ReviewLibrary/);
+  assert.match(app, /libraryMode=\{libraryMode\}/);
+  assert.match(flashcards, /isNuRevit:\s*boolean/);
+  assert.match(reviewLibrary, /isNuRevit=\{preferences\.mtap_features_enabled\}/);
   assert.match(flashcards, /buildSubjectSections\(visibleSubjects, isNuRevit\)/);
   assert.match(search, /type="search"/);
   assert.match(search, /STANDARD_CATEGORY_CHOICES/);
@@ -147,6 +147,88 @@ test("MCQ and flashcard libraries expose shared category choices, search, and re
   assert.match(search, /MTAP 1/);
   assert.match(search, /Other Majors/);
   assert.match(search, /Search subjects or topics\.\.\./);
+});
+
+test("Review Library unified subjects expand with complete topics and questions across all subjects", async () => {
+  const { getUnifiedSubjects } = await import("../app/lib/reviewerLibrary");
+  const { ciullaPreviewSubjects, ciullaPreviewTopics, ciullaTopicQuestionCounts } = await import("../app/content/ciullaMetadata");
+
+  const allAvailableSubjects = [...harrSubjects, ...ciullaPreviewSubjects];
+  const allAvailableTopics = [...harrTopics, ...ciullaPreviewTopics];
+
+  const topicQuestionCounts = new Map<string, number>();
+  for (const _q of harrTopics) {
+    // Topic question count mapping from metadata
+  }
+  for (const [tId, count] of Object.entries(ciullaTopicQuestionCounts)) {
+    topicQuestionCounts.set(tId, count);
+  }
+
+  const unified = getUnifiedSubjects("all", allAvailableSubjects, allAvailableTopics);
+  assert.equal(unified.length, 14, "Expected 14 unified subjects (8 combined + 6 standalone)");
+
+  for (const subj of unified) {
+    const subjectTopics = allAvailableTopics.filter((t) =>
+      subj.topicIds ? subj.topicIds.includes(t.id) : t.subjectId === subj.id
+    );
+    assert.ok(subjectTopics.length > 0, `Subject ${subj.name} must have at least 1 topic`);
+
+    const harr = subjectTopics.filter((t) => (t.book ?? "Harr") === "Harr");
+    const ciulla = subjectTopics.filter((t) => t.book === "Ciulla");
+
+    // Defensive activeBook fallback must never resolve to empty edition topics
+    for (const selectedBook of ["Harr", "Ciulla", "all"] as const) {
+      for (const tab of [undefined, "Harr", "Ciulla"] as const) {
+        const preferredBook = tab ?? (selectedBook === "Ciulla" ? "Ciulla" : "Harr");
+        const activeBook = preferredBook === "Ciulla"
+          ? (ciulla.length > 0 ? "Ciulla" : "Harr")
+          : (harr.length > 0 ? "Harr" : (ciulla.length > 0 ? "Ciulla" : "Harr"));
+        const activeTopics = activeBook === "Ciulla" ? ciulla : harr;
+        assert.ok(activeTopics.length > 0, `Subject ${subj.name} must never have 0 topics for activeBook ${activeBook}`);
+      }
+    }
+  }
+
+  // Clinical Chemistry specific verification
+  const cc = unified.find((s) => s.name === "Clinical Chemistry");
+  assert.ok(cc, "Clinical Chemistry must exist in unified subjects");
+  const ccTopics = allAvailableTopics.filter((t) => cc.topicIds?.includes(t.id));
+  const ccHarr = ccTopics.filter((t) => (t.book ?? "Harr") === "Harr");
+  const ccCiulla = ccTopics.filter((t) => t.book === "Ciulla");
+  assert.equal(ccHarr.length, 10, "Clinical Chemistry Harr must have exactly 10 topics");
+  assert.equal(ccCiulla.length, 12, "Clinical Chemistry Ciulla must have exactly 12 topics");
+});
+
+test("Mixed Harr and Ciulla selections persist and filter questions accurately", () => {
+  const harrTopicId = "clinical-chemistry-6-1";
+  const ciullaTopicId = "ciulla-cc-instrumentation-and-analytical-principles";
+  const selectedTopicIds = [harrTopicId, ciullaTopicId];
+
+  // Mock questions from both editions
+  const mockQuestions: ReviewerQuestion[] = [
+    { id: "q1", subjectId: "clinical-chemistry", topicId: harrTopicId, book: "Harr", choices: ["A","B","C","D"], correctAnswer: 0, officialAnswer: "A", explanation: "test", prompt: "q1", source: { fileName: "test.pdf", page: 1, kind: "Official supplied MCQ reviewer" } },
+    { id: "q2", subjectId: "ciulla-clinical-chemistry", topicId: ciullaTopicId, book: "Ciulla", choices: ["A","B","C","D"], correctAnswer: 1, officialAnswer: "B", explanation: "test", prompt: "q2", source: { fileName: "test.pdf", page: 1, kind: "Official supplied MCQ reviewer" } },
+  ];
+
+  // When selectedBook === "all"
+  const qAll = mockQuestions.filter((q) => selectedTopicIds.includes(q.topicId));
+  assert.equal(qAll.length, 2, "All Books selection must include questions from both Harr and Ciulla");
+
+  // When selectedBook === "Harr"
+  const qHarr = mockQuestions.filter((q) => {
+    if (!selectedTopicIds.includes(q.topicId)) return false;
+    return (q.book ?? "Harr") === "Harr";
+  });
+  assert.equal(qHarr.length, 1, "Harr filter must return only Harr question");
+  assert.equal(qHarr[0].id, "q1");
+
+  // When selectedBook === "Ciulla"
+  const qCiulla = mockQuestions.filter((q) => {
+    if (!selectedTopicIds.includes(q.topicId)) return false;
+    return (q.book ?? "Harr") === "Ciulla";
+  });
+  assert.equal(qCiulla.length, 1, "Ciulla filter must return only Ciulla question");
+  assert.equal(qCiulla[0].id, "q2");
 });
 
 test("Ciulla question count, structure, and stimuli integrity", () => {

@@ -29,20 +29,24 @@ export default function SiteNotificationTrigger({
         display: "inline-flex",
         alignItems: "center",
         gap: "8px",
-        padding: size === "compact" ? "6px" : "7px 12px 7px 10px",
-        borderRadius: size === "compact" ? "50%" : "99px",
-        border: "1px solid var(--line)",
-        background: "var(--paper)",
+        padding: size === "compact" ? "0" : "7px 12px 7px 10px",
+        borderRadius: "10px",
+        border: "none",
+        outline: "none",
+        background: size === "compact" ? "transparent" : "var(--paper)",
         color: "var(--ink)",
         fontSize: "11px",
         fontWeight: 700,
         cursor: "pointer",
         lineHeight: 1,
         whiteSpace: "nowrap",
-        boxShadow: "0 4px 14px rgba(0, 0, 0, 0.06)",
-        width: size === "compact" ? "34px" : "auto",
-        height: size === "compact" ? "34px" : "auto",
-        justifyContent: size === "compact" ? "center" : "flex-start"
+        boxShadow: "none",
+        width: size === "compact" ? "36px" : "auto",
+        height: size === "compact" ? "36px" : "auto",
+        minWidth: size === "compact" ? "36px" : "auto",
+        minHeight: size === "compact" ? "36px" : "auto",
+        boxSizing: "border-box",
+        justifyContent: "center"
       }}
     >
       <span
@@ -56,7 +60,7 @@ export default function SiteNotificationTrigger({
           flexShrink: 0
         }}
       >
-        <Notification3 size={size === "compact" ? 18 : 20} />
+        <Notification3 size={20} />
         {unreadCount > 0 && (
           <span
             className="site-notification-badge"

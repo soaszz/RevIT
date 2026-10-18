@@ -1,5 +1,6 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { createInterface } from "node:readline";
 
 const HIGH_CONFIDENCE_PATTERNS = [
   ["private key", /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/g],
@@ -48,6 +49,15 @@ function scan(label, content) {
   return [...new Set(findings)];
 }
 
+async function scanGitHistory(stdout) {
+  const findings = [];
+  // Every detection pattern is line-local; readline preserves tokens split across stream chunks.
+  for await (const line of createInterface({ input: stdout, crlfDelay: Infinity })) {
+    findings.push(...scan("Git history", line));
+  }
+  return [...new Set(findings)];
+}
+
 const tracked = execFileSync("git", ["ls-files", "-co", "--exclude-standard", "-z"], { encoding: "utf8" })
   .split("\0")
   .filter(Boolean);
@@ -64,16 +74,22 @@ for (const path of tracked) {
 }
 
 try {
-  const history = execFileSync(
+  const history = spawn(
     "git",
     ["log", "--all", "--full-history", "--no-ext-diff", "--text", "--format=commit:%H", "-p", "--", "."],
-    { encoding: "utf8", maxBuffer: 256 * 1024 * 1024 },
+    { windowsHide: true, stdio: ["ignore", "pipe", "pipe"] },
   );
-  findings.push(...scan("Git history", history));
+  history.stderr.resume();
+  const completion = new Promise((resolve, reject) => {
+    history.once("error", reject);
+    history.once("close", code => code === 0 ? resolve() : reject(new Error(`Git history exited with status ${code}.`)));
+  });
+  const [historyFindings] = await Promise.all([scanGitHistory(history.stdout), completion]);
+  findings.push(...historyFindings);
 } catch (error) {
   console.error("Secret scan could not inspect Git history.");
-  process.exitCode = 2;
-  throw error;
+  console.error(error instanceof Error ? error.message : "Git history reader failed.");
+  process.exit(2);
 }
 
 if (findings.length) {

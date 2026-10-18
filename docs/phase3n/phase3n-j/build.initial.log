@@ -1,0 +1,82 @@
+
+> revit-site@0.1.0 build
+> next build
+
+▲ Next.js 16.3.1 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 73ms
+
+  Creating an optimized production build ...
+(node:55628) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:9008) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+[next]/internal/font/google/dm_sans_fb5c29f7.js:1:1
+Error: Module not found: Can't resolve '@vercel/turbopack-next/internal/font/google/cssmodule.module.css'
+[31m[1m>[0m [90m1 |[0m ...[32mss?{%22path%22:%22layout.tsx%22,%22import%22:%22DM_Sans%22,%22arguments%22:[{%22subsets%...[0m
+  [90m  |[0m    [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m ...
+  [90m3 |[0m ...
+  [90m4 |[0m ...
+
+url not found
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Execution of NextFontGoogleCssModuleReplacer::import_map_result failed
+- url not found
+Error while looking up import map: url not found
+
+Debug info:
+- Execution of NextFontGoogleCssModuleReplacer::import_map_result failed
+- url not found
+
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/dm_sans_fb5c29f7.js
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[next]/internal/font/google/geist_mono_31187869.js:1:1
+Error: Module not found: Can't resolve '@vercel/turbopack-next/internal/font/google/cssmodule.module.css'
+[31m[1m>[0m [90m1 |[0m ...[32m{%22path%22:%22layout.tsx%22,%22import%22:%22Geist_Mono%22,%22arguments%22:[{%22subsets%...[0m
+  [90m  |[0m    [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m2 |[0m ...
+  [90m3 |[0m ...
+  [90m4 |[0m ...
+
+url not found
+
+Debug info:
+- Execution of <ModuleAssetContext as AssetContext>::resolve_asset failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Execution of NextFontGoogleCssModuleReplacer::import_map_result failed
+- url not found
+Error while looking up import map: url not found
+
+Debug info:
+- Execution of NextFontGoogleCssModuleReplacer::import_map_result failed
+- url not found
+
+
+Import trace:
+  Server Component:
+    [next]/internal/font/google/geist_mono_31187869.js
+    ./app/layout.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> ([next]/internal/font/google/dm_sans_fb5c29f7.js:1:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> ([next]/internal/font/google/geist_mono_31187869.js:1:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)

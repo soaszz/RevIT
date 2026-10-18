@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
+  reviewTimerProgress,
   reviewTimerVisualState,
   type ReviewTimerDuration,
 } from "../lib/reviewTimer";
@@ -48,6 +49,8 @@ export default function QuestionTimer({ durationSeconds, questionKey, paused, on
 
   const remainingSeconds = Math.ceil(remainingMilliseconds / 1000);
   const visualState = reviewTimerVisualState(remainingSeconds, durationSeconds);
+  const progressRatio = reviewTimerProgress(remainingMilliseconds, durationSeconds);
+  const strokeDashoffset = (1 - progressRatio) * 100;
   const timerColor = visualState === "critical"
     ? "var(--danger)"
     : visualState === "approaching"
@@ -60,38 +63,31 @@ export default function QuestionTimer({ durationSeconds, questionKey, paused, on
       role="timer"
       aria-label={`${remainingSeconds} seconds remaining`}
       aria-atomic="true"
-      style={{ position: "relative", width: 112, height: 112, flex: "0 0 auto", color: timerColor }}
+      style={{ color: timerColor }}
     >
       <svg
-        width="112"
-        height="112"
         viewBox="0 0 120 120"
         fill="none"
         aria-hidden="true"
-        style={{ display: "block", width: "100%", height: "100%" }}
       >
-        <circle className={styles.track} cx="60" cy="60" r="52" pathLength="100" fill="none" stroke="var(--surface-soft)" strokeWidth="8" />
+        <circle className={styles.track} cx="60" cy="60" r="50" pathLength="100" fill="none" stroke="var(--surface-soft)" strokeWidth="10" />
         <circle
           className={styles.progress}
           cx="60"
           cy="60"
-          r="52"
+          r="50"
           pathLength="100"
           fill="none"
           stroke="currentColor"
-          strokeWidth="8"
+          strokeWidth="10"
           strokeLinecap="round"
           strokeDasharray="100"
-          strokeDashoffset="0"
+          strokeDashoffset={strokeDashoffset}
           transform="rotate(-90 60 60)"
         />
       </svg>
-      <span
-        className={styles.value}
-        style={{ position: "absolute", inset: 0, display: "grid", placeContent: "center", justifyItems: "center", color: "var(--ink)" }}
-      >
-        <strong style={{ color: "var(--ink)", fontSize: 29, fontVariantNumeric: "tabular-nums" }}>{remainingSeconds}</strong>
-        <small style={{ color: "var(--muted)", display: "block", marginTop: 6 }}>seconds</small>
+      <span className={styles.value}>
+        <strong className={styles.timeNumber}>{remainingSeconds}</strong>
       </span>
     </div>
   );

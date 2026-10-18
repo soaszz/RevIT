@@ -11,9 +11,11 @@ import type {
 type LeaderboardRowRecord = {
   rank: number | string;
   display_name: string;
+  username?: string | null;
   avatar_url: string | null;
   metric_value: number | string;
   answered_count: number | string;
+  total_xp?: number | string | null;
   is_current_user: boolean;
   period_timezone: string;
 };
@@ -21,9 +23,11 @@ type LeaderboardRowRecord = {
 type CurrentPositionRecord = {
   rank: number | string | null;
   display_name: string;
+  username?: string | null;
   avatar_url: string | null;
   metric_value: number | string;
   answered_count: number | string;
+  total_xp?: number | string | null;
   minimum_required: number | string;
   questions_needed: number | string;
   eligible: boolean;
@@ -47,9 +51,11 @@ function normalizeRow(row: LeaderboardRowRecord): LeaderboardRow {
   return {
     rank: asNumber(row.rank),
     displayName: row.display_name,
+    username: (row.username && row.username.trim()) ? (row.username.trim().startsWith("@") ? row.username.trim() : `@${row.username.trim()}`) : `@${row.display_name ? row.display_name.toLowerCase().replace(/[^a-z0-9_]/g, "_").slice(0, 16) : "scholar"}`,
     avatarUrl: row.avatar_url,
     metricValue: asNumber(row.metric_value),
     answeredCount: asNumber(row.answered_count),
+    totalXp: row.total_xp != null ? asNumber(row.total_xp) : undefined,
     isCurrentUser: row.is_current_user,
     periodTimezone: row.period_timezone,
   };
@@ -59,9 +65,11 @@ function normalizePosition(row: CurrentPositionRecord): CurrentLeaderboardPositi
   return {
     rank: row.rank === null ? null : asNumber(row.rank),
     displayName: row.display_name,
+    username: (row.username && row.username.trim()) ? (row.username.trim().startsWith("@") ? row.username.trim() : `@${row.username.trim()}`) : `@${row.display_name ? row.display_name.toLowerCase().replace(/[^a-z0-9_]/g, "_").slice(0, 16) : "scholar"}`,
     avatarUrl: row.avatar_url,
     metricValue: asNumber(row.metric_value),
     answeredCount: asNumber(row.answered_count),
+    totalXp: row.total_xp != null ? asNumber(row.total_xp) : undefined,
     minimumRequired: asNumber(row.minimum_required),
     questionsNeeded: asNumber(row.questions_needed),
     eligible: row.eligible,
@@ -77,6 +85,23 @@ export function isCiullaAttempt(attempt: QuestionAttempt): boolean {
     attempt.questionId?.startsWith("ciulla-") ||
     attempt.subjectId?.startsWith("ciulla-") ||
     attempt.topicId?.startsWith("ciulla-")
+  );
+}
+
+export function isRodakAttempt(attempt: QuestionAttempt): boolean {
+  return Boolean(
+    attempt.questionId?.startsWith("rodak-") ||
+    attempt.subjectId?.startsWith("rodak-") ||
+    attempt.topicId?.startsWith("rodak-")
+  );
+}
+
+export function isStrasingerAttempt(attempt: QuestionAttempt): boolean {
+  return Boolean(
+    attempt.questionId?.startsWith("strasinger-") ||
+    attempt.questionId?.startsWith("strasinger7-") ||
+    attempt.subjectId?.startsWith("strasinger-") ||
+    attempt.topicId?.startsWith("strasinger-")
   );
 }
 
@@ -141,8 +166,12 @@ export function computeAttemptStats(
     if (options.subjectId && attempt.subjectId !== options.subjectId) return false;
     if (options.book && options.book !== "all") {
       const isCiulla = isCiullaAttempt(attempt);
+      const isRodak = isRodakAttempt(attempt);
+      const isStrasinger = isStrasingerAttempt(attempt);
       if (options.book === "Ciulla" && !isCiulla) return false;
-      if (options.book === "Harr" && isCiulla) return false;
+      if (options.book === "Rodak" && !isRodak) return false;
+      if (options.book === "Strasinger" && !isStrasinger) return false;
+      if (options.book === "Harr" && (isCiulla || isRodak || isStrasinger)) return false;
     }
     return true;
   });
@@ -277,6 +306,13 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
             subjectId: input.subjectId,
             timezone: normalizedPos.periodTimezone,
           });
+          const rodakStats = computeAttemptStats(input.attempts, {
+            book: "Rodak",
+            period: input.period,
+            metric: input.metric,
+            subjectId: input.subjectId,
+            timezone: normalizedPos.periodTimezone,
+          });
           const allLocalStats = computeAttemptStats(input.attempts, {
             book: "all",
             period: input.period,
@@ -293,8 +329,11 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
           const ciullaAnswered = ciullaStats.answeredCount;
           const ciullaCorrect = ciullaStats.correctCount;
 
-          const combinedAnswered = Math.max(allLocalStats.answeredCount, harrAnswered + ciullaAnswered);
-          const combinedCorrect = Math.max(allLocalStats.correctCount, harrCorrect + ciullaCorrect);
+          const rodakAnswered = rodakStats.answeredCount;
+          const rodakCorrect = rodakStats.correctCount;
+
+          const combinedAnswered = Math.max(allLocalStats.answeredCount, harrAnswered + ciullaAnswered + rodakAnswered);
+          const combinedCorrect = Math.max(allLocalStats.correctCount, harrCorrect + ciullaCorrect + rodakCorrect);
 
           let combinedMetricValue = 0;
           let combinedEligible = false;
@@ -318,24 +357,24 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
             eligible: combinedEligible,
             questionsNeeded: Math.max(0, minRequired - combinedAnswered),
           });
-        } else if (bookParam === "Ciulla") {
-          const ciullaStats = computeAttemptStats(input.attempts, {
-            book: "Ciulla",
+        } else if (bookParam === "Ciulla" || bookParam === "Rodak") {
+          const bookStats = computeAttemptStats(input.attempts, {
+            book: bookParam,
             period: input.period,
             metric: input.metric,
             subjectId: input.subjectId,
             timezone: normalizedPos.periodTimezone,
           });
 
-          normalizedPos.answeredCount = ciullaStats.answeredCount;
-          normalizedPos.metricValue = ciullaStats.metricValue;
-          normalizedPos.eligible = ciullaStats.eligible;
-          normalizedPos.questionsNeeded = ciullaStats.questionsNeeded;
+          normalizedPos.answeredCount = bookStats.answeredCount;
+          normalizedPos.metricValue = bookStats.metricValue;
+          normalizedPos.eligible = bookStats.eligible;
+          normalizedPos.questionsNeeded = bookStats.questionsNeeded;
 
           for (const row of rows) {
             if (row.isCurrentUser) {
-              row.answeredCount = ciullaStats.answeredCount;
-              row.metricValue = ciullaStats.metricValue;
+              row.answeredCount = bookStats.answeredCount;
+              row.metricValue = bookStats.metricValue;
             }
           }
         } else {
@@ -419,6 +458,13 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
             subjectId: input.subjectId,
             timezone: normalizedPos.periodTimezone,
           });
+          const rodakStats = computeAttemptStats(input.attempts, {
+            book: "Rodak",
+            period: input.period,
+            metric: input.metric,
+            subjectId: input.subjectId,
+            timezone: normalizedPos.periodTimezone,
+          });
           const allLocalStats = computeAttemptStats(input.attempts, {
             book: "all",
             period: input.period,
@@ -435,8 +481,11 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
           const ciullaAnswered = ciullaStats.answeredCount;
           const ciullaCorrect = ciullaStats.correctCount;
 
-          const combinedAnswered = Math.max(allLocalStats.answeredCount, harrAnswered + ciullaAnswered);
-          const combinedCorrect = Math.max(allLocalStats.correctCount, harrCorrect + ciullaCorrect);
+          const rodakAnswered = rodakStats.answeredCount;
+          const rodakCorrect = rodakStats.correctCount;
+
+          const combinedAnswered = Math.max(allLocalStats.answeredCount, harrAnswered + ciullaAnswered + rodakAnswered);
+          const combinedCorrect = Math.max(allLocalStats.correctCount, harrCorrect + ciullaCorrect + rodakCorrect);
 
           let combinedMetricValue = 0;
           let combinedEligible = false;
@@ -468,10 +517,10 @@ export async function loadLeaderboard(client: SupabaseClient, input: {
         };
       }
 
-      // If user selected Ciulla:
-      if (bookParam === "Ciulla") {
+      // If user selected Ciulla or Rodak:
+      if (bookParam === "Ciulla" || bookParam === "Rodak") {
         const userStats = computeAttemptStats(input.attempts, {
-          book: "Ciulla",
+          book: bookParam,
           period: input.period,
           metric: input.metric,
           subjectId: input.subjectId,

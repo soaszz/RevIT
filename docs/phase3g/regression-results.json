@@ -1,0 +1,38 @@
+[
+  {
+    "name": "typecheck",
+    "exitCode": 0,
+    "seconds": 11.2,
+    "log": "docs/phase3g/typecheck.log"
+  },
+  {
+    "name": "lint",
+    "exitCode": 0,
+    "seconds": 27.1,
+    "log": "docs/phase3g/lint.log"
+  },
+  {
+    "name": "build",
+    "exitCode": 0,
+    "seconds": 32.4,
+    "log": "docs/phase3g/build.log"
+  },
+  {
+    "name": "unit",
+    "exitCode": 0,
+    "seconds": 4.9,
+    "log": "docs/phase3g/unit.log"
+  },
+  {
+    "name": "reviewer-content",
+    "exitCode": 0,
+    "seconds": 0.7,
+    "log": "docs/phase3g/reviewer-content.log"
+  },
+  {
+    "name": "secrets",
+    "exitCode": 0,
+    "seconds": 42.1,
+    "log": "docs/phase3g/secrets.log"
+  }
+]

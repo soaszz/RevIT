@@ -1,0 +1,5 @@
+--- a/scratch/phase3n-n2-evidence/run-read-only-preflight.ps1
++++ b/scratch/phase3n-n2-evidence/run-read-only-preflight.ps1
+@@ -127,1 +127,1 @@
+-    'Child default_transaction_read_only forced on; this does not establish the original role default.'
++    'PGOPTIONS requests a read-only default; server enforcement is not established by this header. Inspect actual settings.'

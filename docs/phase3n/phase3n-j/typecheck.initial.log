@@ -1,0 +1,24 @@
+app/lib/clientSessionAdapter.ts(368,48): error TS2339: Property 'status' does not exist on type '{ id: string; verified_at?: string | undefined; }'.
+app/lib/clientSessionAdapter.ts(368,75): error TS2339: Property 'status' does not exist on type '{ id: string; verified_at?: string | undefined; }'.
+app/lib/clientSessionAdapter.ts(380,23): error TS2339: Property 'status' does not exist on type '{ id: string; verified_at?: string | undefined; }'.
+app/lib/server/trustedStudyRoutes.ts(34,55): error TS2345: Argument of type 'SupabaseClient<any, "public", "public", any, any>' is not assignable to parameter of type 'TrustedStudyWriter'.
+  The types returned by 'rpc(...)' are incompatible between these types.
+    Type 'PostgrestFilterBuilder<any, any, any, any, string, null, "RPC", false>' is missing the following properties from type 'Promise<{ data: unknown; error: unknown; }>': catch, finally, [Symbol.toStringTag]
+app/lib/server/trustedStudyRoutes.ts(38,48): error TS2345: Argument of type 'SupabaseClient<any, "public", "public", any, any>' is not assignable to parameter of type 'TrustedStudyWriter'.
+  The types returned by 'rpc(...)' are incompatible between these types.
+    Type 'PostgrestFilterBuilder<any, any, any, any, string, null, "RPC", false>' is missing the following properties from type 'Promise<{ data: unknown; error: unknown; }>': catch, finally, [Symbol.toStringTag]
+app/RevITApp.tsx(460,61): error TS7006: Parameter '_event' implicitly has an 'any' type.
+app/RevITApp.tsx(460,69): error TS7006: Parameter 'session' implicitly has an 'any' type.
+tests/concurrent-harness.test.ts(26,16): error TS18047: 'res.error' is possibly 'null'.
+tests/concurrent-harness.test.ts(27,16): error TS18047: 'res.error' is possibly 'null'.
+tests/concurrent-harness.test.ts(34,16): error TS18047: 'res.error' is possibly 'null'.
+tests/concurrent-harness.test.ts(39,10): error TS2339: Property 'code' does not exist on type 'Error'.
+tests/concurrent-harness.test.ts(40,45): error TS2345: Argument of type 'Error' is not assignable to parameter of type 'null | undefined'.
+tests/concurrent-harness.test.ts(42,16): error TS18047: 'res.error' is possibly 'null'.
+tests/concurrent-harness.test.ts(43,23): error TS18047: 'res.error' is possibly 'null'.
+tests/concurrent-harness.test.ts(44,16): error TS18047: 'res.error' is possibly 'null'.
+tests/concurrent-harness.test.ts(45,16): error TS18047: 'res.error' is possibly 'null'.
+tests/concurrent-harness.test.ts(131,24): error TS2339: Property 'cleanup' does not exist on type '({ name: string; status: string; overlapEstablished: boolean; rowCount: number; records?: undefined; } | { name: string; status: string; overlapEstablished: boolean; rowCount: any; records: any; })[]'.
+tests/concurrent-harness.test.ts(137,17): error TS7006: Parameter 'name' implicitly has an 'any' type.
+tests/concurrent-harness.test.ts(137,23): error TS7006: Parameter 'args' implicitly has an 'any' type.
+tests/trusted-integration.test.ts(114,16): error TS2571: Object is of type 'unknown'.

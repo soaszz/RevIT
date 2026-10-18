@@ -1,0 +1,58 @@
+-- PREPARATION ONLY. Sixth independent verified owner session M; no N5 execution.
+-- Supply observed integer n5_O_pid, n5_A_pid, n5_B_pid, n5_C_pid, n5_D_pid.
+-- Include this same file twice in the SAME M connection at worker barriers 1 and 2.
+\set ON_ERROR_STOP on
+\set VERBOSITY verbose
+\pset pager off
+BEGIN READ ONLY;
+SET LOCAL statement_timeout='15s'; SET LOCAL lock_timeout='3s';
+SET LOCAL idle_in_transaction_session_timeout='120s';
+SET LOCAL application_name='revit-n5-M';
+SELECT current_user='postgres' AND session_user='postgres'
+ AND current_setting('transaction_read_only')='on'
+ AND current_setting('transaction_isolation')='read committed' AS n5_monitor_owner \gset
+\if :n5_monitor_owner
+\else
+ROLLBACK;
+\echo MONITOR_OWNER_BOUNDARY_FAILED_STOP
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+\if :{?n5_M_pid}
+SELECT pg_backend_pid()= :n5_M_pid AS n5_monitor_stable \gset
+\if :n5_monitor_stable
+\else
+ROLLBACK;
+\echo MONITOR_PID_CHANGED_STOP
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+\else
+SELECT pg_backend_pid() AS "n5_M_pid" \gset
+\endif
+SELECT pg_backend_pid(),current_user,session_user,current_setting('transaction_read_only'),
+ count(*) AS session_rows FROM public.study_sessions;
+WITH expected(label,pid) AS (VALUES('revit-n5-O',:'n5_O_pid'::integer),
+ ('revit-n5-A',:'n5_A_pid'::integer),('revit-n5-B',:'n5_B_pid'::integer),
+ ('revit-n5-C',:'n5_C_pid'::integer),('revit-n5-D',:'n5_D_pid'::integer),('revit-n5-M',:n5_M_pid))
+SELECT e.label,e.pid,a.datname,a.usename,a.application_name,a.state,a.xact_start,
+ a.wait_event_type,a.wait_event,pg_blocking_pids(e.pid) AS blockers,
+ EXISTS(SELECT FROM pg_locks l WHERE l.pid=e.pid AND l.relation='public.study_sessions'::regclass
+ AND l.locktype='relation' AND l.mode='AccessShareLock' AND l.granted) AS observed_read_lock
+FROM expected e LEFT JOIN pg_stat_activity a ON a.pid=e.pid ORDER BY e.label;
+WITH expected(label,pid) AS (VALUES('revit-n5-O',:'n5_O_pid'::integer),
+ ('revit-n5-A',:'n5_A_pid'::integer),('revit-n5-B',:'n5_B_pid'::integer),
+ ('revit-n5-C',:'n5_C_pid'::integer),('revit-n5-D',:'n5_D_pid'::integer),('revit-n5-M',:n5_M_pid))
+SELECT (SELECT count(DISTINCT pid)=6 FROM expected) AND count(a.pid)=6
+ AND bool_and((a.application_name=e.label AND a.usename='postgres' AND a.datname=current_database()
+ AND a.state IS NOT NULL AND a.xact_start IS NOT NULL AND EXISTS(SELECT FROM pg_locks l
+ WHERE l.pid=e.pid AND l.relation='public.study_sessions'::regclass AND l.locktype='relation'
+ AND l.mode='AccessShareLock' AND l.granted)) IS TRUE) AS n5_visibility_ok
+FROM expected e LEFT JOIN pg_stat_activity a ON a.pid=e.pid \gset
+\if :n5_visibility_ok
+\else
+ROLLBACK;
+\echo SIX_SESSION_VISIBILITY_NOT_ESTABLISHED_STOP
+SELECT 1/0 AS prerequisite_failed_stop;
+\endif
+ROLLBACK;
+\echo N5_MONITOR_RECHECK_COMPLETE
+-- Worker logs must separately prove B/C current_user=service_role; pg_stat_activity shows login.

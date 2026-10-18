@@ -1,6 +1,6 @@
 import rawContent from "./reviewerContent.json";
 
-export type ReviewerBook = "Harr" | "Ciulla";
+export type ReviewerBook = "Harr" | "Ciulla" | "Rodak" | "Strasinger";
 
 export type Subject = {
   id: string;
@@ -42,6 +42,17 @@ export type QuestionStimulus =
       caption?: string;
     };
 
+export type QuestionReference = {
+  questionId: string;
+  type: "figure" | "table" | "reference_intervals";
+  label: string;
+  sourceChapter: number;
+  sourcePage: number | null;
+  sourcePdfPage: number | null;
+  verificationStatus: "visual_checked" | "missing_source" | "needs_review";
+  stimulus?: QuestionStimulus;
+};
+
 export type ReviewerQuestion = {
   id: string;
   subjectId: string;
@@ -50,9 +61,16 @@ export type ReviewerQuestion = {
   difficulty?: "Easy" | "Medium" | "Hard";
   caseStudy?: string;
   prompt: string;
+  promptAfterReferences?: string;
   stimulus?: QuestionStimulus;
+  references?: QuestionReference[];
   choices: string[];
+  choiceTable?: { columns: string[]; rows: string[][] };
   correctAnswer: number;
+  matching?: {
+    items: string[];
+    answerKey: number[];
+  };
   officialAnswer: string;
   explanation: string;
   source: {
@@ -61,6 +79,7 @@ export type ReviewerQuestion = {
     kind: string;
   };
   book?: ReviewerBook;
+  disableShuffle?: boolean;
 };
 
 const content = rawContent as {

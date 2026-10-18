@@ -249,7 +249,7 @@ export default function PlanAnnouncementModal({
                 <div className={`${styles.planMiniCard} ${styles.proFeatured}`}>
                   <div className={styles.miniCardHeader}>
                     <span className={`${styles.planTag} ${styles.planTagPro}`}>PRO ACCESS</span>
-                    <span className={styles.planMiniPrice}>₱49 <small>/ early access</small></span>
+                    <span className={styles.planMiniPrice}>₱49 <small>/ month · early bird</small></span>
                   </div>
                   <ul className={styles.miniFeatureList}>
                     <li>

@@ -1,0 +1,20 @@
+✔ canonical registry covers all banks once, preserves source, and rejects unknown IDs (560.3882ms)
+✔ registry rejects duplicate, malformed and ambiguous definitions without key leakage (2.0606ms)
+✔ content versions are stable for identical content and change with grading keys (0.5508ms)
+✔ ordinary grading uses canonical indexes for two through seven choices (6.2518ms)
+✔ ordinary grading rejects malformed indexes and unknown IDs (0.8449ms)
+✔ all 16 matching IDs grade exact sequences with unchanged local scorer parity (6.0841ms)
+✔ matching rejects missing, extra, sparse, noninteger and encoded answers (18.7575ms)
+✔ strict request union rejects mixed variants and smuggled grading/security fields (3.4012ms)
+✔ explicit timeouts are incorrect for both canonical response types (0.9211ms)
+✔ isolated authenticated handler permits Harr Free and premium books only for server-verified Pro (1452.6352ms)
+✔ handler denies unauthenticated/errors/forgery and never returns private errors or answer keys (394.0844ms)
+✔ foundation is server-only, has no HTTP route or persistence imports, preserves all prior source/content (109.8868ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4676.2007

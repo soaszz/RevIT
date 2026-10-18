@@ -1,0 +1,6 @@
+-- PREPARATION ONLY. Same M connection, actual five observed PID variables only.
+\set ON_ERROR_STOP on
+\ir ../phase3n-n5/MONITOR_READ_ONLY_RECHECK.psql
+\prompt 'M pass 1 complete. Move all five sessions to Barrier 2, then press Enter here: ' n6_release
+\ir ../phase3n-n5/MONITOR_READ_ONLY_RECHECK.psql
+\echo N6_MONITOR_TWO_PASSES_COMPLETE

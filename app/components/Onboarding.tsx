@@ -229,7 +229,7 @@ export default function Onboarding({
                   <h3 style={{ margin: "2px 0 0", fontSize: "16px", fontWeight: "750", color: "var(--ink)" }}>RevIT Pro</h3>
                   <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginTop: "4px" }}>
                     <span style={{ fontSize: "20px", fontWeight: "800", color: "var(--ink)" }}>₱49</span>
-                    <span style={{ fontSize: "10px", color: "var(--muted)" }}>/ Early Access</span>
+                    <span style={{ fontSize: "10px", color: "var(--muted)" }}>/ month (early bird)</span>
                   </div>
                 </div>
                 <ul style={{ margin: "4px 0 0", padding: "0", listStyle: "none", display: "grid", gap: "8px", fontSize: "11px", color: "var(--ink)" }}>

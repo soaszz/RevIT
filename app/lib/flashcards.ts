@@ -13,7 +13,7 @@ export type Flashcard = {
 
 type FlashcardQuestion = Pick<
   ReviewerQuestion,
-  "id" | "subjectId" | "topicId" | "prompt" | "choices" | "correctAnswer" | "officialAnswer" | "explanation" | "book"
+  "id" | "subjectId" | "topicId" | "prompt" | "choices" | "correctAnswer" | "officialAnswer" | "explanation" | "book" | "matching"
 >;
 
 function cleanAnswerLabel(answer: string) {
@@ -32,7 +32,9 @@ export function toFlashcard(question: FlashcardQuestion): Flashcard {
     id: question.id,
     subjectId: question.subjectId,
     topicId: question.topicId,
-    prompt: question.prompt,
+    prompt: question.matching
+      ? `${question.prompt}\n${question.matching.items.map((item, index) => `${index + 1}. ${item}`).join("\n")}`
+      : question.prompt,
     choices: question.choices,
     answer: resolveFlashcardAnswer(question),
     explanation: question.explanation,

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   questions as freeQuestions,
@@ -13,28 +12,37 @@ import {
 } from "../content/reviewerContent";
 import { buildFlashcardDeck, shuffleFlashcards, type Flashcard } from "../lib/flashcards";
 import {
+  ALL_MAJORS_CATEGORY,
   buildSubjectSections,
   filterSubjectsBySearch,
   getUnifiedSubjects,
+  MTAP_1_CATEGORY,
+  OTHER_MAJORS_CATEGORY,
   type UnifiedSubject,
 } from "../lib/reviewerLibrary";
-import { motion, AnimatePresence } from "motion/react";
-import styles from "./Flashcards.module.css";
-import LibrarySearch from "./LibrarySearch";
-import MobileReviewBar from "./MobileReviewBar";
+import reviewerStyles from "./Flashcards.module.css";
+import styles from "./ReviewLibrary.module.css";
+import CollectionHeader from "./CollectionHeader";
+import { QUESTION_BANKS } from "../lib/entitlements";
+
+function isBookLocked(book: ReviewerBook, proActive: boolean): boolean {
+  const bank = QUESTION_BANKS[book.toLowerCase() as Lowercase<ReviewerBook>];
+  return (bank ? bank.requiredPlan === "pro" : book !== "Harr") && !proActive;
+}
 
 function isTypingTarget(target: EventTarget | null) {
   if (!(target instanceof HTMLElement)) return false;
   return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
 }
 
-function getBookBadgeStyle(book: "Harr" | "Ciulla" | string, extraStyle?: React.CSSProperties): React.CSSProperties {
-  const isCiulla = book.toLowerCase() === "ciulla";
+function getBookBadgeStyle(book: "Harr" | "Ciulla" | "Rodak" | "Strasinger" | string, extraStyle?: React.CSSProperties): React.CSSProperties {
+  const lower = book.toLowerCase();
+  const color = lower === "strasinger" ? "#38bdf8" : lower === "rodak" ? "#fbbf24" : lower === "ciulla" ? "#92e06b" : "#66d0b2";
   return {
     display: "inline-flex",
     alignItems: "center",
-    padding: "2.5px 8px",
-    borderRadius: "6px",
+    padding: 0,
+    borderRadius: 0,
     fontSize: "8.5px",
     fontWeight: 750,
     textTransform: "uppercase",
@@ -42,9 +50,9 @@ function getBookBadgeStyle(book: "Harr" | "Ciulla" | string, extraStyle?: React.
     whiteSpace: "nowrap",
     flexShrink: 0,
     lineHeight: 1.2,
-    border: isCiulla ? "1px solid rgba(142, 214, 107, 0.52)" : "1px solid rgba(102, 208, 178, 0.52)",
-    color: isCiulla ? "#92e06b" : "#66d0b2",
-    background: isCiulla ? "rgba(142, 214, 107, 0.16)" : "rgba(102, 208, 178, 0.16)",
+    border: "none",
+    color,
+    background: "transparent",
     boxSizing: "border-box",
     ...extraStyle,
   };
@@ -60,6 +68,7 @@ export default function Flashcards({
   onSelectBook,
   onReviewingChange,
   onRequestConfirm,
+  onUpgradePro,
 }: {
   isNuRevit: boolean;
   selectedBook?: ReviewerBook | "all";
@@ -70,14 +79,16 @@ export default function Flashcards({
   onSelectBook?: (book: ReviewerBook | "all") => void;
   onReviewingChange?: (reviewing: boolean, topics?: string[]) => void;
   onRequestConfirm?: (title: string, message: string, confirmLabel: string, action: () => void) => void;
+  onUpgradePro?: () => void;
 }) {
   const subjectById = useMemo(() => new Map(subjects.map((subject) => [subject.id, subject])), [subjects]);
   const topicById = useMemo(() => new Map(topics.map((topic) => [topic.id, topic])), [topics]);
-  const [internalBook, setInternalBook] = useState<ReviewerBook | "all">(() => {
+
+  const [internalBook] = useState<ReviewerBook | "all">(() => {
     if (typeof window === "undefined") return "Harr";
     try {
       const saved = localStorage.getItem("revit-selected-book-v1");
-      if (saved === "Harr" || saved === "Ciulla" || saved === "all") return saved;
+      if (saved === "Harr" || saved === "Ciulla" || saved === "Rodak" || saved === "Strasinger" || saved === "all") return saved;
     } catch {}
     return "Harr";
   });
@@ -88,26 +99,21 @@ export default function Flashcards({
   const [cardIndex, setCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [subjectSearch, setSubjectSearch] = useState("");
-  const [expandedSubjectIds, setExpandedSubjectIds] = useState<string[]>([]);
-  const [expandedBookEditionKeys, setExpandedBookEditionKeys] = useState<string[]>([]);
+  const [expandedSubjectIds, setExpandedSubjectIds] = useState<Set<string>>(new Set());
+  const [activeEditionBySubject, setActiveEditionBySubject] = useState<Record<string, ReviewerBook>>({});
+  const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
 
-  function toggleBookEditionExpanded(subjectId: string, book: ReviewerBook) {
-    const key = `${subjectId}:${book}`;
-    setExpandedBookEditionKeys((current) =>
-      current.includes(key)
-        ? current.filter((id) => id !== key)
-        : [...current, key],
-    );
-  }
+  const unifiedSubjects = useMemo(() => {
+    return getUnifiedSubjects("all", subjects, topics);
+  }, [subjects, topics]);
 
-  const currentBookSubjects = useMemo(() => {
-    return getUnifiedSubjects(selectedBook, subjects, topics);
-  }, [selectedBook]);
+  const visibleSubjects = useMemo(() => {
+    return filterSubjectsBySearch(unifiedSubjects, topics, subjectSearch);
+  }, [unifiedSubjects, topics, subjectSearch]);
 
-  const currentBookTopics = useMemo(() => {
-    if (selectedBook === "all") return topics;
-    return topics.filter((topic) => topic.book === selectedBook);
-  }, [selectedBook]);
+  const subjectSections = useMemo(() => {
+    return buildSubjectSections(visibleSubjects, isNuRevit);
+  }, [visibleSubjects, isNuRevit]);
 
   const topicQuestionCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -115,24 +121,39 @@ export default function Flashcards({
       counts.set(question.topicId, (counts.get(question.topicId) ?? 0) + 1);
     }
     return counts;
-  }, []);
+  }, [questions]);
 
   const availableCards = useMemo(
     () => selectedTopicIds.reduce((total, topicId) => total + (topicQuestionCounts.get(topicId) ?? 0), 0),
     [selectedTopicIds, topicQuestionCounts],
   );
-  const visibleSubjects = useMemo(
-    () => filterSubjectsBySearch(currentBookSubjects, currentBookTopics, subjectSearch),
-    [currentBookSubjects, currentBookTopics, subjectSearch],
-  );
-  const subjectSections = useMemo(
-    () => buildSubjectSections(visibleSubjects, isNuRevit),
-    [isNuRevit, visibleSubjects],
-  );
-  const selectedTopicNames = useMemo(
-    () => selectedTopicIds.map((id) => topicById.get(id)?.name).filter((name): name is string => Boolean(name)),
-    [selectedTopicIds],
-  );
+
+  const sourceCounts = useMemo(() => {
+    let harr = 0;
+    let ciulla = 0;
+    let rodak = 0;
+    let strasinger = 0;
+    const topicMap = new Map(topics.map((t) => [t.id, t]));
+    for (const id of selectedTopicIds) {
+      const topic = topicMap.get(id);
+      const b = topic?.book ?? "Harr";
+      if (b === "Strasinger") {
+        strasinger += 1;
+      } else if (b === "Rodak") {
+        rodak += 1;
+      } else if (b === "Ciulla") {
+        ciulla += 1;
+      } else {
+        harr += 1;
+      }
+    }
+    return { harr, ciulla, rodak, strasinger };
+  }, [selectedTopicIds, topics]);
+
+  const isSearchActive = subjectSearch.trim().length > 0;
+  const isMtap1Active = subjectSearch.trim().toLowerCase() === MTAP_1_CATEGORY.toLowerCase();
+  const isOtherMajorsActive = subjectSearch.trim().toLowerCase() === OTHER_MAJORS_CATEGORY.toLowerCase();
+  const isAllSubjectsActive = !isSearchActive || subjectSearch.trim().toLowerCase() === ALL_MAJORS_CATEGORY.toLowerCase();
 
   const currentCard = deck[cardIndex];
   const reviewing = deck.length > 0;
@@ -141,45 +162,39 @@ export default function Flashcards({
     onReviewingChange?.(reviewing, reviewing ? selectedTopicIds : []);
   }, [reviewing, selectedTopicIds, onReviewingChange]);
 
-  useEffect(() => {
-    const validIds = new Set((selectedBook === "all" ? topics : topics.filter((t) => t.book === selectedBook)).map((t) => t.id));
-    setSelectedTopicIds((current) => current.filter((id) => validIds.has(id)));
-  }, [selectedBook]);
+  function toggleSubjectExpand(subjectId: string) {
+    setExpandedSubjectIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(subjectId)) {
+        next.delete(subjectId);
+      } else {
+        next.add(subjectId);
+      }
+      return next;
+    });
+  }
 
-  function handleBookChange(newBook: ReviewerBook | "all") {
-    if (onSelectBook) {
-      onSelectBook(newBook);
-    } else {
-      setInternalBook(newBook);
-      try {
-        localStorage.setItem("revit-selected-book-v1", newBook);
-      } catch {}
-    }
-    const newBookTopics = newBook === "all" ? topics : topics.filter((t) => t.book === newBook);
-    const validIds = new Set(newBookTopics.map((t) => t.id));
-    setSelectedTopicIds((current) => current.filter((id) => validIds.has(id)));
+  function setSubjectEditionTab(subjectId: string, book: ReviewerBook) {
+    setActiveEditionBySubject((prev) => ({
+      ...prev,
+      [subjectId]: book,
+    }));
   }
 
   function toggleTopic(topicId: string) {
-    setSelectedTopicIds((current) => current.includes(topicId)
-      ? current.filter((id) => id !== topicId)
-      : [...current, topicId]);
-  }
-
-  function toggleSubject(subjectId: string, topicIdsOverride?: string[]) {
-    const subjectTopicIds = topicIdsOverride ?? currentBookTopics.filter((topic) => topic.subjectId === subjectId).map((topic) => topic.id);
-    const allSelected = subjectTopicIds.every((id) => selectedTopicIds.includes(id));
-    setSelectedTopicIds((current) => allSelected
-      ? current.filter((id) => !subjectTopicIds.includes(id))
-      : [...new Set([...current, ...subjectTopicIds])]);
-  }
-
-  function toggleSubjectExpanded(subjectId: string) {
-    setExpandedSubjectIds((current) =>
-      current.includes(subjectId)
-        ? current.filter((id) => id !== subjectId)
-        : [...current, subjectId],
+    setSelectedTopicIds((current) =>
+      current.includes(topicId)
+        ? current.filter((id) => id !== topicId)
+        : [...current, topicId],
     );
+  }
+
+  function toggleSubject(topicIds: string[], isCurrentlyFullySelected: boolean) {
+    if (isCurrentlyFullySelected) {
+      setSelectedTopicIds((current) => current.filter((id) => !topicIds.includes(id)));
+    } else {
+      setSelectedTopicIds((current) => [...new Set([...current, ...topicIds])]);
+    }
   }
 
   useEffect(() => {
@@ -251,98 +266,98 @@ export default function Flashcards({
     const cardBook = currentCard.book ?? topicById.get(currentCard.topicId)?.book;
 
     return (
-      <div className={`${styles.reviewerShell} flashcard-session-active`}>
-        <div className={styles.sessionToolbar}>
+      <div className={`${reviewerStyles.reviewerShell} flashcard-session-active`}>
+        <div className={reviewerStyles.sessionToolbar}>
           <div>
             <p className="eyebrow">Passive review{selectedBook !== "all" ? ` · ${selectedBook}` : " · All Books"}</p>
             <strong>{deck.length} cards from {selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"}</strong>
           </div>
-          <div className={styles.toolbarActions}>
+          <div className={reviewerStyles.toolbarActions}>
             <button className="text-button" type="button" onClick={shuffleDeck}>Shuffle</button>
             <button className="secondary-button" type="button" onClick={changeTopics}>Exit session</button>
           </div>
         </div>
 
         <div key={cardIndex}>
-          <div className={`${styles.cardStage} ${flipped ? styles.flipped : ""}`} aria-live="polite">
-              <article className={`${styles.cardFace} ${styles.cardFront}`} aria-hidden={flipped}>
-                <button
-                  className={styles.cardHitArea}
-                  type="button"
-                  tabIndex={flipped ? -1 : 0}
-                  aria-label={`Show answer for: ${currentCard.prompt}`}
-                  onClick={toggleCard}
-                />
-                <div className={styles.cardTopline}>
-                  <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                      <p className={styles.subjectLabel}>{subjectName}</p>
-                      {cardBook && (
-                        <span className={`topic-book-badge topic-book-${cardBook.toLowerCase()}`} style={getBookBadgeStyle(cardBook, { fontSize: "9px", padding: "1px 6px", margin: 0 })}>
-                          {cardBook}
-                        </span>
-                      )}
-                    </div>
-                    <p className={styles.topicLabel}>{topicName}</p>
+          <div className={`${reviewerStyles.cardStage} ${flipped ? reviewerStyles.flipped : ""}`} aria-live="polite">
+            <article className={`${reviewerStyles.cardFace} ${reviewerStyles.cardFront}`} aria-hidden={flipped}>
+              <button
+                className={reviewerStyles.cardHitArea}
+                type="button"
+                tabIndex={flipped ? -1 : 0}
+                aria-label={`Show answer for: ${currentCard.prompt}`}
+                onClick={toggleCard}
+              />
+              <div className={reviewerStyles.cardTopline}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <p className={reviewerStyles.subjectLabel}>{subjectName}</p>
+                    {cardBook && (
+                      <span className={`topic-book-badge topic-book-${cardBook.toLowerCase()}`} style={getBookBadgeStyle(cardBook, { fontSize: "9px", padding: 0, margin: 0 })}>
+                        {cardBook}
+                      </span>
+                    )}
                   </div>
-                  <span>{cardIndex + 1} / {deck.length}</span>
+                  <p className={reviewerStyles.topicLabel}>{topicName}</p>
                 </div>
-                <div className={styles.questionArea}>
-                  <h2>{currentCard.prompt}</h2>
-                  {currentCard.choices && currentCard.choices.length > 0 && (
-                    <div className={styles.horizontalChoices} role="list" aria-label="Question choices">
-                      {currentCard.choices.map((choice, index) => {
-                        const cleanChoice = choice.trim().replace(/^[A-D](?:[.):])\s+/, "");
-                        const choiceLetter = String.fromCharCode(65 + index);
-                        return (
-                          <div className={styles.horizontalChoiceItem} key={index} role="listitem">
-                            <span className={styles.choiceLetter}>{choiceLetter}</span>
-                            <span className={styles.choiceText}>{cleanChoice}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-                <button
-                  className={`${styles.flipControl} primary-button`}
-                  type="button"
-                  tabIndex={flipped ? -1 : 0}
-                  onClick={toggleCard}
-                >
-                  Flip card
-                </button>
-              </article>
+                <span>{cardIndex + 1} / {deck.length}</span>
+              </div>
+              <div className={reviewerStyles.questionArea}>
+                <h2>{currentCard.prompt}</h2>
+                {currentCard.choices && currentCard.choices.length > 0 && (
+                  <div className={reviewerStyles.horizontalChoices} role="list" aria-label="Question choices">
+                    {currentCard.choices.map((choice, index) => {
+                      const cleanChoice = choice.trim().replace(/^[A-D](?:[.):])\s+/, "");
+                      const choiceLetter = String.fromCharCode(65 + index);
+                      return (
+                        <div className={reviewerStyles.horizontalChoiceItem} key={index} role="listitem">
+                          <span className={reviewerStyles.choiceLetter}>{choiceLetter}</span>
+                          <span className={reviewerStyles.choiceText}>{cleanChoice}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+              <button
+                className={`${reviewerStyles.flipControl} primary-button`}
+                type="button"
+                tabIndex={flipped ? -1 : 0}
+                onClick={toggleCard}
+              >
+                Flip card
+              </button>
+            </article>
 
-              <article className={`${styles.cardFace} ${styles.cardBack}`} aria-hidden={!flipped}>
-                <button
-                  className={styles.cardHitArea}
-                  type="button"
-                  tabIndex={flipped ? 0 : -1}
-                  aria-label={`Show question. Answer: ${currentCard.answer}`}
-                  onClick={toggleCard}
-                />
-                <div className={styles.answerBlock}>
-                  <p className={styles.sideLabel}>Answer</p>
-                  <h2>{currentCard.answer}</h2>
-                </div>
-                <div className={styles.explanationBlock}>
-                  <p className={styles.sideLabel}>Explanation</p>
-                  <p>{currentCard.explanation}</p>
-                </div>
-                <button
-                  className={`${styles.flipControl} secondary-button`}
-                  type="button"
-                  tabIndex={flipped ? 0 : -1}
-                  onClick={toggleCard}
-                >
-                  Flip back
-                </button>
-              </article>
-            </div>
+            <article className={`${reviewerStyles.cardFace} ${reviewerStyles.cardBack}`} aria-hidden={!flipped}>
+              <button
+                className={reviewerStyles.cardHitArea}
+                type="button"
+                tabIndex={flipped ? 0 : -1}
+                aria-label={`Show question. Answer: ${currentCard.answer}`}
+                onClick={toggleCard}
+              />
+              <div className={reviewerStyles.answerBlock}>
+                <p className={reviewerStyles.sideLabel}>Answer</p>
+                <h2>{currentCard.answer}</h2>
+              </div>
+              <div className={reviewerStyles.explanationBlock}>
+                <p className={reviewerStyles.sideLabel}>Explanation</p>
+                <p>{currentCard.explanation}</p>
+              </div>
+              <button
+                className={`${reviewerStyles.flipControl} secondary-button`}
+                type="button"
+                tabIndex={flipped ? 0 : -1}
+                onClick={toggleCard}
+              >
+                Flip back
+              </button>
+            </article>
+          </div>
         </div>
 
-        <div className={styles.navigation} aria-label="Flashcard navigation">
+        <div className={reviewerStyles.navigation} aria-label="Flashcard navigation">
           <button
             className="secondary-button"
             type="button"
@@ -361,455 +376,639 @@ export default function Flashcards({
             Next <span aria-hidden="true">→</span>
           </button>
         </div>
-        <p className={styles.keyboardHint}>Tip: use Space to flip and the arrow keys to move between cards.</p>
+        <p className={reviewerStyles.keyboardHint}>Tip: use Space to flip and the arrow keys to move between cards.</p>
       </div>
     );
   }
 
   return (
-    <div className="library-shell">
-      <LibrarySearch
-        id="flashcard-library-search"
-        isNuRevit={isNuRevit}
-        value={subjectSearch}
-        resultCount={visibleSubjects.length}
-        onChange={setSubjectSearch}
-      />
-      <div className="library-layout">
-        <div className="subject-list">
+    <>
+      {/* Search & Category Filter Toolbar */}
+      <div className={styles.searchToolbar} role="search">
+        <div className={styles.searchInputWrap}>
+          <span className={styles.searchIcon} aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </span>
+          <input
+            id="flashcard-library-search"
+            className={styles.searchInput}
+            type="search"
+            placeholder="Search subjects or topics..."
+            value={subjectSearch}
+            onChange={(e) => setSubjectSearch(e.target.value)}
+          />
+          {subjectSearch.trim().length > 0 && (
+            <button
+              type="button"
+              className={styles.searchClearBtn}
+              onClick={() => setSubjectSearch("")}
+              aria-label="Clear search"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        {/* Category Filter Chips */}
+        {isNuRevit ? (
+          <div className={styles.categoryChips} role="group" aria-label="Filter library by category">
+            <button
+              type="button"
+              className={`${styles.categoryChipBtn} ${isAllSubjectsActive ? styles.active : ""}`}
+              onClick={() => setSubjectSearch("")}
+            >
+              All Subjects
+            </button>
+            <button
+              type="button"
+              className={`${styles.categoryChipBtn} ${isMtap1Active ? styles.active : ""}`}
+              onClick={() => setSubjectSearch(MTAP_1_CATEGORY)}
+            >
+              MTAP 1
+            </button>
+            <button
+              type="button"
+              className={`${styles.categoryChipBtn} ${isOtherMajorsActive ? styles.active : ""}`}
+              onClick={() => setSubjectSearch(OTHER_MAJORS_CATEGORY)}
+            >
+              Other Majors
+            </button>
+          </div>
+        ) : (
+          <div className={styles.categoryChips} role="group" aria-label="Filter library by category">
+            <button
+              type="button"
+              className={`${styles.categoryChipBtn} ${styles.active}`}
+              onClick={() => setSubjectSearch("")}
+            >
+              All Majors
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Two-Column Desktop / One-Column Mobile Layout */}
+      <div className={styles.libraryLayout}>
+        {/* Left Column: Subjects */}
+        <div className={styles.subjectList}>
           {subjectSections.map((section) => (
-            <div className="subject-category" key={section.id}>
+            <div className={styles.subjectCategory} key={section.id}>
               {section.title && (
-                <div className="subject-category-heading">
-                  <div><p className="eyebrow">{isNuRevit ? "NU RevIT collection" : "Standard RevIT collection"}</p><h2>{section.title}</h2></div>
-                  {section.description && <p>{section.description}</p>}
-                </div>
+                <CollectionHeader
+                  kicker={isNuRevit ? "NU RevIT collection" : "Standard RevIT collection"}
+                  title={section.title}
+                  description={section.description}
+                />
               )}
+
               {section.subjects.map((subject: UnifiedSubject) => {
-                const unifiedSubj = subject;
-                const subjectTopics = currentBookTopics.filter((topic) =>
-                  subject.topicIds ? subject.topicIds.includes(topic.id) : topic.subjectId === subject.id
+                const subjectTopics = topics.filter((t) =>
+                  subject.topicIds ? subject.topicIds.includes(t.id) : t.subjectId === subject.id,
                 );
-                const subjectTopicIds = subjectTopics.map((topic) => topic.id);
-                const subjectSelected = subjectTopics.filter((topic) => selectedTopicIds.includes(topic.id)).length;
-                const subjectFullySelected = subjectTopics.length > 0 && subjectSelected === subjectTopics.length;
-                const isExpanded = expandedSubjectIds.includes(subject.id);
-                const subjectCardCount = subjectTopics.reduce(
-                  (total, topic) => total + (topicQuestionCounts.get(topic.id) ?? 0),
-                  0,
+                const harrTopics = subjectTopics.filter((t) => (t.book ?? "Harr") === "Harr");
+                const ciullaTopics = subjectTopics.filter((t) => t.book === "Ciulla");
+                const rodakTopics = subjectTopics.filter((t) => t.book === "Rodak");
+                const strasingerTopics = subjectTopics.filter((t) => t.book === "Strasinger");
+
+                const preferredBook: ReviewerBook =
+                  activeEditionBySubject[subject.id] ?? (selectedBook === "Strasinger" ? "Strasinger" : selectedBook === "Ciulla" ? "Ciulla" : selectedBook === "Rodak" ? "Rodak" : "Harr");
+
+                const activeBook: ReviewerBook =
+                  preferredBook === "Strasinger"
+                    ? (strasingerTopics.length > 0 ? "Strasinger" : (rodakTopics.length > 0 ? "Rodak" : (ciullaTopics.length > 0 ? "Ciulla" : "Harr")))
+                    : preferredBook === "Rodak"
+                      ? (rodakTopics.length > 0 ? "Rodak" : (strasingerTopics.length > 0 ? "Strasinger" : (ciullaTopics.length > 0 ? "Ciulla" : "Harr")))
+                      : preferredBook === "Ciulla"
+                        ? (ciullaTopics.length > 0 ? "Ciulla" : (strasingerTopics.length > 0 ? "Strasinger" : (rodakTopics.length > 0 ? "Rodak" : "Harr")))
+                        : (harrTopics.length > 0 ? "Harr" : (strasingerTopics.length > 0 ? "Strasinger" : (rodakTopics.length > 0 ? "Rodak" : (ciullaTopics.length > 0 ? "Ciulla" : "Harr"))));
+
+                const currentEditionTopics =
+                  activeBook === "Strasinger"
+                    ? strasingerTopics
+                    : activeBook === "Rodak"
+                      ? rodakTopics
+                      : activeBook === "Ciulla"
+                        ? ciullaTopics
+                        : harrTopics;
+
+                const subjectTopicIds = subjectTopics.map((t) => t.id);
+                const selectedInSubjectCount = subjectTopics.filter((t) => selectedTopicIds.includes(t.id)).length;
+                const isSubjectFullySelected = subjectTopics.length > 0 && selectedInSubjectCount === subjectTopics.length;
+
+                const currentEditionTopicIds = currentEditionTopics.map((t) => t.id);
+                const selectedInEditionCount = currentEditionTopics.filter((t) => selectedTopicIds.includes(t.id)).length;
+                const isEditionFullySelected = currentEditionTopics.length > 0 && selectedInEditionCount === currentEditionTopics.length;
+
+                const totalSubjectCards = subjectTopics.reduce((sum, t) => sum + (topicQuestionCounts.get(t.id) ?? 0), 0);
+                const activeEditionCards = currentEditionTopics.reduce((sum, t) => sum + (topicQuestionCounts.get(t.id) ?? 0), 0);
+
+                const query = subjectSearch.trim().toLowerCase();
+                const isCategoryMatch = query === MTAP_1_CATEGORY.toLowerCase() || query === OTHER_MAJORS_CATEGORY.toLowerCase() || query === ALL_MAJORS_CATEGORY.toLowerCase();
+                const matchesSubjectOrTopics = isSearchActive && !isCategoryMatch && (
+                  subject.name.toLowerCase().includes(query) ||
+                  subjectTopics.some((t) => t.name.toLowerCase().includes(query))
                 );
-                const bookLabel = unifiedSubj.books && unifiedSubj.books.length > 0
-                  ? unifiedSubj.books.join(", ")
-                  : (subject.book ?? "Harr");
+
+                const isExpanded = matchesSubjectOrTopics || expandedSubjectIds.has(subject.id);
+
+                const editionsAvailable = [];
+                if (harrTopics.length > 0) editionsAvailable.push("Harr");
+                if (ciullaTopics.length > 0) editionsAvailable.push("Ciulla");
+                if (rodakTopics.length > 0) editionsAvailable.push("Rodak");
+                if (strasingerTopics.length > 0) editionsAvailable.push("Strasinger");
+                const editionsLabel = editionsAvailable.join(" + ");
+
+                const isEditionActiveAndLocked = isBookLocked(activeBook, proActive);
 
                 return (
-                  <section className={`subject-card ${isExpanded ? "is-expanded" : ""}`} key={subject.id}>
+                  <section
+                    className={`${styles.subjectCard} ${isExpanded ? styles.isExpanded : ""}`}
+                    key={subject.id}
+                  >
                     <div
-                      className="subject-heading subject-heading-clickable"
-                      onClick={() => toggleSubjectExpanded(subject.id)}
+                      className={styles.subjectCardHeader}
+                      onClick={() => toggleSubjectExpand(subject.id)}
                       role="button"
                       tabIndex={0}
                       aria-expanded={isExpanded}
                       aria-controls={`flashcard-subject-topics-${subject.id}`}
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter" || event.key === " ") {
-                          event.preventDefault();
-                          toggleSubjectExpanded(subject.id);
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          toggleSubjectExpand(subject.id);
                         }
                       }}
                     >
-                      <div className="subject-heading-info">
-                        <div className="subject-heading-meta">
-                          <span className="eyebrow">{subjectCardCount} flashcards · {subjectTopics.length} topic{subjectTopics.length === 1 ? "" : "s"} · {bookLabel}</span>
-                          {subjectSelected > 0 && (
-                            <span className={`subject-status-badge ${subjectFullySelected ? "fully-selected" : "partially-selected"}`}>
-                              {subjectFullySelected ? "All selected" : `${subjectSelected}/${subjectTopics.length} selected`}
+                      <div className={styles.subjectHeaderLeft}>
+                        <h3 className={styles.subjectTitle}>{subject.name}</h3>
+                        <div className={styles.subjectMetaRow}>
+                          <span className={styles.subjectMeta}>
+                            {totalSubjectCards.toLocaleString()} flashcards · {subjectTopics.length} topics {editionsLabel ? `· ${editionsLabel}` : ""}
+                          </span>
+                          {selectedInSubjectCount > 0 && (
+                            <span className={`${styles.subjectSelectionBadge} ${isSubjectFullySelected ? styles.allSelected : ""}`}>
+                              {isSubjectFullySelected ? "All selected" : `${selectedInSubjectCount}/${subjectTopics.length} selected`}
                             </span>
                           )}
                         </div>
-                        <h2>{subject.name}</h2>
-                        <p>{subject.description}</p>
                       </div>
-                      <div className="subject-heading-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+
+                      <div className={styles.subjectHeaderActions}>
                         <button
-                          className="text-button"
                           type="button"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            toggleSubject(subject.id, subjectTopicIds);
+                          className={styles.selectSubjectBtn}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleSubject(subjectTopicIds, isSubjectFullySelected);
                           }}
                         >
-                          {subjectFullySelected ? "Unselect subject" : "Select subject"}
+                          {isSubjectFullySelected ? "Unselect subject" : "Select subject"}
                         </button>
-                        <button
-                          className="subject-expand-toggle"
-                          type="button"
-                          aria-label={isExpanded ? `Hide topics for ${subject.name}` : `Show topics for ${subject.name}`}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            toggleSubjectExpanded(subject.id);
-                          }}
-                          style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: "6px",
-                            padding: "7px 13px",
-                            borderRadius: "9px",
-                            border: "1px solid var(--line)",
-                            background: isExpanded ? "var(--green-soft)" : "var(--surface-soft)",
-                            color: isExpanded ? "var(--green-dark)" : "var(--ink)",
-                            fontSize: "11px",
-                            fontWeight: 650,
-                            cursor: "pointer",
-                            whiteSpace: "nowrap"
-                          }}
-                        >
-                          <span className="subject-expand-label" style={{ fontSize: "11px", fontWeight: 650 }}>
-                            {isExpanded ? "Hide topics" : "Show topics"}
-                          </span>
-                          <svg
-                            className="subject-expand-icon"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                            style={{
-                              flexShrink: 0,
-                              transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-                              transition: "transform 0.22s ease",
-                              color: isExpanded ? "var(--green)" : "var(--muted)"
-                            }}
-                          >
+                        <div className={`${styles.expandChevron} ${isExpanded ? styles.expanded : ""}`} aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="6 9 12 15 18 9" />
                           </svg>
-                        </button>
-                      </div>
-                    </div>
-                    <AnimatePresence initial={false}>
-                      {isExpanded && (
-                        <motion.div
-                          id={`flashcard-subject-topics-${subject.id}`}
-                          className="subject-topics-collapse expanded"
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                          style={{ overflow: "hidden" }}
-                          aria-hidden={!isExpanded}
-                        >
-                          <div className="subject-topics-content">
-                            <div className="subject-topics-inner">
-                          {selectedBook === "all" ? (
-                            <div className="subject-book-groups">
-                              {(["Harr", "Ciulla"] as const).map((bookName) => {
-                                const bookTopics = subjectTopics.filter((t) => t.book === bookName);
-                                if (!bookTopics.length) return null;
-                                const bookTopicIds = bookTopics.map((t) => t.id);
-                                const bookKey = `${subject.id}:${bookName}`;
-                                const isBookExpanded = expandedBookEditionKeys.includes(bookKey);
-                                const bookSelected = bookTopics.filter((t) => selectedTopicIds.includes(t.id)).length;
-                                const bookFullySelected = bookTopics.length > 0 && bookSelected === bookTopics.length;
-                                const bookCardCount = bookTopics.reduce(
-                                  (total, topic) => total + (topicQuestionCounts.get(topic.id) ?? 0),
-                                  0,
-                                );
-
-                                return (
-                                  <div
-                                    className={`book-edition-accordion ${isBookExpanded ? "is-expanded" : ""}`}
-                                    key={bookName}
-                                    style={{
-                                      border: "1px solid var(--line)",
-                                      borderRadius: "12px",
-                                      background: isBookExpanded ? "var(--paper)" : "var(--surface-soft)",
-                                      overflow: "hidden",
-                                      transition: "all 0.2s ease",
-                                      marginBottom: "10px",
-                                    }}
-                                  >
-                                    <div
-                                      className="book-edition-heading"
-                                      onClick={() => toggleBookEditionExpanded(subject.id, bookName)}
-                                      role="button"
-                                      tabIndex={0}
-                                      aria-expanded={isBookExpanded}
-                                      aria-controls={`flashcard-book-topics-${subject.id}-${bookName}`}
-                                      onKeyDown={(event) => {
-                                        if (event.key === "Enter" || event.key === " ") {
-                                          event.preventDefault();
-                                          toggleBookEditionExpanded(subject.id, bookName);
-                                        }
-                                      }}
-                                      style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                        padding: "13px 16px",
-                                        gap: "14px",
-                                        cursor: "pointer",
-                                        userSelect: "none",
-                                        width: "100%",
-                                        boxSizing: "border-box",
-                                      }}
-                                    >
-                                      <div style={{ display: "flex", alignItems: "center", gap: "10px", minWidth: 0, flex: "1 1 auto", flexWrap: "wrap" }}>
-                                        <span className="book-edition-title" style={{ fontSize: "14px", fontWeight: 700, color: "var(--ink)", whiteSpace: "nowrap" }}>
-                                          {bookName} Edition
-                                        </span>
-                                        <span className="book-edition-meta" style={{ fontSize: "11px", color: "var(--muted)", fontWeight: 500, whiteSpace: "nowrap" }}>
-                                          • {bookTopics.length} topic{bookTopics.length === 1 ? "" : "s"} · {bookCardCount} cards
-                                        </span>
-                                        {bookSelected > 0 && (
-                                          <span className={`subject-status-badge ${bookFullySelected ? "fully-selected" : "partially-selected"}`} style={{ fontSize: "9px", padding: "1px 7px" }}>
-                                            {bookFullySelected ? "All selected" : `${bookSelected}/${bookTopics.length}`}
-                                          </span>
-                                        )}
-                                      </div>
-                                      <div className="book-edition-actions" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0, marginLeft: "auto" }}>
-                                        <button
-                                          className="text-button"
-                                          type="button"
-                                          onClick={(event) => {
-                                            event.stopPropagation();
-                                            toggleSubject(subject.id, bookTopicIds);
-                                          }}
-                                          style={{ fontSize: "11px", fontWeight: 650, whiteSpace: "nowrap" }}
-                                        >
-                                          {bookFullySelected ? `Unselect ${bookName}` : `Select ${bookName}`}
-                                        </button>
-                                        <span className={`topic-book-badge topic-book-${bookName.toLowerCase()}`} style={getBookBadgeStyle(bookName, { margin: 0 })}>
-                                          {bookName}
-                                        </span>
-                                        <button
-                                          className="book-edition-toggle"
-                                          type="button"
-                                          aria-label={isBookExpanded ? `Hide ${bookName} topics` : `Show ${bookName} topics`}
-                                          onClick={(event) => {
-                                            event.stopPropagation();
-                                            toggleBookEditionExpanded(subject.id, bookName);
-                                          }}
-                                          style={{
-                                            display: "inline-flex",
-                                            alignItems: "center",
-                                            gap: "6px",
-                                            padding: "6px 12px",
-                                            borderRadius: "8px",
-                                            border: "1px solid var(--line)",
-                                            background: isBookExpanded ? "var(--green-soft)" : "var(--surface-tint)",
-                                            color: isBookExpanded ? "var(--green-dark)" : "var(--ink)",
-                                            fontSize: "10.5px",
-                                            fontWeight: 650,
-                                            cursor: "pointer",
-                                            whiteSpace: "nowrap",
-                                            lineHeight: 1,
-                                            flexShrink: 0,
-                                          }}
-                                        >
-                                          <span>{isBookExpanded ? "Hide topics" : "Show topics"}</span>
-                                          <svg
-                                            width="13"
-                                            height="13"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth="2.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            aria-hidden="true"
-                                            style={{
-                                              flexShrink: 0,
-                                              transform: isBookExpanded ? "rotate(180deg)" : "rotate(0deg)",
-                                              transition: "transform 0.22s ease",
-                                              color: isBookExpanded ? "var(--green)" : "var(--muted)",
-                                            }}
-                                          >
-                                            <polyline points="6 9 12 15 18 9" />
-                                          </svg>
-                                        </button>
-                                      </div>
-                                    </div>
-                                    <AnimatePresence initial={false}>
-                                      {isBookExpanded && (
-                                        <motion.div
-                                          id={`flashcard-book-topics-${subject.id}-${bookName}`}
-                                          className="book-edition-content"
-                                          initial={{ height: 0, opacity: 0 }}
-                                          animate={{ height: "auto", opacity: 1 }}
-                                          exit={{ height: 0, opacity: 0 }}
-                                          transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                                          style={{ overflow: "hidden" }}
-                                          aria-hidden={!isBookExpanded}
-                                        >
-                                      <div className="topic-selection-grid">
-                                        {bookTopics.map((topic) => {
-                                          const count = topicQuestionCounts.get(topic.id) ?? 0;
-                                          const selected = selectedTopicIds.includes(topic.id);
-                                          return (
-                                            <motion.label
-                                              className={`topic-select-card ${selected ? "selected" : ""}`}
-                                              key={topic.id}
-                                              whileTap={{ scale: 0.985 }}
-                                              transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                                            >
-                                              <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                              <span className="topic-check" aria-hidden="true">
-                                                {selected && (
-                                                  <motion.span
-                                                    initial={{ scale: 0, rotate: -25 }}
-                                                    animate={{ scale: 1, rotate: 0 }}
-                                                    transition={{ type: "spring", stiffness: 600, damping: 20 }}
-                                                    style={{ display: "inline-block" }}
-                                                  >
-                                                    ✓
-                                                  </motion.span>
-                                                )}
-                                              </span>
-                                              <span className="topic-select-copy">
-                                                <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
-                                                  <strong>{topic.name}</strong>
-                                                  {topic.book && (
-                                                    <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={getBookBadgeStyle(topic.book, { marginLeft: "auto" })}>
-                                                      {topic.book}
-                                                    </span>
-                                                  )}
-                                                </div>
-                                                <small>{topic.description}</small>
-                                                <em>{count} card{count === 1 ? "" : "s"}</em>
-                                              </span>
-                                            </motion.label>
-                                          );
-                                        })}
-                                      </div>
-                                      <p className="subject-selection-note">{bookSelected} of {bookTopics.length} {bookName} topics selected</p>
-                                        </motion.div>
-                                      )}
-                                    </AnimatePresence>
-                                  </div>
-                                );
-                              })}
-                              <p className="subject-selection-note" style={{ marginTop: "6px" }}>{subjectSelected} of {subjectTopics.length} total topics selected</p>
-                            </div>
-                          ) : (
-                            <>
-                              <div className="topic-selection-grid">
-                                {subjectTopics.map((topic) => {
-                                  const count = topicQuestionCounts.get(topic.id) ?? 0;
-                                  const selected = selectedTopicIds.includes(topic.id);
-                                  return (
-                                    <motion.label
-                                      className={`topic-select-card ${selected ? "selected" : ""}`}
-                                      key={topic.id}
-                                      whileTap={{ scale: 0.985 }}
-                                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                                    >
-                                      <input type="checkbox" checked={selected} onChange={() => toggleTopic(topic.id)} />
-                                      <span className="topic-check" aria-hidden="true">
-                                        {selected && (
-                                          <motion.span
-                                            initial={{ scale: 0, rotate: -25 }}
-                                            animate={{ scale: 1, rotate: 0 }}
-                                            transition={{ type: "spring", stiffness: 600, damping: 20 }}
-                                            style={{ display: "inline-block" }}
-                                          >
-                                            ✓
-                                          </motion.span>
-                                        )}
-                                      </span>
-                                      <span className="topic-select-copy">
-                                        <div className="topic-select-header" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "10px", width: "100%" }}>
-                                          <strong>{topic.name}</strong>
-                                          {topic.book && (
-                                            <span className={`topic-book-badge topic-book-${topic.book.toLowerCase()}`} style={getBookBadgeStyle(topic.book, { marginLeft: "auto" })}>
-                                              {topic.book}
-                                            </span>
-                                          )}
-                                        </div>
-                                        <small>{topic.description}</small>
-                                        <em>{count} card{count === 1 ? "" : "s"}</em>
-                                      </span>
-                                    </motion.label>
-                                  );
-                                })}
-                              </div>
-                              <p className="subject-selection-note">{subjectSelected} of {subjectTopics.length} topics selected</p>
-                            </>
-                          )}
                         </div>
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </section>
+                    </div>
+
+                    {isExpanded && (
+                      <div className={styles.subjectBody} id={`flashcard-subject-topics-${subject.id}`}>
+                        {editionsAvailable.length > 1 && (
+                          <div className={styles.editionNavStrip}>
+                            <div className={styles.editionTabs} role="tablist">
+                              {harrTopics.length > 0 && (
+                                <button
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={activeBook === "Harr"}
+                                  className={`${styles.editionTabBtn} ${activeBook === "Harr" ? styles.active : ""}`}
+                                  onClick={() => setSubjectEditionTab(subject.id, "Harr")}
+                                >
+                                  Harr · <span className={styles.editionTabCount}>{harrTopics.length}</span>
+                                </button>
+                              )}
+                              {ciullaTopics.length > 0 && (
+                                <button
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={activeBook === "Ciulla"}
+                                  className={`${styles.editionTabBtn} ${activeBook === "Ciulla" ? styles.active : ""}`}
+                                  onClick={() => setSubjectEditionTab(subject.id, "Ciulla")}
+                                >
+                                  Ciulla · <span className={styles.editionTabCount}>{ciullaTopics.length}</span>
+                                  {!proActive && <span className={styles.editionProPill}>Pro</span>}
+                                </button>
+                              )}
+                              {rodakTopics.length > 0 && (
+                                <button
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={activeBook === "Rodak"}
+                                  className={`${styles.editionTabBtn} ${activeBook === "Rodak" ? styles.active : ""}`}
+                                  onClick={() => setSubjectEditionTab(subject.id, "Rodak")}
+                                >
+                                  Rodak · <span className={styles.editionTabCount}>{rodakTopics.length}</span>
+                                  {!proActive && <span className={styles.editionProPill}>Pro</span>}
+                                </button>
+                              )}
+                              {strasingerTopics.length > 0 && (
+                                <button
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={activeBook === "Strasinger"}
+                                  className={`${styles.editionTabBtn} ${activeBook === "Strasinger" ? styles.active : ""}`}
+                                  onClick={() => setSubjectEditionTab(subject.id, "Strasinger")}
+                                >
+                                  Strasinger · <span className={styles.editionTabCount}>{strasingerTopics.length}</span>
+                                  {!proActive && <span className={styles.editionProPill}>Pro</span>}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className={styles.editionSubheader}>
+                          <p className={styles.editionAvailableText}>
+                            {activeEditionCards.toLocaleString()} flashcards available
+                          </p>
+                          {!isEditionActiveAndLocked && (
+                            <button
+                              type="button"
+                              className={styles.selectAllEditionBtn}
+                              onClick={() => toggleSubject(currentEditionTopicIds, isEditionFullySelected)}
+                            >
+                              {isEditionFullySelected ? `Unselect all ${activeBook}` : `Select all ${activeBook}`}
+                            </button>
+                          )}
+                        </div>
+
+                        {isEditionActiveAndLocked && (
+                          <div className={styles.proLockBanner}>
+                            <p>{activeBook} Flashcards are exclusive to RevIT Pro.</p>
+                            <button
+                              type="button"
+                              className={styles.proUpgradeBtn}
+                              onClick={() => onUpgradePro ? onUpgradePro() : window.location.assign("/pricing")}
+                            >
+                              Unlock Pro →
+                            </button>
+                          </div>
+                        )}
+
+                        <div className={styles.topicList}>
+                          {currentEditionTopics.map((topic) => {
+                            const isSelected = selectedTopicIds.includes(topic.id);
+                            const cardCount = topicQuestionCounts.get(topic.id) ?? 0;
+                            const isLocked = isBookLocked((topic.book ?? "Harr") as ReviewerBook, proActive);
+
+                            return (
+                              <label
+                                key={topic.id}
+                                className={`${styles.topicRow} ${isLocked ? styles.topicRowLocked : ""}`}
+                                onClick={(e) => {
+                                  if ((e.target as HTMLElement).tagName !== "INPUT") {
+                                    if (isLocked) {
+                                      if (onUpgradePro) onUpgradePro();
+                                      else window.location.assign("/pricing");
+                                    } else {
+                                      toggleTopic(topic.id);
+                                    }
+                                  }
+                                }}
+                              >
+                                <div className={styles.topicRowLeft}>
+                                  <input
+                                    type="checkbox"
+                                    className={styles.topicCheckbox}
+                                    checked={isSelected}
+                                    disabled={isLocked}
+                                    onChange={() => {
+                                      if (isLocked) {
+                                        if (onUpgradePro) onUpgradePro();
+                                      } else {
+                                        toggleTopic(topic.id);
+                                      }
+                                    }}
+                                    aria-label={`Select topic ${topic.name}`}
+                                  />
+                                  <div className={styles.topicInfo}>
+                                    <h4 className={styles.topicName}>{topic.name}</h4>
+                                    <p className={styles.topicQuestionsCount}>
+                                      {cardCount} card{cardCount === 1 ? "" : "s"}
+                                    </p>
+                                  </div>
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </section>
                 );
               })}
             </div>
           ))}
+
           {!visibleSubjects.length && (
             <div className="library-empty-state">
               <h2>No subjects found</h2>
-              <p>Try another subject or topic name.</p>
-              <button className="text-button" type="button" onClick={() => setSubjectSearch("")}>Clear search</button>
+              <p>Try searching for another subject or topic name.</p>
+              <button className="text-button" type="button" onClick={() => setSubjectSearch("")}>
+                Clear search
+              </button>
             </div>
           )}
         </div>
 
-        <aside className="selection-panel">
-          <p className="eyebrow">Deck setup</p>
-          <h2>{selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"} selected</h2>
-          <p>{availableCards} card{availableCards === 1 ? " is" : "s are"} available from your selection.</p>
-          <div style={{ marginBottom: "14px" }}>
-            <label className="field-label" htmlFor="flashcard-reviewer-book">Reviewer book</label>
-            <select
-              id="flashcard-reviewer-book"
-              value={selectedBook}
-              onChange={(event) => handleBookChange(event.target.value as ReviewerBook | "all")}
-            >
-              <option value="Harr">Harr (999 cards)</option>
-              <option value="Ciulla" disabled={!proActive}>Ciulla (1,884 cards){proActive ? "" : " · Pro"}</option>
-              <option value="all" disabled={!proActive}>All Books (2,883 cards){proActive ? "" : " · Pro"}</option>
-            </select>
-            {!proActive && <p className="security-copy"><span className="source-pill">PRO</span> Ciulla flashcards are available with RevIT Pro. <Link className="pro-inline-link" href="/pricing">Learn about Pro →</Link></p>}
-          </div>
-          <div className="selection-controls">
-            <button className="text-button" type="button" onClick={() => setSelectedTopicIds(currentBookTopics.map((topic) => topic.id))}>Select all</button>
-            <button className="text-button quiet" type="button" onClick={() => setSelectedTopicIds([])}>Clear all</button>
-          </div>
-          <button className="primary-button wide" type="button" onClick={startReviewing} disabled={!availableCards}>
-            Start reviewing
-          </button>
-          {selectedTopicNames.length > 0 && (
-            <div className="selected-tags">
-              <AnimatePresence>
-                {selectedTopicNames.map((name) => (
-                  <motion.span
-                    key={name}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                    layout
-                  >
-                    {name}
-                  </motion.span>
-                ))}
-              </AnimatePresence>
+        {/* Right Column: Desktop Sticky Session Setup Sidebar */}
+        <aside className={styles.sessionSidebar} aria-label="Deck setup">
+          <div className={styles.sidebarHeader}>
+            <div className={styles.sidebarHeaderTop}>
+              <span className={styles.setupKicker}>Session Setup</span>
+              {availableCards > 0 && (
+                <span className={styles.readyIndicator}>
+                  <span className={styles.readyDot} aria-hidden="true" />
+                  Ready
+                </span>
+              )}
             </div>
-          )}
+            <h2 className={styles.sidebarTitle}>
+              {selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"} selected
+            </h2>
+          </div>
+
+          {/* Selected Sources */}
+          <div className={styles.sourcesBlock}>
+            <div className={styles.sourceBadges}>
+              {sourceCounts.harr > 0 && (
+                <span className={styles.sourceTag}>Harr · {sourceCounts.harr}</span>
+              )}
+              {sourceCounts.ciulla > 0 && (
+                <span className={styles.sourceTag}>Ciulla · {sourceCounts.ciulla}</span>
+              )}
+              {sourceCounts.rodak > 0 && (
+                <span className={styles.sourceTag}>Rodak · {sourceCounts.rodak}</span>
+              )}
+              {sourceCounts.strasinger > 0 && (
+                <span className={styles.sourceTag}>Strasinger · {sourceCounts.strasinger}</span>
+              )}
+              {selectedTopicIds.length === 0 && (
+                <span className={styles.sourceNone}>No topics selected</span>
+              )}
+            </div>
+            <span className={styles.availableQuestionsText}>
+              {availableCards} {availableCards === 1 ? "card" : "cards"} available
+            </span>
+          </div>
+
+          {/* Selection Actions */}
+          <div className={styles.selectionActionsRow}>
+            <button
+              type="button"
+              className={styles.selectionTextBtn}
+              onClick={() => {
+                const selectable = topics.filter((t) => proActive || (t.book ?? "Harr") === "Harr");
+                setSelectedTopicIds(selectable.map((t) => t.id));
+              }}
+            >
+              Select all
+            </button>
+            <button
+              type="button"
+              className={`${styles.selectionTextBtn} ${styles.quiet}`}
+              onClick={() => setSelectedTopicIds([])}
+              disabled={selectedTopicIds.length === 0}
+            >
+              Clear
+            </button>
+          </div>
+
+          <div className={styles.setupDivider} />
+
+          {/* Flashcard Session Info */}
+          <div className={styles.setupRow}>
+            <div className={styles.setupRowLabel}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={styles.setupIcon}>
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <line x1="2" y1="10" x2="22" y2="10" />
+              </svg>
+              <span>Passive Flashcard Deck</span>
+            </div>
+            <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--green)" }}>
+              {availableCards} cards
+            </span>
+          </div>
+
+          <div className={styles.setupDivider} />
+
+          <button
+            type="button"
+            className={styles.startReviewBtn}
+            onClick={startReviewing}
+            disabled={!availableCards}
+          >
+            <span>Start reviewing</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </button>
         </aside>
       </div>
 
-      <MobileReviewBar
-        selectedTopicCount={selectedTopicIds.length}
-        questionCount={availableCards}
-        itemLabel="card"
-        onStart={startReviewing}
-        onClear={() => setSelectedTopicIds([])}
-      />
-    </div>
+      {/* Sticky Mobile Review Bar */}
+      <div className={styles.mobileStickyBar} role="region" aria-label="Mobile session action bar">
+        <div className={styles.mobileBarInfo}>
+          <div className={styles.mobileBarHeaderRow}>
+            <span className={styles.mobileBarTopicCount}>
+              {selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"}
+            </span>
+            {availableCards > 0 && (
+              <span className={styles.mobileReadyBadge}>
+                <span className={styles.readyDot} aria-hidden="true" />
+                Ready
+              </span>
+            )}
+          </div>
+          <div className={styles.mobileBarSubtext}>
+            {(() => {
+              const labels: string[] = [];
+              if (sourceCounts.harr > 0) labels.push(`Harr · ${sourceCounts.harr}`);
+              if (sourceCounts.ciulla > 0) labels.push(`Ciulla · ${sourceCounts.ciulla}`);
+              if (sourceCounts.rodak > 0) labels.push(`Rodak · ${sourceCounts.rodak}`);
+              if (sourceCounts.strasinger > 0) labels.push(`Strasinger · ${sourceCounts.strasinger}`);
+              return labels.length > 0 ? (
+                <span>{labels.join(", ")} ({availableCards} cards)</span>
+              ) : (
+                <span>Select topics above ({availableCards} cards)</span>
+              );
+            })()}
+          </div>
+        </div>
+        <div className={styles.mobileBarActions}>
+          <button
+            type="button"
+            className={styles.mobileSetupBtn}
+            onClick={() => setBottomSheetOpen(true)}
+            aria-label="Open session setup"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <line x1="4" y1="21" x2="4" y2="14" />
+              <line x1="4" y1="10" x2="4" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12" y2="3" />
+              <line x1="20" y1="21" x2="20" y2="16" />
+              <line x1="20" y1="12" x2="20" y2="3" />
+              <line x1="1" y1="14" x2="7" y2="14" />
+              <line x1="9" y1="8" x2="15" y2="8" />
+              <line x1="17" y1="16" x2="23" y2="16" />
+            </svg>
+            <span>Setup</span>
+          </button>
+          <button
+            type="button"
+            className={styles.mobileStartReviewBtn}
+            onClick={startReviewing}
+            disabled={!availableCards}
+          >
+            <span>Start</span>
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Session Setup Bottom Sheet */}
+      {bottomSheetOpen && (
+        <div
+          className={styles.bottomSheetOverlay}
+          onClick={() => setBottomSheetOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mobile-flashcard-setup-title"
+        >
+          <div
+            className={styles.bottomSheetContainer}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.bottomSheetHeader}>
+              <div className={styles.bottomSheetTitleBlock}>
+                <div className={styles.bottomSheetTitleRow}>
+                  <span className={styles.setupKicker}>Session Setup</span>
+                  {availableCards > 0 && (
+                    <span className={styles.readyIndicator}>
+                      <span className={styles.readyDot} aria-hidden="true" />
+                      Ready
+                    </span>
+                  )}
+                </div>
+                <h3 className={styles.bottomSheetTitle} id="mobile-flashcard-setup-title">
+                  {selectedTopicIds.length} topic{selectedTopicIds.length === 1 ? "" : "s"} selected
+                </h3>
+              </div>
+              <button
+                type="button"
+                className={styles.bottomSheetCloseBtn}
+                onClick={() => setBottomSheetOpen(false)}
+                aria-label="Close session setup"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <div className={styles.bottomSheetBody}>
+              <div className={styles.sourcesBlock}>
+                <div className={styles.sourceBadges}>
+                  {sourceCounts.harr > 0 && (
+                    <span className={styles.sourceTag}>Harr · {sourceCounts.harr}</span>
+                  )}
+                  {sourceCounts.ciulla > 0 && (
+                    <span className={styles.sourceTag}>Ciulla · {sourceCounts.ciulla}</span>
+                  )}
+                  {sourceCounts.rodak > 0 && (
+                    <span className={styles.sourceTag}>Rodak · {sourceCounts.rodak}</span>
+                  )}
+                  {sourceCounts.strasinger > 0 && (
+                    <span className={styles.sourceTag}>Strasinger · {sourceCounts.strasinger}</span>
+                  )}
+                  {selectedTopicIds.length === 0 && (
+                    <span className={styles.sourceNone}>No topics selected</span>
+                  )}
+                </div>
+                <span className={styles.availableQuestionsText}>
+                  {availableCards} {availableCards === 1 ? "card" : "cards"} available
+                </span>
+              </div>
+
+              <div className={styles.selectionActionsRow}>
+                <button
+                  type="button"
+                  className={styles.selectionTextBtn}
+                  onClick={() => {
+                    const selectable = topics.filter((t) => proActive || (t.book ?? "Harr") === "Harr");
+                    setSelectedTopicIds(selectable.map((t) => t.id));
+                  }}
+                >
+                  Select all
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.selectionTextBtn} ${styles.quiet}`}
+                  onClick={() => setSelectedTopicIds([])}
+                  disabled={selectedTopicIds.length === 0}
+                >
+                  Clear
+                </button>
+              </div>
+
+              <div className={styles.setupDivider} />
+
+              <div className={styles.setupRow}>
+                <div className={styles.setupRowLabel}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className={styles.setupIcon}>
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                  </svg>
+                  <span>Passive Flashcard Deck</span>
+                </div>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--green)" }}>
+                  {availableCards} cards
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.bottomSheetFooter}>
+              <button
+                type="button"
+                className={styles.sheetClearBtn}
+                onClick={() => setSelectedTopicIds([])}
+                disabled={selectedTopicIds.length === 0}
+              >
+                Clear selections
+              </button>
+              <button
+                type="button"
+                className={styles.sheetStartBtn}
+                onClick={() => {
+                  setBottomSheetOpen(false);
+                  startReviewing();
+                }}
+                disabled={!availableCards}
+              >
+                <span>Start reviewing</span>
+                <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

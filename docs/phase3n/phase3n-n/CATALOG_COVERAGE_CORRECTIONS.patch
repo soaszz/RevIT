@@ -1,0 +1,246 @@
+--- a/docs/phase3n/phase3n-n/EXECUTION_PACK.proposed.md
++++ b/docs/phase3n/phase3n-n/EXECUTION_PACK.md
+@@ -2,7 +2,7 @@
+ 
+ Prepared 2026-10-16. **Not executed; scenarios 6 and 12 NOT TESTED.** This document contains future database writes. Do not paste its setup, worker or cleanup blocks until separately authorized for this exact committed staging procedure. Existing rollback-only suite authorization is insufficient. No automatic runner is provided.
+ 
+-**PROPOSED coverage revision; NOT APPLIED / NOT AUTHORIZED TO RUN.** See [focused coverage review](CATALOG_COVERAGE_REVIEW.md). The captured N6 incoming-FK closure contains 28 relations / 28 incoming edges, plus five outgoing-parent edges. Four managed-auth leaf tables are count-only, always zero: no additional fixtures, row exports, DELETEs or restoration grants. This exact closure is conditional on fresh catalog comparison; a new node/edge/action/owner/trigger/partition or nonzero untracked row still stops. Six event definitions are pinned before any temporary helper DDL. Fresh metadata, operational quiescence, six-session readiness and separate write authorization remain outstanding. No startup-setting request substitutes for an observed mode.
++**Coverage revision APPLIED LOCALLY; NOT AUTHORIZED TO RUN.** See [focused coverage review](CATALOG_COVERAGE_REVIEW.md). The captured N6 incoming-FK closure contains 28 relations / 28 incoming edges, plus five outgoing-parent edges. Four managed-auth leaf tables are count-only, always zero: no additional fixtures, row exports, DELETEs or restoration grants. This exact closure is conditional on fresh catalog comparison; a new node/edge/action/owner/trigger/partition or nonzero untracked row still stops. Six event definitions are pinned before any temporary helper DDL. Fresh metadata, operational quiescence, six-session readiness and separate write authorization remain outstanding. No startup-setting request substitutes for an observed mode.
+ 
+ Target exclusively `qnepjfcbzsycmesrcbjb`, dashboard URL `https://qnepjfcbzsycmesrcbjb.supabase.co`. Never connect to production `lznsdxfvxeckflxsohig`. Do not use CLI link/push/repair, registry writes, migration replay, standalone rollback, new grants/roles, real accounts, application activation or HTTP traffic.
+ 
+@@ -78,27 +78,29 @@
+  'owner',p.proowner,'security_definer',p.prosecdef,'settings',p.proconfig,'acl_null',p.proacl IS NULL,
+  'acl',ARRAY(SELECT z::text FROM unnest(p.proacl) z ORDER BY z::text),
+  'effective',(SELECT jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) ORDER BY r)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r)) ORDER BY e.evtname)
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r)) ORDER BY e.evtname)
+  FROM pg_event_trigger e JOIN pg_proc p ON p.oid=e.evtfoid),
+  'schemas',(SELECT jsonb_agg(jsonb_build_array(n.oid,n.nspname,n.nspowner,n.nspacl IS NULL,
+  ARRAY(SELECT z::text FROM unnest(n.nspacl) z ORDER BY z::text),
+  (SELECT jsonb_agg(jsonb_build_array(r,has_schema_privilege(r,n.oid,'USAGE'),has_schema_privilege(r,n.oid,'CREATE')) ORDER BY r)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r)) ORDER BY n.oid)
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r)) ORDER BY n.oid)
+  FROM pg_namespace n WHERE n.oid IN(SELECT relnamespace FROM pg_class WHERE oid IN(SELECT oid FROM scope))),
+  'relations',(SELECT jsonb_agg(jsonb_build_object('oid',c.oid,'name',c.oid::regclass::text,
+  'kind',c.relkind,'persistence',c.relpersistence,'access_method',c.relam,'owner',c.relowner,
++ 'partition',c.relispartition,'replica_identity',c.relreplident,'options',c.reloptions,
+  'rls',c.relrowsecurity,'force_rls',c.relforcerowsecurity,'acl_null',c.relacl IS NULL,
+  'acl',ARRAY(SELECT z::text FROM unnest(c.relacl) z ORDER BY z::text),
+  'columns',(SELECT jsonb_agg(jsonb_build_array(a.attnum,a.attname,a.atttypid,a.atttypmod,
+  a.attnotnull,a.attidentity,a.attgenerated,a.attacl IS NULL,
++ a.attcollation,a.attstorage,a.attcompression,a.attislocal,a.attinhcount,
+  ARRAY(SELECT z::text FROM unnest(a.attacl) z ORDER BY z::text),pg_get_expr(d.adbin,d.adrelid)) ORDER BY a.attnum)
+  FROM pg_attribute a LEFT JOIN pg_attrdef d ON d.adrelid=a.attrelid AND d.adnum=a.attnum
+  WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped),
+  'effective',(SELECT jsonb_agg(jsonb_build_array(r,priv,has_table_privilege(r,c.oid,priv)) ORDER BY r,priv)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r
+  CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER','MAINTAIN']) priv),
+  'effective_columns',(SELECT jsonb_agg(jsonb_build_array(r,a.attnum,priv,has_column_privilege(r,c.oid,a.attnum,priv)) ORDER BY r,a.attnum,priv)
+- FROM pg_attribute a CROSS JOIN unnest(ARRAY['anon','authenticated','service_role']) r
++ FROM pg_attribute a CROSS JOIN unnest(ARRAY['postgres','anon','authenticated','service_role']) r
+  CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','REFERENCES']) priv
+  WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped)) ORDER BY c.oid)
+  FROM pg_class c WHERE c.oid IN(SELECT oid FROM scope)),
+@@ -112,7 +114,7 @@
+  t.tgenabled,pg_get_triggerdef(t.oid),t.tgfoid,p.proowner,p.prosecdef,p.proconfig,p.proacl IS NULL,
+  ARRAY(SELECT z::text FROM unnest(p.proacl) z ORDER BY z::text),
+  (SELECT jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) ORDER BY r)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r),
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r),
+  CASE WHEN NOT t.tgisinternal THEN pg_get_functiondef(p.oid) END) ORDER BY t.tgrelid,t.tgname)
+  FROM pg_trigger t JOIN pg_proc p ON p.oid=t.tgfoid WHERE t.tgrelid IN(SELECT oid FROM scope)),
+  'dependencies',(SELECT jsonb_agg(jsonb_build_array(d.refobjid,d.refobjsubid,d.classid,d.objid,d.objsubid,d.deptype)
+@@ -125,7 +127,7 @@
+ ROLLBACK;
+ ```
+ 
+-Before opening O/A/B/C/D/M, compare the fresh catalog to CATALOG_COVERAGE_REVIEW.md and its captured 28-node/33-FK contract. Review every changed edge/action/owner/constraint/index/policy/trigger/event definition; no silent re-baselining. The added metadata output must establish permanent ordinary-table persistence, no inheritance and the complete managed-auth schema. Existing N6 capture did not establish all those fields. Require current ingress/job quiescence and existing SET-role/monitor capability; actual six-session proof is the separate read-only handshake, not a pre-existing fact. Do not create a helper for this review. No connection or writes are authorized by this proposal.
++Before opening O/A/B/C/D/M, compare the fresh catalog to CATALOG_COVERAGE_REVIEW.md and its captured 28-node/33-FK contract. Review every changed edge/action/owner/constraint/index/policy/trigger/event definition; no silent re-baselining. The added metadata output must establish permanent ordinary-table persistence, no inheritance and the complete managed-auth schema. Existing N6 capture did not establish all those fields. Require current ingress/job quiescence and existing SET-role/monitor capability; actual six-session proof is the separate read-only handshake, not a pre-existing fact. Do not create a helper for this review. No connection or writes are authorized by this document. Use the separately prepared COVERAGE_READ_ONLY_RECHECK.psql only after read-only authorization.
+ 
+ Record all actual migration version/name rows. Require exactly one `202610160027 / trusted_cutover_and_attempt_numbering`; retain earlier rows verbatim. Require exactly config id 1 false and all ten counts zero, optional XP table absent or empty. The read-only transaction reports `on` by design; separately establish writable owner capability through session metadata outside it **only after authorization**, without a write probe. PostgreSQL server version must be captured, not inferred from psql 17.11.
+ 
+@@ -309,7 +311,7 @@
+  RETURN counts;
+ END $$;
+ CREATE FUNCTION pg_temp.snapshot() RETURNS jsonb LANGUAGE plpgsql AS $$
+-DECLARE data jsonb:='{}'; t text; rows jsonb; meta jsonb;
++DECLARE data jsonb:='{}'; t text; rows jsonb; meta jsonb; foreign_owner boolean;
+ BEGIN
+  IF EXISTS(SELECT FROM jsonb_each_text(pg_temp.dependency_counts()) d
+  WHERE d.key NOT IN('auth.users','public.profiles','public.user_preferences','public.user_progress',
+@@ -320,6 +322,13 @@
+  OR email IS DISTINCT FROM 'phase3n-n2-20261016@revit.invalid') THEN
+   RAISE EXCEPTION 'Unrelated auth user present; do not snapshot credentials or private rows';
+  END IF;
++ FOREACH t IN ARRAY ARRAY['public.profiles','public.user_preferences','public.user_progress',
++ 'public.study_sessions','public.question_attempts'] LOOP
++  EXECUTE format('SELECT EXISTS(SELECT FROM %s WHERE (%I = %L::uuid) IS NOT TRUE)',
++   t,CASE WHEN t='public.profiles' THEN 'id' ELSE 'user_id' END,
++   '3e9a0000-3a2e-4e60-8000-000000000001') INTO foreign_owner;
++  IF foreign_owner THEN RAISE EXCEPTION 'Untracked owner before snapshot: %',t; END IF;
++ END LOOP;
+  FOREACH t IN ARRAY ARRAY['auth.users','public.profiles','public.user_preferences',
+  'public.study_sessions','public.question_attempts','public.activity_events',
+  'public.daily_activity','public.user_progress','public.user_achievements',
+@@ -327,7 +336,8 @@
+   IF to_regclass(t) IS NULL THEN rows:='null';
+   ELSIF t='auth.users' THEN
+    SELECT coalesce(jsonb_agg(to_jsonb(x) ORDER BY x.id),'[]'::jsonb) INTO rows
+-   FROM (SELECT id,aud,role,email,created_at,updated_at FROM auth.users) x;
++   FROM (SELECT u.id,u.aud,u.role,u.email,u.created_at,u.updated_at,
++   md5(to_jsonb(u)::text) AS full_row_md5 FROM auth.users u) x;
+   ELSE
+    EXECUTE format('SELECT coalesce(jsonb_agg(j ORDER BY j::text),''[]''::jsonb) FROM (SELECT to_jsonb(x) j FROM %s x) s',t) INTO rows;
+   END IF;
+@@ -344,27 +354,29 @@
+  'owner',p.proowner,'security_definer',p.prosecdef,'settings',p.proconfig,'acl_null',p.proacl IS NULL,
+  'acl',ARRAY(SELECT z::text FROM unnest(p.proacl) z ORDER BY z::text),
+  'effective',(SELECT jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) ORDER BY r)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r)) ORDER BY e.evtname)
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r)) ORDER BY e.evtname)
+  FROM pg_event_trigger e JOIN pg_proc p ON p.oid=e.evtfoid),
+  'schemas',(SELECT jsonb_agg(jsonb_build_array(n.oid,n.nspname,n.nspowner,n.nspacl IS NULL,
+  ARRAY(SELECT z::text FROM unnest(n.nspacl) z ORDER BY z::text),
+  (SELECT jsonb_agg(jsonb_build_array(r,has_schema_privilege(r,n.oid,'USAGE'),has_schema_privilege(r,n.oid,'CREATE')) ORDER BY r)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r)) ORDER BY n.oid)
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r)) ORDER BY n.oid)
+  FROM pg_namespace n WHERE n.oid IN(SELECT relnamespace FROM pg_class WHERE oid IN(SELECT oid FROM scope))),
+  'relations',(SELECT jsonb_agg(jsonb_build_object('oid',c.oid,'name',c.oid::regclass::text,
+  'kind',c.relkind,'persistence',c.relpersistence,'access_method',c.relam,'owner',c.relowner,
++ 'partition',c.relispartition,'replica_identity',c.relreplident,'options',c.reloptions,
+  'rls',c.relrowsecurity,'force_rls',c.relforcerowsecurity,'acl_null',c.relacl IS NULL,
+  'acl',ARRAY(SELECT z::text FROM unnest(c.relacl) z ORDER BY z::text),
+  'columns',(SELECT jsonb_agg(jsonb_build_array(a.attnum,a.attname,a.atttypid,a.atttypmod,
+  a.attnotnull,a.attidentity,a.attgenerated,a.attacl IS NULL,
++ a.attcollation,a.attstorage,a.attcompression,a.attislocal,a.attinhcount,
+  ARRAY(SELECT z::text FROM unnest(a.attacl) z ORDER BY z::text),pg_get_expr(d.adbin,d.adrelid)) ORDER BY a.attnum)
+  FROM pg_attribute a LEFT JOIN pg_attrdef d ON d.adrelid=a.attrelid AND d.adnum=a.attnum
+  WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped),
+  'effective',(SELECT jsonb_agg(jsonb_build_array(r,priv,has_table_privilege(r,c.oid,priv)) ORDER BY r,priv)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r
+  CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER','MAINTAIN']) priv),
+  'effective_columns',(SELECT jsonb_agg(jsonb_build_array(r,a.attnum,priv,has_column_privilege(r,c.oid,a.attnum,priv)) ORDER BY r,a.attnum,priv)
+- FROM pg_attribute a CROSS JOIN unnest(ARRAY['anon','authenticated','service_role']) r
++ FROM pg_attribute a CROSS JOIN unnest(ARRAY['postgres','anon','authenticated','service_role']) r
+  CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','REFERENCES']) priv
+  WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped)) ORDER BY c.oid)
+  FROM pg_class c WHERE c.oid IN(SELECT oid FROM scope)),
+@@ -378,7 +390,7 @@
+  t.tgenabled,pg_get_triggerdef(t.oid),t.tgfoid,p.proowner,p.prosecdef,p.proconfig,p.proacl IS NULL,
+  ARRAY(SELECT z::text FROM unnest(p.proacl) z ORDER BY z::text),
+  (SELECT jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) ORDER BY r)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r),
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r),
+  CASE WHEN NOT t.tgisinternal THEN pg_get_functiondef(p.oid) END) ORDER BY t.tgrelid,t.tgname)
+  FROM pg_trigger t JOIN pg_proc p ON p.oid=t.tgfoid WHERE t.tgrelid IN(SELECT oid FROM scope)),
+  'dependencies',(SELECT jsonb_agg(jsonb_build_array(d.refobjid,d.refobjsubid,d.classid,d.objid,d.objsubid,d.deptype)
+@@ -405,10 +417,10 @@
+  'acl_null',a.attacl IS NULL,'acl',ARRAY(SELECT z::text FROM unnest(a.attacl) z ORDER BY z::text)) ORDER BY a.attnum)
+  FROM pg_attribute a WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped),
+  'effective',(SELECT jsonb_agg(jsonb_build_array(r,priv,has_table_privilege(r,c.oid,priv)) ORDER BY r,priv)
+- FROM unnest(ARRAY['anon','authenticated','service_role']) r
++ FROM unnest(ARRAY['postgres','anon','authenticated','service_role']) r
+  CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER','MAINTAIN']) priv),
+  'effective_columns',(SELECT jsonb_agg(jsonb_build_array(r,a.attnum,priv,has_column_privilege(r,c.oid,a.attnum,priv)) ORDER BY r,a.attnum,priv)
+- FROM pg_attribute a CROSS JOIN unnest(ARRAY['anon','authenticated','service_role']) r
++ FROM pg_attribute a CROSS JOIN unnest(ARRAY['postgres','anon','authenticated','service_role']) r
+  CROSS JOIN unnest(ARRAY['SELECT','INSERT','UPDATE','REFERENCES']) priv
+  WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped)) ORDER BY c.oid)
+  FROM pg_class c WHERE c.relnamespace='public'::regnamespace AND c.relkind IN ('r','p')),
+@@ -446,8 +458,6 @@
+   END IF;
+  END LOOP;
+ END $$;
+-CREATE TEMP TABLE n2_baseline AS SELECT pg_temp.snapshot() AS j;
+-\copy (SELECT j FROM n2_baseline) TO 'scratch/phase3n-n2-evidence/baseline.json' WITH (FORMAT text)
+ ```
+ 
+ This restoration generator deliberately supports only existing owner-issued direct ACLs on the touched privileges, with no NULL ACL reset ambiguity or column-level write grants. An unsupported grantor, NULL touched ACL, or column write grant stops **before** writes. It does not attempt to repair role inheritance. The original touched fence tables have no column ACLs; profiles are outside this fence and retain their existing column ACLs. Fresh verification is mandatory. Grant options are preserved. Restoration is exact semantic ACL equality (sorted ACL items), not grant-array ordering.
+@@ -485,6 +495,9 @@
+  WHERE a.grantee IN(0,'anon'::regrole,'authenticated'::regrole)
+  AND a.privilege_type IN('INSERT','UPDATE','DELETE','TRUNCATE','TRIGGER') AND a.grantor<>t.relowner),
+  'restore grantors must equal owner');
++-- All empty/config/registry and ACL-restorability guards precede serialization/export.
++CREATE TEMP TABLE n2_baseline AS SELECT pg_temp.snapshot() AS j;
++\copy (SELECT j FROM n2_baseline) TO 'scratch/phase3n-n2-evidence/baseline.json' WITH (FORMAT text)
+ INSERT INTO n2_restore SELECT 30,format(
+  'UPDATE public.trusted_study_config SET enabled=false,updated_at=%L::timestamptz WHERE id=1;',updated_at)
+ FROM public.trusted_study_config WHERE id=1;
+@@ -792,7 +805,13 @@
+ ```sql
+ BEGIN ISOLATION LEVEL READ COMMITTED READ WRITE;
+ SELECT pg_temp.check_owner(); SELECT pg_temp.check_pid(:initial_pid);
+-SELECT pg_temp.require((SELECT count(*)=1 AND bool_and(NOT enabled) FROM public.trusted_study_config),'disabled before cleanup');
++-- Lock the exact validated closure before checking/deleting; prevent a child insert
++-- between a zero-count check and FK CASCADE/SET NULL. Missing locks abort, no retry.
++SET LOCAL lock_timeout='5s'; SET LOCAL statement_timeout='15s';
++SELECT format('LOCK TABLE %I.%I IN SHARE ROW EXCLUSIVE MODE;',split_part(k,'.',1),split_part(k,'.',2))
++FROM (SELECT jsonb_object_keys(pg_temp.dependency_counts()) AS k
++ UNION SELECT 'public.trusted_study_config') locked ORDER BY k COLLATE "C" \gexec
++SELECT pg_temp.require((SELECT count(*)=1 AND bool_and(id=1 AND enabled IS FALSE) FROM public.trusted_study_config),'disabled before cleanup');
+ SELECT pg_temp.require(NOT EXISTS(SELECT FROM auth.users WHERE id<>'3e9a0000-3a2e-4e60-8000-000000000001'),'no foreign users');
+ SELECT pg_temp.require(NOT EXISTS(SELECT FROM auth.users WHERE
+  email IS DISTINCT FROM 'phase3n-n2-20261016@revit.invalid' OR raw_user_meta_data->>'username' IS DISTINCT FROM 'n2_20261016_owner'),'owner manifest');
+@@ -810,9 +829,30 @@
+  ('3e9a0000-3a2e-4e60-8000-000000002001','3e9a0000-3a2e-4e60-8000-000000002002',
+  '3e9a0000-3a2e-4e60-8000-000000002101','3e9a0000-3a2e-4e60-8000-000000002102',
+  '3e9a0000-3a2e-4e60-8000-000000002111','3e9a0000-3a2e-4e60-8000-000000002112',
+- '3e9a0000-3a2e-4e60-8000-000000002113'))),'only manifest attempts');
+-DELETE FROM public.question_attempts WHERE user_id='3e9a0000-3a2e-4e60-8000-000000000001';
+-DELETE FROM public.study_sessions WHERE user_id='3e9a0000-3a2e-4e60-8000-000000000001';
++ '3e9a0000-3a2e-4e60-8000-000000002113')),'only manifest attempts');
++-- Abort/recovery preservation checks execute before the first DELETE too.
++SELECT pg_temp.require(pg_temp.snapshot()->'meta'=(SELECT j->'meta' FROM n2_seed),
++ 'cleanup metadata/ACL/membership/schema must match original fenced seed');
++SELECT pg_temp.require(
++ ((pg_temp.snapshot()->'data')-'public.question_attempts'-'public.trusted_study_config')=
++ ((SELECT j->'data' FROM n2_seed)-'public.question_attempts'-'public.trusted_study_config'),
++ 'cleanup immutable auth fingerprint, seeds and session rows');
++SELECT pg_temp.require(
++ (SELECT coalesce(jsonb_agg(to_jsonb(a) ORDER BY a.id),'[]'::jsonb)
++  FROM public.question_attempts a WHERE a.id IN
++  ('3e9a0000-3a2e-4e60-8000-000000002001','3e9a0000-3a2e-4e60-8000-000000002002'))=
++ (SELECT jsonb_agg(v ORDER BY v->>'id') FROM n2_seed s,
++  LATERAL jsonb_array_elements(s.j->'data'->'public.question_attempts') v
++  WHERE v->>'id' IN('3e9a0000-3a2e-4e60-8000-000000002001','3e9a0000-3a2e-4e60-8000-000000002002')),
++ 'cleanup historical seed rows present and byte-equivalent');
++DELETE FROM public.question_attempts WHERE user_id='3e9a0000-3a2e-4e60-8000-000000000001' AND id IN
++ ('3e9a0000-3a2e-4e60-8000-000000002001','3e9a0000-3a2e-4e60-8000-000000002002',
++ '3e9a0000-3a2e-4e60-8000-000000002101','3e9a0000-3a2e-4e60-8000-000000002102',
++ '3e9a0000-3a2e-4e60-8000-000000002111','3e9a0000-3a2e-4e60-8000-000000002112',
++ '3e9a0000-3a2e-4e60-8000-000000002113');
++DELETE FROM public.study_sessions WHERE user_id='3e9a0000-3a2e-4e60-8000-000000000001' AND id IN
++ ('3e9a0000-3a2e-4e60-8000-000000001001','3e9a0000-3a2e-4e60-8000-000000001002',
++ '3e9a0000-3a2e-4e60-8000-000000001011','3e9a0000-3a2e-4e60-8000-000000001012');
+ -- Only manifested seed rows may be removed. No auth-managed/untracked child delete is allowed.
+ SELECT pg_temp.require(NOT EXISTS(SELECT FROM public.user_progress WHERE
+  user_id<>'3e9a0000-3a2e-4e60-8000-000000000001' OR id<>'3e9a0000-3a2e-4e60-8000-000000004001'),'progress manifest before delete');
+@@ -834,7 +874,18 @@
+ 
+ Before DELETE additionally compare historical rows to seed using section 10; an untracked child row fails cleanup and requires separate review while config remains disabled. Never remove it automatically. Delete only manifested synthetic rows; never TRUNCATE, broad cleanup, sequence reset, schema rollback or registry repair. The four added auth descendants remain count-only zero at baseline/seed/each snapshot, before parent DELETE and after restoration. There is no new managed-auth fixture, row export, DELETE/UPDATE or ACL change. Any such row stops cleanup with configuration disabled; do not remove a session/factor/token to make counts pass. With all accepted dependents empty before parent deletion, existing FK CASCADE and SCIM SET NULL actions affect zero rows; they are not used as cleanup mechanisms. Optional XP/dependency additions block the known graph until reviewed. On recovery import original seed.json into `n2_seed(j jsonb)`; it was exported before setup COMMIT and is not itself proof that COMMIT succeeded. Resolve committed state against manifest and captured acknowledgement before any cleanup; never fabricate or overwrite baseline/seed exports.
+ 
+-If O disconnects, no automatic continuation: reverify endpoint and stopped ingress, disable/drain, initialize a replacement owner session, recreate snapshot/require helpers and `n2_baseline(j jsonb)`, and `\copy n2_baseline(j) FROM 'scratch/phase3n-n2-evidence/baseline.json' WITH (FORMAT text)`. Reuse original verified restore-body.sql; do not recapture a changed baseline. Review drift and only then apply the same atomic cleanup. If original exports are missing, do not guess grants/config timestamp. Classify NO-GO / restoration unresolved.
++If O disconnects, no automatic continuation. First reverify endpoint and stopped ingress, then use the authorized disable/drain path; no helper is needed for the configuration UPDATE itself. Initialize a replacement verified owner session using section2's pre-helper catalog guard and shared helpers, then only section4's dependency_counts/snapshot definitions, **not section4's fresh-baseline guards/export or setup**. Never overwrite original baseline/seed/restore files. Import both original baseline.json and seed.json into n2_baseline(j jsonb) and n2_seed(j jsonb) before the cleanup guards. Under the same separately authorized recovery scope:
++
++```sql
++CREATE TEMP TABLE n2_baseline(j jsonb);
++CREATE TEMP TABLE n2_seed(j jsonb);
++\copy n2_baseline(j) FROM 'scratch/phase3n-n2-evidence/baseline.json' WITH (FORMAT text)
++\copy n2_seed(j) FROM 'scratch/phase3n-n2-evidence/seed.json' WITH (FORMAT text)
++SELECT pg_temp.require((SELECT count(*)=1 FROM n2_baseline) AND
++ (SELECT count(*)=1 FROM n2_seed),'one original baseline and seed export');
++```
++
++If setup COMMIT did not occur, verify baseline equality and close; do not clean a nonexistent committed setup. If committed state or the acknowledgement is ambiguous, stop for read-only manifest reconciliation, never retry INSERTs. For confirmed committed setup, review drift, reuse original verified restore-body.sql and apply the same atomic locked cleanup. If original exports are missing or their recorded hashes differ, do not guess grants/config timestamp or manufacture a replacement seed. Classify NO-GO / restoration unresolved.
+ 
+ Final independent read-only diagnostics must confirm ten counts zero, optional XP baseline preserved, no run-specific user/email/session/request/question/attempt IDs, disabled config including original updated_at, exact prior registry rows, full routine definitions/owners/security/search_path, normalized direct table/column/function ACLs, effective browser/service rights, memberships/RLS/policies/triggers and session rows restored. Compare snapshot to original imported baseline in a new verified owner session if read-only connector cannot inspect all metadata. Close O/M; temporary helpers/tables disappear. Verify no remaining test backends/open transactions/advisory locks. Save postcheck output. A cleanup or comparison failure makes the run failed even if races passed.
+ 
+@@ -847,3 +898,5 @@
+ Rewards/completion persistence, leaderboard cohort/cutover, permanent legacy-writer revocation, real-user trusted activation and Strasinger synchronization remain pending. Stop after preparation; no deployment, commit, push or production operation.
+ 
+ PostgreSQL references: [row/advisory locking](https://www.postgresql.org/docs/17/explicit-locking.html), [READ COMMITTED behavior](https://www.postgresql.org/docs/17/transaction-iso.html), [psql error handling and command behavior](https://www.postgresql.org/docs/17/app-psql.html). Locks are transaction scoped here; a disable UPDATE must conflict with the held FOR SHARE row lock. READ COMMITTED is required by the reviewed guard. `ON_ERROR_STOP` stops script processing; explicitly roll back or close a connection on unexpected error, including interactive sessions.
++
++Coverage restoration clarification: auth snapshots export only the synthetic identity projection plus an opaque full-row MD5 drift fingerprint, never credential column values. Immutable auth/seed/session values, original fenced metadata and both historical attempt IDs are checked before any cleanup DELETE, including abort/recovery. A changed or missing seed/history row stops cleanup; do not normalize it away. Fingerprints are drift checks, not credential protection or database identity. Original baseline/seed exports remain required and must be trusted, durable, run-specific and unchanged.

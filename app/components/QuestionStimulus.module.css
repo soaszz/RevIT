@@ -3,6 +3,12 @@
   margin: 18px auto 24px;
 }
 
+.references { width: 100%; min-width: 0; }
+.source { width: min(820px, 100%); margin: -16px auto 20px; color: var(--muted); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.missing { width: min(820px, 100%); margin: 18px auto 24px; color: var(--danger); font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.imageLink { display: block; width: fit-content; margin: 10px 14px; color: var(--green-dark); font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.imageLink:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+
 .figure {
   overflow: hidden;
   border: 1px solid var(--line);

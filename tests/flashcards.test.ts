@@ -62,11 +62,14 @@ test("shuffle changes only temporary order and does not mutate the input", () =>
 
 test("flashcards switch inside Review Library instead of using a separate navigation tab", async () => {
   const app = await readFile(new URL("../app/RevITApp.tsx", import.meta.url), "utf8");
+  const library = await readFile(new URL("../app/components/ReviewLibrary.tsx", import.meta.url), "utf8");
   const switcher = await readFile(new URL("../app/components/ReviewModeSwitch.tsx", import.meta.url), "utf8");
 
   assert.doesNotMatch(app, /id: "flashcards"/);
   assert.doesNotMatch(app, /activeView === "flashcards"/);
-  assert.match(app, /activeView === "library" && \(libraryMode === "flashcards"/);
+  assert.match(app, /activeView === "library" && \(/);
+  assert.match(library, /libraryMode === "flashcards"/);
+  assert.match(library, /<Flashcards/);
   assert.match(switcher, /label: "MCQs"/);
   assert.match(switcher, /label: "Flashcards"/);
   assert.match(switcher, /\/icons\/mcqs\.svg/);

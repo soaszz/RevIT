@@ -90,6 +90,7 @@ begin
     select
       profile.id,
       coalesce(nullif(btrim(profile.first_name), ''), profile.username, 'RevIT learner') as display_name,
+      profile.username,
       profile.avatar_url,
       coalesce(preference.leaderboard_opt_in, false) as opted_in
     from public.profiles profile
@@ -99,14 +100,17 @@ begin
     select coalesce(jsonb_agg(jsonb_build_object(
       'rank', ranked.position,
       'display_name', coalesce(nullif(btrim(profile.first_name), ''), profile.username, 'RevIT learner'),
+      'username', profile.username,
       'avatar_url', profile.avatar_url,
       'metric_value', ranked.metric_value,
       'answered_count', ranked.answered_count,
+      'total_xp', coalesce(progress.total_xp, 0),
       'is_current_user', ranked.participant_id = v_owner,
       'period_timezone', public.leaderboard_timezone()
     ) order by ranked.position), '[]'::jsonb) as rows
     from ranked
     join public.profiles profile on profile.id = ranked.participant_id
+    left join public.user_progress progress on progress.user_id = ranked.participant_id
     where ranked.position <= 10
   ), current_position as (
     select jsonb_build_object(
@@ -117,9 +121,11 @@ begin
         else ranked.position
       end,
       'display_name', my_profile.display_name,
+      'username', my_profile.username,
       'avatar_url', my_profile.avatar_url,
       'metric_value', mine.metric_value,
       'answered_count', mine.answered_count,
+      'total_xp', coalesce(my_progress.total_xp, 0),
       'minimum_required', v_minimum,
       'questions_needed', case
         when p_metric = 'accuracy' then greatest(0, v_minimum - mine.answered_count)::integer
@@ -140,6 +146,7 @@ begin
     from my_profile
     cross join mine
     cross join participant_total
+    left join public.user_progress my_progress on my_progress.user_id = v_owner
     left join ranked on ranked.participant_id = v_owner
   )
   select jsonb_build_object(

@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "fontMocks": false,
+  "families": [
+    "DM Sans",
+    "Geist Mono"
+  ],
+  "assets": [
+    {
+      "file": "static/media/5c285b27cdda1fe8-s.p.2_mbdogr7ni8i.woff2",
+      "bytes": 36980,
+      "signature": "wOF2",
+      "sha256": "468d56b6b25b05b70190b6c233d773f6f1770e8579827ce022a57f03fa8002fb"
+    },
+    {
+      "file": "static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2",
+      "bytes": 23108,
+      "signature": "wOF2",
+      "sha256": "5f3d6ad60f29d6cb708414ec6887163d63bf197377ef5417d2483ff31ace6c3b"
+    }
+  ],
+  "layoutSourceChanged": false,
+  "freshBuildCommand": true,
+  "cache": "Existing genuine-font incremental cache; no cache purge or font mock."
+}

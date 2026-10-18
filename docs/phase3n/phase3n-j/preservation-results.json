@@ -1,0 +1,15 @@
+{
+  "baselineFiles": 311,
+  "authorizedModifiedFiles": [
+    "app/lib/clientSessionAdapter.ts",
+    "app/lib/server/trustedStudyPersistence.ts",
+    "app/page.tsx",
+    "app/RevITApp.tsx",
+    "tests/answer-verification.test.ts",
+    "tests/concurrent-harness.test.ts",
+    "tests/matching-cloud-persistence.test.ts",
+    "tests/trusted-study.test.ts"
+  ],
+  "unexpectedChanges": [],
+  "sqlFilesChanged": []
+}
