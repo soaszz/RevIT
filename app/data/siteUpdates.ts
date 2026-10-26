@@ -13,6 +13,16 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-12-2",
+    version: "v1.12.2",
+    date: "October 26, 2026",
+    type: "minor",
+    title: "Updated Contact Links",
+    summary: "Subscription, renewal, and Pro inquiry buttons now open RevIT's Instagram page.",
+    tags: ["Fixes", "Contact"],
+    highlights: ["Updated contact destinations to Instagram."]
+  },
+  {
     id: "update-v1-12-1",
     version: "v1.12.1",
     date: "October 26, 2026",

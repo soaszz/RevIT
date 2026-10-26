@@ -11,7 +11,18 @@ test("desktop and mobile navigation open the Pro subscription information", () =
   assert.match(app, /className="sidebar-support" href="\/(pro|pricing)"/);
   assert.match(app, /sidebar-support-frog[\s\S]*\/(revit-support\.svg|revit-frog\.png|support\.png)/);
   assert.match(projectFile("app/components/MobileNavDock.tsx"), /href="\/(pro|pricing)"[\s\S]*Pro Subscription/);
-  assert.match(projectFile("app/pro/page.tsx"), /https:\/\/www.facebook.com\/revithoroughly/);
+  assert.match(projectFile("app/pro/page.tsx"), /https:\/\/www.instagram.com\/revithoroughly\//);
+});
+
+test("subscription and renewal contact destinations use the exact Instagram URL", () => {
+  const destination = '"https://www.instagram.com/revithoroughly/"';
+  for (const path of ["app/auth/page.tsx", "app/pricing/PricingContent.tsx", "app/pro/page.tsx", "app/components/AccountSettings.tsx"]) {
+    assert.equal(projectFile(path).split(destination).length - 1, 1, path);
+  }
+  assert.equal(projectFile("app/auth/page.tsx").match(/href=\{proContact\}/g)?.length, 2);
+  assert.equal(projectFile("app/pricing/PricingContent.tsx").match(/href=\{FACEBOOK_PRO_URL\}/g)?.length, 3);
+  assert.match(projectFile("app/pro/page.tsx"), /href="https:\/\/www\.instagram\.com\/revithoroughly\/"/);
+  assert.match(projectFile("app/components/AccountSettings.tsx"), /href=\{isProActive\(entitlement\) \? "https:\/\/www\.instagram\.com\/revithoroughly\/" : "\/pricing"\}/);
 });
 
 test("Support RevIT is informational and does not create payment or entitlement behavior", () => {

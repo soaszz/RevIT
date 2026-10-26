@@ -319,7 +319,7 @@ export default function AccountSettings({ profile, preferences, entitlement, ema
               <div className="account-plan-footer">
                 <a
                   className="account-plan-cta"
-                  href={isProActive(entitlement) ? "https://www.facebook.com/revithoroughly" : "/pricing"}
+                  href={isProActive(entitlement) ? "https://www.instagram.com/revithoroughly/" : "/pricing"}
                   {...(isProActive(entitlement) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 >
                   <span>{isProActive(entitlement) ? "Contact us to renew" : "Learn about RevIT Pro"}</span>

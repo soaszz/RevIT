@@ -129,7 +129,7 @@ export default function ProPage() {
             <div className={styles.cardAction}>
               <a
                 className={styles.primaryCta}
-                href="https://www.facebook.com/revithoroughly"
+                href="https://www.instagram.com/revithoroughly/"
                 target="_blank"
                 rel="noopener noreferrer"
               >

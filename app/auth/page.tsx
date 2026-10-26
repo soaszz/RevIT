@@ -11,7 +11,7 @@ import { AI_LIMITS, QUESTION_BANKS } from "../lib/entitlements";
 import { retryAuthRequest } from "../lib/supabase/retryAuth";
 import styles from "./Landing.module.css";
 
-const proContact = "https://www.facebook.com/revithoroughly";
+const proContact = "https://www.instagram.com/revithoroughly/";
 
 export const metadata: Metadata = {
   title: "Focused MedTech Review",

@@ -11,7 +11,7 @@ type Props = {
   initialEntitlement: SubscriptionEntitlement | null;
 };
 
-const FACEBOOK_PRO_URL = "https://www.facebook.com/revithoroughly";
+const FACEBOOK_PRO_URL = "https://www.instagram.com/revithoroughly/";
 
 export default function PricingContent({ initialUser, initialEntitlement }: Props) {
   const [user, setUser] = useState<{ id: string; email?: string } | null>(initialUser);

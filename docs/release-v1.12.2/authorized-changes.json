@@ -1,0 +1,27 @@
+{
+  "app/auth/page.tsx": {
+    "before": "63796761c37a5b949a7e81dad6a363d5e4369d03b47a3ce1fb651e9678446ce9",
+    "after": "d643213955e6b3edc1da019df82f92e6e327edf7d44f59c7b5c9e0957b86619a",
+    "reason": "v1.12.2: replace subscription/inquiry/renewal contact destination only; all labels, icons, styling, attributes and logic preserved."
+  },
+  "app/pricing/PricingContent.tsx": {
+    "before": "7a024992f43190674b769c27b43fb0edab267297ee7db136dc9e09ab169ec865",
+    "after": "0ba9011c7032d191c6e687229c554bc6835571895f1aba6512cb13a8a0538209",
+    "reason": "v1.12.2: replace subscription/inquiry/renewal contact destination only; all labels, icons, styling, attributes and logic preserved."
+  },
+  "app/pro/page.tsx": {
+    "before": "f10e3fdd030c191c883e94aada271cbe2507ca52a0b9d030a231cb23816ef1cf",
+    "after": "c108432c8d50b27e77b41ee900efb939531035e634c4a7ee48bf9ec5f83024d7",
+    "reason": "v1.12.2: replace subscription/inquiry/renewal contact destination only; all labels, icons, styling, attributes and logic preserved."
+  },
+  "app/components/AccountSettings.tsx": {
+    "before": "c9cfc8ce7fe8bef0fa45e13c52ba6f1e28be9a89a470be1f5d42d1d9defdc3e5",
+    "after": "91132ca8d24b3797f14075a2f97cccc07ba06f67d1602d8c34d03c7ca50f8150",
+    "reason": "v1.12.2: replace subscription/inquiry/renewal contact destination only; all labels, icons, styling, attributes and logic preserved."
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "9762169a39d3e8aae7a75a25e025b127b9421df3b75faa111150a97c86ebfb14",
+    "after": "355a572048ca04691e92c04ebab65c06e6d55b226352ee3070151fff7808d410",
+    "reason": "Required minimal v1.12.2 contact-link announcement; existing footer derives latest update version."
+  }
+}
