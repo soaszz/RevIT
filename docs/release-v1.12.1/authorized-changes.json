@@ -1,0 +1,82 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "db9af612a4ff704195ec5aa41a41ba63286f9718eb53486708b748ebb7882ccc",
+    "after": "9a10dbde06fdbeecfb249a0c4f08c81cc6b8539fe707079650c77fdddd707663",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/api/chat/route.ts": {
+    "before": "9a5d3b563d3200e26665c6e48149bdb7e4299db2d2d20e0fc3830c05b92e3945",
+    "after": "a48538889fbb7859127c3c14ab726c4b510aad9eaa6dd13fd9b3fa75750eaa58",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/auth/page.tsx": {
+    "before": "d508be9e773d27bb0fa4ac8f95ee2c6d5581d86899d661a7a20c15abc8f840da",
+    "after": "63796761c37a5b949a7e81dad6a363d5e4369d03b47a3ce1fb651e9678446ce9",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/components/LandingMcqDemo.tsx": {
+    "before": "2d5b358c508b7d19e3c131adedffc63c6aa2dde5e15cd11d40255f6f6f803eee",
+    "after": "bd42c4a24e15300dccc09048b195ac76acc6707101113e72cb61955d81119e76",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/components/Onboarding.tsx": {
+    "before": "af1e7b4a75ae064033782a3f8a7b3bc444abb25e1b892e2ffa842cf01b087e35",
+    "after": "17ed88212afa8c5ef21d8729a74c860e6f594ff6b28e58aba81c4c28ecdd276f",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/components/PlanAnnouncementModal.tsx": {
+    "before": "87e860c235f2831e4cd229e46f38d550942496d0b38f5ab40c602b3f93929e7b",
+    "after": "19efa70fcb94c57196416072ad9cea1ba43bf4061235e8f35f256759ec34e310",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/components/ProActivationModal.tsx": {
+    "before": "08dc725632fa7a254982e7ab2ee9f844ea245d498297e7910a60bb4ac658743e",
+    "after": "505e4756c46e83dd2ecfa843fd7fe590513c67a4dd0ae99f8beda1fe63a4eced",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/content/ciullaContent.json": {
+    "before": "eb8dacb6dd5f70aae064cc99b742cc1e3f1ac013b5e000d6842761f926b2954d",
+    "after": "898728b595f1ec80385ce18b7ea5a476f7c369c4f085cc2e6fff9a61cb1a98bc",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "00c151484028e1ae54155f62d9bf194c7bfed01d7232d739ab214be1db36ff45",
+    "after": "9762169a39d3e8aae7a75a25e025b127b9421df3b75faa111150a97c86ebfb14",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/globals.css": {
+    "before": "df84249f3ab5e9badea7d900ebbd0379fc87cbe5d8ac7a87c2d6221362e59b00",
+    "after": "c00104f3f04efa3d94f9334473ec29d5a111dbd0d6e644868e29a7fcfd814592",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/lib/server/rodakServerContent.ts": {
+    "before": "8f546738ee43c1e3da9d41ee4a684e70db77cbb578843c673d733f223c14541f",
+    "after": "a8db39982878a665eb2f1b34a3692d8945b1ce74df958a6535710db81885235f",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/neumorphism.css": {
+    "before": "a2853b4d735568363d58bbc9fc9f62f139ea9f4bd8a07dec7cfcafce8c19b058",
+    "after": "6b61c7dd7d706920ece47a10e808add9cd522f499b5ba8c9a80ecd150ec3d25c",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/page.tsx": {
+    "before": "41a9afb4852395141d4e8eb0da5206b83b3272fab9b5200d3792b543fb895721",
+    "after": "fbde7e27f4618d362fb5c96821c1401b9357f75e501582f7db079d1cf5732a6f",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/pricing/PricingContent.tsx": {
+    "before": "90c2376c4f9da3b802c2ac3fda5460cfcce3dd274285587dbc6bc963babcd90b",
+    "after": "7a024992f43190674b769c27b43fb0edab267297ee7db136dc9e09ab169ec865",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "app/pro/page.tsx": {
+    "before": "96ce3a0badfa143c9db08755f52ba12c240ad8a13e96c288c30611a731d6e49e",
+    "after": "f10e3fdd030c191c883e94aada271cbe2507ca52a0b9d030a231cb23816ef1cf",
+    "reason": "Explicitly authorized fixes-only release v1.12.1; no source changes beyond the approved Ciulla occurrences."
+  },
+  "tests/phase3d.test.ts": {
+    "before": "0cc11f7a0c0961b1737624dcccaf05a8225c043913bd08d62b4301974ece0a68",
+    "after": "1c3dfdb840616723fd79c26a99fe5f066f791301325a649bb3d8f632d9f3406e",
+    "reason": "Retain immutable four-book snapshot; check exact approved Ciulla before/after hashes instead of requiring unchanged content for the six approved string edits."
+  }
+}

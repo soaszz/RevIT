@@ -166,11 +166,11 @@ export default function ProActivationModal({
             <ul className={styles.perksList}>
               <li className={styles.perkItem}>
                 <span className={styles.perkCheck} aria-hidden="true">✓</span>
-                <span>Full Harr &amp; Ciulla (4th Edition) question libraries</span>
+                <span>Full access to Pro reviewer books (Ciulla, Rodak, Strasinger)</span>
               </li>
               <li className={styles.perkItem}>
                 <span className={styles.perkCheck} aria-hidden="true">✓</span>
-                <span>Complete flashcard decks and advanced study options</span>
+                <span>Access to newly added Pro reviewer books</span>
               </li>
               <li className={styles.perkItem}>
                 <span className={styles.perkCheck} aria-hidden="true">✓</span>

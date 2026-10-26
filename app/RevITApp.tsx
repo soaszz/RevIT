@@ -3341,14 +3341,14 @@ useEffect(() => {
                   </div>
 
                   <div className="focus-actions">
-                    <button className="primary-button" type="button" onClick={startRecommendedReview}>
-                      Start 15-question review →
-                    </button>
                     <button className="secondary-button" type="button" onClick={() => {
                       if (weakestTopic) setSelectedTopicIds([weakestTopic.id]);
                       openView("library");
                     }}>
                       View topic →
+                    </button>
+                    <button className="primary-button" type="button" onClick={startRecommendedReview}>
+                      Start 15-question review →
                     </button>
                   </div>
 

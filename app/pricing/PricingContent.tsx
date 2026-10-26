@@ -225,13 +225,13 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
             <li className={styles.featureItem}>
               <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
               <span>
-                Full Harr &amp; Ciulla (4th Edition) question banks
+                Full access to Pro reviewer books (Ciulla, Rodak, Strasinger)
                 {isPro && <span className={styles.includedTag}>Included in your plan</span>}
               </span>
             </li>
             <li className={styles.featureItem}>
               <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-              <span>More book editions to be added in future updates</span>
+              <span>Access to newly added Pro reviewer books</span>
             </li>
             <li className={styles.featureItem}>
               <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
@@ -336,32 +336,32 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
                   <span className={styles.compFeatureName}>Harr Question Library</span>
                   <span className={styles.compFeatureDesc}>Complete Harr medical technology MCQs &amp; rationales</span>
                 </td>
-                <td className={styles.compCell}>999 MCQs</td>
-                <td className={styles.compCellPro}>999 MCQs</td>
+                <td className={styles.compCell}>1,593 MCQs</td>
+                <td className={styles.compCellPro}>1,593 MCQs</td>
               </tr>
               <tr>
                 <td>
-                  <span className={styles.compFeatureName}>Ciulla Question Library</span>
-                  <span className={styles.compFeatureDesc}>Ciulla 4th Edition board preparation question bank</span>
+                  <span className={styles.compFeatureName}>Pro Reviewer Libraries</span>
+                  <span className={styles.compFeatureDesc}>Ciulla, Rodak, and Strasinger board preparation question banks</span>
                 </td>
                 <td className={styles.compCell}><span className={styles.crossMark} aria-label="Not included">✕</span></td>
-                <td className={styles.compCellPro}>1,884 MCQs</td>
+                <td className={styles.compCellPro}>2,848 MCQs</td>
               </tr>
               <tr>
                 <td>
                   <span className={styles.compFeatureName}>Total Practice Questions</span>
                   <span className={styles.compFeatureDesc}>Full question pool across all board subjects</span>
                 </td>
-                <td className={styles.compCell}>999 Questions</td>
-                <td className={styles.compCellPro}>2,883 Questions</td>
+                <td className={styles.compCell}>1,593 Questions</td>
+                <td className={styles.compCellPro}>4,441 Questions</td>
               </tr>
               <tr>
                 <td>
                   <span className={styles.compFeatureName}>Digital Flashcards</span>
                   <span className={styles.compFeatureDesc}>Active recall flashcards with question timer and shuffle</span>
                 </td>
-                <td className={styles.compCell}>Harr only (999 cards)</td>
-                <td className={styles.compCellPro}>Harr + Ciulla (2,883 cards)</td>
+                <td className={styles.compCell}>Harr only (1,593 cards)</td>
+                <td className={styles.compCellPro}>All books (4,441 cards)</td>
               </tr>
               <tr>
                 <td>

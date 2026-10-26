@@ -456,7 +456,7 @@ test("actual disabled completeQuestion retains feedback, reinforcement, local hi
   }
 });
 
-test("actual Skip defers question without recording or sending an attempt; all component JSX stays identical", () => {
+test("actual Skip defers question without recording or sending an attempt; component JSX preserves only the approved Recommended Next button reorder", () => {
   const calls: string[] = []; let ids: string[] = [];
   const record = () => { throw Error("Skip must never persist attempts"); };
   execute(componentFunction("skipQuestion"), "skipQuestion", { currentQuestion: ordinary, answerRevealed: false, canSkipCurrentQuestion: true,
@@ -466,9 +466,14 @@ test("actual Skip defers question without recording or sending an attempt; all c
     setSelectedChoice: () => calls.push("choice"), setMatchingSelections: () => calls.push("matching"), setAnswerRevealed: () => {}, setTimedOut: () => {},
     answerLockedRef: { current: true }, queueQuestionAttempt: record, trustedStudy: { recordAttempt: record } }, []);
   assert.deepEqual(ids, ["next", ordinary.id]); assert.deepEqual(calls, ["choice", "matching"]);
+  const currentSource = readFileSync(resolve(root, "app/RevITApp.tsx"), "utf8");
+  const actionPattern = /(<div className="focus-actions">\s*)(<button className="secondary-button"[\s\S]*?<\/button>)(\s*)(<button className="primary-button" type="button" onClick=\{startRecommendedReview\}>[\s\S]*?<\/button>)/g;
+  assert.equal([...currentSource.matchAll(actionPattern)].length, 1);
+  const snapshotSource = currentSource.replace(actionPattern, "$1$4$3$2");
+  const snapshotAst = ts.createSourceFile("app/RevITApp.tsx", snapshotSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const jsx: string[] = [];
-  function visit(node: ts.Node) { if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node)) jsx.push(node.getText(componentAst)); ts.forEachChild(node, visit); }
-  visit(componentAst);
+  function visit(node: ts.Node) { if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node)) jsx.push(node.getText(snapshotAst)); ts.forEachChild(node, visit); }
+  visit(snapshotAst);
   const baseline = JSON.parse(readFileSync(resolve(root, "docs/phase3n/phase3n-j/disabled-study-baseline.json"), "utf8"));
   assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), baseline.jsxHash);
 });

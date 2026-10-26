@@ -143,7 +143,7 @@ export default function LandingMcqDemo({ question, startHref = "/auth?mode=regis
             <div className={styles.followupCta}>
               <div>
                 <p className={styles.ctaTitle}>Ready for more?</p>
-                <p className={styles.ctaSubtitle}>Practice 999+ free medical technology board questions.</p>
+                <p className={styles.ctaSubtitle}>Practice 1,500+ free medical technology board questions.</p>
               </div>
               <a className="primary-button" href={startHref}>
                 Start Reviewing Free <span aria-hidden="true">↗</span>

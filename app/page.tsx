@@ -14,9 +14,16 @@ export default async function Home() {
   if (isTransientAuthError(claimsResult.error)) redirect("/auth?session_unavailable=true");
   const { data: claimsData } = claimsResult;
   if (!claimsData?.claims?.sub) redirect("/auth");
+  const sessionResult = await retryAuthRequest(() => supabase.auth.getSession())
+    .catch(() => redirect("/auth?session_unavailable=true"));
+  if (isTransientAuthError(sessionResult.error)) redirect("/auth?session_unavailable=true");
+  const accessToken = sessionResult.data.session?.access_token;
+  if (sessionResult.error || !accessToken) redirect("/auth?clear_session=true");
+  // Read only the token from storage. The explicit-token MFA path fetches verified
+  // factors through getUser(jwt); the no-argument SDK path trusts session.user.
   const [userResult, assuranceResult] = await Promise.all([
-    retryAuthRequest(() => supabase.auth.getUser()),
-    retryAuthRequest(() => supabase.auth.mfa.getAuthenticatorAssuranceLevel()),
+    retryAuthRequest(() => supabase.auth.getUser(accessToken)),
+    retryAuthRequest(() => supabase.auth.mfa.getAuthenticatorAssuranceLevel(accessToken)),
   ]).catch(() => redirect("/auth?session_unavailable=true"));
   if (isTransientAuthError(userResult.error) || assuranceResult.error) redirect("/auth?session_unavailable=true");
   const { data: userData, error } = userResult;

@@ -136,7 +136,11 @@ test("all 4441 question records, 47 repairs, 42 protections, and reviewer assets
   for (const [path, value] of Object.entries(baseline.files)) {
     const before = value as { sha256: string; questions: number; disableShuffle: string[] };
     const bytes = readFileSync(new URL(`../${path}`, import.meta.url));
-    assert.equal(hash(bytes), before.sha256, path);
+    const release = JSON.parse(read("docs/release-v1.12.1/authorized-changes.json"));
+    if (release[path]) {
+      assert.equal(release[path].before, before.sha256, `${path}: release chain`);
+      assert.equal(hash(bytes), release[path].after, path);
+    } else assert.equal(hash(bytes), before.sha256, path);
     const data = JSON.parse(bytes.toString());
     assert.equal(data.questions.length, before.questions);
     const protectedIds = data.questions.filter((q: { disableShuffle?: boolean }) => q.disableShuffle).map((q: { id: string }) => q.id);

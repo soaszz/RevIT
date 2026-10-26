@@ -204,8 +204,8 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
               </div>
               <ul>
                 <li>Everything in Free, plus:</li>
-                <li>Full reviewer & Flashcard libraries</li>
-                <li>More book editions added in future updates</li>
+                <li>Full access to Pro reviewer books</li>
+                <li>Access to newly added Pro reviewer books</li>
                 <li>Weakness Analytics</li>
                 <li>Advanced Progress Analytics</li>
                 <li>Advanced study recommendations</li>

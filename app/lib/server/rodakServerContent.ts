@@ -29,6 +29,17 @@ export function getRodakServerPayload(): RawRodakPayload {
   return {
     subjects: rodakSubjects,
     topics: rodakTopics,
-    questions: rodakQuestions,
+    questions: rodakQuestions.map((question) => {
+      if (question.subjectId && question.topicId) return question;
+      // Some source records provide only a chapter. Resolve runtime identifiers
+      // without changing the source records used by canonical answer grading.
+      const { chapter } = question as ReviewerQuestion & { chapter?: number };
+      const topicId = question.topicId || `rodak-ch${String(chapter).padStart(2, "0")}`;
+      const topic = rodakTopics.find((candidate) => candidate.id === topicId);
+      if (!topic || (question.subjectId && question.subjectId !== topic.subjectId)) {
+        throw new Error(`Unresolved Rodak topic for ${question.id}`);
+      }
+      return { ...question, subjectId: topic.subjectId, topicId: topic.id };
+    }),
   };
 }

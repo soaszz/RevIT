@@ -152,10 +152,10 @@ export default function PlanAnnouncementModal({
                 </p>
                 <ul className={styles.giftFeaturesList}>
                   <li>
-                    <span>✓</span> Full Harr &amp; Ciulla (4th Edition) question libraries
+                    <span>✓</span> Full access to Pro reviewer books (Ciulla, Rodak, Strasinger)
                   </li>
                   <li>
-                    <span>✓</span> All complete flashcard decks &amp; upcoming book editions
+                    <span>✓</span> Access to newly added Pro reviewer books
                   </li>
                   <li>
                     <span>✓</span> Deep Weakness Analytics &amp; personal mistake bank
@@ -258,7 +258,11 @@ export default function PlanAnnouncementModal({
                     </li>
                     <li>
                       <span className={styles.miniCheck}>✓</span>
-                      <span><strong>Full Harr &amp; Ciulla (4th Ed)</strong> banks</span>
+                      <span><strong>Pro reviewer books:</strong> Ciulla, Rodak &amp; Strasinger</span>
+                    </li>
+                    <li>
+                      <span className={styles.miniCheck}>✓</span>
+                      <span>Access to newly added Pro reviewer books</span>
                     </li>
                     <li>
                       <span className={styles.miniCheck}>✓</span>

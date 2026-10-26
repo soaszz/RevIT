@@ -239,7 +239,11 @@ export default function Onboarding({
                   </li>
                   <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
-                    <span>Full Harr &amp; Ciulla (4th Ed.) libraries</span>
+                    <span>Pro reviewer books: Ciulla, Rodak & Strasinger</span>
+                  </li>
+                  <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
+                    <span>Access to newly added Pro reviewer books</span>
                   </li>
                   <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>

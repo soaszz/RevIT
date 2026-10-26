@@ -35193,12 +35193,12 @@
       "prompt": "In an examination of stained blood films, Babesia spp. are likely to resemble",
       "choices": [
         "Leishmania donovani",
-        "Plasmodiumfalciparum",
+        "Plasmodium falciparum",
         "Toxoplasma gondii",
         "Trypanosoma cruzi"
       ],
       "correctAnswer": 1,
-      "officialAnswer": "Plasmodiumfalciparum",
+      "officialAnswer": "Plasmodium falciparum",
       "explanation": "Babesia spp. are sporozoan parasites of RBCs that have been recognized as causing febrile illness in humans. B. microti has caused a number of tick-borne infections in the U.S. The parasites often appear as small rings within infected RBCs, resembling P. falciparum trophozoites. The pathognomic form of Babesia is the \"Maltese cross,\" four ring forms inside a single RBC.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
@@ -35811,16 +35811,16 @@
       "topicId": "ciulla-para-helminths-and-diagnostic-methods",
       "subtopic": "Helminths and Diagnostic Methods",
       "difficulty": "Easy",
-      "prompt": "Which species of Plasmodium is characterized by the presence of Schiiffner's dots in the infected erythrocytes?",
+      "prompt": "Which species of Plasmodium is characterized by the presence of Schuffner's dots in the infected erythrocytes?",
       "choices": [
-        "Plasmodiumfalciparum",
+        "Plasmodium falciparum",
         "Plasmodium knowlesi",
         "Plasmodium malariae",
         "Plasmodium ovale"
       ],
       "correctAnswer": 3,
       "officialAnswer": "Plasmodium ovale",
-      "explanation": "Typically, RBCs infected with P. ovale are larger than uninfected cells, pale and often misshapen, and frequently contain Schiiffner's dots or stippling in any stage from young ring forms onward. RBCs infected with P vivax are also larger than normal, oval, and contain Schiiffner's dots. Ovale malaria, however, is a comparatively rare disease.",
+      "explanation": "Typically, RBCs infected with P. ovale are larger than uninfected cells, pale and often misshapen, and frequently contain Schuffner's dots or stippling in any stage from young ring forms onward. RBCs infected with P vivax are also larger than normal, oval, and contain Schuffner's dots. Ovale malaria, however, is a comparatively rare disease.",
       "source": {
         "fileName": "Success in Clinical Laboratory Science-Ciulla.pdf",
         "page": 448,
@@ -36252,7 +36252,7 @@
       "choices": [
         "Babesia sp.",
         "Plasmodium malariae",
-        "Plasmodiumfalciparum",
+        "Plasmodium falciparum",
         "Trypanosoma cruzi"
       ],
       "correctAnswer": 1,

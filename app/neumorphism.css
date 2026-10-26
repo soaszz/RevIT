@@ -1476,6 +1476,37 @@ button:disabled, [aria-disabled="true"] { cursor: not-allowed; opacity: .57; }
   }
 }
 
+/* Galaxy Tab S7 landscape (1280x800 CSS): the default 410-450px Question
+   Bank rail leaves the dashboard column too narrow. Keep this width-only:
+   the failing tablet viewport reports a fine pointer, so pointer media
+   queries never activate this rule. */
+@media (min-width: 1241px) and (max-width: 1320px) {
+  .content-grid {
+    grid-template-columns: minmax(0, 1fr) 300px !important;
+  }
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  .source-summary-header {
+    flex-wrap: wrap !important;
+    gap: 4px 8px !important;
+  }
+  .source-summary-total {
+    margin-left: auto !important;
+  }
+  .today-plan-empty-buttons {
+    gap: 5px !important;
+  }
+  .today-plan-review-btn {
+    padding: 0 6px !important;
+    font-size: 9px !important;
+  }
+  .today-plan-planner-btn {
+    padding: 0 6px !important;
+    font-size: 9px !important;
+  }
+}
+
 /* Loading identity and compact mobile More actions. */
 .revit-loading-content { width: min(100%, 440px); gap: 16px; }
 .revit-loading-brand { display: flex; align-items: center; justify-content: center; gap: 18px; width: 100%; }

@@ -107,11 +107,11 @@ export default function ProPage() {
               </li>
               <li className={styles.featureItem}>
                 <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-                <span>Full Harr &amp; Ciulla (4th Edition) question banks</span>
+                <span>Full access to Pro reviewer books (Ciulla, Rodak, Strasinger)</span>
               </li>
               <li className={styles.featureItem}>
                 <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-                <span>Full flashcard decks across all book editions</span>
+                <span>Access to newly added Pro reviewer books</span>
               </li>
               <li className={styles.featureItem}>
                 <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>

@@ -13,6 +13,21 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-12-1",
+    version: "v1.12.1",
+    date: "October 26, 2026",
+    type: "minor",
+    title: "Fixed Rodak Reviews and Tablet Layout",
+    summary: "Fixed three Rodak review topics, improved the Galaxy Tab S7 dashboard, and updated Pro plan details.",
+    tags: ["Fixes", "Rodak", "UI", "Pro"],
+    highlights: [
+      "Restored 34 Rodak questions in Hematopoiesis, Erythrocyte Production and Destruction, and Erythrocyte Metabolism and Membrane Structure and Function.",
+      "Improved dashboard proportions and buttons on Galaxy Tab S7.",
+      "Corrected two Ciulla terms and updated plan details for the four available books and 4,441 questions.",
+      "Fixed repeated sign-in verification warnings."
+    ]
+  },
+  {
     id: "update-v1-12-0",
     version: "v1.12.0",
     date: "October 18, 2026",

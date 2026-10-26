@@ -1685,6 +1685,11 @@ button:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-
   transition: opacity 0.15s ease;
 }
 
+:root[data-theme="dark"] .focus-actions .primary-button {
+  background: var(--green) !important;
+  color: #07261f !important;
+}
+
 .focus-actions .primary-button:hover {
   opacity: 0.92;
 }
