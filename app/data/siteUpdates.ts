@@ -13,6 +13,16 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-12-3",
+    version: "v1.12.3",
+    date: "Pending",
+    type: "minor",
+    title: "Added Scheduled Maintenance Page",
+    summary: "Added RevIT's maintenance page for future scheduled downtime.",
+    tags: ["UI"],
+    highlights: ["Added the official RevIT mascot, logo, and Instagram contact link to the maintenance page. Maintenance remains off."]
+  },
+  {
     id: "update-v1-12-2",
     version: "v1.12.2",
     date: "October 26, 2026",

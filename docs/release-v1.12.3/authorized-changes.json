@@ -1,0 +1,42 @@
+{
+  "app/data/siteUpdates.ts": {
+    "before": "355a572048ca04691e92c04ebab65c06e6d55b226352ee3070151fff7808d410",
+    "after": "b11991cd209c0404f1f8ed3cd81d557a7b5b28fc2f280a81774238540b52c4bd",
+    "reason": "Required maintenance-only v1.12.3 announcement; historical entries preserved and platform footer already follows the latest version."
+  },
+  "tests/support-revit.test.ts": {
+    "before": "2ece1cd078eb9596b382815a48209d7295d89f43ef534a3e358c095c6454b204",
+    "after": "0a6e305739be387b118c8d9a95c4fc09b2b0a3b6ced4e931756b0f48c6b44cf2",
+    "reason": "Historical backfill for the approved v1.12.2 Instagram regression-test change (deployed commit 0f0d7eb4f57aadd2345b2f2c53849652af65d354); test-only assertions, links/URLs, labels, icons, styling and logic unchanged. The v1.12.2 release manifest omitted this file."
+  },
+  "app/auth/capture/page.tsx": {
+    "before": "4198590ec0e1ce2dd6d35826365b3fd634b663f861fe75f0fa85aa20c233f213",
+    "after": "640b23cbb15fe0ec81c4ae2799b7e409fce93d661cd6e593f980450c9a13aa43",
+    "reason": "v1.12.3 deterministic LF checkout of unchanged Git blob; authentic mixed-ending pin retained as before; raw original and normalized production equivalence recorded; no source/content change."
+  },
+  "app/layout.tsx": {
+    "before": "f9568f9edb3a81eecf827abd50db3f213d9839356843a68da8b0146fa0f91542",
+    "after": "10c3e569fed49285c0fcfed92ab9f628d418264016e52993ae236847754025c3",
+    "reason": "v1.12.3 deterministic LF checkout of unchanged Git blob; authentic mixed-ending pin retained as before; raw original and normalized production equivalence recorded; no source/content change."
+  },
+  "app/lib/adaptiveQuestions.ts": {
+    "before": "1901dd422435e08c76cfea8e11a75d4c364b8ff87df9a038e6c15a5143f861f0",
+    "after": "916db8620f458d6c558f5804cd897af79ac44516096b7c3e1f4b2900b0e84998",
+    "reason": "v1.12.3 deterministic LF checkout of unchanged Git blob; authentic mixed-ending pin retained as before; raw original and normalized production equivalence recorded; no source/content change."
+  },
+  "app/lib/scientificCalculator.ts": {
+    "before": "f8caff2fac693b0899e016d24f25c9f43a955a9a47c96e7bacc33521e3583a8d",
+    "after": "f3173c90ed80ad4e0a15a18fd5da6f42521e980deed8baa57c03c32b1a31d422",
+    "reason": "v1.12.3 deterministic LF checkout of unchanged Git blob; authentic mixed-ending pin retained as before; raw original and normalized production equivalence recorded; no source/content change."
+  },
+  "app/lib/xpService.ts": {
+    "before": "dffcb8ff39b925419be3a555fcf45f5f97c977dccec2c61c37af62b09b70e79a",
+    "after": "db30cd9f9af2c46c6dcb6df687d477bf46e46ea52d86566db8bc545499b8cfbe",
+    "reason": "v1.12.3 deterministic LF checkout of unchanged Git blob; authentic mixed-ending pin retained as before; raw original and normalized production equivalence recorded; no source/content change."
+  },
+  "app/page.tsx": {
+    "before": "fbde7e27f4618d362fb5c96821c1401b9357f75e501582f7db079d1cf5732a6f",
+    "after": "2f96ca783db089286a528199187e82056762448c74ddfefb78123a01ca9693c5",
+    "reason": "v1.12.3 deterministic LF checkout of unchanged Git blob; authentic mixed-ending pin retained as before; raw original and normalized production equivalence recorded; no source/content change."
+  }
+}
