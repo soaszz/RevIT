@@ -1,7 +1,7 @@
 {
   "app/data/siteUpdates.ts": {
     "before": "355a572048ca04691e92c04ebab65c06e6d55b226352ee3070151fff7808d410",
-    "after": "b11991cd209c0404f1f8ed3cd81d557a7b5b28fc2f280a81774238540b52c4bd",
+    "after": "fb156728ccc736f472a0eb1bf334130ba95d56ddce9b376c8a11a0d534955ad2",
     "reason": "Required maintenance-only v1.12.3 announcement; historical entries preserved and platform footer already follows the latest version."
   },
   "tests/support-revit.test.ts": {

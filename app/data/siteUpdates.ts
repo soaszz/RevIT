@@ -15,7 +15,7 @@ export const SITE_UPDATES: SiteUpdate[] = [
   {
     id: "update-v1-12-3",
     version: "v1.12.3",
-    date: "Pending",
+    date: "November 4, 2026",
     type: "minor",
     title: "Added Scheduled Maintenance Page",
     summary: "Added RevIT's maintenance page for future scheduled downtime.",
