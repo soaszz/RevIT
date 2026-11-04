@@ -15,7 +15,7 @@ export const SITE_UPDATES: SiteUpdate[] = [
   {
     id: "update-v1-12-4",
     version: "v1.12.4",
-    date: "Pending",
+    date: "November 5, 2026",
     type: "minor",
     title: "Updated Pro Plans and Subscription Options",
     summary: "Updated Pro plan prices, renewal options, and reviewer descriptions.",

@@ -154,7 +154,7 @@
   },
   "app/data/siteUpdates.ts": {
     "before": "fb156728ccc736f472a0eb1bf334130ba95d56ddce9b376c8a11a0d534955ad2",
-    "after": "919674031fb4cddfa7d3fef7f0194c18e2ec48ad5229d647277631d6ab555189",
+    "after": "709629bbf89fc438328ae5311469b094e89fa394a69464eda0a6c12f7661dec0",
     "reason": "Explicitly authorized Phase 3 minor-release metadata: Pending v1.12.4 entry only; removing the new entry reproduces all historical Updates bytes exactly."
   }
 }
