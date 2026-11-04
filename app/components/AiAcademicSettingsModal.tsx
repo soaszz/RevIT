@@ -319,7 +319,7 @@ export default function AiAcademicSettingsModal({
                     Review Library Context
                   </strong>
                   <span style={{ fontSize: "11px", color: "var(--muted)", lineHeight: 1.4 }}>
-                    Harr vs. Ciulla book editions, subject structure, and available topics. (Phase 2 integration)
+                    Published reviewer editions, subject structure, and available topics. (Phase 2 integration)
                   </span>
                 </div>
                 <span style={{ fontSize: "10px", color: "var(--muted)", fontWeight: 600, padding: "5px 8px" }}>

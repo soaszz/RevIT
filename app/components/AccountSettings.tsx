@@ -9,6 +9,7 @@ import { AVATAR_ACCEPT, validateAvatarFile } from "../lib/avatarValidation";
 import { createClient } from "../lib/supabase/client";
 import MtapPreferenceControl from "./MtapPreferenceControl";
 import { isProActive, type SubscriptionEntitlement } from "../lib/entitlements";
+import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
 
 type AccountTab = "profile" | "personalization" | "privacy" | "security";
 
@@ -298,6 +299,7 @@ export default function AccountSettings({ profile, preferences, entitlement, ema
               </div>
 
               <div className="account-plan-body">
+                <p className="account-plan-notice">Pro includes {PUBLIC_REVIEWERS.proBooks.length} Pro-only reviewer editions ({PUBLIC_REVIEWERS.proNames}), plus {PUBLIC_REVIEWERS.freeNames} Free.</p>
                 {isProActive(entitlement) && entitlement.proExpiresAt ? (
                   <div className="account-plan-expiry">
                     <span className="account-plan-expiry-label">Your Pro access is active until</span>
@@ -323,7 +325,7 @@ export default function AccountSettings({ profile, preferences, entitlement, ema
                   {...(isProActive(entitlement) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 >
                   <span>{isProActive(entitlement) ? "Contact us to renew" : "Learn about RevIT Pro"}</span>
-                  {isProActive(entitlement) && <span className="sr-only"> on Facebook (opens in a new tab)</span>}
+                  {isProActive(entitlement) && <span className="sr-only"> on Instagram (opens in a new tab)</span>}
                   <span className="account-plan-cta-arrow" aria-hidden="true">↗</span>
                 </a>
               </div>

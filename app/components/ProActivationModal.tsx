@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
 import styles from "./ProActivationModal.module.css";
 
 export type ActivationSource = "purchased" | "gift" | "prize";
@@ -166,7 +167,7 @@ export default function ProActivationModal({
             <ul className={styles.perksList}>
               <li className={styles.perkItem}>
                 <span className={styles.perkCheck} aria-hidden="true">✓</span>
-                <span>Full access to Pro reviewer books (Ciulla, Rodak, Strasinger)</span>
+                <span>Full access to Pro reviewer books ({PUBLIC_REVIEWERS.proNames}). {PUBLIC_REVIEWERS.freeNames} remains Free.</span>
               </li>
               <li className={styles.perkItem}>
                 <span className={styles.perkCheck} aria-hidden="true">✓</span>

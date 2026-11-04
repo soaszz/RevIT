@@ -1,3 +1,4 @@
+import { getPublicQuestionCounts } from "../lib/server/publicReviewerCounts";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,6 +63,7 @@ export default async function PricingPage() {
 
       <PricingContent
         initialUser={initialUser}
+        questionCounts={getPublicQuestionCounts()}
         initialEntitlement={initialEntitlement}
       />
 

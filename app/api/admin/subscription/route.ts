@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 
 // In-memory idempotency cache for deduplication (60-second sliding window)
 const idempotencyCache = new Map<string, { timestamp: number; result: any }>();
+const inFlightChanges = new Map<string, Promise<unknown>>();
 
 function cleanupIdempotencyCache() {
   const cutoff = Date.now() - 60_000;
@@ -76,16 +77,20 @@ export async function POST(request: Request) {
 
     // Idempotency check: prevent duplicate submits / rapid double-clicks
     cleanupIdempotencyCache();
-    const effectiveKey = typeof idempotencyKey === "string" && idempotencyKey.trim().length > 0
+    const requestKey = typeof idempotencyKey === "string" && idempotencyKey.trim().length > 0
       ? idempotencyKey.trim()
-      : `${auth.user.id}:${userId}:${action}:${customExpiresAt || durationDays}`;
+      : `${action}:${customExpiresAt || durationDays}`;
+    const effectiveKey = `${auth.user.id}:${userId.trim()}:${action}:${requestKey}`;
 
     const cached = idempotencyCache.get(effectiveKey);
     if (cached && Date.now() - cached.timestamp < 15_000) {
       return NextResponse.json({ success: true, result: cached.result, deduplicated: true });
     }
 
-    const result = await applySubscriptionChange({
+    const pending = inFlightChanges.get(effectiveKey);
+    if (pending) return NextResponse.json({ success: true, result: await pending, deduplicated: true });
+
+    const operation = applySubscriptionChange({
       userId: userId.trim(),
       action,
       source: source || "purchased",
@@ -97,9 +102,14 @@ export async function POST(request: Request) {
       allowShorten: Boolean(allowShorten),
     });
 
-    idempotencyCache.set(effectiveKey, { timestamp: Date.now(), result });
-
-    return NextResponse.json({ success: true, result });
+    inFlightChanges.set(effectiveKey, operation);
+    try {
+      const result = await operation;
+      idempotencyCache.set(effectiveKey, { timestamp: Date.now(), result });
+      return NextResponse.json({ success: true, result });
+    } finally {
+      inFlightChanges.delete(effectiveKey);
+    }
   } catch (err: any) {
     const rawMessage: string = err.message || "";
 

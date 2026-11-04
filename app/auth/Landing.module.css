@@ -281,3 +281,8 @@
   .comparison[open]::details-content { block-size: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .comparison::details-content { transition: none; } }
+
+/* Shared prepaid pricing only; original screenshots and other sections remain unchanged. */
+.freePlanSummary { margin-block: 28px 20px; padding-block: 20px; border-block: 1px solid var(--line); }
+.freePlanSummary h3 { font-size: 20px; color: var(--ink); }
+.freePlanSummary p, .publishedBooks, .plans > .contactNote { margin-block: 12px 20px; color: var(--muted); font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; }

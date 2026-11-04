@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProActivationModal, { type ActivationSource } from "../components/ProActivationModal";
 import styles from "./AdminPanel.module.css";
+import { PRO_PLANS } from "../lib/proPlans";
+
+function openDialog(dialog: HTMLDialogElement | null) {
+  if (dialog && !dialog.open) dialog.showModal();
+}
 
 export type AdminUserItem = {
   id: string;
@@ -53,7 +58,7 @@ export default function AdminPanel({
 
   // Subscription action state
   const [actionType, setActionType] = useState<"activate" | "extend" | "modify_expiration" | "revoke">("activate");
-  const [durationPreset, setDurationPreset] = useState<"1m" | "2m" | "3m" | "custom">("1m");
+  const [durationPreset, setDurationPreset] = useState<"1m" | "3m" | "6m" | "custom">("1m");
   const [customDays, setCustomDays] = useState(30);
   const [customDate, setCustomDate] = useState("");
   const [activationSource, setActivationSource] = useState<ActivationSource>("purchased");
@@ -65,6 +70,10 @@ export default function AdminPanel({
   const [activeProWarningModalOpen, setActiveProWarningModalOpen] = useState(false);
   const [shortenConfirmed, setShortenConfirmed] = useState(false);
   const [actionPending, setActionPending] = useState(false);
+  const submissionRef = useRef(false);
+  const confirmationRef = useRef<{ date: Date; dateStr: string; days: number } | null>(null);
+  const requestKeyRef = useRef<string | null>(null);
+  const [confirmationPreview, setConfirmationPreview] = useState<{ date: Date; dateStr: string; days: number } | null>(null);
   const [actionMessage, setActionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Admin note state
@@ -136,10 +145,10 @@ export default function AdminPanel({
   }
 
   // Select user handler
-  async function handleSelectUser(u: AdminUserItem) {
+  async function handleSelectUser(u: AdminUserItem, preserveActionMessage = false) {
     setUserLoading(true);
     setSelectedUser(u);
-    setActionMessage(null);
+    if (!preserveActionMessage) setActionMessage(null);
     setNoteStatus(null);
     setNoteContent(u.proNote || "");
 
@@ -214,7 +223,7 @@ export default function AdminPanel({
       };
     }
 
-    const monthsToAdd = durationPreset === "1m" ? 1 : durationPreset === "2m" ? 2 : 3;
+    const monthsToAdd = durationPreset === "1m" ? 1 : durationPreset === "3m" ? 3 : 6;
     const targetDate = addMonths(base, monthsToAdd);
     const diffMs = targetDate.getTime() - now.getTime();
     return {
@@ -246,7 +255,7 @@ export default function AdminPanel({
       };
     }
 
-    const monthsToAdd = durationPreset === "1m" ? 1 : durationPreset === "2m" ? 2 : 3;
+    const monthsToAdd = durationPreset === "1m" ? 1 : durationPreset === "3m" ? 3 : 6;
     const targetDate = addMonths(now, monthsToAdd);
     const diffMs = targetDate.getTime() - now.getTime();
     return {
@@ -293,17 +302,21 @@ export default function AdminPanel({
       return;
     }
 
+    confirmationRef.current = calc;
+    setConfirmationPreview(calc);
+    requestKeyRef.current = crypto.randomUUID();
     setShortenConfirmed(false);
     setConfirmModalOpen(true);
   }
 
   // Confirm and execute subscription change
   async function handleConfirmSubscriptionChange() {
-    if (!selectedUser || actionPending) return;
+    if (!selectedUser || submissionRef.current) return;
+    submissionRef.current = true;
     setActionPending(true);
     setActionMessage(null);
 
-    const calc = getCalculatedExpiration();
+    const calc = confirmationRef.current ?? getCalculatedExpiration();
     const isShorteningAccess = Boolean(
       selectedUser.isEffectivePro &&
       selectedUser.proExpiresAt &&
@@ -314,6 +327,7 @@ export default function AdminPanel({
     if (isShorteningAccess && !shortenConfirmed) {
       setActionMessage({ type: "error", text: "Please acknowledge that the user will lose remaining Pro access." });
       setActionPending(false);
+      submissionRef.current = false;
       return;
     }
 
@@ -330,7 +344,7 @@ export default function AdminPanel({
           customMessage: customRecipientMessage.trim() || null,
           expectedExpiresAt: selectedUser.proExpiresAt,
           allowShorten: Boolean(isShorteningAccess && shortenConfirmed),
-          idempotencyKey: crypto.randomUUID(),
+          idempotencyKey: requestKeyRef.current ?? (requestKeyRef.current = crypto.randomUUID()),
         }),
       });
 
@@ -367,10 +381,11 @@ export default function AdminPanel({
       setConfirmModalOpen(false);
       setActiveProWarningModalOpen(false);
 
-      await handleSelectUser(selectedUser);
+      await handleSelectUser(selectedUser, true);
     } catch (err: any) {
       setActionMessage({ type: "error", text: err.message || "Failed to update subscription." });
     } finally {
+      submissionRef.current = false;
       setActionPending(false);
     }
   }
@@ -414,7 +429,7 @@ export default function AdminPanel({
     }
   }
 
-  const calculated = getCalculatedExpiration();
+  const calculated = confirmModalOpen && confirmationPreview ? confirmationPreview : getCalculatedExpiration();
   const extendCalculated = calculateExtension();
   const replaceCalculated = calculateReplacement();
 
@@ -437,6 +452,12 @@ export default function AdminPanel({
         Math.abs(calculated.date.getTime() - new Date(selectedUser.proExpiresAt).getTime()) < 60_000)
   );
   const isNoteUnchanged = Boolean(!selectedUser || noteContent === (selectedUser.proNote || ""));
+  const selectedDuration = durationPreset === "custom"
+    ? customDate ? "Custom expiration date" : `${customDays} days`
+    : `${parseInt(durationPreset)} ${durationPreset === "1m" ? "Month" : "Months"}`;
+  const actionLabel = actionType === "revoke" ? "Revocation"
+    : actionType === "extend" ? "Extension"
+    : actionType === "modify_expiration" ? "Expiration Change" : "Grant";
 
   const periodStats = (() => {
     if (!selectedUser) {
@@ -482,7 +503,7 @@ export default function AdminPanel({
 
     const expDate = new Date(selectedUser.proExpiresAt);
     const formatted = expDate.toLocaleDateString("en-US", {
-      month: "short",
+      month: "long",
       day: "numeric",
       year: "numeric",
     });
@@ -532,11 +553,24 @@ export default function AdminPanel({
 
       {/* Main Workspace */}
       <main className={styles.workspace}>
+        <section className={styles.dashboardIntro} aria-labelledby="admin-overview-title">
+          <div>
+            <span className={styles.eyebrow}>Admin workspace</span>
+            <h2 id="admin-overview-title">Overview</h2>
+            <p>Manage learner access and subscription changes in one place.</p>
+          </div>
+          <div className={styles.registeredSummary}>
+            <span>Registered Users</span>
+            <strong>Total unavailable</strong>
+            <small>Find individual users below.</small>
+          </div>
+        </section>
         {/* Left Column: User Search */}
         <section className={styles.searchSection}>
           <div className={styles.cardHeader}>
-            <h2 className={styles.cardTitle}>Find User</h2>
-            <span className={styles.cardSubtitle}>Search by email, name, or UUID</span>
+            <span className={styles.eyebrow}>Subscription Management</span>
+            <h2 className={styles.cardTitle}>Find a learner</h2>
+            <span className={styles.cardSubtitle}>Search by email, name, or user ID</span>
           </div>
 
           <form onSubmit={handleSearch} className={styles.searchForm}>
@@ -546,6 +580,7 @@ export default function AdminPanel({
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="e.g. learner@example.com or username"
               className={styles.searchInput}
+              aria-label="Find a learner by email, name, or user ID"
               autoComplete="off"
               disabled={searchLoading}
             />
@@ -586,7 +621,7 @@ export default function AdminPanel({
                       </span>
                       {u.proExpiresAt && (
                         <span className={styles.expirySnippet}>
-                          Exp: {new Date(u.proExpiresAt).toLocaleDateString()}
+                          Expires {new Date(u.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" })}
                         </span>
                       )}
                     </div>
@@ -609,6 +644,7 @@ export default function AdminPanel({
         <section className={styles.detailsSection}>
           {!selectedUser ? (
             <div className={styles.placeholderState}>
+              <h2 className={styles.cardTitle}>Ready to manage access</h2>
               <p>Select a user from search results to manage subscription and view history.</p>
             </div>
           ) : (
@@ -712,12 +748,13 @@ export default function AdminPanel({
               {/* Subscription Controls Card */}
               <div className={styles.sectionCard}>
                 <div className={styles.cardHeader}>
-                  <h3 className={styles.cardTitle}>Manage Subscription</h3>
-                  <span className={styles.cardSubtitle}>Upgrade, extend, modify, or revoke</span>
+                  <span className={styles.eyebrow}>Subscription Management</span>
+                  <h3 className={styles.cardTitle}>Manage access</h3>
+                  <span className={styles.cardSubtitle}>Choose a change, review the dates, then confirm.</span>
                 </div>
 
                 {actionMessage && (
-                  <div className={actionMessage.type === "success" ? styles.successBanner : styles.errorBanner}>
+                  <div role="status" className={actionMessage.type === "success" ? styles.successBanner : styles.errorBanner}>
                     {actionMessage.text}
                   </div>
                 )}
@@ -737,7 +774,7 @@ export default function AdminPanel({
                           ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" })
                           : "an active date"}
                       </strong>
-                      . Clicking Apply will prompt you to <strong>Extend</strong> or <strong>Replace</strong> expiration to prevent duplicate entries.
+                      . Review Grant will let you choose <strong>Extend</strong> or <strong>Replace</strong> expiration.
                     </span>
                   </div>
                 )}
@@ -796,8 +833,9 @@ export default function AdminPanel({
                 <div className={styles.controlGrid}>
                   {/* Action Selector */}
                   <div className={styles.fieldGroup}>
-                    <label className={styles.fieldLabel}>Action</label>
+                    <label htmlFor="subscription-action" className={styles.fieldLabel}>Action</label>
                     <select
+                      id="subscription-action"
                       className={styles.selectInput}
                       value={actionType}
                       onChange={(e) => setActionType(e.target.value as any)}
@@ -813,8 +851,9 @@ export default function AdminPanel({
                     <>
                       {/* Source Selector */}
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Activation Source</label>
+                        <label htmlFor="subscription-source" className={styles.fieldLabel}>Activation Source</label>
                         <select
+                          id="subscription-source"
                           className={styles.selectInput}
                           value={activationSource}
                           onChange={(e) => setActivationSource(e.target.value as ActivationSource)}
@@ -827,12 +866,12 @@ export default function AdminPanel({
 
                       {/* Duration Presets */}
                       <div className={styles.fieldGroup}>
-                        <label className={styles.fieldLabel}>Duration</label>
-                        <div className={styles.durationOptions}>
+                        <span id="subscription-duration-label" className={styles.fieldLabel}>Duration</span>
+                        <div className={styles.durationOptions} role="group" aria-labelledby="subscription-duration-label">
                           {([
                             { id: "1m", label: "1 Month" },
-                            { id: "2m", label: "2 Months" },
                             { id: "3m", label: "3 Months" },
+                            { id: "6m", label: "6 Months" },
                             { id: "custom", label: "Custom" },
                           ] as const).map((d) => (
                             <button
@@ -840,6 +879,7 @@ export default function AdminPanel({
                               type="button"
                               className={`${styles.presetBtn} ${durationPreset === d.id ? styles.presetActive : ""}`}
                               onClick={() => setDurationPreset(d.id)}
+                              aria-pressed={durationPreset === d.id}
                             >
                               {d.label}
                             </button>
@@ -849,8 +889,9 @@ export default function AdminPanel({
 
                       {durationPreset === "custom" && (
                         <div className={styles.fieldGroup}>
-                          <label className={styles.fieldLabel}>Custom Expiration Date</label>
+                          <label htmlFor="subscription-custom-expiration" className={styles.fieldLabel}>Custom Expiration Date</label>
                           <input
+                            id="subscription-custom-expiration"
                             type="date"
                             className={styles.dateInput}
                             value={customDate}
@@ -861,10 +902,11 @@ export default function AdminPanel({
 
                       {/* Optional Recipient Message */}
                       <div className={styles.fieldGroupFull}>
-                        <label className={styles.fieldLabel}>
+                        <label htmlFor="subscription-recipient-message" className={styles.fieldLabel}>
                           Personal Recipient Message (Optional)
                         </label>
                         <input
+                          id="subscription-recipient-message"
                           type="text"
                           className={styles.textInput}
                           placeholder="e.g. Thanks for being one of our early testers!"
@@ -880,10 +922,10 @@ export default function AdminPanel({
                 {/* Expiration Preview Calculation */}
                 {actionType !== "revoke" && (
                   <div className={styles.calcPreviewRow}>
-                    <span className={styles.calcLabel}>Calculated New Expiration:</span>
-                    <strong className={styles.calcValue}>
-                      {calculated.date.toLocaleDateString("en-US", { dateStyle: "long" })} ({calculated.days} days)
-                    </strong>
+                    <div><span className={styles.calcLabel}>Current expiration</span><strong>{selectedUser.proExpiresAt ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" }) : "No subscription"}</strong></div>
+                    <div><span className={styles.calcLabel}>Selected duration</span><strong>{selectedDuration}</strong><small>{durationPreset === "custom" ? "Custom arrangement" : `₱${PRO_PLANS.find(plan => plan.months === parseInt(durationPreset))?.price} prepaid`}</small></div>
+                    <div><span className={styles.calcLabel}>New expiration</span><strong className={styles.calcValue}>{calculated.date.toLocaleDateString("en-US", { dateStyle: "long" })}</strong></div>
+                    {actionType === "extend" && isActivePro && !(durationPreset === "custom" && customDate) && <p className={styles.previewNote}>Added after current expiration. Remaining Pro access is preserved.</p>}
                   </div>
                 )}
 
@@ -908,12 +950,14 @@ export default function AdminPanel({
                     {actionPending
                       ? "Applying..."
                       : actionType === "revoke"
-                      ? "Confirm Revoke Pro"
-                      : "Apply Subscription"}
+                      ? "Review Revocation"
+                      : `Review ${actionLabel}`}
                   </button>
                 </div>
               </div>
 
+              <div className={styles.toolsHeader}><h3 className={styles.cardTitle}>Admin tools</h3><span className={styles.cardSubtitle}>Private notes and subscription records</span></div>
+              <div className={styles.secondaryTools}>
               {/* Private Admin Notes */}
               <div className={styles.sectionCard}>
                 <div className={styles.cardHeader}>
@@ -928,6 +972,7 @@ export default function AdminPanel({
                 )}
 
                 <textarea
+                  aria-label="Private Admin Note"
                   className={styles.noteTextarea}
                   rows={3}
                   placeholder="Private notes (e.g., GCash ref 123456, gifted for contest, support issue)..."
@@ -966,7 +1011,7 @@ export default function AdminPanel({
                           <span className={styles.historyEvent}>{h.eventType}</span>
                           <span className={styles.historySource}>[{h.source}]</span>
                           <span className={styles.historyDate}>
-                            {new Date(h.createdAt).toLocaleDateString()}
+                            {new Date(h.createdAt).toLocaleDateString("en-US", { dateStyle: "long" })}
                           </span>
                         </div>
                         <div className={styles.historyDetails}>
@@ -975,7 +1020,7 @@ export default function AdminPanel({
                           </span>
                           {h.newExpiresAt && (
                             <span className={styles.historyExp}>
-                              Exp: {new Date(h.newExpiresAt).toLocaleDateString()}
+                              Expires {new Date(h.newExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" })}
                             </span>
                           )}
                         </div>
@@ -987,6 +1032,7 @@ export default function AdminPanel({
                   </div>
                 )}
               </div>
+              </div>
             </div>
           )}
         </section>
@@ -995,7 +1041,7 @@ export default function AdminPanel({
       {/* Active Pro Conflict Warning Dialog */}
       {activeProWarningModalOpen && selectedUser && (
         <div className={styles.modalBackdrop}>
-          <div className={styles.warningCard}>
+          <dialog ref={openDialog} className={styles.warningCard} aria-labelledby="subscription-conflict-title" onCancel={() => setActiveProWarningModalOpen(false)}>
             <div className={styles.warningModalHeader}>
               <div className={styles.warningIconBadge}>
                 <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1005,8 +1051,8 @@ export default function AdminPanel({
                 </svg>
               </div>
               <div>
-                <h3 className={styles.warningModalTitle}>User Already Has RevIT Pro</h3>
-                <span className={styles.warningModalSubtitle}>Active subscription conflict detected</span>
+                <h3 id="subscription-conflict-title" className={styles.warningModalTitle}>Keep existing Pro access</h3>
+                <span className={styles.warningModalSubtitle}>Choose how to update this active subscription.</span>
               </div>
             </div>
 
@@ -1017,7 +1063,7 @@ export default function AdminPanel({
                   ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" })
                   : "an active date"}
               </strong>
-              . Activating a new subscription from scratch would silently overwrite remaining time. Choose how you want to handle this:
+              . Extend to keep the remaining time, or review a replacement date.
             </p>
 
             <div className={styles.conflictOptionsList}>
@@ -1028,17 +1074,20 @@ export default function AdminPanel({
                   <span className={styles.recommendedBadge}>Recommended</span>
                 </div>
                 <p className={styles.conflictOptionDesc}>
-                  Add the selected duration ({durationPreset === "custom" ? `${calculated.days} days` : durationPreset === "1m" ? "1 Month" : durationPreset === "2m" ? "2 Months" : "3 Months"}) to their current expiration date. Preserves all remaining active days.
+                  {durationPreset === "custom" && customDate ? "Use the selected custom expiration date. Review any reduction before confirming." : `Add ${selectedDuration} after the current expiration. Keep all remaining Pro access.`}
                 </p>
                 <div className={styles.conflictDateRow}>
-                  <span>Current: {selectedUser.proExpiresAt ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "short" }) : "—"}</span>
+                  <span>Current: {selectedUser.proExpiresAt ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" }) : "—"}</span>
                   <span>&rarr;</span>
-                  <strong>New: {extendCalculated.date.toLocaleDateString("en-US", { dateStyle: "short" })} ({extendCalculated.days} total days remaining)</strong>
+                  <strong>New: {extendCalculated.date.toLocaleDateString("en-US", { dateStyle: "long" })}</strong>
                 </div>
                 <button
                   type="button"
                   className={styles.primaryBtn}
                   onClick={() => {
+                    confirmationRef.current = extendCalculated;
+                    setConfirmationPreview(extendCalculated);
+                    requestKeyRef.current = crypto.randomUUID();
                     setActionType("extend");
                     setActiveProWarningModalOpen(false);
                     setShortenConfirmed(false);
@@ -1058,14 +1107,17 @@ export default function AdminPanel({
                   Explicitly set a new expiration date calculated from today, overriding their current end date.
                 </p>
                 <div className={styles.conflictDateRow}>
-                  <span>Current: {selectedUser.proExpiresAt ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "short" }) : "—"}</span>
+                  <span>Current: {selectedUser.proExpiresAt ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" }) : "—"}</span>
                   <span>&rarr;</span>
-                  <strong>New: {replaceCalculated.date.toLocaleDateString("en-US", { dateStyle: "short" })} ({replaceCalculated.days} days from today)</strong>
+                  <strong>New: {replaceCalculated.date.toLocaleDateString("en-US", { dateStyle: "long" })}</strong>
                 </div>
                 <button
                   type="button"
                   className={styles.secondaryBtn}
                   onClick={() => {
+                    confirmationRef.current = replaceCalculated;
+                    setConfirmationPreview(replaceCalculated);
+                    requestKeyRef.current = crypto.randomUUID();
                     setActionType("modify_expiration");
                     setActiveProWarningModalOpen(false);
                     setShortenConfirmed(false);
@@ -1083,18 +1135,18 @@ export default function AdminPanel({
                 className={styles.secondaryBtn}
                 onClick={() => setActiveProWarningModalOpen(false)}
               >
-                Cancel — Make No Changes
+                Cancel
               </button>
             </div>
-          </div>
+          </dialog>
         </div>
       )}
 
       {/* Confirmation Modal */}
       {confirmModalOpen && selectedUser && (
         <div className={styles.modalBackdrop}>
-          <div className={styles.confirmCard}>
-            <h3 className={styles.confirmTitle}>
+          <dialog ref={openDialog} className={styles.confirmCard} aria-labelledby="subscription-confirmation-title" onCancel={(event) => { if (actionPending) event.preventDefault(); else setConfirmModalOpen(false); }}>
+            <h3 id="subscription-confirmation-title" className={styles.confirmTitle}>
               {actionType === "revoke"
                 ? "Confirm Subscription Revocation"
                 : actionType === "extend"
@@ -1106,7 +1158,7 @@ export default function AdminPanel({
 
             {actionType === "revoke" && (
               <div className={styles.errorBanner} style={{ marginTop: "12px", marginBottom: "16px" }}>
-                <strong>Destructive Action:</strong> Pro access will be revoked immediately and this user will return to the Free plan. A revocation audit record will be logged.
+                Pro access ends immediately. This learner will return to Free access.
               </div>
             )}
 
@@ -1131,26 +1183,20 @@ export default function AdminPanel({
               </div>
             )}
 
-            <div className={styles.confirmDetails}>
-              <div><strong>User:</strong> {selectedUser.email || selectedUser.username}</div>
-              <div><strong>Current Plan:</strong> {selectedUser.plan} ({selectedUser.isEffectivePro ? "Active Pro" : "Free"})</div>
-              <div><strong>New Plan:</strong> {actionType === "revoke" ? "free" : "pro"}</div>
-              <div><strong>Action Type:</strong> {actionType === "extend" ? "Extend Subscription" : actionType === "modify_expiration" ? "Set Custom Expiration" : actionType === "revoke" ? "Revoke Access" : "Activate Pro"}</div>
+            <dl className={styles.confirmDetails}>
+              <div><dt>Learner</dt><dd>{selectedUser.email || selectedUser.username}</dd></div>
+              <div><dt>Current access</dt><dd>{selectedUser.isEffectivePro ? "Active RevIT Pro" : selectedUser.proExpiresAt ? "Free · Pro expired" : "Free"}</dd></div>
+              <div><dt>Current expiration</dt><dd>{selectedUser.proExpiresAt ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" }) : "No subscription"}</dd></div>
               {actionType !== "revoke" && (
                 <>
-                  <div><strong>Activation Source:</strong> {activationSource}</div>
-                  <div><strong>Duration:</strong> {durationPreset === "custom" ? `${calculated.days} days` : durationPreset === "1m" ? "1 Month" : durationPreset === "2m" ? "2 Months" : "3 Months"} ({calculated.days} days)</div>
-                  <div>
-                    <strong>Expiration Change:</strong>{" "}
-                    {selectedUser.proExpiresAt
-                      ? `${new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "short" })} → `
-                      : ""}
-                    {calculated.date.toLocaleDateString("en-US", { dateStyle: "long" })}
-                  </div>
-                  {customRecipientMessage && <div><strong>Custom Message:</strong> {customRecipientMessage}</div>}
+                  <div><dt>{actionType === "modify_expiration" ? "Change" : "Selected duration"}</dt><dd>{selectedDuration}</dd></div>
+                  <div className={styles.confirmResult}><dt>New expiration</dt><dd>{calculated.date.toLocaleDateString("en-US", { dateStyle: "long" })}</dd></div>
+                  {customRecipientMessage && <div><dt>Recipient message</dt><dd>{customRecipientMessage}</dd></div>}
                 </>
               )}
-            </div>
+              {actionType === "revoke" && <div className={styles.confirmResult}><dt>Resulting access</dt><dd>Free · Pro removed</dd></div>}
+            </dl>
+            {actionMessage?.type === "error" && <div role="alert" className={styles.errorBanner}>{actionMessage.text}</div>}
 
             <div className={styles.confirmActions}>
               <button
@@ -1158,6 +1204,7 @@ export default function AdminPanel({
                 className={styles.secondaryBtn}
                 onClick={() => setConfirmModalOpen(false)}
                 disabled={actionPending}
+                autoFocus
               >
                 Cancel
               </button>
@@ -1170,13 +1217,13 @@ export default function AdminPanel({
                 {actionPending
                   ? "Applying..."
                   : actionType === "revoke"
-                  ? "Confirm Revoke Pro"
+                  ? "Confirm Revocation"
                   : actionType === "extend"
                   ? "Confirm Extension"
-                  : "Confirm Subscription Update"}
+                  : `Confirm ${actionLabel}`}
               </button>
             </div>
-          </div>
+          </dialog>
         </div>
       )}
 

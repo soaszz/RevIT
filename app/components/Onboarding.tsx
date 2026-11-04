@@ -1,5 +1,7 @@
 "use client";
 
+import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
+import { PRO_PLANS, PRO_PLAN_SUMMARY } from "../lib/proPlans";
 import { useState, useEffect } from "react";
 import type { Profile } from "../lib/domain";
 import { saveProfile, uploadAvatar } from "../lib/cloudService";
@@ -228,9 +230,10 @@ export default function Onboarding({
                 <div>
                   <h3 style={{ margin: "2px 0 0", fontSize: "16px", fontWeight: "750", color: "var(--ink)" }}>RevIT Pro</h3>
                   <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginTop: "4px" }}>
-                    <span style={{ fontSize: "20px", fontWeight: "800", color: "var(--ink)" }}>₱49</span>
-                    <span style={{ fontSize: "10px", color: "var(--muted)" }}>/ month (early bird)</span>
+                    <span style={{ fontSize: "20px", fontWeight: "800", color: "var(--ink)" }}>₱{PRO_PLANS[0].price}</span>
+                    <span style={{ fontSize: "10px", color: "var(--muted)" }}>/ 1 month, paid upfront</span>
                   </div>
+                  <p style={{ fontSize: "11px", color: "var(--muted)", margin: "6px 0 0", overflowWrap: "anywhere" }}>{PRO_PLAN_SUMMARY} · Paid upfront</p>
                 </div>
                 <ul style={{ margin: "4px 0 0", padding: "0", listStyle: "none", display: "grid", gap: "8px", fontSize: "11px", color: "var(--ink)" }}>
                   <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
@@ -239,7 +242,7 @@ export default function Onboarding({
                   </li>
                   <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
-                    <span>Pro reviewer books: Ciulla, Rodak & Strasinger</span>
+                    <span>{PUBLIC_REVIEWERS.proBooks.length} Pro-only reviewer editions: {PUBLIC_REVIEWERS.proNames}</span>
                   </li>
                   <li style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     <span style={{ color: "var(--green)", fontWeight: "bold" }}>✓</span>
@@ -259,7 +262,7 @@ export default function Onboarding({
 
             <div className="mtap-onboarding-note" style={{ padding: "12px 14px" }}>
               <span style={{ fontSize: "11px", color: "var(--muted)", lineHeight: 1.5 }}>
-                You start automatically on <strong>RevIT Free</strong>. Subscriptions are activated manually via Facebook Messenger whenever you wish to upgrade.
+                You start automatically on <strong>RevIT Free</strong>. Subscriptions are activated manually via Instagram whenever you wish to upgrade.
               </span>
             </div>
 

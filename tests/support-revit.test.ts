@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import { join } from "node:path";
+import { renderPublicPricing } from "./helpers/publicPricing";
+import { PRO_CONTACT_URL } from "../app/lib/proPlans";
 
 const projectFile = (path: string) => readFileSync(join(process.cwd(), path), "utf8");
 
@@ -16,11 +18,17 @@ test("desktop and mobile navigation open the Pro subscription information", () =
 
 test("subscription and renewal contact destinations use the exact Instagram URL", () => {
   const destination = '"https://www.instagram.com/revithoroughly/"';
-  for (const path of ["app/auth/page.tsx", "app/pricing/PricingContent.tsx", "app/pro/page.tsx", "app/components/AccountSettings.tsx"]) {
+  for (const path of ["app/auth/page.tsx", "app/pro/page.tsx", "app/components/AccountSettings.tsx"]) {
     assert.equal(projectFile(path).split(destination).length - 1, 1, path);
   }
-  assert.equal(projectFile("app/auth/page.tsx").match(/href=\{proContact\}/g)?.length, 2);
-  assert.equal(projectFile("app/pricing/PricingContent.tsx").match(/href=\{FACEBOOK_PRO_URL\}/g)?.length, 3);
+  assert.equal(projectFile("app/auth/page.tsx").match(/href=\{proContact\}/g)?.length, 1);
+  assert.match(projectFile("app/auth/page.tsx"), /<ProPlanCards/);
+  assert.equal(PRO_CONTACT_URL, "https://www.instagram.com/revithoroughly/");
+  const pricing = renderPublicPricing();
+  assert.equal(pricing.split(`href="${PRO_CONTACT_URL}"`).length - 1, 3);
+  assert.equal(pricing.split(`href="${PRO_CONTACT_URL}" target="_blank" rel="noopener noreferrer"`).length - 1, 3);
+  assert.equal((projectFile("app/auth/page.tsx").match(/href=\{proContact\}/g)?.length ?? 0)
+    + pricing.split(`href="${PRO_CONTACT_URL}"`).length - 1, 4);
   assert.match(projectFile("app/pro/page.tsx"), /href="https:\/\/www\.instagram\.com\/revithoroughly\/"/);
   assert.match(projectFile("app/components/AccountSettings.tsx"), /href=\{isProActive\(entitlement\) \? "https:\/\/www\.instagram\.com\/revithoroughly\/" : "\/pricing"\}/);
 });

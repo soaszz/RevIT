@@ -1,5 +1,7 @@
 "use client";
 
+import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
+import { PRO_PLAN_SUMMARY } from "../lib/proPlans";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./PlanAnnouncementModal.module.css";
@@ -152,7 +154,7 @@ export default function PlanAnnouncementModal({
                 </p>
                 <ul className={styles.giftFeaturesList}>
                   <li>
-                    <span>✓</span> Full access to Pro reviewer books (Ciulla, Rodak, Strasinger)
+                    <span>✓</span> Full access to {PUBLIC_REVIEWERS.proBooks.length} Pro-only reviewer editions ({PUBLIC_REVIEWERS.proNames})
                   </li>
                   <li>
                     <span>✓</span> Access to newly added Pro reviewer books
@@ -249,7 +251,7 @@ export default function PlanAnnouncementModal({
                 <div className={`${styles.planMiniCard} ${styles.proFeatured}`}>
                   <div className={styles.miniCardHeader}>
                     <span className={`${styles.planTag} ${styles.planTagPro}`}>PRO ACCESS</span>
-                    <span className={styles.planMiniPrice}>₱49 <small>/ month · early bird</small></span>
+                    <span className={styles.planMiniPrice} style={{ minWidth: 0, fontSize: "12px", overflowWrap: "anywhere" }}>{PRO_PLAN_SUMMARY}<small> · Paid upfront; same Pro features</small></span>
                   </div>
                   <ul className={styles.miniFeatureList}>
                     <li>
@@ -258,7 +260,7 @@ export default function PlanAnnouncementModal({
                     </li>
                     <li>
                       <span className={styles.miniCheck}>✓</span>
-                      <span><strong>Pro reviewer books:</strong> Ciulla, Rodak &amp; Strasinger</span>
+                      <span><strong>{PUBLIC_REVIEWERS.proBooks.length} Pro-only reviewer editions:</strong> {PUBLIC_REVIEWERS.proNames}</span>
                     </li>
                     <li>
                       <span className={styles.miniCheck}>✓</span>

@@ -1,0 +1,160 @@
+{
+  "app/admin/AdminPanel.module.css": {
+    "before": "d157242aecb4659d548ce14eb5d5b8840036d345fb76459f4f12faadef2bf4a9",
+    "after": "2c8477f6dda080c5e4671c72290c3510a3eb5616e8afe8c09aa772bcaa506b7f",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "684f535fa855f1f141e98cd89a44172592924ab05534a4561767f52c96cdbf44",
+    "transformation": "CRLF to LF per existing attributes"
+  },
+  "app/admin/AdminPanel.tsx": {
+    "before": "d33cdf4ce13a285e55ab54c27faecafc1487c9d48cea304578cbd4523d0920da",
+    "after": "d9f28cccc65a7f109462a23f6f3facac765022146ac4494e0ae933b17a3276d5",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "52af7ee2ce9d19293bd8d9a2d664f857bd26df3d888906488fcbf17e84549b33",
+    "transformation": "CRLF to LF per existing attributes"
+  },
+  "app/api/admin/subscription/route.ts": {
+    "before": "959d4b6ecb8d0923b79a97e403af78e4ce4bb7283a30f5d3c566ae13c58649f9",
+    "after": "d8fb162d213728b08ae2331b729818fcfc3036db3ae63d93dc4e968fae9e1af3",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "a32db944713d6bcfd2e2ad5a92f694576055fbde9751058dd936a1b7f6c7f33b",
+    "transformation": "CRLF to LF per existing attributes"
+  },
+  "app/auth/Landing.module.css": {
+    "before": "8ad6f6a0e338474fa98deed3a9d8729ae4e66a122a8be5b5f56e281484221f57",
+    "after": "38a21a2312a9cf881887335f2a99e6befdd408f5bae7c65208c81fc236ed2119",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "38a21a2312a9cf881887335f2a99e6befdd408f5bae7c65208c81fc236ed2119",
+    "transformation": "none"
+  },
+  "app/auth/page.tsx": {
+    "before": "d643213955e6b3edc1da019df82f92e6e327edf7d44f59c7b5c9e0957b86619a",
+    "after": "6dc6666591e2352aab3665296ae2fee1f5cf30b31324e7bd4e70f7c91c5b5e5b",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "6dc6666591e2352aab3665296ae2fee1f5cf30b31324e7bd4e70f7c91c5b5e5b",
+    "transformation": "none"
+  },
+  "app/components/AccountSettings.tsx": {
+    "before": "91132ca8d24b3797f14075a2f97cccc07ba06f67d1602d8c34d03c7ca50f8150",
+    "after": "54916e5e188743cf2002492b06ea47c6bedea1d5f26dd4e3208f3cc837bd03b9",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "54916e5e188743cf2002492b06ea47c6bedea1d5f26dd4e3208f3cc837bd03b9",
+    "transformation": "none"
+  },
+  "app/components/Onboarding.tsx": {
+    "before": "17ed88212afa8c5ef21d8729a74c860e6f594ff6b28e58aba81c4c28ecdd276f",
+    "after": "58cc77d2ab100aafd16b95b215692dfcc020eb627a97ef756a3858d264538e3f",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "4aaf0c891e32f6f74b41f4ebee73ae9b4511be2bd6510f563065bd873284d016",
+    "transformation": "CRLF to LF per existing attributes"
+  },
+  "app/components/PlanAnnouncementModal.tsx": {
+    "before": "19efa70fcb94c57196416072ad9cea1ba43bf4061235e8f35f256759ec34e310",
+    "after": "37f02ef2cc29961afe1fdf9ab4b5c2a073d4b5ef56ccb93072ae055037193264",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "6d54a6b96e0d073a02449e6f97f638fb30ba7d5d0cad2482209745ce3e65c774",
+    "transformation": "CRLF to LF per existing attributes"
+  },
+  "app/components/ProActivationModal.tsx": {
+    "before": "505e4756c46e83dd2ecfa843fd7fe590513c67a4dd0ae99f8beda1fe63a4eced",
+    "after": "ae89bca57197bdc5a7e7dcd89991b79c2275cdb5ca0a2f6156fd156aeea3d731",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "f9d69491da49a8367414b1d9e7363e24f9a8b9031cb415da9fc7f4bd75aecc04",
+    "transformation": "CRLF to LF per existing attributes"
+  },
+  "app/pricing/PricingContent.tsx": {
+    "before": "0ba9011c7032d191c6e687229c554bc6835571895f1aba6512cb13a8a0538209",
+    "after": "d32774cfde74c06dc997f9a6fa6a21b5a4dea4fcbc27f59e63ebf0e96cd184ed",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "81dee0db4a316f7e5d2fbb5f26bbf6f9ed4c1023d94f9ed4006bca2a3378dac3",
+    "transformation": "CRLF to LF per existing attributes",
+    "history": [
+      {
+        "before": "0ba9011c7032d191c6e687229c554bc6835571895f1aba6512cb13a8a0538209",
+        "after": "629e5dfde3371610d07c1bcafa0ed2e69dbd860798e577dec0a2d54bfcdc7cd5",
+        "reason": "Exact previously verified Phase3 application candidate bytes"
+      }
+    ],
+    "copyUpdate": {
+      "before": "629e5dfde3371610d07c1bcafa0ed2e69dbd860798e577dec0a2d54bfcdc7cd5",
+      "after": "d32774cfde74c06dc997f9a6fa6a21b5a4dea4fcbc27f59e63ebf0e96cd184ed",
+      "reason": "Explicitly authorized Coming Soon copy only"
+    }
+  },
+  "app/pricing/PricingPage.module.css": {
+    "before": "59397caf5c9130a5c20a9fe68b5fdc9dfc513920d5fb0568d6554babdf8bf137",
+    "after": "fa1754312d3a0c20bd918da6103428f542557896ae092df231ab3e6cef459a84",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "903dff22eb16ce073014be11d55432e04a5526ef6c07221f8631bcc387a1d83b",
+    "transformation": "CRLF to LF per existing attributes"
+  },
+  "app/pricing/page.tsx": {
+    "before": "2357ed88d792704230bc11a1a1fe4e8d5d09bc3b25d0e6a1b75b7d3eb7cf26a2",
+    "after": "f52a6ef34935c6b2387aafebe41cd92616cae991a2b3ae02b5f34adf5ab6a75b",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "e000b4283d8b0f1cc4db780ac1a0362d0b446b9ae7efde6de1ef1d81ad84b17d",
+    "transformation": "CRLF to LF per existing attributes"
+  },
+  "app/pro/page.tsx": {
+    "before": "c108432c8d50b27e77b41ee900efb939531035e634c4a7ee48bf9ec5f83024d7",
+    "after": "319b297c82b7f01ce359570915844cff5f84094bcd1eca95b0a968b3a766d06b",
+    "reason": "verified 22-file pricing candidate",
+    "sourceSha256": "2bb79320ff2200287a5e92b16783a30431db13f931c3fd9c205325f7145ad079",
+    "transformation": "CRLF to LF per existing attributes",
+    "history": [
+      {
+        "before": "c108432c8d50b27e77b41ee900efb939531035e634c4a7ee48bf9ec5f83024d7",
+        "after": "068a0aab08dfaa97e5e037c01106371a030171ac17c24f613cb5eb3bb5b616e3",
+        "reason": "Exact previously verified Phase3 application candidate bytes"
+      }
+    ],
+    "copyUpdate": {
+      "before": "068a0aab08dfaa97e5e037c01106371a030171ac17c24f613cb5eb3bb5b616e3",
+      "after": "319b297c82b7f01ce359570915844cff5f84094bcd1eca95b0a968b3a766d06b",
+      "reason": "Explicitly authorized Coming Soon copy only"
+    }
+  },
+  "app/api/chat/route.ts": {
+    "before": "a48538889fbb7859127c3c14ab726c4b510aad9eaa6dd13fd9b3fa75750eaa58",
+    "after": "c712848816d33a58cf7cb178fca6878575fc8f1e7c512bd17c60c4e7dc04b01e",
+    "reason": "verified combined-candidate publication descriptions",
+    "sourceSha256": "c712848816d33a58cf7cb178fca6878575fc8f1e7c512bd17c60c4e7dc04b01e",
+    "transformation": "none"
+  },
+  "app/components/AiAcademicSettingsModal.tsx": {
+    "before": "86b2a0814cfe708885c4c5572d7d19be1f6dd2a2edc0ba8537e333c608e4ad30",
+    "after": "faf046412cbb7d0f0d4e0e6ad182c1a38583572ff020e97272796ee12d4b88cb",
+    "reason": "verified combined-candidate publication descriptions",
+    "sourceSha256": "faf046412cbb7d0f0d4e0e6ad182c1a38583572ff020e97272796ee12d4b88cb",
+    "transformation": "none"
+  },
+  "tests/fixes-only-release.test.ts": {
+    "before": "c741259d722263b13f8e376a713b65a882dcab045dfce284dd2b9e0381d07810",
+    "after": "f74f1ff8a3e367232ff6f4aa4ddd19b5d3c26dfeb789de5ca1e90ffeab395fb3",
+    "reason": "Retain original release/publication/count/contact requirements using the approved shared-card rendering. No expected bank counts, versions, URLs, prices, security checks or original preservation baselines removed.",
+    "assertionReconciliation": "inline source location to actual rendered output; exact composed contact coverage replaces obsolete inline anchor count",
+    "history": [
+      {
+        "before": "c741259d722263b13f8e376a713b65a882dcab045dfce284dd2b9e0381d07810",
+        "after": "047ced73f036829b28f81fbfb5610f2688d02a12b29fc516a8b261e2a3dbcc44",
+        "reason": "Exact previously verified Phase3 application candidate bytes"
+      }
+    ],
+    "copyUpdate": {
+      "before": "047ced73f036829b28f81fbfb5610f2688d02a12b29fc516a8b261e2a3dbcc44",
+      "after": "f74f1ff8a3e367232ff6f4aa4ddd19b5d3c26dfeb789de5ca1e90ffeab395fb3",
+      "reason": "Retain current-publication exclusions while validating the exact authorized upcoming notice separately"
+    }
+  },
+  "tests/support-revit.test.ts": {
+    "before": "0a6e305739be387b118c8d9a95c4fc09b2b0a3b6ced4e931756b0f48c6b44cf2",
+    "after": "e6ab66947f2aac481d4a515d12114c96cdb0d12fc4c1306c6f08fd4dee661bf4",
+    "reason": "Retain original release/publication/count/contact requirements using the approved shared-card rendering. No expected bank counts, versions, URLs, prices, security checks or original preservation baselines removed.",
+    "assertionReconciliation": "inline source location to actual rendered output; exact composed contact coverage replaces obsolete inline anchor count"
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "fb156728ccc736f472a0eb1bf334130ba95d56ddce9b376c8a11a0d534955ad2",
+    "after": "919674031fb4cddfa7d3fef7f0194c18e2ec48ad5229d647277631d6ab555189",
+    "reason": "Explicitly authorized Phase 3 minor-release metadata: Pending v1.12.4 entry only; removing the new entry reproduces all historical Updates bytes exactly."
+  }
+}

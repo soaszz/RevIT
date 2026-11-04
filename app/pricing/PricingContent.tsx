@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ProPlanCards from "../components/ProPlanCards";
+import { PUBLIC_REVIEWERS, type PublicQuestionCounts } from "../lib/publicReviewerBooks";
 import { AI_LIMITS, isProActive, type SubscriptionEntitlement } from "../lib/entitlements";
 import { createClient } from "../lib/supabase/client";
 import styles from "./PricingPage.module.css";
@@ -9,11 +11,11 @@ import styles from "./PricingPage.module.css";
 type Props = {
   initialUser: { id: string; email?: string } | null;
   initialEntitlement: SubscriptionEntitlement | null;
+  questionCounts: PublicQuestionCounts;
 };
 
-const FACEBOOK_PRO_URL = "https://www.instagram.com/revithoroughly/";
 
-export default function PricingContent({ initialUser, initialEntitlement }: Props) {
+export default function PricingContent({ initialUser, initialEntitlement, questionCounts }: Props) {
   const [user, setUser] = useState<{ id: string; email?: string } | null>(initialUser);
   const [entitlement, setEntitlement] = useState<SubscriptionEntitlement | null>(initialEntitlement);
   const [loading, setLoading] = useState(initialUser === undefined && initialEntitlement === undefined);
@@ -77,9 +79,8 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
   }, []);
 
   const isPro = !loading && Boolean(user) && isProActive(entitlement);
+  const isFreeUser = !loading && Boolean(user) && !isPro && entitlement?.storedPlan !== "pro";
   const isExpiredPro = !loading && Boolean(user) && !isPro && entitlement?.storedPlan === "pro";
-  const isFreeUser = !loading && Boolean(user) && !isPro && !isExpiredPro;
-  const isLoggedOut = !loading && !user;
 
   const formattedExpiry = entitlement?.proExpiresAt
     ? new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(new Date(entitlement.proExpiresAt))
@@ -96,213 +97,11 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
         </p>
       </section>
 
-      <section className={styles.plansGrid} aria-label="Subscription plan comparison">
-        {/* FREE CARD */}
-        <article className={`${styles.planCard} ${isPro ? styles.freeCardDimmed : ""}`}>
-          {isFreeUser && (
-            <span className={styles.currentPlanBadge} aria-label="Current plan indicator">
-              Current Plan
-            </span>
-          )}
-          <div className={styles.cardTop}>
-            <span className={styles.sourcePill}>FREE</span>
-          </div>
-          <h2 className={styles.planTitle}>RevIT Free</h2>
-          <p className={styles.planDesc}>Essential tools for daily board exam practice and progress tracking.</p>
-
-          <div className={styles.priceBlock}>
-            <div className={styles.priceRow}>
-              <span className={styles.priceAmount}>₱0</span>
-              <span className={styles.pricePeriod}>/ Free forever</span>
-            </div>
-            <p className={styles.priceNote}>Core review features always free</p>
-          </div>
-
-          <ul className={styles.featureList}>
-            <li className={styles.featureItem}>
-              <span className={styles.checkIcon} aria-hidden="true">✓</span>
-              <span>Harr question library &amp; flashcards</span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={styles.checkIcon} aria-hidden="true">✓</span>
-              <span>MCQ Review mode with customizable question timer</span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={styles.checkIcon} aria-hidden="true">✓</span>
-              <span>Basic progress tracking &amp; subject mastery</span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={styles.checkIcon} aria-hidden="true">✓</span>
-              <span>Grades, Grade Simulator, Planner, and Calendar</span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={styles.checkIcon} aria-hidden="true">✓</span>
-              <span>XP, leveling system, streaks, and achievements</span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={styles.checkIcon} aria-hidden="true">✓</span>
-              <span>RevIT AI: {AI_LIMITS.free.dailyRequests} tutoring messages per day</span>
-            </li>
-          </ul>
-
-          <div className={styles.cardAction}>
-            {loading ? (
-              <div className={styles.skeletonCta} aria-hidden="true" />
-            ) : isFreeUser ? (
-              <Link className={styles.currentPlanCta} href="/overview">
-                <span>Current Plan · Open RevIT →</span>
-              </Link>
-            ) : isPro ? (
-              <Link className={styles.currentPlanCta} href="/overview">
-                <span>Open RevIT Workspace →</span>
-              </Link>
-            ) : (
-              <Link className={styles.secondaryCta} href="/overview">
-                Continue with Free
-              </Link>
-            )}
-          </div>
-        </article>
-
-        {/* PRO CARD */}
-        <article className={`${styles.planCard} ${styles.proCard} ${isPro ? styles.proCardActive : ""}`}>
-          {loading ? null : isPro ? (
-            <span className={styles.activePlanBadge} aria-label="Subscription status: Active">
-              <span className={styles.activePlanBadgeDot} aria-hidden="true" />
-              Active Plan
-            </span>
-          ) : isExpiredPro ? (
-            <span className={styles.expiredBadge} aria-label="Subscription status: Expired">
-              Expired
-            </span>
-          ) : (
-            <span className={styles.proBadge}>Recommended</span>
-          )}
-
-          <div className={styles.cardTop}>
-            <span className={styles.sourcePill}>PRO ACCESS</span>
-          </div>
-          <h2 className={styles.planTitle}>RevIT Pro</h2>
-          <p className={styles.planDesc}>Complete library access and deep weakness diagnostics for serious reviewers.</p>
-
-          {/* DYNAMIC PRICE / STATUS BLOCK */}
-          {loading ? (
-            <div className={styles.skeletonPrice} aria-hidden="true" />
-          ) : isPro ? (
-            <div className={styles.activeStatusBlock} role="status">
-              <div className={styles.activeStatusRow}>
-                <span className={styles.activeStatusDot} aria-hidden="true" />
-                <span>RevIT Pro is active</span>
-              </div>
-              <p className={styles.activeExpiryLabel}>Your Pro access is active until</p>
-              <p className={styles.activeExpiryDate}>{formattedExpiry}</p>
-            </div>
-          ) : isExpiredPro ? (
-            <div className={styles.expiredStatusBlock} role="status">
-              <p className={styles.expiredNotice}>Your Pro access has expired</p>
-              {formattedExpiry && <p className={styles.expiredDate}>Expired on {formattedExpiry}</p>}
-              <div className={styles.priceRow} style={{ marginTop: "10px" }}>
-                <span className={styles.priceAmount}>₱49</span>
-                <span className={styles.pricePeriod}>/ month</span>
-              </div>
-              <p className={styles.priceNote}>Early bird price · Monthly access</p>
-            </div>
-          ) : (
-            <div className={styles.priceBlock}>
-              <div className={styles.priceRow}>
-                <span className={styles.priceAmount}>₱49</span>
-                <span className={styles.pricePeriod}>/ month</span>
-              </div>
-              <p className={styles.priceNote}>Early bird price · Monthly access</p>
-            </div>
-          )}
-
-          <ul className={styles.featureList}>
-            <li className={styles.featureItem}>
-              <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-              <strong>Everything included in RevIT Free</strong>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-              <span>
-                Full access to Pro reviewer books (Ciulla, Rodak, Strasinger)
-                {isPro && <span className={styles.includedTag}>Included in your plan</span>}
-              </span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-              <span>Access to newly added Pro reviewer books</span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-              <span>
-                Full flashcard decks across all book editions
-                {isPro && <span className={styles.includedTag}>Included in your plan</span>}
-              </span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-              <span>
-                Weakness Analytics to target low-scoring subtopics
-                {isPro && <span className={styles.includedTag}>Included in your plan</span>}
-              </span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-              <span>
-                Detailed topic trends and personalized recommendations
-                {isPro && <span className={styles.includedTag}>Included in your plan</span>}
-              </span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-              <span>
-                RevIT AI: {AI_LIMITS.pro.dailyRequests} tutoring messages per day
-                {isPro && <span className={styles.includedTag}>Included in your plan</span>}
-              </span>
-            </li>
-          </ul>
-
-          <div className={styles.cardAction}>
-            {loading ? (
-              <div className={styles.skeletonCta} aria-hidden="true" />
-            ) : isPro ? (
-              <a
-                className={styles.activeRenewCta}
-                href={FACEBOOK_PRO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>Contact us to renew</span>
-                <span className="sr-only"> on Facebook (opens in a new tab)</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-            ) : isExpiredPro ? (
-              <a
-                className={styles.primaryCta}
-                href={FACEBOOK_PRO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>Renew Pro via Facebook</span>
-                <span className="sr-only"> (opens in a new tab)</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-            ) : (
-              <a
-                className={styles.primaryCta}
-                href={FACEBOOK_PRO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>Get RevIT Pro on Facebook</span>
-                <span className="sr-only"> (opens in a new tab)</span>
-                <span aria-hidden="true">↗</span>
-              </a>
-            )}
-          </div>
-        </article>
-      </section>
+      {!loading && isPro && <p className={styles.accountStatus} role="status">RevIT Pro is active until {formattedExpiry}. Renewals preserve remaining access.</p>}
+      {!loading && isExpiredPro && <p className={styles.accountStatus} role="status">Your Pro access expired{formattedExpiry ? ` on ${formattedExpiry}` : ""}. Choose a prepaid plan to renew.</p>}
+      <h2 className="sr-only">RevIT Pro prepaid options</h2>
+      <ProPlanCards renew={isPro || isExpiredPro} />
+      <p className={styles.freeNote}>Same Pro features with every duration. Prepaid access; no automatic billing. {PUBLIC_REVIEWERS.freeBooks.length} free reviewer edition ({PUBLIC_REVIEWERS.freeNames}); {PUBLIC_REVIEWERS.proBooks.length} Pro-only editions ({PUBLIC_REVIEWERS.proNames}). Core study tools remain free. <Link href="/overview">Continue with RevIT Free</Link>.</p>
 
       {/* DETAILED COMPARISON TABLE */}
       <section className={styles.comparisonSection} aria-labelledby="comparison-heading">
@@ -333,35 +132,35 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
               </tr>
               <tr>
                 <td>
-                  <span className={styles.compFeatureName}>Harr Question Library</span>
-                  <span className={styles.compFeatureDesc}>Complete Harr medical technology MCQs &amp; rationales</span>
+                  <span className={styles.compFeatureName}>{PUBLIC_REVIEWERS.freeNames} Question Library</span>
+                  <span className={styles.compFeatureDesc}>Published Free reviewer MCQs &amp; rationales</span>
                 </td>
-                <td className={styles.compCell}>1,593 MCQs</td>
-                <td className={styles.compCellPro}>1,593 MCQs</td>
+                <td className={styles.compCell}>{questionCounts.free.toLocaleString("en-US")} MCQs</td>
+                <td className={styles.compCellPro}>{questionCounts.free.toLocaleString("en-US")} MCQs</td>
               </tr>
               <tr>
                 <td>
                   <span className={styles.compFeatureName}>Pro Reviewer Libraries</span>
-                  <span className={styles.compFeatureDesc}>Ciulla, Rodak, and Strasinger board preparation question banks</span>
+                  <span className={styles.compFeatureDesc}>{PUBLIC_REVIEWERS.proBooks.length} Pro-only reviewer editions: {PUBLIC_REVIEWERS.proNames}</span>
                 </td>
                 <td className={styles.compCell}><span className={styles.crossMark} aria-label="Not included">✕</span></td>
-                <td className={styles.compCellPro}>2,848 MCQs</td>
+                <td className={styles.compCellPro}>{questionCounts.proOnly.toLocaleString("en-US")} MCQs</td>
               </tr>
               <tr>
                 <td>
                   <span className={styles.compFeatureName}>Total Practice Questions</span>
                   <span className={styles.compFeatureDesc}>Full question pool across all board subjects</span>
                 </td>
-                <td className={styles.compCell}>1,593 Questions</td>
-                <td className={styles.compCellPro}>4,441 Questions</td>
+                <td className={styles.compCell}>{questionCounts.free.toLocaleString("en-US")} MCQs</td>
+                <td className={styles.compCellPro}>{questionCounts.total.toLocaleString("en-US")} MCQs</td>
               </tr>
               <tr>
                 <td>
                   <span className={styles.compFeatureName}>Digital Flashcards</span>
                   <span className={styles.compFeatureDesc}>Active recall flashcards with question timer and shuffle</span>
                 </td>
-                <td className={styles.compCell}>Harr only (1,593 cards)</td>
-                <td className={styles.compCellPro}>All books (4,441 cards)</td>
+                <td className={styles.compCell}>{PUBLIC_REVIEWERS.freeNames} ({questionCounts.free.toLocaleString("en-US")} cards)</td>
+                <td className={styles.compCellPro}>{PUBLIC_REVIEWERS.books.length} published editions ({questionCounts.total.toLocaleString("en-US")} cards)</td>
               </tr>
               <tr>
                 <td>
@@ -487,7 +286,7 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
         <div>
           <strong>Manual Verification &amp; Account Protection</strong>
           <p>
-            To subscribe, message our official Facebook page. Subscriptions are verified and activated manually by our team.
+            To subscribe, message our official Instagram account. Subscriptions are verified and activated manually by our team.
             RevIT never asks for or collects payment card details, bank credentials, OTPs, or wallet PINs.
           </p>
         </div>
@@ -510,6 +309,11 @@ export default function PricingContent({ initialUser, initialEntitlement }: Prop
           </p>
         </article>
       </section>
+      <aside data-upcoming-reviewers="true" aria-label="Upcoming reviewer editions" className={styles.freeNote}>
+        <strong>More Reviewer Books Coming Soon</strong>
+        <p>We&apos;re working on adding BOC Study Guide 7th Edition and Elsevier&apos;s MLS Examination Review to RevIT Pro.</p>
+        <p>These reviewer editions are not yet available. Their release is subject to final approval, and no availability date has been announced.</p>
+      </aside>
     </div>
   );
 }

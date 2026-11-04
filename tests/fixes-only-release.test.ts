@@ -3,6 +3,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
 import { QUESTION_BANKS } from "../app/lib/entitlements";
 import { SITE_UPDATES } from "../app/data/siteUpdates";
+import { currentReviewerCopy, renderPublicPricing } from "./helpers/publicPricing";
 
 const read = (path: string) => readFileSync(path, "utf8");
 
@@ -18,16 +19,21 @@ test("release includes exactly four published banks and the canonical 4,441 ques
   assert.doesNotMatch(read("app/content/reviewerContent.ts"), /Elsevier|BOC|questionSections|choiceTables|sourceFormatting/);
 });
 
-test("release and platform footer share v1.12.3; current plan copy names only published books", () => {
-  assert.equal(SITE_UPDATES[0].version, "v1.12.3");
+test("release and platform footer share v1.12.4; current plan copy names only published books", () => {
+  assert.equal(SITE_UPDATES[0].version, "v1.12.4");
   assert.equal(SITE_UPDATES[0].type, "minor");
   assert.match(read("app/components/SiteUpdatesModal.tsx"), /RevIT Platform \{SITE_UPDATES\[0\]\?\.version/);
-  const pricing = read("app/pricing/PricingContent.tsx");
+  const pricing = currentReviewerCopy(renderPublicPricing());
   for (const count of ["1,593", "2,848", "4,441"]) assert.ok(pricing.includes(count));
   assert.doesNotMatch(pricing, /999|1,884|2,883|Elsevier|BOC/);
   for (const path of ["app/auth/page.tsx", "app/components/Onboarding.tsx", "app/components/PlanAnnouncementModal.tsx", "app/components/ProActivationModal.tsx", "app/pro/page.tsx"]) {
-    const source = read(path);
-    assert.match(source, /Access to newly added Pro reviewer books/);
+    const source = path === "app/pro/page.tsx" ? currentReviewerCopy(read(path)) : read(path);
+    if (path === "app/auth/page.tsx") {
+      assert.match(source, /<ProPlanCards/);
+      assert.match(source, /\["Future book editions", "Not included", "Included in Pro"\]/);
+    } else {
+      assert.match(source, /Access to newly added Pro reviewer books/);
+    }
     assert.doesNotMatch(source, /Elsevier|BOC/);
   }
 });

@@ -396,3 +396,29 @@
     transition: none !important;
   }
 }
+/* Prepaid pricing: solid surfaces, no promotional glow or decorative gradients. */
+.shell { background: var(--canvas); background-image: none; }
+.content { width: min(1120px, calc(100% - 40px)); margin-inline: auto; gap: 28px; }
+.plansGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.prepaidCard { min-width: 0; padding: 26px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); display: flex; flex-direction: column; gap: 10px; box-shadow: 2px 3px 7px rgb(0 0 0 / 5%); overflow-wrap: anywhere; }
+.prepaidCard[data-best-value="true"] { border-color: var(--green); }
+.planLabel { margin: 0; color: var(--green-dark); font-size: 12px; font-weight: 750; }
+.prepaidCard h3 { margin: 0 0 6px; color: var(--ink); font-size: 23px; letter-spacing: -.025em; }
+.upfrontPrice { margin: 0; color: var(--ink); font-size: 44px; line-height: 1.1; font-weight: 800; letter-spacing: -.04em; }
+.paymentTerm, .equivalent, .savings { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.savings { color: var(--green-dark); font-weight: 650; }
+.prepaidFeatures { margin: 10px 0 16px; padding-left: 18px; display: grid; gap: 10px; color: var(--ink); font-size: 13px; line-height: 1.55; }
+.prepaidCta { margin-top: auto; min-height: 44px; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--green-dark); color: #fff; font-size: 13px; font-weight: 700; line-height: 1.5; text-align: center; text-decoration: none; }
+.prepaidCta:hover { background: var(--green); color: #07261f; }
+:global(:root[data-theme="dark"]) .prepaidCta { background: var(--green); color: #07261f; }
+:global(:root[data-theme="dark"]) .planLabel, :global(:root[data-theme="dark"]) .savings { color: var(--green); }
+.freeNote, .accountStatus { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; }
+.accountStatus { color: var(--ink); }
+.comparisonSection, .faqCard { box-shadow: none; }
+.checkMark, .crossMark, .safetyIcon { border: 0; background: none; border-radius: 0; box-shadow: none; }
+.safetyIcon { width: 24px; height: 24px; }
+.content *, .header *, .footer * { background-image: none; text-shadow: none; }
+@media (max-width: 900px) { .plansGrid { grid-template-columns: minmax(0, 540px); justify-content: center; } }
+@media (max-width: 560px) { .content { width: calc(100% - 32px); } .prepaidCard { padding: 22px; } .hero h1 { font-size: 32px; } }
+.tableActivePill { display: block; border: 0; background: none; border-radius: 0; padding: 0; }
+.header button { border: 0; box-shadow: none; }

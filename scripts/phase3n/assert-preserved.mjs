@@ -33,5 +33,10 @@ export function assertPreserved(path, expected) {
     assert.equal(maintenance[path].before, current, `${path}: broken v1.12.3 preservation chain`);
     current = maintenance[path].after;
   }
+  const integration = JSON.parse(readFileSync(new URL("docs/release-integration/authorized-changes.json", root), "utf8"));
+  if (integration[path]) {
+    assert.equal(integration[path].before, current, `${path}: broken integration preservation chain`);
+    current = integration[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

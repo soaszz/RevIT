@@ -13,6 +13,20 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-12-4",
+    version: "v1.12.4",
+    date: "Pending",
+    type: "minor",
+    title: "Updated Pro Plans and Subscription Options",
+    summary: "Updated Pro plan prices, renewal options, and reviewer descriptions.",
+    tags: ["Plans", "Improvements"],
+    highlights: [
+      "Pro plans cost ₱79 for 1 month, ₱219 for 3 months, and ₱399 for 6 months.",
+      "Renewals preserve remaining Pro access and show the confirmed expiration date.",
+      "Plan pages and RevIT AI describe only the available reviewer books."
+    ]
+  },
+  {
     id: "update-v1-12-3",
     version: "v1.12.3",
     date: "November 4, 2026",

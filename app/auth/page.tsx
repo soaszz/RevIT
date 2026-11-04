@@ -1,3 +1,6 @@
+import ProPlanCards from "../components/ProPlanCards";
+import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
+import { getPublicQuestionCounts } from "../lib/server/publicReviewerCounts";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -28,6 +31,7 @@ const features = [
 ];
 
 // Display the same limits used by the application; authorization stays server-side.
+const publicQuestionCounts = getPublicQuestionCounts();
 const comparison = [
   ["Reviewer questions", `${QUESTION_BANKS.harr.label} library`, "Full library"],
   ["Future book editions", "Not included", "Included in Pro"],
@@ -166,59 +170,14 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
         </section>
         <section id="plans" className={`${styles.section} ${styles.plans}`} aria-labelledby="plans-title">
           <div className={styles.sectionHeading}><p className={styles.eyebrow}>RevIT Free & RevIT Pro</p><h2 id="plans-title">Choose how you review.</h2><p>Start with RevIT Free and upgrade when you want deeper analytics, more reviewer content, and higher RevIT AI limits.</p></div>
-          <div className={styles.planGrid}>
-            <article className={styles.plan}>
-              <p className={styles.planKicker}>Your starting point</p>
-              <h3>RevIT Free</h3>
-              <p>The core tools you need to start reviewing.</p>
-              <div className={styles.planPriceBlock}>
-                <div className={styles.planPriceRow}>
-                  <span className={styles.planPriceAmount}>₱0</span>
-                  <span className={styles.planPricePeriod}>/ Free forever</span>
-                </div>
-                <p className={styles.planPriceNote}>Core review features always free</p>
-              </div>
-              <ul>
-                <li>{QUESTION_BANKS.harr.label} question library & MCQ Review</li>
-                <li>Flashcards for Free content & Basic Progress</li>
-                <li>Grades & Grade Simulator</li>
-                <li>Study Planner & Calendar</li>
-                <li>XP, Levels & Achievements</li>
-                <li><strong>{AI_LIMITS.free.dailyRequests} RevIT AI messages per day</strong></li>
-              </ul>
-              <a className={`secondary-button ${styles.secondary}`} href={startHref}>
-                {signedIn ? "Open RevIT" : "Get Started Free"}<span aria-hidden="true">↗</span>
-              </a>
-            </article>
-
-            <article className={`${styles.plan} ${styles.proPlan}`}>
-              <p className={styles.planKicker}>A deeper review <span className={styles.proBadge}>Pro</span></p>
-              <h3>RevIT Pro</h3>
-              <p>Expanded review resources and deeper insights for students who want more from RevIT.</p>
-              <div className={styles.planPriceBlock}>
-                <div className={styles.planPriceRow}>
-                  <span className={styles.planPriceAmount}>₱49</span>
-                  <span className={styles.planPricePeriod}>/ month</span>
-                </div>
-                <p className={styles.planPriceNote}>Early bird price · Monthly access</p>
-              </div>
-              <ul>
-                <li>Everything in Free, plus:</li>
-                <li>Full access to Pro reviewer books</li>
-                <li>Access to newly added Pro reviewer books</li>
-                <li>Weakness Analytics</li>
-                <li>Advanced Progress Analytics</li>
-                <li>Advanced study recommendations</li>
-                <li><strong>{AI_LIMITS.pro.dailyRequests} RevIT AI messages per day</strong></li>
-              </ul>
-              <a className={`primary-button ${styles.primary}`} href={proContact} target="_blank" rel="noopener noreferrer" aria-label="Get RevIT Pro on Facebook (opens in a new tab)">
-                Get RevIT Pro on Facebook <span aria-hidden="true">↗</span>
-              </a>
-              <p className={styles.contactNote}>
-                Want to see the full breakdown? <Link href="/pricing">View complete plan comparison →</Link>
-              </p>
-            </article>
+          <div className={styles.freePlanSummary}>
+            <h3>RevIT Free · ₱0 forever</h3>
+            <p>{PUBLIC_REVIEWERS.freeBooks.length} free reviewer edition ({PUBLIC_REVIEWERS.freeNames}), {publicQuestionCounts.free.toLocaleString("en-US")} MCQs and {publicQuestionCounts.free.toLocaleString("en-US")} Flashcards. Basic Progress, Grades, Planner, XP and {AI_LIMITS.free.dailyRequests} daily RevIT AI messages remain included.</p>
+            <a className={styles.textLink} href={startHref}>{signedIn ? "Open RevIT" : "Get Started Free"}</a>
           </div>
+          <p className={styles.publishedBooks}>{PUBLIC_REVIEWERS.books.length} published reviewer editions: {PUBLIC_REVIEWERS.freeNames}, {PUBLIC_REVIEWERS.proNames}. Pro includes all editions; {PUBLIC_REVIEWERS.proBooks.length} are Pro-only. {publicQuestionCounts.total.toLocaleString("en-US")} available MCQs and {publicQuestionCounts.total.toLocaleString("en-US")} Flashcards.</p>
+          <ProPlanCards />
+          <p className={styles.contactNote}>Same Pro features with every duration. One upfront payment; no automatic billing. <Link href="/pricing">View complete plan comparison</Link>.</p>
           <details className={styles.comparison}><summary>Compare what’s included <span aria-hidden="true">+</span></summary><table><caption>RevIT Free and Pro at a glance</caption><thead><tr><th scope="col">Feature</th><th scope="col">Free</th><th scope="col">Pro</th></tr></thead><tbody>{comparison.map(([feature, free, pro]) => <tr key={feature}><th scope="row">{feature}</th><td>{free}</td><td>{pro}</td></tr>)}</tbody></table></details>
         </section>
         <section id="account" className={`${styles.section} ${styles.account}`} aria-label="Your RevIT account" tabIndex={-1}>
@@ -230,7 +189,7 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
             </div>}
         </section>
       </main>
-      <footer className={styles.footer}><div><strong>RevIT</strong><span>Review It Thoroughly.</span></div><nav aria-label="Legal and subscription links"><Link href="/terms">Terms of Service</Link><Link href="/privacy">Privacy Policy</Link><a href={proContact} target="_blank" rel="noopener noreferrer">Pro enquiries<span className="sr-only"> on Facebook (opens in a new tab)</span></a></nav><small>© {new Date().getFullYear()} RevIT</small></footer>
+      <footer className={styles.footer}><div><strong>RevIT</strong><span>Review It Thoroughly.</span></div><nav aria-label="Legal and subscription links"><Link href="/terms">Terms of Service</Link><Link href="/privacy">Privacy Policy</Link><a href={proContact} target="_blank" rel="noopener noreferrer">Pro enquiries<span className="sr-only"> on Instagram (opens in a new tab)</span></a></nav><small>© {new Date().getFullYear()} RevIT</small></footer>
     </div>
   );
 }

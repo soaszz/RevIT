@@ -1,3 +1,5 @@
+import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
+import { PRO_PLANS, PRO_PLAN_SUMMARY } from "../lib/proPlans";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,7 +58,7 @@ export default function ProPage() {
             <ul className={styles.featureList}>
               <li className={styles.featureItem}>
                 <span className={styles.checkIcon} aria-hidden="true">✓</span>
-                <span>Harr question library &amp; flashcards</span>
+                <span>{PUBLIC_REVIEWERS.freeBooks.length} free reviewer edition ({PUBLIC_REVIEWERS.freeNames}) &amp; Flashcards</span>
               </li>
               <li className={styles.featureItem}>
                 <span className={styles.checkIcon} aria-hidden="true">✓</span>
@@ -95,10 +97,10 @@ export default function ProPage() {
             <p className={styles.planDesc}>Complete library access and deep weakness diagnostics for serious reviewers.</p>
             <div className={styles.priceBlock}>
               <div className={styles.priceRow}>
-                <span className={styles.priceAmount}>₱49</span>
-                <span className={styles.pricePeriod}>/ month</span>
+                <span className={styles.priceAmount}>₱{PRO_PLANS[0].price}</span>
+                <span className={styles.pricePeriod}>/ 1 month, paid upfront</span>
               </div>
-              <p className={styles.priceNote}>Early bird price · Monthly access</p>
+              <p className={styles.priceNote}>{PRO_PLAN_SUMMARY} · Paid upfront</p>
             </div>
             <ul className={styles.featureList}>
               <li className={styles.featureItem}>
@@ -107,7 +109,7 @@ export default function ProPage() {
               </li>
               <li className={styles.featureItem}>
                 <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
-                <span>Full access to Pro reviewer books (Ciulla, Rodak, Strasinger)</span>
+                <span>Full access to {PUBLIC_REVIEWERS.proBooks.length} Pro-only reviewer editions ({PUBLIC_REVIEWERS.proNames})</span>
               </li>
               <li className={styles.featureItem}>
                 <span className={`${styles.checkIcon} ${styles.proCheckIcon}`} aria-hidden="true">✓</span>
@@ -133,7 +135,7 @@ export default function ProPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>Get RevIT Pro on Facebook</span>
+                <span>Get RevIT Pro on Instagram</span>
                 <span className="sr-only"> (opens in a new tab)</span>
                 <span aria-hidden="true">↗</span>
               </a>
@@ -151,7 +153,7 @@ export default function ProPage() {
           <div>
             <strong>Manual Verification &amp; Account Protection</strong>
             <p>
-              To subscribe, message our official Facebook page. Subscriptions are verified and activated manually by our team.
+              To subscribe, message our official Instagram page. Subscriptions are verified and activated manually by our team.
               RevIT never asks for or collects payment card details, bank credentials, OTPs, or wallet PINs.
             </p>
           </div>
@@ -173,6 +175,11 @@ export default function ProPage() {
             </p>
           </article>
         </section>
+        <aside data-upcoming-reviewers="true" aria-label="Upcoming reviewer editions" className={styles.heroLead}>
+          <strong>More Reviewer Books Coming Soon</strong>
+          <p>We&apos;re working on adding BOC Study Guide 7th Edition and Elsevier&apos;s MLS Examination Review to RevIT Pro.</p>
+          <p>These reviewer editions are not yet available. Their release is subject to final approval, and no availability date has been announced.</p>
+        </aside>
       </div>
 
       <footer className={styles.footer}>
