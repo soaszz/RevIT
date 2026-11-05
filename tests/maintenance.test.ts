@@ -1,9 +1,85 @@
+import ts from "typescript";
+import { createRequire } from "node:module";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { maintenanceResponse } from "../app/lib/maintenance";
+
+const routingRequire = createRequire(import.meta.url);
+routingRequire("next/dist/server/node-environment-baseline");
+const { unstable_doesMiddlewareMatch: unstable_doesProxyMatch } = routingRequire("next/experimental/testing/server");
+
+test("only the exact maintenance font bypasses app-session routing in every auth and maintenance state", async () => {
+  function loadSource(path: string, overrides: Record<string, unknown>) {
+    const exports: Record<string, any> = {};
+    const code = ts.transpileModule(readFileSync(path, "utf8"), {
+      compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
+    }).outputText;
+    new Function("require", "exports", code)((name: string) => {
+      if (Object.hasOwn(overrides, name)) return overrides[name];
+      throw new Error(`Unexpected routing dependency: ${name}`);
+    }, exports);
+    return exports;
+  }
+  const font = "/maintenance-assets/dm-sans-latin.woff2";
+  const protectedPaths = ["/overview", "/admin", "/library", "/fonts/other.woff2", "/maintenance-assets/other.woff2", `${font}/extra`, `${font}.bak`, "/maintenance-assets/dm-sans-latinXwoff2"];
+  const before = process.env.REVIT_MAINTENANCE_MODE;
+  try {
+    for (const flag of ["false", "true"]) for (const auth of ["logged-out", "signed-in", "unavailable"]) {
+      process.env.REVIT_MAINTENANCE_MODE = flag;
+      let claimsCalls = 0;
+      const session = loadSource("app/lib/supabase/proxy.ts", {
+        "@supabase/ssr": { createServerClient: () => ({ auth: { getClaims: async () => {
+          claimsCalls++;
+          if (auth === "unavailable") throw new Error("Synthetic auth unavailable");
+          return { data: { claims: auth === "signed-in" ? { sub: "synthetic-user" } : null }, error: null };
+        } } }) },
+        "next/server": { NextResponse },
+        "./config": { isSupabaseConfigured: () => true, supabaseConfig: () => ({ url: "https://not-used.invalid", key: "synthetic-placeholder" }), supabaseCookieOptions: () => ({}) },
+        "./retryAuth": { retryAuthRequest: (fn: () => Promise<unknown>) => fn(), isTransientAuthError: () => false },
+      });
+      const entry = loadSource("proxy.ts", {
+        "./app/lib/securityHeaders": { contentSecurityPolicy: () => "synthetic-policy" },
+        "./app/lib/supabase/proxy": session,
+        "./app/lib/maintenance": { maintenanceResponse },
+      });
+      const matches = (path: string) => unstable_doesProxyMatch({ config: entry.config, nextConfig: {}, url: `https://revit.example${path}` });
+      for (const path of [font, `${font}?font_probe=1`]) {
+        assert.equal(matches(path), false, path);
+        const response = matches(path) ? await entry.proxy(new NextRequest(`https://revit.example${path}`)) : NextResponse.next();
+        assert.equal(response.headers.get("x-middleware-next"), "1");
+        assert.equal(response.headers.get("location"), null);
+      }
+      assert.equal(claimsCalls, 0, "Static font must not invoke app-session auth");
+      for (const path of protectedPaths) {
+        assert.equal(matches(path), true, path);
+        const response = await entry.proxy(new NextRequest(`https://revit.example${path}`));
+        if (flag === "true" && path.startsWith("/maintenance-assets/")) {
+          // Preserve the existing maintenance-ON infrastructure allowlist.
+          assert.equal(response.headers.get("x-middleware-next"), "1", path);
+        } else if (flag === "true") {
+          assert.equal(response.status, 503, path);
+          assert.equal(response.headers.get("x-revit-maintenance"), "true");
+        } else if (auth === "signed-in") {
+          assert.equal(response.headers.get("x-middleware-next"), "1", path);
+          assert.equal(response.headers.get("content-security-policy"), "synthetic-policy");
+        } else {
+          assert.equal(response.status, 307, path);
+          const target = new URL(response.headers.get("location"));
+          assert.equal(target.pathname, "/auth");
+          assert.equal(target.searchParams.get("next"), path);
+          assert.equal(response.headers.get("content-security-policy"), "synthetic-policy");
+        }
+      }
+    }
+    assert.equal(createHash("sha256").update(readFileSync(`public${font}`)).digest("hex"), "468d56b6b25b05b70190b6c233d773f6f1770e8579827ce022a57f03fa8002fb");
+  } finally {
+    if (before === undefined) delete process.env.REVIT_MAINTENANCE_MODE;
+    else process.env.REVIT_MAINTENANCE_MODE = before;
+  }
+});
 
 test("server maintenance gate, response contracts and exact supplied mascot", async () => {
   const before = process.env.REVIT_MAINTENANCE_MODE;
