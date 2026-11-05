@@ -21,7 +21,7 @@ export default function ProPlanCards({ renew = false }: { renew?: boolean }) {
               <li>{AI_LIMITS.pro.dailyRequests} RevIT AI messages per day</li>
               <li>All Free features included</li>
             </ul>
-            <a className={styles.prepaidCta} href={PRO_CONTACT_URL} target="_blank" rel="noopener noreferrer">{renew ? "Renew" : "Get"} {plan.months}-month Pro on Instagram<span className="sr-only"> (opens in a new tab)</span></a>
+            <a className={styles.prepaidCta} href={PRO_CONTACT_URL} target="_blank" rel="noopener noreferrer">{renew ? "Renew" : "Get"} {plan.months}-month Pro<span className="sr-only"> on Instagram (opens in a new tab)</span></a>
           </article>;
         })}
       </section>

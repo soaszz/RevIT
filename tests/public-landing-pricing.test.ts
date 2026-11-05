@@ -33,8 +33,16 @@ test("static MCQ totals match source lengths and future publication changes upda
  assert.match(readFileSync("app/lib/server/publicReviewerCounts.ts","utf8"),/^import "server-only"/);
 });
 test("landing and pricing render the same three cards with upfront prices, correct savings and public-only counts",()=>{
- const Card=transpiled("app/components/ProPlanCards.tsx",{"../lib/proPlans":plans,"../lib/publicReviewerBooks":{PUBLIC_REVIEWERS},"../lib/entitlements":{AI_LIMITS}}).default as React.ComponentType;
+ const Card=transpiled("app/components/ProPlanCards.tsx",{"../lib/proPlans":plans,"../lib/publicReviewerBooks":{PUBLIC_REVIEWERS},"../lib/entitlements":{AI_LIMITS}}).default as React.ComponentType<{ renew?: boolean }>;
  const html=renderToStaticMarkup(React.createElement(Card));assert.equal((html.match(/<article/g)||[]).length,3);
+ for(const renew of [false,true]) {
+  const markup=renderToStaticMarkup(React.createElement(Card,{renew}));
+  const links=[...markup.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)];assert.equal(links.length,3);
+  const visible=links.map(([,label])=>label.replace(/<span class="sr-only">[\s\S]*?<\/span>/g,"").replace(/<[^>]*>/g,"").trim());
+  assert.deepEqual(visible,[1,3,6].map(months=>`${renew ? "Renew" : "Get"} ${months}-month Pro`));
+  for(const [,label] of links)assert.match(label,/<span class="sr-only"> on Instagram \(opens in a new tab\)<\/span>/);
+  assert.deepEqual([...markup.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*target="_blank" rel="noopener noreferrer"/g)].map(match=>match[1]),[plans.PRO_CONTACT_URL,plans.PRO_CONTACT_URL,plans.PRO_CONTACT_URL]);
+ }
  for(const value of ["₱79","₱219","₱399","₱79.00 per month equivalent","₱73.00 per month equivalent","₱66.50 per month equivalent","Save ₱18","Save ₱75","Best Value"])assert.ok(html.includes(value),value);
  assert.equal((html.match(/One upfront payment/g)||[]).length,3);assert.doesNotMatch(html,/BOC|Elsevier/);
  for(const path of ["app/auth/page.tsx","app/pricing/PricingContent.tsx"]){const text=readFileSync(path,"utf8");assert.match(text,/<ProPlanCards/);assert.match(text,/PUBLIC_REVIEWERS/);assert.doesNotMatch(text,/1,593|2,848|4,441/);}
