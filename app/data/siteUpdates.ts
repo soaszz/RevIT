@@ -13,6 +13,20 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-12-5",
+    version: "v1.12.5",
+    date: "November 10, 2026",
+    type: "minor",
+    title: "Fixed Pro Subscription Access",
+    summary: "Fixed Pro grants, revocations, and access after subscriptions expire.",
+    tags: ["Fixes", "Subscriptions"],
+    highlights: [
+      "Restored admin Pro grants and revocations.",
+      "Protected subscription settings from unauthorized changes.",
+      "Made Pro and AI access follow subscription expiration.",
+    ],
+  },
+  {
     id: "update-v1-12-4",
     version: "v1.12.4",
     date: "November 5, 2026",

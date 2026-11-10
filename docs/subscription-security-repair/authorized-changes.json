@@ -1,0 +1,17 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "9a10dbde06fdbeecfb249a0c4f08c81cc6b8539fe707079650c77fdddd707663",
+    "after": "b934b3cd64f01472b29ae73442f4b045fd6bbe1c60b1d21216d67917348eab15",
+    "reason": "Use database entitlement for VIP access; preserve gift presentation, actual approved expiration and all other behavior."
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "709629bbf89fc438328ae5311469b094e89fa394a69464eda0a6c12f7661dec0",
+    "after": "7be65053b75d78c4544da2698f6da38c863eba975f174f7a7db688f65e08d6d0",
+    "reason": "Authorized v1.12.5 subscription repair release entry only; removing it reproduces historical Updates bytes exactly. Bound November 10 Asia/Manila; deployment/promotion must be same date."
+  },
+  "tests/fixes-only-release.test.ts": {
+    "before": "413744973fc90c7c766b2c87e7a75be9375155440367a35b241805c0e927e9e4",
+    "after": "23c05af416e965a98310b1d888d76b5f389271bc108cae01f5cb604ddafdefeb",
+    "reason": "Keep exact latest-version assertion aligned to v1.12.5 and explicitly preserve historical v1.12.4; all publication/count/security assertions retained."
+  }
+}

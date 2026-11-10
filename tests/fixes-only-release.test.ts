@@ -19,8 +19,9 @@ test("release includes exactly four published banks and the canonical 4,441 ques
   assert.doesNotMatch(read("app/content/reviewerContent.ts"), /Elsevier|BOC|questionSections|choiceTables|sourceFormatting/);
 });
 
-test("release and platform footer share v1.12.4; current plan copy names only published books", () => {
-  assert.equal(SITE_UPDATES[0].version, "v1.12.4");
+test("release and platform footer share v1.12.5; current plan copy names only published books", () => {
+  assert.equal(SITE_UPDATES[0].version, "v1.12.5");
+  assert.equal(SITE_UPDATES[1].version, "v1.12.4");
   assert.equal(SITE_UPDATES[0].type, "minor");
   assert.match(read("app/components/SiteUpdatesModal.tsx"), /RevIT Platform \{SITE_UPDATES\[0\]\?\.version/);
   const pricing = currentReviewerCopy(renderPublicPricing());

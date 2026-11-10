@@ -1098,17 +1098,7 @@ useEffect(() => {
         const nextProfile = snapshot.profile ?? localProfileToCloud(initialUser!.id, initialUser!.username ?? `learner_${initialUser!.id.slice(0, 8)}`, fallbackName, "");
         const nextPreferences = normalizeUserPreferences(snapshot.preferences ?? preferences, preferences.timezone);
         const userEntitlement = snapshot.entitlement;
-        const isGiftedUser = GIFTED_PRO_USER_IDS.includes(initialUser!.id);
-        const giftedUserConfig = isGiftedUser ? GIFTED_PRO_USERS[initialUser!.id] : undefined;
-        const effectiveEntitlement: SubscriptionEntitlement = isGiftedUser
-          ? {
-              storedPlan: "pro",
-              effectivePlan: "pro",
-              proStartedAt: userEntitlement.proStartedAt || new Date().toISOString(),
-              proExpiresAt: giftedUserConfig?.expiresAt || "2028-12-31T23:59:59Z",
-              serverNow: userEntitlement.serverNow || new Date().toISOString(),
-            }
-          : userEntitlement;
+        const effectiveEntitlement: SubscriptionEntitlement = userEntitlement;
         setCloudProfile(nextProfile); setGrades(snapshot.grades); if (snapshot.customGradebooks) setCustomGradebooks(snapshot.customGradebooks); setActivity(snapshot.activity); setExams(snapshot.exams); setPreferences(nextPreferences); setEntitlement(effectiveEntitlement);
         if (snapshot.pendingActivation) setPendingActivation(snapshot.pendingActivation);
         setAttempts((current) => mergeAttempts(snapshot.attempts, current));

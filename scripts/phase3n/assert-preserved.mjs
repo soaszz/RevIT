@@ -38,5 +38,10 @@ export function assertPreserved(path, expected) {
     assert.equal(integration[path].before, current, `${path}: broken integration preservation chain`);
     current = integration[path].after;
   }
+  const security = JSON.parse(readFileSync(new URL("docs/subscription-security-repair/authorized-changes.json", root), "utf8"));
+  if (security[path]) {
+    assert.equal(security[path].before, current, `${path}: broken subscription-security preservation chain`);
+    current = security[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }
