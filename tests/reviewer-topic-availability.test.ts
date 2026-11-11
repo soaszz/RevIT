@@ -40,7 +40,7 @@ function serverRuntime(overrides: Record<string, unknown> = {}, mode = "developm
       compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
     }).outputText;
     new Function("require", "module", "exports", "process", code)(requireModule, loaded, loaded.exports,
-      { env: { ...process.env, NODE_ENV: mode } });
+      { env: { ...process.env, NODE_ENV: mode }, cwd: () => process.cwd() });
     return loaded.exports;
   }
   return (path: string) => load(resolve(root, path));
@@ -292,10 +292,10 @@ test("BOC API requires authentication/Pro and stays unpublished in production", 
   let signedIn = false, plan = "free", authCalls = 0;
   const overrides = {
     "next/server": { NextResponse: Response },
-    "../../../lib/supabase/config": { isSupabaseConfigured: () => true },
-    "../../../lib/supabase/server": { createClient: async () => ({
+    "../supabase/config": { isSupabaseConfigured: () => true },
+    "../supabase/server": { createClient: async () => ({
       auth: { getUser: async () => { authCalls++; return { data: { user: signedIn ? { id: "synthetic-local" } : null }, error: null }; } },
-      rpc: async () => ({ data: [{ effective_plan: plan }], error: null }),
+      rpc: async () => ({ data: [{ effective_plan: plan, server_now: "2026-11-12T00:00:00Z", pro_expires_at: "2027-11-12T00:00:00Z" }], error: null }),
     }) },
   };
   const load = serverRuntime(overrides);

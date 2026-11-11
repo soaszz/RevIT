@@ -127,10 +127,13 @@ test("combined entry matches the reviewed profile and preserves historical Updat
   assert.equal(updates[0].id, "update-v1-13-0"); assert.equal(updates[0].date, profile.releaseDate); assert.equal(updates[0].type, "major");
   for (const word of ["BOC", "Elsevier", "Harr", "two correct"]) assert.ok(JSON.stringify(updates[0]).includes(word));
   const source = readFileSync("app/data/siteUpdates.ts", "utf8");
-  const reverse = source.replace(/  \{\r?\n    id: "update-v1-13-0",[\s\S]*?\r?\n  \},\r?\n/, "");
+  const reverse = source
+    .replace(/  \{\r?\n    id: "update-v1-13-0",[\s\S]*?\r?\n  \},\r?\n/, "")
+    .replace(/  \{\r?\n    id: "update-v1-12-6",[\s\S]*?\r?\n  \},\r?\n/, "");
   assert.notEqual(reverse, source);
   const ledger = JSON.parse(readFileSync("docs/reviewer-release/authorized-changes.json", "utf8"));
   assert.equal(createHash("sha256").update(reverse).digest("hex"), ledger["app/data/siteUpdates.ts"].before);
-  assert.equal(updates[1].version, "v1.12.5"); assert.equal(updates[1].date, "November 10, 2026");
+  assert.equal(updates[1].version, "v1.12.6"); assert.equal(updates[1].date, "November 12, 2026");
+  assert.equal(updates[2].version, "v1.12.5"); assert.equal(updates[2].date, "November 10, 2026");
   assert.match(readFileSync("app/components/SiteUpdatesModal.tsx", "utf8"), /RevIT Platform \{SITE_UPDATES\[0\]\?\.version/);
 });

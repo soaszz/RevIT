@@ -106,8 +106,8 @@
   },
   "tests/reviewer-topic-availability.test.ts": {
     "before": "4c016beeca6bf4a18ab959b4d327415505b29805b08e18d8998a39481fc67fb9",
-    "after": "05f2d9e1dcb415ba6ce020035b3636680ba8cc8731a2e0b423bda24831449438",
-    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+    "after": "82df20d87562a910e7affd5f867620ca67f5ebb292cfdb6bf3c217115655a63b",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved. Reconciliation fix supplies process.cwd and the correct nested Supabase module keys to the loader stub so the six-edition payloads and API gates load; assertions unchanged."
   },
   "app/lib/publicReviewerBooks.ts": {
     "before": "11c43b71fbd8d634962fea45ec4e59dd3a66d3192e0651f5b173153ef2eff314",
