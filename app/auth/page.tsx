@@ -46,8 +46,8 @@ const comparison = [
   ["RevIT AI messages", `${AI_LIMITS.free.dailyRequests} per day`, `${AI_LIMITS.pro.dailyRequests} per day`],
 ];
 
-function ProductPreview({ name, alt, caption, width, height, hero = false, isPro = false }: {
-  name: string; alt: string; caption: string; width: number; height: number; hero?: boolean; isPro?: boolean;
+function ProductPreview({ src, alt, caption, width, height, hero = false, isPro = false }: {
+  src: string; alt: string; caption: string; width: number; height: number; hero?: boolean; isPro?: boolean;
 }) {
   return (
     <figure className={`${styles.preview} ${hero ? styles.heroPreview : ""}`}>
@@ -56,25 +56,10 @@ function ProductPreview({ name, alt, caption, width, height, hero = false, isPro
         <span>Inside your workspace</span>
       </div>
       <div className={styles.previewCrop}>
-        {/* Unoptimized serves the crisp lossless WebP screenshot without downsampling artifacts. */}
-        <Image
-          className={styles.lightPreview}
-          src={`/landing/${name}-light.webp`}
-          alt={alt}
-          width={width}
-          height={height}
-          priority={hero}
-          unoptimized
-        />
-        <Image
-          className={styles.darkPreview}
-          src={`/landing/${name}-dark.webp`}
-          alt={alt}
-          width={width}
-          height={height}
-          priority={hero}
-          unoptimized
-        />
+        <a href={src} target="_blank" rel="noopener noreferrer" aria-label={`Open full-size ${caption} screenshot (opens in a new tab)`}>
+          {/* Preserve the supplied PNG bytes and full aspect ratio, as with existing unoptimized screenshots. */}
+          <Image src={src} alt={alt} width={width} height={height} priority={hero} unoptimized />
+        </a>
       </div>
       <figcaption>{hero ? "Your review, your schedule, one place to begin." : "Actual RevIT Weakness Analytics, identifying weak topics and study priorities."}</figcaption>
     </figure>
@@ -117,7 +102,7 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
             <div className={styles.actions}><a className={`primary-button ${styles.primary}`} href={startHref}>{signedIn ? "Open RevIT" : "Start Reviewing"}<span aria-hidden="true">↗</span></a><a className={styles.textLink} href="#mcq-demo">Try Sample Question <span aria-hidden="true">↓</span></a></div>
             <p className={styles.heroNote}>Built for Medical Technology / Medical Laboratory Science.</p>
           </div>
-          <ProductPreview name="overview" width={1024} height={530} hero alt="RevIT Overview showing performance summary, today's study plan, and the study calendar." caption="Overview" />
+          <ProductPreview src="/landing/overview-updated.png" width={1862} height={1012} hero alt="RevIT Overview with today’s schedule, study activity, mastery, Mistake Bank, topic performance, and Question Bank." caption="Overview" />
         </section>
         <div className={styles.subjectStrip} aria-label="Medical Technology subjects"><span>Made for your subjects</span><p>Clinical Chemistry <i aria-hidden="true">/</i> Hematology <i aria-hidden="true">/</i> Microbiology <i aria-hidden="true">/</i> And the connections between them.</p></div>
         <section id="features" className={styles.section} aria-labelledby="features-title">
@@ -149,7 +134,7 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
             <p>See where you need more practice—and give those topics your attention.</p>
             <a className={styles.textLink} href="#plans">Explore RevIT Pro <span aria-hidden="true">↓</span></a>
           </div>
-          <ProductPreview name="analytics" width={1024} height={557} alt="RevIT Weakness Analytics showing topic mastery, repeated mistakes, and study recommendations." caption="Weakness Analytics" isPro />
+          <ProductPreview src="/landing/weakness-analytics-updated.png" width={1858} height={1010} alt="RevIT Weakness Analytics with mastery summary, priority topic, book and subject filters, and a ranked topic mastery table." caption="Weakness Analytics" isPro />
         </section>
 
         <section id="flashcard-demo" className={`${styles.section} ${styles.showcaseSection} ${styles.reverse}`} aria-labelledby="flashcard-demo-title">

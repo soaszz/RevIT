@@ -1,0 +1,18 @@
+{
+  "app/auth/page.tsx": {
+    "before": "6dc6666591e2352aab3665296ae2fee1f5cf30b31324e7bd4e70f7c91c5b5e5b",
+    "after": "656653269c8fdb6037fe3781036e98fd63998fb283d439daf376f5d30367c766",
+    "reason": "Latest Overview and Weakness Analytics screenshots wired through the existing ProductPreview as a single full-width unoptimized image (with full-size link). No other landing page change."
+  },
+  "app/auth/Landing.module.css": {
+    "before": "38a21a2312a9cf881887335f2a99e6befdd408f5bae7c65208c81fc236ed2119",
+    "after": "0c93d541a152f0356dbd22f62deeccb688b4fe2c4c9d17001729a9ef27353e0c",
+    "reason": "Preview frame now fits the wider screenshots at every breakpoint; existing landing styling and theme behavior otherwise unchanged."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "6582db0e255b71fbc4d9cd17b7bdfa9469604c7b2a5150ded133664bb43d9332",
+    "after": "e87c7fd82ea9f9de25e467fe205e9bf8584f930f09df0a969081368b108ac5de",
+    "reason": "Preservation chain extended with the landing-screenshots authorized change; all existing chains and assertions retained."
+  },
+  "_note": "New assets public/landing/overview-updated.png and public/landing/weakness-analytics-updated.png are additions, not chained preserved files."
+}

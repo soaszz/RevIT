@@ -63,5 +63,10 @@ export function assertPreserved(path, expected) {
     assert.equal(publication[path].before, current, path + ": broken prepared publication preservation chain");
     current = publication[path].after;
   }
+  const landing = JSON.parse(readFileSync(new URL("docs/landing-screenshots/authorized-changes.json", root), "utf8"));
+  if (landing[path]) {
+    assert.equal(landing[path].before, current, path + ": broken landing-screenshots preservation chain");
+    current = landing[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

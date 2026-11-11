@@ -249,10 +249,6 @@
   .actions { gap: 12px 20px; }
   .heroNote { margin-top: 16px !important; }
   .previewLabel > span:last-child { display: none; }
-  .heroPreview .previewCrop { max-height: 320px; }
-  .heroPreview img { width: 540px; max-width: none; }
-  .analyticsSection .previewCrop { height: 310px; }
-  .analyticsSection img { width: 520px; max-width: none; }
   .subjectStrip { font-size: 12px; }
   .subjectStrip i { margin-inline: 6px; }
   .sectionHeading { grid-template-columns: 1fr; }
@@ -286,3 +282,7 @@
 .freePlanSummary { margin-block: 28px 20px; padding-block: 20px; border-block: 1px solid var(--line); }
 .freePlanSummary h3 { font-size: 20px; color: var(--ink); }
 .freePlanSummary p, .publishedBooks, .plans > .contactNote { margin-block: 12px 20px; color: var(--muted); font-size: 14px; line-height: 1.7; overflow-wrap: anywhere; }
+
+/* Latest screenshots render as a single full-width image inside the existing preview frame. */
+.previewCrop a { display: block; }
+.preview img { display: block; width: 100%; max-width: 100%; height: auto; }
