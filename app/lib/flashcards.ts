@@ -1,4 +1,4 @@
-import type { ReviewerBook, ReviewerQuestion } from "../content/reviewerContent";
+import type { QuestionStimulus, ReviewerBook, ReviewerQuestion, SourceTextMarks } from "../content/reviewerContent";
 
 export type Flashcard = {
   id: string;
@@ -9,11 +9,21 @@ export type Flashcard = {
   answer: string;
   explanation: string;
   book?: ReviewerBook;
+  stimulus?: QuestionStimulus;
+  rationaleImages?: QuestionStimulus[];
+  rationaleSections?: ReviewerQuestion["rationaleSections"];
+  promptAfterReferences?: string;
+  questionSections?: ReviewerQuestion["questionSections"];
+  choiceTable?: ReviewerQuestion["choiceTable"];
+  choiceTables?: ReviewerQuestion["choiceTables"];
+  answerTable?: Extract<QuestionStimulus, { kind: "table" }>;
+  sourceFormatting?: ReviewerQuestion["sourceFormatting"];
+  answerFormatting?: SourceTextMarks;
 };
 
 type FlashcardQuestion = Pick<
   ReviewerQuestion,
-  "id" | "subjectId" | "topicId" | "prompt" | "choices" | "correctAnswer" | "officialAnswer" | "explanation" | "book" | "matching"
+  "id" | "subjectId" | "topicId" | "prompt" | "choices" | "correctAnswer" | "officialAnswer" | "explanation" | "book" | "matching" | "stimulus" | "rationaleImages" | "rationaleSections" | "promptAfterReferences" | "questionSections" | "choiceTable" | "choiceTables" | "sourceFormatting"
 >;
 
 function cleanAnswerLabel(answer: string) {
@@ -21,9 +31,10 @@ function cleanAnswerLabel(answer: string) {
 }
 
 export function resolveFlashcardAnswer(
-  question: Pick<ReviewerQuestion, "choices" | "correctAnswer" | "officialAnswer">,
+  question: Pick<ReviewerQuestion, "choices" | "correctAnswer" | "officialAnswer"> & Partial<Pick<ReviewerQuestion, "book" | "sourceFormatting" | "questionSections" | "choiceTables">>,
 ) {
   const indexedAnswer = question.choices[question.correctAnswer];
+  if ((question.book === "Elsevier" || question.book === "BOC") || question.sourceFormatting || question.questionSections || question.choiceTables) return indexedAnswer ?? question.officialAnswer;
   return cleanAnswerLabel(indexedAnswer?.trim() || question.officialAnswer);
 }
 
@@ -39,6 +50,20 @@ export function toFlashcard(question: FlashcardQuestion): Flashcard {
     answer: resolveFlashcardAnswer(question),
     explanation: question.explanation,
     book: question.book,
+    ...(question.questionSections ? { questionSections: question.questionSections } : {}),
+    ...(question.choiceTables ? {
+      choiceTables: question.choiceTables,
+      answerTable: question.choiceTables[question.correctAnswer] ?? undefined,
+    } : {}),
+    ...(question.sourceFormatting ? {
+      sourceFormatting: question.sourceFormatting,
+      answerFormatting: question.sourceFormatting.choices?.[question.correctAnswer],
+    } : {}),
+    ...((question.book === "Elsevier" || question.book === "BOC") ? {
+      stimulus: question.stimulus, rationaleImages: question.rationaleImages,
+      rationaleSections: question.rationaleSections, promptAfterReferences: question.promptAfterReferences,
+      choiceTable: question.choiceTable,
+    } : {}),
   };
 }
 

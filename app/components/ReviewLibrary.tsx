@@ -51,6 +51,8 @@ type ReviewLibraryProps = {
   ciullaTopicQuestionCounts?: Record<string, number>;
   rodakTopicQuestionCounts?: Record<string, number>;
   strasingerTopicQuestionCounts?: Record<string, number>;
+  bocTopicQuestionCounts?: Record<string, number>;
+  elsevierTopicQuestionCounts?: Record<string, number>;
   onOpenProModal: () => void;
   onRequestConfirm: (title: string, message: string, confirmLabel: string, onConfirm: () => void) => void;
 };
@@ -89,6 +91,8 @@ export default function ReviewLibrary({
   ciullaTopicQuestionCounts = {},
   rodakTopicQuestionCounts = {},
   strasingerTopicQuestionCounts = {},
+  bocTopicQuestionCounts = {},
+  elsevierTopicQuestionCounts = {},
   onOpenProModal,
   onRequestConfirm,
 }: ReviewLibraryProps) {
@@ -148,8 +152,14 @@ export default function ReviewLibrary({
         counts.set(tId, sCount);
       }
     }
+    for (const [topicId, count] of Object.entries(bocTopicQuestionCounts)) {
+      if (!counts.has(topicId)) counts.set(topicId, count);
+    }
+    for (const [topicId, count] of Object.entries(elsevierTopicQuestionCounts)) {
+      if (!counts.has(topicId)) counts.set(topicId, count);
+    }
     return counts;
-  }, [questions, ciullaTopicQuestionCounts, rodakTopicQuestionCounts, strasingerTopicQuestionCounts]);
+  }, [questions, ciullaTopicQuestionCounts, rodakTopicQuestionCounts, strasingerTopicQuestionCounts, bocTopicQuestionCounts, elsevierTopicQuestionCounts]);
 
   // Selected sources count (Harr vs Ciulla vs Rodak vs Strasinger topics)
   const sourceCounts = useMemo(() => {
@@ -157,11 +167,17 @@ export default function ReviewLibrary({
     let ciulla = 0;
     let rodak = 0;
     let strasinger = 0;
+    let boc = 0;
+    let elsevier = 0;
     const topicMap = new Map(allAvailableTopics.map((t) => [t.id, t]));
     for (const id of selectedTopicIds) {
       const topic = topicMap.get(id);
       const b = topic?.book ?? "Harr";
-      if (b === "Strasinger") {
+      if (b === "BOC") {
+        boc += 1;
+      } else if (b === "Elsevier") {
+        elsevier += 1;
+      } else if (b === "Strasinger") {
         strasinger += 1;
       } else if (b === "Rodak") {
         rodak += 1;
@@ -171,7 +187,7 @@ export default function ReviewLibrary({
         harr += 1;
       }
     }
-    return { harr, ciulla, rodak, strasinger };
+    return { harr, ciulla, rodak, strasinger, elsevier, boc };
   }, [selectedTopicIds, allAvailableTopics]);
 
   // Track active flashcard review session to hide top control strip when reviewing
@@ -195,6 +211,8 @@ export default function ReviewLibrary({
           subjects={allAvailableSubjects}
           topics={allAvailableTopics}
           questions={questions}
+          bocTopicQuestionCounts={bocTopicQuestionCounts}
+          elsevierTopicQuestionCounts={elsevierTopicQuestionCounts}
           onSelectBook={onSelectBook}
           onReviewingChange={setIsFlashcardReviewing}
           onRequestConfirm={onRequestConfirm}
@@ -303,12 +321,16 @@ export default function ReviewLibrary({
                 const ciullaTopics = subjectTopics.filter((t) => t.book === "Ciulla");
                 const rodakTopics = subjectTopics.filter((t) => t.book === "Rodak");
                 const strasingerTopics = subjectTopics.filter((t) => t.book === "Strasinger");
+                const bocTopics = subjectTopics.filter((t) => t.book === "BOC");
+                const elsevierTopics = subjectTopics.filter((t) => t.book === "Elsevier");
 
                 // Check active edition tab for this subject
                 const preferredBook: ReviewerBook =
-                  activeEditionBySubject[subject.id] ?? (selectedBook === "Strasinger" ? "Strasinger" : selectedBook === "Ciulla" ? "Ciulla" : selectedBook === "Rodak" ? "Rodak" : "Harr");
+                  activeEditionBySubject[subject.id] ?? (selectedBook === "BOC" ? "BOC" : selectedBook === "Elsevier" ? "Elsevier" : selectedBook === "Strasinger" ? "Strasinger" : selectedBook === "Ciulla" ? "Ciulla" : selectedBook === "Rodak" ? "Rodak" : "Harr");
 
                 const activeBook: ReviewerBook =
+                  bocTopics.length > 0 && (preferredBook === "BOC" || !(harrTopics.length + ciullaTopics.length + rodakTopics.length + strasingerTopics.length + elsevierTopics.length)) ? "BOC" :
+                  elsevierTopics.length > 0 && (preferredBook === "Elsevier" || !(harrTopics.length + ciullaTopics.length + rodakTopics.length + strasingerTopics.length)) ? "Elsevier" :
                   preferredBook === "Strasinger"
                     ? (strasingerTopics.length > 0 ? "Strasinger" : (rodakTopics.length > 0 ? "Rodak" : (ciullaTopics.length > 0 ? "Ciulla" : "Harr")))
                     : preferredBook === "Rodak"
@@ -318,7 +340,7 @@ export default function ReviewLibrary({
                         : (harrTopics.length > 0 ? "Harr" : (strasingerTopics.length > 0 ? "Strasinger" : (rodakTopics.length > 0 ? "Rodak" : (ciullaTopics.length > 0 ? "Ciulla" : "Harr"))));
 
                 const currentEditionTopics =
-                  activeBook === "Strasinger"
+                  activeBook === "BOC" ? bocTopics : activeBook === "Elsevier" ? elsevierTopics : activeBook === "Strasinger"
                     ? strasingerTopics
                     : activeBook === "Rodak"
                       ? rodakTopics
@@ -355,6 +377,8 @@ export default function ReviewLibrary({
                 if (ciullaTopics.length > 0) editionsAvailable.push("Ciulla");
                 if (rodakTopics.length > 0) editionsAvailable.push("Rodak");
                 if (strasingerTopics.length > 0) editionsAvailable.push("Strasinger");
+                if (elsevierTopics.length > 0) editionsAvailable.push("Elsevier");
+                if (bocTopics.length > 0) editionsAvailable.push("BOC");
                 const editionsLabel = editionsAvailable.join(" + ");
 
                 return (
@@ -459,6 +483,30 @@ export default function ReviewLibrary({
                                   onClick={() => setSubjectEditionTab(subject.id, "Strasinger")}
                                 >
                                   Strasinger · <span className={styles.editionTabCount}>{strasingerTopics.length}</span>
+                                </button>
+                              )}
+                              {elsevierTopics.length > 0 && (
+                                <button
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={activeBook === "Elsevier"}
+                                  className={`${styles.editionTabBtn} ${activeBook === "Elsevier" ? styles.active : ""}`}
+                                  onClick={() => setSubjectEditionTab(subject.id, "Elsevier")}
+
+                                >
+                                  Elsevier · <span className={styles.editionTabCount}>{elsevierTopics.length}</span>
+                                </button>
+                              )}
+                            {bocTopics.length > 0 && (
+                                <button
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={activeBook === "BOC"}
+                                  className={`${styles.editionTabBtn} ${activeBook === "BOC" ? styles.active : ""}`}
+                                  onClick={() => setSubjectEditionTab(subject.id, "BOC")}
+
+                                >
+                                  BOC · <span className={styles.editionTabCount}>{bocTopics.length}</span>
                                 </button>
                               )}
                             </div>
@@ -578,6 +626,11 @@ export default function ReviewLibrary({
               )}
               {sourceCounts.strasinger > 0 && (
                 <span className={styles.sourceTag}>Strasinger · {sourceCounts.strasinger}</span>
+              )}
+              {sourceCounts.elsevier > 0 && (
+                <span className={styles.sourceTag}>Elsevier · {sourceCounts.elsevier}</span>
+              )}{sourceCounts.boc > 0 && (
+                <span className={styles.sourceTag}>BOC · {sourceCounts.boc}</span>
               )}
               {selectedTopicIds.length === 0 && (
                 <span className={styles.sourceNone}>No topics selected</span>
@@ -742,6 +795,8 @@ export default function ReviewLibrary({
               if (sourceCounts.ciulla > 0) labels.push(`Ciulla · ${sourceCounts.ciulla}`);
               if (sourceCounts.rodak > 0) labels.push(`Rodak · ${sourceCounts.rodak}`);
               if (sourceCounts.strasinger > 0) labels.push(`Strasinger · ${sourceCounts.strasinger}`);
+              if (sourceCounts.elsevier > 0) labels.push(`Elsevier · ${sourceCounts.elsevier}`);
+              if (sourceCounts.boc > 0) labels.push(`BOC · ${sourceCounts.boc}`);
               return labels.length > 0 ? (
                 <span>{labels.join(", ")} ({sessionQuestions.length} Qs)</span>
               ) : (
@@ -840,6 +895,11 @@ export default function ReviewLibrary({
                   )}
                   {sourceCounts.strasinger > 0 && (
                     <span className={styles.sourceTag}>Strasinger · {sourceCounts.strasinger}</span>
+                  )}
+                  {sourceCounts.elsevier > 0 && (
+                    <span className={styles.sourceTag}>Elsevier · {sourceCounts.elsevier}</span>
+                  )}{sourceCounts.boc > 0 && (
+                    <span className={styles.sourceTag}>BOC · {sourceCounts.boc}</span>
                   )}
                   {selectedTopicIds.length === 0 && (
                     <span className={styles.sourceNone}>No topics selected</span>

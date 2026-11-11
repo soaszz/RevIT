@@ -16,6 +16,7 @@ import {
   buildSubjectSections,
   filterSubjectsBySearch,
   getUnifiedSubjects,
+  getSubjectDisplayName,
   MTAP_1_CATEGORY,
   OTHER_MAJORS_CATEGORY,
   type UnifiedSubject,
@@ -23,11 +24,13 @@ import {
 import reviewerStyles from "./Flashcards.module.css";
 import styles from "./ReviewLibrary.module.css";
 import CollectionHeader from "./CollectionHeader";
-import { QUESTION_BANKS } from "../lib/entitlements";
+import QuestionStimulus from "./QuestionStimulus";
+import SourceText from "./SourceText";
+import { QUESTION_BANKS, isQuestionBankPublished } from "../lib/entitlements";
 
 function isBookLocked(book: ReviewerBook, proActive: boolean): boolean {
   const bank = QUESTION_BANKS[book.toLowerCase() as Lowercase<ReviewerBook>];
-  return (bank ? bank.requiredPlan === "pro" : book !== "Harr") && !proActive;
+  return !isQuestionBankPublished(book) || ((bank ? bank.requiredPlan === "pro" : book !== "Harr") && !proActive);
 }
 
 function isTypingTarget(target: EventTarget | null) {
@@ -65,6 +68,8 @@ export default function Flashcards({
   subjects = freeSubjects,
   topics = freeTopics,
   questions = freeQuestions,
+  bocTopicQuestionCounts = {},
+  elsevierTopicQuestionCounts = {},
   onSelectBook,
   onReviewingChange,
   onRequestConfirm,
@@ -76,6 +81,8 @@ export default function Flashcards({
   subjects?: Subject[];
   topics?: Topic[];
   questions?: ReviewerQuestion[];
+  bocTopicQuestionCounts?: Record<string, number>;
+  elsevierTopicQuestionCounts?: Record<string, number>;
   onSelectBook?: (book: ReviewerBook | "all") => void;
   onReviewingChange?: (reviewing: boolean, topics?: string[]) => void;
   onRequestConfirm?: (title: string, message: string, confirmLabel: string, action: () => void) => void;
@@ -88,6 +95,8 @@ export default function Flashcards({
     if (typeof window === "undefined") return "Harr";
     try {
       const saved = localStorage.getItem("revit-selected-book-v1");
+      if (saved === "BOC" && isQuestionBankPublished("BOC")) return saved;
+      if (saved === "Elsevier" && isQuestionBankPublished("Elsevier")) return saved;
       if (saved === "Harr" || saved === "Ciulla" || saved === "Rodak" || saved === "Strasinger" || saved === "all") return saved;
     } catch {}
     return "Harr";
@@ -104,8 +113,12 @@ export default function Flashcards({
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
 
   const unifiedSubjects = useMemo(() => {
-    return getUnifiedSubjects("all", subjects, topics);
-  }, [subjects, topics]);
+    return getUnifiedSubjects("all", subjects, topics).map(subject => ({
+      ...subject,
+      category: selectedBook === "all" ? subject.category : subjects.find(source =>
+        source.book === selectedBook && subject.sourceSubjectIds.includes(source.id))?.category ?? subject.category,
+    }));
+  }, [selectedBook, subjects, topics]);
 
   const visibleSubjects = useMemo(() => {
     return filterSubjectsBySearch(unifiedSubjects, topics, subjectSearch);
@@ -120,8 +133,14 @@ export default function Flashcards({
     for (const question of questions) {
       counts.set(question.topicId, (counts.get(question.topicId) ?? 0) + 1);
     }
+    for (const [topicId, count] of Object.entries(bocTopicQuestionCounts)) {
+      if (!counts.has(topicId)) counts.set(topicId, count);
+    }
+    for (const [topicId, count] of Object.entries(elsevierTopicQuestionCounts)) {
+      if (!counts.has(topicId)) counts.set(topicId, count);
+    }
     return counts;
-  }, [questions]);
+  }, [questions, bocTopicQuestionCounts, elsevierTopicQuestionCounts]);
 
   const availableCards = useMemo(
     () => selectedTopicIds.reduce((total, topicId) => total + (topicQuestionCounts.get(topicId) ?? 0), 0),
@@ -133,11 +152,17 @@ export default function Flashcards({
     let ciulla = 0;
     let rodak = 0;
     let strasinger = 0;
+    let boc = 0;
+    let elsevier = 0;
     const topicMap = new Map(topics.map((t) => [t.id, t]));
     for (const id of selectedTopicIds) {
       const topic = topicMap.get(id);
       const b = topic?.book ?? "Harr";
-      if (b === "Strasinger") {
+      if (b === "BOC") {
+        boc += 1;
+      } else if (b === "Elsevier") {
+        elsevier += 1;
+      } else if (b === "Strasinger") {
         strasinger += 1;
       } else if (b === "Rodak") {
         rodak += 1;
@@ -147,7 +172,7 @@ export default function Flashcards({
         harr += 1;
       }
     }
-    return { harr, ciulla, rodak, strasinger };
+    return { harr, ciulla, rodak, strasinger, elsevier, boc };
   }, [selectedTopicIds, topics]);
 
   const isSearchActive = subjectSearch.trim().length > 0;
@@ -261,7 +286,9 @@ export default function Flashcards({
   }
 
   if (reviewing && currentCard) {
-    const subjectName = subjectById.get(currentCard.subjectId)?.name ?? "Uncategorized";
+    const subjectName = currentCard.book && ["Harr","Ciulla","Rodak","Strasinger"].includes(currentCard.book)
+      ? subjectById.get(currentCard.subjectId)?.name ?? "Uncategorized"
+      : getSubjectDisplayName(currentCard.subjectId, subjectById.get(currentCard.subjectId)?.name ?? "Uncategorized", currentCard.topicId);
     const topicName = topicById.get(currentCard.topicId)?.name ?? "Uncategorized";
     const cardBook = currentCard.book ?? topicById.get(currentCard.topicId)?.book;
 
@@ -303,16 +330,24 @@ export default function Flashcards({
                 <span>{cardIndex + 1} / {deck.length}</span>
               </div>
               <div className={reviewerStyles.questionArea}>
-                <h2>{currentCard.prompt}</h2>
-                {currentCard.choices && currentCard.choices.length > 0 && (
+                {currentCard.questionSections ? currentCard.questionSections.map((section, index) => section.kind === "text" ? (
+                  index === 0
+                    ? <h2 key={index}><SourceText text={section.text} marks={section.sourceFormatting} /></h2>
+                    : <p key={index}><SourceText text={section.text} marks={section.sourceFormatting} /></p>
+                ) : <div key={index} style={{ width: "100%", pointerEvents: "auto" }}><QuestionStimulus stimulus={section.stimulus} allowEnlarge /></div>) : <>
+                <h2><SourceText text={currentCard.prompt} marks={currentCard.sourceFormatting?.prompt} /></h2>
+                {currentCard.stimulus && <div style={{ width: "100%", pointerEvents: "auto" }}><QuestionStimulus stimulus={currentCard.stimulus} allowEnlarge /></div>}
+                {currentCard.promptAfterReferences && <p><SourceText text={currentCard.promptAfterReferences} marks={currentCard.sourceFormatting?.promptAfterReferences} /></p>}
+                </>}
+                {currentCard.choiceTable ? <QuestionStimulus stimulus={{ kind: "table", caption: "Answer choices", columns: ["Choice", ...currentCard.choiceTable.columns], rows: currentCard.choiceTable.rows.map((row, index) => [String.fromCharCode(65 + index), ...row]) }} /> : currentCard.choices && currentCard.choices.length > 0 && (
                   <div className={reviewerStyles.horizontalChoices} role="list" aria-label="Question choices">
                     {currentCard.choices.map((choice, index) => {
-                      const cleanChoice = choice.trim().replace(/^[A-D](?:[.):])\s+/, "");
+                      const cleanChoice = currentCard.book === "Elsevier" || currentCard.book === "BOC" || currentCard.sourceFormatting || currentCard.questionSections || currentCard.choiceTables ? choice : choice.trim().replace(/^[A-D](?:[.):])\s+/, "");
                       const choiceLetter = String.fromCharCode(65 + index);
                       return (
                         <div className={reviewerStyles.horizontalChoiceItem} key={index} role="listitem">
                           <span className={reviewerStyles.choiceLetter}>{choiceLetter}</span>
-                          <span className={reviewerStyles.choiceText}>{cleanChoice}</span>
+                          <span className={reviewerStyles.choiceText}>{currentCard.choiceTables?.[index] ? <QuestionStimulus stimulus={currentCard.choiceTables[index]!} inlineTable /> : <SourceText text={cleanChoice} marks={currentCard.sourceFormatting?.choices?.[index]} />}</span>
                         </div>
                       );
                     })}
@@ -339,11 +374,12 @@ export default function Flashcards({
               />
               <div className={reviewerStyles.answerBlock}>
                 <p className={reviewerStyles.sideLabel}>Answer</p>
-                <h2>{currentCard.answer}</h2>
+                <h2>{currentCard.answerTable ? <QuestionStimulus stimulus={currentCard.answerTable} inlineTable /> : <SourceText text={currentCard.answer} marks={currentCard.answerFormatting} />}</h2>
               </div>
               <div className={reviewerStyles.explanationBlock}>
                 <p className={reviewerStyles.sideLabel}>Explanation</p>
-                <p>{currentCard.explanation}</p>
+                {currentCard.rationaleSections ? currentCard.rationaleSections.map((section, index) => section.kind === "text" ? <p key={index}><SourceText text={section.text} marks={section.sourceFormatting} /></p> : <div key={index} style={{ width: "100%", pointerEvents: "auto" }}><QuestionStimulus stimulus={section.stimulus} allowEnlarge /></div>) : <><p><SourceText text={currentCard.explanation} marks={currentCard.sourceFormatting?.explanation} /></p>
+                {currentCard.rationaleImages?.map((stimulus, index) => <div key={index} style={{ width: "100%", pointerEvents: "auto" }}><QuestionStimulus stimulus={stimulus} allowEnlarge /></div>)}</>}
               </div>
               <button
                 className={`${reviewerStyles.flipControl} secondary-button`}
@@ -472,11 +508,15 @@ export default function Flashcards({
                 const ciullaTopics = subjectTopics.filter((t) => t.book === "Ciulla");
                 const rodakTopics = subjectTopics.filter((t) => t.book === "Rodak");
                 const strasingerTopics = subjectTopics.filter((t) => t.book === "Strasinger");
+                const bocTopics = subjectTopics.filter((t) => t.book === "BOC");
+                const elsevierTopics = subjectTopics.filter((t) => t.book === "Elsevier");
 
                 const preferredBook: ReviewerBook =
-                  activeEditionBySubject[subject.id] ?? (selectedBook === "Strasinger" ? "Strasinger" : selectedBook === "Ciulla" ? "Ciulla" : selectedBook === "Rodak" ? "Rodak" : "Harr");
+                  activeEditionBySubject[subject.id] ?? (selectedBook === "BOC" ? "BOC" : selectedBook === "Elsevier" ? "Elsevier" : selectedBook === "Strasinger" ? "Strasinger" : selectedBook === "Ciulla" ? "Ciulla" : selectedBook === "Rodak" ? "Rodak" : "Harr");
 
                 const activeBook: ReviewerBook =
+                  bocTopics.length > 0 && (preferredBook === "BOC" || !(harrTopics.length + ciullaTopics.length + rodakTopics.length + strasingerTopics.length + elsevierTopics.length)) ? "BOC" :
+                  elsevierTopics.length > 0 && (preferredBook === "Elsevier" || !(harrTopics.length + ciullaTopics.length + rodakTopics.length + strasingerTopics.length)) ? "Elsevier" :
                   preferredBook === "Strasinger"
                     ? (strasingerTopics.length > 0 ? "Strasinger" : (rodakTopics.length > 0 ? "Rodak" : (ciullaTopics.length > 0 ? "Ciulla" : "Harr")))
                     : preferredBook === "Rodak"
@@ -486,7 +526,7 @@ export default function Flashcards({
                         : (harrTopics.length > 0 ? "Harr" : (strasingerTopics.length > 0 ? "Strasinger" : (rodakTopics.length > 0 ? "Rodak" : (ciullaTopics.length > 0 ? "Ciulla" : "Harr"))));
 
                 const currentEditionTopics =
-                  activeBook === "Strasinger"
+                  activeBook === "BOC" ? bocTopics : activeBook === "Elsevier" ? elsevierTopics : activeBook === "Strasinger"
                     ? strasingerTopics
                     : activeBook === "Rodak"
                       ? rodakTopics
@@ -519,6 +559,8 @@ export default function Flashcards({
                 if (ciullaTopics.length > 0) editionsAvailable.push("Ciulla");
                 if (rodakTopics.length > 0) editionsAvailable.push("Rodak");
                 if (strasingerTopics.length > 0) editionsAvailable.push("Strasinger");
+                if (elsevierTopics.length > 0) editionsAvailable.push("Elsevier");
+                if (bocTopics.length > 0) editionsAvailable.push("BOC");
                 const editionsLabel = editionsAvailable.join(" + ");
 
                 const isEditionActiveAndLocked = isBookLocked(activeBook, proActive);
@@ -624,6 +666,32 @@ export default function Flashcards({
                                   onClick={() => setSubjectEditionTab(subject.id, "Strasinger")}
                                 >
                                   Strasinger · <span className={styles.editionTabCount}>{strasingerTopics.length}</span>
+                                  {!proActive && <span className={styles.editionProPill}>Pro</span>}
+                                </button>
+                              )}
+                              {elsevierTopics.length > 0 && (
+                                <button
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={activeBook === "Elsevier"}
+                                  className={`${styles.editionTabBtn} ${activeBook === "Elsevier" ? styles.active : ""}`}
+                                  onClick={() => setSubjectEditionTab(subject.id, "Elsevier")}
+
+                                >
+                                  Elsevier · <span className={styles.editionTabCount}>{elsevierTopics.length}</span>
+                                  {!proActive && <span className={styles.editionProPill}>Pro</span>}
+                                </button>
+                              )}
+                            {bocTopics.length > 0 && (
+                                <button
+                                  type="button"
+                                  role="tab"
+                                  aria-selected={activeBook === "BOC"}
+                                  className={`${styles.editionTabBtn} ${activeBook === "BOC" ? styles.active : ""}`}
+                                  onClick={() => setSubjectEditionTab(subject.id, "BOC")}
+
+                                >
+                                  BOC · <span className={styles.editionTabCount}>{bocTopics.length}</span>
                                   {!proActive && <span className={styles.editionProPill}>Pro</span>}
                                 </button>
                               )}
@@ -757,6 +825,11 @@ export default function Flashcards({
               {sourceCounts.strasinger > 0 && (
                 <span className={styles.sourceTag}>Strasinger · {sourceCounts.strasinger}</span>
               )}
+              {sourceCounts.elsevier > 0 && (
+                <span className={styles.sourceTag}>Elsevier · {sourceCounts.elsevier}</span>
+              )}{sourceCounts.boc > 0 && (
+                <span className={styles.sourceTag}>BOC · {sourceCounts.boc}</span>
+              )}
               {selectedTopicIds.length === 0 && (
                 <span className={styles.sourceNone}>No topics selected</span>
               )}
@@ -842,6 +915,8 @@ export default function Flashcards({
               if (sourceCounts.ciulla > 0) labels.push(`Ciulla · ${sourceCounts.ciulla}`);
               if (sourceCounts.rodak > 0) labels.push(`Rodak · ${sourceCounts.rodak}`);
               if (sourceCounts.strasinger > 0) labels.push(`Strasinger · ${sourceCounts.strasinger}`);
+              if (sourceCounts.elsevier > 0) labels.push(`Elsevier · ${sourceCounts.elsevier}`);
+              if (sourceCounts.boc > 0) labels.push(`BOC · ${sourceCounts.boc}`);
               return labels.length > 0 ? (
                 <span>{labels.join(", ")} ({availableCards} cards)</span>
               ) : (
@@ -937,6 +1012,11 @@ export default function Flashcards({
                   )}
                   {sourceCounts.strasinger > 0 && (
                     <span className={styles.sourceTag}>Strasinger · {sourceCounts.strasinger}</span>
+                  )}
+                  {sourceCounts.elsevier > 0 && (
+                    <span className={styles.sourceTag}>Elsevier · {sourceCounts.elsevier}</span>
+                  )}{sourceCounts.boc > 0 && (
+                    <span className={styles.sourceTag}>BOC · {sourceCounts.boc}</span>
                   )}
                   {selectedTopicIds.length === 0 && (
                     <span className={styles.sourceNone}>No topics selected</span>

@@ -161,8 +161,16 @@ test("all 4441 question records, 47 repairs, 42 protections, and reviewer assets
   }
   walk("public/reviewer-assets");
   assets.sort((a, b) => a[0].localeCompare(b[0]));
-  assert.equal(assets.length, baseline.assetCount);
-  assert.equal(hash(JSON.stringify(assets)), baseline.assetsSha256);
+  const originalPins = JSON.parse(read("docs/phase3i-a/content-integrity.json")).assets;
+  const original = assets.filter(([path]) => Object.hasOwn(originalPins, path));
+  assert.equal(original.length, baseline.assetCount);
+  assert.equal(hash(JSON.stringify(original)), baseline.assetsSha256);
+  assert.equal(assets.length, baseline.assetCount, "Only historical assets may be public");
+  const privatePins = JSON.parse(read("docs/private-reviewers/pins.json")).files;
+  const added = privatePins.filter((file: { path: string }) => file.path.startsWith("public/reviewer-assets/")).map((file: { path: string; privatePath: string }) => [file.path, hash(readFileSync(`.private-reviewers/${file.privatePath}`))]);
+  const addedPins = JSON.parse(read("docs/reviewer-compatibility/asset-pins.json")).assets;
+  assert.equal(added.length, 306);
+  assert.deepEqual(Object.fromEntries(added), addedPins);
 });
 
 test("actual Strasinger GET handler fails closed and only returns content to server-authorized Pro", async () => {

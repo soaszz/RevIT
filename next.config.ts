@@ -1,6 +1,26 @@
 import type { NextConfig } from "next";
+import { existsSync, readdirSync } from "node:fs";
+
+// Fail the build if commercial inputs accidentally return to public source/assets.
+for (const path of ["app/content/bocContent.json", "app/content/elsevierContent.json",
+  "app/content/bocSourceManifest.json", "app/content/elsevierSourceManifest.json",
+  "docs/reviewer-compatibility/boc-presentation-source-fixture.json"]) {
+  if (existsSync(path)) throw new Error("Private reviewer input at public source path");
+}
+for (const path of ["public/reviewer-assets/boc-7e", "public/reviewer-assets/elsevier-1e"]) {
+  if (existsSync(path) && readdirSync(path).length) throw new Error("Private reviewer asset in public directory");
+}
 
 const nextConfig: NextConfig = {
+  outputFileTracingExcludes: {
+    "/*": ["./.private-reviewers/verification/**/*"],
+  },
+  outputFileTracingIncludes: {
+    "/api/reviewer/boc": ["./.private-reviewers/runtime/books/boc.json"],
+    "/api/reviewer/elsevier": ["./.private-reviewers/runtime/books/elsevier.json"],
+    "/api/reviewer/attempt": ["./.private-reviewers/runtime/books/*.json"],
+    "/api/reviewer/assets/*": ["./.private-reviewers/runtime/assets/**/*.png"],
+  },
   async headers() {
     return [
       {

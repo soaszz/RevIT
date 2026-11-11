@@ -5,6 +5,9 @@ import { createHash } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
 import ts from "typescript";
+import { queueAfterAnswer } from "../app/lib/sessionMastery";
+import { canAccessQuestionBank, FREE_ENTITLEMENT } from "../app/lib/entitlements";
+import { isCloudSyncAllowedForBook } from "../app/lib/cloudSyncGate";
 import type * as Routes from "../app/lib/server/trustedStudyRoutes";
 import type * as Client from "../app/lib/trustedStudyClient";
 
@@ -448,6 +451,10 @@ test("actual disabled completeQuestion retains feedback, reinforcement, local hi
         topicById: new Map(), subjectById: new Map(), reinforcementLevels: {}, ...reinforcement, ...scoring, normalizedDifficulty: () => "Unspecified",
         crypto: { randomUUID: () => id }, Date: class { toISOString() { return "2026-10-16T00:00:00Z"; } }, sessionMode: "adaptive", sessionId: localId,
         trustedStudy: null, cloudEnabled: true, initialUser: { id: owner }, STRASINGER_CLOUD_SYNC_ENABLED: false,
+        sessionOwnerRef: { current: owner }, sessionAttempts: [], sessionQuestionIds: [question.id], sessionIndex: 0,
+        canAccessQuestionBank, entitlement: { ...FREE_ENTITLEMENT, effectivePlan: "pro" }, queueAfterAnswer, isCloudSyncAllowedForBook,
+        setSessionQuestionIds: (queue: string[]) => assert.deepEqual(queue, selectedAnswer === (question.matching ? scoring.encodeMatchingAnswers(question.matching.answerKey, question.choices.length) : question.correctAnswer) ? [question.id] : [question.id, question.id]),
+        setPlanAnnouncementOpen: () => assert.fail("Existing authorized Pro question must stay available"),
         queueQuestionAttempt: event("queueQuestionAttempt"), queueQuestionReinforcement: event("queueQuestionReinforcement"), soundEffectsEnabled: true,
         playReviewSound: event("playReviewSound"), recordStudyEvent: event("recordStudyEvent"), XP_REWARDS: { CORRECT_QUESTION: 5 } }, [selectedAnswer, selectedAnswer === null]);
       return calls;
@@ -475,5 +482,8 @@ test("actual Skip defers question without recording or sending an attempt; compo
   function visit(node: ts.Node) { if (ts.isJsxElement(node) || ts.isJsxSelfClosingElement(node) || ts.isJsxFragment(node)) jsx.push(node.getText(snapshotAst)); ts.forEachChild(node, visit); }
   visit(snapshotAst);
   const baseline = JSON.parse(readFileSync(resolve(root, "docs/phase3n/phase3n-j/disabled-study-baseline.json"), "utf8"));
-  assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), baseline.jsxHash);
+  const transition = JSON.parse(readFileSync(resolve(root, "docs/reviewer-compatibility/component-jsx-transition.json"), "utf8"));
+  assert.equal(transition.before, baseline.jsxHash, "Immutable original JSX pin is retained");
+  assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), transition.after);
+  assert.equal(createHash("sha256").update(readFileSync(resolve(root, "app/RevITApp.tsx"))).digest("hex"), transition.sourceAfter);
 });

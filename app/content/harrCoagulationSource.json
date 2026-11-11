@@ -1,0 +1,529 @@
+{
+  "questions": [
+    {
+      "id": "harr-hemostasis-2-1-source-001",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following initiates in vivo coagulation by activation of factor VII?",
+      "choices": [
+        "Protein C",
+        "Tissue factor (TF)",
+        "Plasmin activator",
+        "Thrombomodulin (TM)"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Tissue factor (TF)",
+      "explanation": "In vivo, activation of coagulation occurs on the surface of activated platelets (PLTs) or cells that have TF. TF is found on the surface of many cells outside the vascular system (extrinsic). On vascular injury, TF is exposed to the vascular system. TF has high affinity for factors VII and VIIa. TF activates factor VII to VIIa and forms TF–VIIa complex. TF–VIIa complex in the presence of calcium ion (Ca²⁺) and PLT phospholipid activates factor IX to factor IXa and factor X to factor Xa. Factor Xa forms a complex with cofactor Va (Xa–Va) on the surface of the activated PLTs. Factor Xa–Va complex in the presence of Ca²⁺ and PLT phospholipid converts prothrombin (factor II) to thrombin (IIa). Thrombin acts on soluble plasma fibrinogen to form a fibrin clot, which is stabilized by activated factor XIII (XIIIa). In addition, activated factor IX (IXa) forms a complex with activated cofactor VIII (VIIIa) on the surface of the activated PLTs. Factor IXa–VIIIa complex in the presence of Ca²⁺ and PLT phospholipid converts factor X to Xa with the end products of thrombin and fibrin clot, as discussed previously. The classical description of intrinsic, extrinsic, and common pathways does not take place in vivo. The concept of these three pathways is used to explain clot formation in laboratory tests. Activated thromboplastin time (APTT) is determined by the intrinsic and common pathways, whereas prothrombin time (PT) is determined by the extrinsic and common pathways. The extrinsic pathway is so named because TF is derived from extravascular cells.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-002",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following clotting factors plays a role in clot formation in vitro, but not in vivo?",
+      "choices": [
+        "Factor VIIa",
+        "Factor IIa",
+        "Factor XIIa",
+        "Factor Xa"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Factor XIIa",
+      "explanation": "Factor XIIa does not play a role in coagulation in vivo; however, in vitro, the deficiency of this factor causes prolonged APTT. In vitro, factor XII is activated by substances, such as glass, Kaolin, and ellagic acid, and in vivo it may be activated by exposure to a negatively charged cell surface membrane, such collagen, as well as to kallikrein and high-molecular-weight kininogen (HMWK). In vivo, factor XIIa plays an important role in the fibrinolytic system by activating plasminogen to plasmin. Plasmin degrades the fibrin clot at the site of injury. Deficiency of factor XII is associated with thrombosis and not with bleeding. Factors VIIa, Xa, and IIa play a role in vivo and in vitro.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-003",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "The anticoagulant of choice for most routine coagulation studies is:",
+      "choices": [
+        "Sodium oxalate",
+        "Sodium citrate",
+        "Heparin",
+        "Ethylenediaminetetraacetic acid (EDTA)"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Sodium citrate",
+      "explanation": "The anticoagulant of choice for most coagulation procedures is sodium citrate (3.2%). Because factors V and VIII are more labile in sodium oxalate, heparin neutralizes thrombin, and EDTA inhibits thrombin’s action on fibrinogen, these anticoagulants are not used for routine coagulation studies.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 2,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-004",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which anticoagulant:blood ratio is correct for coagulation procedures?",
+      "choices": [
+        "1:4",
+        "1:5",
+        "1:9",
+        "1:10"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "1:9",
+      "explanation": "The optimal anticoagulant:blood ratio is one part anticoagulant to nine parts blood. The anticoagulant supplied in this amount is sufficient to bind all the available calcium, thereby preventing clotting.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-005",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which results would be expected for PT and APTT in a patient with polycythemia?",
+      "choices": [
+        "Both prolonged",
+        "Both shortened",
+        "Normal PT, prolonged APTT",
+        "Both normal"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Both prolonged",
+      "explanation": "The volume of blood in a polycythemic patient contains so little plasma that excess anticoagulant remains and is available to bind to reagent calcium, thereby resulting in prolongation of PT and APTT. For more accurate results, the plasma:anticoagulant ratio can be modified by decreasing the amount of anticoagulant in the collection tube by using the following formula: (0.00185)(V)(100–H) = C, where V = blood volume in milliliters (mL); H = patient’s hematocrit (Hct); and C = volume (mL) of anticoagulant. A new sample should be drawn to rerun the PT and APTT tests.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-006",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which reagents are used in the PT test?",
+      "choices": [
+        "Thromboplastin and sodium chloride",
+        "Thromboplastin and potassium chloride",
+        "Thromboplastin and calcium",
+        "Actin and calcium chloride"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Thromboplastin and calcium",
+      "explanation": "Thromboplastin and calcium (combined into a single reagent) replace tissue thromboplastin and calcium necessary, in vivo, to activate factor VII to factor VIIa. This ultimately generates thrombin from prothrombin via the coagulation cascade.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-007",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which test would be abnormal in a patient with factor X deficiency?",
+      "choices": [
+        "PT only",
+        "APTT only",
+        "PT and APTT",
+        "Thrombin time (TT)"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "PT and APTT",
+      "explanation": "Factor X is involved in the common pathway of the coagulation cascade; therefore, its deficiency prolongs both PT and APTT. Activated factor X along with activated factor V in the presence of calcium and platelet factor 3 (PF3) converts prothrombin (factor II) to the active enzyme thrombin (factor IIa).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 3,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-008",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which clotting factor is not measured by the PT and APTT tests?",
+      "choices": [
+        "Factor VIII",
+        "Factor IX",
+        "Factor V",
+        "Factor XIII"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Factor XIII",
+      "explanation": "Factor XIII is not measured by PT or APTT. Factor XIII (fibrin stabilizing factor) is a transamidase. It creates covalent bonds between fibrin monomers, which are formed during the coagulation process, to produce a stable fibrin clot. In the absence of factor XIII, the hydrogen bonded fibrin polymers are unstable and, therefore, soluble in 5M urea or in 1% monochloroacetic acid.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-009",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "A modification of which procedure can be used to measure fibrinogen?",
+      "choices": [
+        "PT",
+        "APTT",
+        "TT",
+        "Fibrin degradation products"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "TT",
+      "explanation": "Fibrinogen can be quantitatively measured by modification of the TT by diluting the plasma because the thrombin clotting time of diluted plasma is inversely proportional to the concentration of fibrinogen (principle of Clauss method).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-010",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following characterizes vitamin K?",
+      "choices": [
+        "It is required for biological activity of fibrinolysis",
+        "Its activity is enhanced by heparin therapy",
+        "It is required for carboxylation of glutamate residues of some coagulation factors",
+        "It is made by endothelial cells"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "It is required for carboxylation of glutamate residues of some coagulation factors",
+      "explanation": "Vitamin K is necessary for activation of vitamin K–dependent clotting factors (II, VII, IX, and X). This activation is accomplished by carboxylation of glutamic acid residues of the inactive clotting factors. The activity of vitamin K is not enhanced by heparin therapy. Vitamin K is present in a variety of foods and is also the only vitamin made by the organisms living in the intestine.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-011",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which fragments of fibrin clot degradation are measured by the D-dimer test?",
+      "choices": [
+        "Fragments X and Y",
+        "Fibrinopeptide A and B",
+        "Fragments D and E",
+        "The D-D domains"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "The D-D domains",
+      "explanation": "D-dimer is a specific product resulting from digestion of cross-linked fibrin only. It consists of two D domains called D-D fragment and is a marker for thrombosis and fibrinolysis. In the D-dimer test, monoclonal antibody is directed against D-dimer antigen by using a variety of automated instruments. The D-dimer test is used to diagnose acute and chronic disseminated intravascular coagulation (DIC) and to rule out thromboembolic disorders. Fragments X, Y, D, and E are produced by the action of plasmin on fibrinogen and fibrin. Polypeptide A and B are produced by the proteolytic action of thrombin on fibrinogen to form a fibrin clot.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-012",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following clotting factors are measured by the APTT test?",
+      "choices": [
+        "Factors II, VII, IX, X",
+        "Factors VII, X, V, II, I",
+        "Factors XII, XI, IX, VIII, X, V, II, I",
+        "Factors XII, VII, X, V, II, I"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Factors XII, XI, IX, VIII, X, V, II, I",
+      "explanation": "The APTT test evaluates the clotting factors in the intrinsic pathway (XII, XI, IX, and VIII) as well as those in the common pathway (X, V, II, and I).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 4,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-013",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which coagulation test(s) would be abnormal in a patient with vitamin K deficiency?",
+      "choices": [
+        "PT only",
+        "PT and APTT",
+        "Fibrinogen level",
+        "TT"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "PT and APTT",
+      "explanation": "Patients with vitamin K deficiency exhibit decreased production of functional prothrombin proteins (factors II, VII, IX, and X). Decreased levels of these factors prolong both PT and APTT.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-014",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following is correct regarding the international normalized ratio (INR)?",
+      "choices": [
+        "It uses the international sensitivity ratio (ISR)",
+        "It standardizes PT results",
+        "It standardizes APTT results",
+        "It is used to monitor heparin therapy"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "It standardizes PT results",
+      "explanation": "INR is used to standardize PT results to adjust for the differences in thromboplastin reagents made by different manufacturers and used by various institutions. The INR calculation uses the international sensitivity index (ISI) value and is used to monitor an oral anticoagulant, such as warfarin. INR is not used to standardize APTT testing.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 5,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-015",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following is referred to as an endogenous activator of plasminogen?",
+      "choices": [
+        "Streptokinase",
+        "Transamidase",
+        "Tissue plasminogen activator (tPA)",
+        "tPA inhibitor"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Tissue plasminogen activator (tPA)",
+      "explanation": "tPA is an endogenous (produced in the body) activator of plasminogen. It is released from the endothelial cells by the action of protein C. It converts plasminogen to plasmin. Streptokinase is an exogenous (not made in the body) activator of plasminogen.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-016",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which protein is the primary inhibitor of the fibrinolytic system?",
+      "choices": [
+        "Protein C",
+        "Protein S",
+        "α₂-Antiplasmin",
+        "α₂-Macroglobulin"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "α₂-Antiplasmin",
+      "explanation": "α₂-Antiplasmin is the main inhibitor of plasmin. It inhibits plasmin by forming a 1:1 stoichiometric complex with any free plasmin in plasma and, thus, prevents binding of plasmin to fibrin and fibrinogen.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-017",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following statements is correct regarding the D-dimer test?",
+      "choices": [
+        "Levels are decreased in DIC",
+        "Test detects polypeptides A and B",
+        "Test detects fragments D and E",
+        "Test has a negative predictive value"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Test has a negative predictive value",
+      "explanation": "The D-dimer assay evaluates fibrin degradation. It is a nonspecific screening test that shows increased values in many conditions in which fibrinolysis is increased, such as DIC and fibrinolytic therapy. The D-dimer test is widely used to rule out thrombosis and thrombotic activities. The negative predictive value of a test is the probability that a person with a negative result is free of the disease that the test is meant to detect. Therefore, a negative D-dimer test result rules out thrombosis, and further laboratory investigations are not required.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-018",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "A protein that plays a role in both coagulation and PLT aggregation is:",
+      "choices": [
+        "Factor I",
+        "Factor VIII",
+        "Factor IX",
+        "Factor XI"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Factor I",
+      "explanation": "Factor I (fibrinogen), along with the glycoprotein IIb–IIIa complex, is necessary for PLT aggregation. Factor I is also a substrate in the common pathway of coagulation. Thrombin acts on fibrinogen to form fibrin clots.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-019",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "A standard 4.5-mL blue-top tube filled with 3.0 mL of blood was submitted to the laboratory for PT and APTT tests. The sample is from a patient undergoing surgery the following morning for a tonsillectomy. Which of the following is the necessary course of action by the medical laboratory scientist?",
+      "choices": [
+        "Run both tests in duplicate and report the average result",
+        "Reject the sample and request a new sample",
+        "Report the PT result",
+        "Report the APTT result"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Reject the sample and request a new sample",
+      "explanation": "A 4.5-mL blue-top tube contains 4.5 mL blood + 0.5 mL sodium citrate. The tube should be 90% full. A tube with 3.0 mL blood should be rejected because the quantity is not sufficient (QNS). QNS samples alter the necessary blood:anticoagulant ratio (9:1). The excess anticoagulant in a QNS sample binds to the reagent calcium, resulting in prolongation of PT and APTT.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 6,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-020",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which statement is correct regarding sample storage for the PT test?",
+      "choices": [
+        "Stable for 24 hours if the sample is capped",
+        "Stable for 24 hours if the sample is refrigerated at 4°C",
+        "Stable for 4 hours if the sample is stored at 4°C",
+        "Should be run within 8 hours"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Stable for 24 hours if the sample is capped",
+      "explanation": "According to Clinical Laboratory Standards Institute (CLSI) guidelines, plasma samples for PT testing, if capped, are stable for 24 hours at room temperature. Refrigerating the sample causes cold activation of factor VII and, therefore, shortened PT results. APTT samples are stable for 4 hours if stored at 4°C.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-021",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "In primary fibrinolysis, the fibrinolytic activity results in response to:",
+      "choices": [
+        "Increased fibrin formation",
+        "Spontaneous activation of fibrinolysis",
+        "Increased fibrin monomers",
+        "DIC"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Spontaneous activation of fibrinolysis",
+      "explanation": "Primary fibrinolysis is a rare pathological condition in which spontaneous systemic fibrinolysis occurs. Plasmin is formed in the absence of coagulation activation and clot formation. Primary fibrinolysis is associated with increased production of plasminogen and plasmin, decreased plasmin removal from the circulation, and spontaneous bleeding.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-022",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Plasminogen deficiency is associated with:",
+      "choices": [
+        "Bleeding",
+        "Thrombosis",
+        "Increased fibrinolysis",
+        "Increased coagulation"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Thrombosis",
+      "explanation": "Plasminogen deficiency is associated with thrombosis. Plasminogen is an important component of the fibrinolytic system. Plasminogen is activated to plasmin, which is necessary for the degradation of fibrin clots to prevent thrombosis. When plasminogen is deficient, plasmin is not formed, causing a defect in the clot lysing processes.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-023",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following clotting factors are activated by thrombin that is generated by tissue pathway (TF-VIIa)?",
+      "choices": [
+        "Factors XII, XI",
+        "Factors XII, I",
+        "Factors I, II",
+        "Factors V, VIII"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Factors V, VIII",
+      "explanation": "Factors V and VIII are activated by the thrombin that is generated by the action of TF-VIIa on factor X to form factor Xa. Factor Xa forms a complex with factor Va on the PLT surfaces. Factor Xa–Va complex in the presence of phospholipid and Ca²⁺ transform more prothrombin to thrombin.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 7,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-024",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which substrate is used in a chromogenic factor assay?",
+      "choices": [
+        "p-nitroaniline (pNa)",
+        "Chlorophenol red",
+        "Prussian blue",
+        "Ferricyanide"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "p-nitroaniline (pNa)",
+      "explanation": "The chromogenic, or amidolytic, assays use a color-producing substance, known as chromophore. The chromophore used for the coagulation laboratory is pNa. pNa is bound to a synthetic oligopeptide substrate. The protease cleaves the chromogenic substrate at the site binding the oligopeptide to the pNa, which results in release of pNa. Free pNa has a yellow color; the color intensity of the solution is proportional to protease activity and is measured by a photodetector at 405 nm.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-025",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-1",
+      "prompt": "Which of the following antibodies is used in the D-dimer assay?",
+      "choices": [
+        "Polyclonal antibody directed against X and Y fragments",
+        "Polyclonal antibody directed against D-dimer",
+        "Monoclonal antibody against D and E fragments",
+        "Monoclonal antibody against D-dimer"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Monoclonal antibody against D-dimer",
+      "explanation": "The D-dimer is the fibrin degradation product generated by the action of plasmin on cross-linked fibrin formed by XIIIa. The patient’s plasma is mixed with latex particles coated with monoclonal antibodies against D-domains. The test can be automated, or performed manually on a glass slide by looking macroscopically for agglutination. Enzyme-linked immunosorbent assay (ELISA) methods are also available. Normal D-dimer in plasma is less than 2 ng/mL. Increased levels of D-dimer are associated with DIC, thrombolytic therapy, venous thrombosis, and thromboembolic disorders. The D-dimer assay has a 90% to 95% negative predictive value and has been used to rule out thrombosis and thromboembolic disorders.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 8,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    }
+  ]
+}

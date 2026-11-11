@@ -1,0 +1,72 @@
+{
+  ".gitignore": {
+    "before": "6098ad0418651ef60d4cae68706ab48b5cab1a4c19a39fa6e8d64d0475f745b8",
+    "after": "88d986f6d7819a17656656436e61bf59694894524c991a88271ceaffb3ea2d83",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "next.config.ts": {
+    "before": "e60c050f369a3d60260c941987573e94a6da696c654cf3f7fece4f8d612e16ae",
+    "after": "cde57ceffacf1f51dcabde24496dc9290f7ffad1bccbdcdf355c39cf6489cf24",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "app/components/QuestionStimulus.tsx": {
+    "before": "ae0464779f9aa979bf4e1f029a6d4b5b4076c98076d4e8a392fefebdcc6c7779",
+    "after": "36e1a3fe1edf0b5fb56eb96aebd8890e4f64cd580b3dd7ea3596cc64d251b4f2",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "app/api/reviewer/boc/route.ts": {
+    "before": "dfbcd3b04afd4d08f1c07f5fd27e235d429f38b634d77c506dc6fa68c9f2d58e",
+    "after": "5a495da7a280e58709097a8e6904ed351f632577e60cb21707ed56427b74e606",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "app/api/reviewer/elsevier/route.ts": {
+    "before": "8fb3d9ea1c2a52417cae5e9d0b25d6b5254a3d37dfc28c4d33063e32b323bade",
+    "after": "e47c24284ffd87cee9c6a5f444f8ed93536f59c334308bd0497374ff595b4f4c",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "app/lib/server/bocServerContent.ts": {
+    "before": "8b25e7bec30e09221b0909d3a63a30a096f485fabc01877bd90dc86fb585417d",
+    "after": "7fdd81e14d4bbbaa3b65f0e90389301ab63c38080ae00741b8f4238d8256a892",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "app/lib/server/elsevierServerContent.ts": {
+    "before": "92ce4d1b32dcb98e366f5755f83905b891e247bbd9bbda9f3ea2a47100987c7c",
+    "after": "413fc151fbdd92b551b795c2dacc1870fda0437a60a4bad261b33396407e08cc",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "tests/phase3d.test.ts": {
+    "before": "e1eb61f885d7e3db2e1f3363b5d8387f42d1bd997ae193af79cfe769ad97cc63",
+    "after": "917b6131f1ed0a1dcdf15111cf59fdb5aad2f28adabf33a5812eccb1f7abdf66",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "tests/fixes-only-release.test.ts": {
+    "before": "7bff38aa7ae48fff79620917193d2863636030c3be828b67047b936914840c50",
+    "after": "5b8f580ce8f9f0c8e6c107efe842744bcfd4cdf02b138613776c39f5e1f7718c",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "tests/elsevier-preview.test.ts": {
+    "before": "fdabe47a333bc90b01a5ffb98951714201ad5e72d29bde64ca2251b84806e156",
+    "after": "291b2cdc79518f467c7a76678d3326ee51283ce5b62972994a66dffca117d970",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "tests/elsevier-presentation.test.ts": {
+    "before": "79022cd9403f5b01837b73bfe200dc11bdbd2cbb97e21514c0fd0bc631303908",
+    "after": "455b68609dc16dab05fc86282d53c5bc143e58be8ae23940755e0d6b2c68ef66",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "tests/reviewer-compatibility.test.ts": {
+    "before": "20cd49a99351192794426f6b0dd573f3adb77352a7e09051b262d08f7d533f12",
+    "after": "359b8df2950ba7861abdedf85c430edab9fbfbef9ae8aad1a30aa4f3c6180425",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "tests/reviewer-mastery-integration.test.ts": {
+    "before": "38441c5823ed1c4b6562a04cf86f82729b01372ad7f4dad26c880e02c1986d36",
+    "after": "fa9bfd8c849ed6356f0c1226154a94a00d3f7584a7c74eebd2ed88c81fd2c5c5",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "c7b1599ebd8ab5ead8a8d8ac0c5dd3469ae21950433422ab77aea0f3109b53dc",
+    "after": "b68ef654cae279d5f3de7a904e7446cc7da9ade97e91ead24e8f8338801b9ff6",
+    "reason": "Authorized private BOC/Elsevier delivery; original source pins and assertions retained, private fixture paths and secure URLs substituted"
+  }
+}

@@ -169,3 +169,10 @@ app/lib/adaptiveQuestions.ts text eol=lf
 app/lib/scientificCalculator.ts text eol=lf
 app/lib/xpService.ts text eol=lf
 app/page.tsx text eol=lf
+# New reviewer source evidence is pinned to original CRLF working bytes.
+app/content/bocContent.json text eol=crlf
+app/content/bocMetadata.ts text eol=crlf
+app/content/bocSourceManifest.json text eol=crlf
+app/content/elsevierContent.json text eol=crlf
+app/content/elsevierMetadata.ts text eol=crlf
+app/content/elsevierSourceManifest.json text eol=crlf

@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "./ProgressPage.module.css";
 import type { ReviewerBook, Subject, Topic } from "../content/reviewerContent";
 import type { QuestionAttempt, UserPreferences } from "../lib/domain";
-import { canAccessFeature as canAccessSubscriptionFeature, type SubscriptionEntitlement } from "../lib/entitlements";
+import { canAccessFeature as canAccessSubscriptionFeature, isQuestionBankPublished, type SubscriptionEntitlement } from "../lib/entitlements";
 import {
   ALL_MAJORS_CATEGORY,
   MTAP_1_CATEGORY,
@@ -60,7 +60,7 @@ export default function ProgressPage({
   cloudEnabled,
   preferences,
   onStartReview,
-  availableBooks = ["Harr", "Ciulla", "Rodak", "Strasinger"],
+  availableBooks = ["Harr", "Ciulla", "Rodak", "Strasinger", ...(isQuestionBankPublished("Elsevier") ? ["Elsevier" as const] : []), ...(isQuestionBankPublished("BOC") ? ["BOC" as const] : [])],
 }: ProgressPageProps) {
   // Collapsible Subject state
   const [expandedSubjectIds, setExpandedSubjectIds] = useState<Set<string>>(() => new Set());

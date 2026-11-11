@@ -1,10 +1,13 @@
 import Image from "next/image";
+import { reviewerAssetUrl } from "../lib/reviewerAssetPaths";
 import type { QuestionStimulus as QuestionStimulusData, ReviewerQuestion } from "../content/reviewerContent";
 import styles from "./QuestionStimulus.module.css";
+import SourceText from "./SourceText";
 
 type QuestionStimulusProps = {
   stimulus?: QuestionStimulusData;
   allowEnlarge?: boolean;
+  inlineTable?: boolean;
 };
 
 export function QuestionReferences({ question }: { question: ReviewerQuestion }) {
@@ -32,10 +35,22 @@ export function QuestionReferences({ question }: { question: ReviewerQuestion })
   );
 }
 
-export default function QuestionStimulus({ stimulus, allowEnlarge = false }: QuestionStimulusProps) {
+export default function QuestionStimulus({ stimulus, allowEnlarge = false, inlineTable = false }: QuestionStimulusProps) {
   if (!stimulus) return null;
 
   if (stimulus.kind === "table") {
+    // Choice buttons and answer headings require phrasing content, not a nested native table.
+    if (inlineTable) return (
+      <span className={styles.inlineTable} role="table" aria-label={stimulus.caption || undefined}>
+        {stimulus.caption && <span className={styles.inlineCaption}>{stimulus.caption}</span>}
+        {stimulus.columns.length > 0 && <span className={styles.inlineRow} role="row">
+          {stimulus.columns.map((column, index) => <span className={styles.inlineCell} role="columnheader" key={index}><SourceText text={column} marks={stimulus.sourceFormatting?.columns?.[index]} /></span>)}
+        </span>}
+        {stimulus.rows.map((row, rowIndex) => <span className={styles.inlineRow} role="row" key={rowIndex}>
+          {row.map((cell, index) => <span className={styles.inlineCell} role="cell" key={index}><SourceText text={cell} marks={stimulus.sourceFormatting?.rows?.[rowIndex]?.[index]} /></span>)}
+        </span>)}
+      </span>
+    );
     return (
       <div className={styles.root}>
         <div className={styles.tableScroll}>
@@ -44,7 +59,7 @@ export default function QuestionStimulus({ stimulus, allowEnlarge = false }: Que
             <thead>
               <tr>
                 {stimulus.columns.map((column, index) => (
-                  <th key={`${index}:${column}`} scope="col">{column}</th>
+                  <th key={`${index}:${column}`} scope="col"><SourceText text={column} marks={stimulus.sourceFormatting?.columns?.[index]} /></th>
                 ))}
               </tr>
             </thead>
@@ -52,9 +67,9 @@ export default function QuestionStimulus({ stimulus, allowEnlarge = false }: Que
               {stimulus.rows.map((row, rowIndex) => (
                 <tr key={`${rowIndex}:${row.join(":")}`}>
                   {row.map((cell, cellIndex) => cellIndex === 0 ? (
-                    <th key={`${cellIndex}:${cell}`} scope="row">{cell}</th>
+                    <th key={`${cellIndex}:${cell}`} scope="row"><SourceText text={cell} marks={stimulus.sourceFormatting?.rows?.[rowIndex]?.[cellIndex]} /></th>
                   ) : (
-                    <td key={`${cellIndex}:${cell}`}>{cell}</td>
+                    <td key={`${cellIndex}:${cell}`}><SourceText text={cell} marks={stimulus.sourceFormatting?.rows?.[rowIndex]?.[cellIndex]} /></td>
                   ))}
                 </tr>
               ))}
@@ -69,13 +84,14 @@ export default function QuestionStimulus({ stimulus, allowEnlarge = false }: Que
     <figure className={`${styles.root} ${styles.figure}`}>
       <Image
         className={styles.image}
-        src={stimulus.src}
+        src={reviewerAssetUrl(stimulus.src)}
+        unoptimized={reviewerAssetUrl(stimulus.src) !== stimulus.src}
         alt={stimulus.alt}
         width={stimulus.width}
         height={stimulus.height}
         sizes="(max-width: 760px) calc(100vw - 48px), 820px"
       />
-      {allowEnlarge && <a className={styles.imageLink} href={stimulus.src} target="_blank" rel="noopener noreferrer">Open full-size reference image</a>}
+      {allowEnlarge && <a className={styles.imageLink} href={reviewerAssetUrl(stimulus.src)} target="_blank" rel="noopener noreferrer">Open full-size reference image</a>}
       {stimulus.caption && <figcaption>{stimulus.caption}</figcaption>}
     </figure>
   );

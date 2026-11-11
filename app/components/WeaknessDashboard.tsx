@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { type ReviewerBook, type ReviewerQuestion, type Subject, type Topic } from "../content/reviewerContent";
 import type { QuestionAttempt } from "../lib/domain";
+import { getCanonicalSubjectId, getUnifiedSubjects } from "../lib/reviewerLibrary";
+import { isQuestionBankPublished } from "../lib/entitlements";
 import {
   buildAccuracyHistory,
   calculateTopicMastery,
@@ -148,15 +150,14 @@ export default function WeaknessDashboard({
   const weakestReliable = [...reliable].sort((a, b) => (a.mastery ?? 101) - (b.mastery ?? 101))[0];
 
   const availableSubjects = useMemo(() => {
-    if (bookFilter === "all") return subjects;
-    return subjects.filter((s) => s.book === bookFilter);
-  }, [bookFilter, subjects]);
+    return getUnifiedSubjects(bookFilter, subjects, topics);
+  }, [bookFilter, subjects, topics]);
 
   const filteredTopics = useMemo(() => {
     const needle = search.trim().toLowerCase();
     const matching = bookMasteries.filter(
       (topic) =>
-        (subjectFilter === "all" || topic.subjectId === subjectFilter) &&
+        (subjectFilter === "all" || getCanonicalSubjectId(topic.subjectId, topic.topicId) === getCanonicalSubjectId(subjectFilter)) &&
         (statusFilter === "all" || topic.status === statusFilter) &&
         (!needle || `${topic.topicName} ${topic.subjectName} ${topic.book ?? ""}`.toLowerCase().includes(needle))
     );
@@ -376,6 +377,8 @@ export default function WeaknessDashboard({
                 <option value="Ciulla">Ciulla</option>
                 <option value="Rodak">Rodak</option>
                 <option value="Strasinger">Strasinger</option>
+                {isQuestionBankPublished("Elsevier") && <option value="Elsevier">Elsevier</option>}
+                {isQuestionBankPublished("BOC") && <option value="BOC">BOC</option>}
               </select>
             </label>
             <label>
@@ -708,6 +711,8 @@ export default function WeaknessDashboard({
                   <option value="Ciulla">Ciulla</option>
                   <option value="Rodak">Rodak</option>
                   <option value="Strasinger">Strasinger</option>
+                  {isQuestionBankPublished("Elsevier") && <option value="Elsevier">Elsevier</option>}
+                {isQuestionBankPublished("BOC") && <option value="BOC">BOC</option>}
                 </select>
               </label>
 

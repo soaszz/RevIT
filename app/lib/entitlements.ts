@@ -27,11 +27,14 @@ export const QUESTION_BANKS: Readonly<Record<Lowercase<ReviewerBook>, {
   id: Lowercase<ReviewerBook>;
   label: ReviewerBook;
   requiredPlan: SubscriptionPlan;
+  published?: boolean;
 }>> = Object.freeze({
   harr: { id: "harr", label: "Harr", requiredPlan: "free" },
   ciulla: { id: "ciulla", label: "Ciulla", requiredPlan: "pro" },
   rodak: { id: "rodak", label: "Rodak", requiredPlan: "pro" },
   strasinger: { id: "strasinger", label: "Strasinger", requiredPlan: "pro" },
+  boc: { id: "boc", label: "BOC", requiredPlan: "pro", published: false },
+  elsevier: { id: "elsevier", label: "Elsevier", requiredPlan: "pro", published: false },
 });
 
 export const AI_LIMITS: Readonly<Record<SubscriptionPlan, {
@@ -57,7 +60,13 @@ export function canAccessFeature(feature: SubscriptionFeature, entitlement: Subs
 
 export function canAccessQuestionBank(book: ReviewerBook, entitlement: SubscriptionEntitlement | null | undefined) {
   const bank = QUESTION_BANKS[book.toLowerCase() as Lowercase<ReviewerBook>];
-  return bank.requiredPlan === "free" || isProActive(entitlement);
+  return isQuestionBankPublished(book) && (bank.requiredPlan === "free" || isProActive(entitlement));
+}
+
+export function isQuestionBankPublished(book: ReviewerBook) {
+  const bank = QUESTION_BANKS[book.toLowerCase() as Lowercase<ReviewerBook>];
+  const localPreview = (book === "Elsevier" || book === "BOC") && process.env.NODE_ENV === "development";
+  return Boolean(bank) && (bank.published !== false || localPreview);
 }
 
 export function getAiLimits(entitlement: SubscriptionEntitlement | null | undefined) {

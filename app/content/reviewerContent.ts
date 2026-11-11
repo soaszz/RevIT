@@ -1,6 +1,7 @@
 import rawContent from "./reviewerContent.json";
+import { activeHarrQuestions, allHarrHistoryQuestions, sourceHarrQuestions, HARR_COAGULATION_TOPIC } from "../lib/harrQuestionPool";
 
-export type ReviewerBook = "Harr" | "Ciulla" | "Rodak" | "Strasinger";
+export type ReviewerBook = "Harr" | "Ciulla" | "Rodak" | "Strasinger" | "Elsevier" | "BOC";
 
 export type Subject = {
   id: string;
@@ -32,6 +33,7 @@ export type QuestionStimulus =
       caption: string;
       columns: string[];
       rows: string[][];
+      sourceFormatting?: { columns?: SourceTextMarks[]; rows?: SourceTextMarks[][] };
     }
   | {
       kind: "image";
@@ -53,6 +55,17 @@ export type QuestionReference = {
   stimulus?: QuestionStimulus;
 };
 
+export type SourceTextMarks = { start: number; end: number; script: "sub" | "sup" }[];
+
+export type SourceTextFormatting = {
+  prompt?: SourceTextMarks;
+  promptAfterReferences?: SourceTextMarks;
+  choices?: SourceTextMarks[];
+  explanation?: SourceTextMarks;
+};
+
+export type QuestionSection = { kind: "text"; text: string; sourceFormatting?: SourceTextMarks } | { kind: "visual"; stimulus: QuestionStimulus };
+
 export type ReviewerQuestion = {
   id: string;
   subjectId: string;
@@ -62,10 +75,12 @@ export type ReviewerQuestion = {
   caseStudy?: string;
   prompt: string;
   promptAfterReferences?: string;
+  questionSections?: QuestionSection[];
   stimulus?: QuestionStimulus;
   references?: QuestionReference[];
   choices: string[];
   choiceTable?: { columns: string[]; rows: string[][] };
+  choiceTables?: (Extract<QuestionStimulus, { kind: "table" }> | null)[];
   correctAnswer: number;
   matching?: {
     items: string[];
@@ -73,6 +88,9 @@ export type ReviewerQuestion = {
   };
   officialAnswer: string;
   explanation: string;
+  sourceFormatting?: SourceTextFormatting;
+  rationaleImages?: QuestionStimulus[];
+  rationaleSections?: QuestionSection[];
   source: {
     fileName: string;
     page: number;
@@ -89,8 +107,13 @@ const content = rawContent as {
 };
 
 export const harrSubjects: Subject[] = content.subjects.map((s) => ({ ...s, book: "Harr" as ReviewerBook }));
-export const harrTopics: Topic[] = content.topics.map((t) => ({ ...t, book: "Harr" as ReviewerBook }));
-export const harrQuestions: ReviewerQuestion[] = content.questions.map((q) => ({ ...q, book: "Harr" as ReviewerBook }));
+export const harrTopics: Topic[] = content.topics.map((t) => ({ ...t,
+  sourcePdfs: t.id === HARR_COAGULATION_TOPIC ? [{ fileName: "Chapter_2_Hematology 2.pdf", pageRange: "2–9", kind: "Original supplied MCQ reviewer" }] : t.sourcePdfs,
+  book: "Harr" as ReviewerBook }));
+export const harrQuestions: ReviewerQuestion[] = activeHarrQuestions.map((q) => ({ ...q, book: "Harr" as ReviewerBook }));
+export const harrHistoryQuestions: ReviewerQuestion[] = allHarrHistoryQuestions.map(q => ({ ...q, book: "Harr" as ReviewerBook }));
+export const harrLegacyQuestions: ReviewerQuestion[] = content.questions.map(q => ({ ...q, book: "Harr" as ReviewerBook }));
+export const harrSourceQuestions: ReviewerQuestion[] = sourceHarrQuestions.map(q => ({ ...q, book: "Harr" as ReviewerBook }));
 
 export const allSubjects: Subject[] = harrSubjects;
 export const allTopics: Topic[] = harrTopics;
@@ -102,6 +125,6 @@ export const questions: ReviewerQuestion[] = harrQuestions;
 
 export const subjectById = new Map(harrSubjects.map((subject) => [subject.id, subject]));
 export const topicById = new Map(harrTopics.map((topic) => [topic.id, topic]));
-export const questionById = new Map(harrQuestions.map((question) => [question.id, question]));
+export const questionById = new Map(harrHistoryQuestions.map((question) => [question.id, question]));
 
 
