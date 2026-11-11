@@ -15,7 +15,7 @@ export const SITE_UPDATES: SiteUpdate[] = [
   {
     id: "update-v1-13-0",
     version: "v1.13.0",
-    date: "Pending",
+    date: "November 12, 2026",
     type: "major",
     title: "Added BOC and Elsevier Reviewers",
     summary: "Added two Pro reviewers, corrected Harr questions, and improved MCQ retries.",

@@ -6,8 +6,8 @@
   },
   "app/data/siteUpdates.ts": {
     "before": "7be65053b75d78c4544da2698f6da38c863eba975f174f7a7db688f65e08d6d0",
-    "after": "cceac1e7ca11328bba035e1d1c370054872a60ec4833e853849959339446607d",
-    "reason": "Reconciled with the released v1.12.6 hotfix: keeps the dated v1.12.6 entry and adds the Pending v1.13.0 entry; immutable history preserved."
+    "after": "07e40847763fedd64e76bb33133cfe54700e5e84a9ce7456916dff8a04cdff27",
+    "reason": "Reconciled with the released v1.12.6 hotfix and bound to the actual Manila promotion date November 12, 2026; keeps the dated v1.12.6 entry and the v1.13.0 entry; immutable history preserved."
   },
   "tests/fixes-only-release.test.ts": {
     "before": "5b8f580ce8f9f0c8e6c107efe842744bcfd4cdf02b138613776c39f5e1f7718c",
