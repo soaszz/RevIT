@@ -1,0 +1,6 @@
+{
+  "before": "55afa631aa828fb06c537cabab417ee653c9f64a4c914b25eb405ebd40eab44b",
+  "after": "d993041aafac10ac9a072c4f7a2cfbd0cdb71106ac9a73a45092ba6a32209c1b",
+  "sourceAfter": "59b468bc97c433127b24c13f705ee70872c516fc450f4aa10e155fcb98318292",
+  "reason": "MCQ retry-mastery hotfix JSX only: quiz topline shows unique questions vs attempts, adds mastery/retry status line, and updates the session summary to first-attempt counts. The immutable phase3n baseline remains unchanged and is retained as the transition source."
+}

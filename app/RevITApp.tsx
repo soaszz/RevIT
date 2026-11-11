@@ -30,6 +30,7 @@ import MobileReviewBar from "./components/MobileReviewBar";
 import { motion, AnimatePresence } from "motion/react";
 import CustomConfirm from "./components/CustomConfirm";
 import ResumeSessionModal, { type SavedRecentSession } from "./components/ResumeSessionModal";
+import { canResumeRecentReview, parseRecentReviewSession, restoreRecentMasterySession } from "./lib/recentReviewSession";
 import StudyActivityHeatmap from "./components/StudyActivityHeatmap";
 import StudyCalendar from "./components/StudyCalendar";
 import StudyPlanner, { TodayStudyPlan, type PlannerViewMode } from "./components/StudyPlanner";
@@ -83,6 +84,7 @@ import { normalizeStudyPlans, studyPlansStorageKey } from "./lib/studyPlanner";
 import { type ReviewTimerDuration } from "./lib/reviewTimer";
 import { playReviewSound, unlockReviewSounds } from "./lib/reviewSounds";
 import { buildWeakTopicQuestionPool, type TopicMastery } from "./lib/weaknessAnalytics";
+import { allQuestionIds, firstSessionAnswers, queueAfterAnswer, sessionMastery, upgradeMasteryQueue } from "./lib/sessionMastery";
 import { encodeMatchingAnswers, isQuestionAnswerCorrect } from "./lib/matchingQuestion";
 import { createClient } from "./lib/supabase/client";
 import { hasCurrentLegalConsent } from "./lib/legal";
@@ -699,6 +701,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const [confirmConfig, setConfirmConfig] = useState<{isOpen: boolean, action?: () => void, title?: string, message?: string, confirmLabel?: string}>({ isOpen: false });
   const [recentSession, setRecentSession] = useState<SavedRecentSession | null>(null);
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
+  const sessionOwnerRef = useRef(initialUser?.id ?? "local");
   const [planAnnouncementOpen, setPlanAnnouncementOpen] = useState(false);
   const [planAnnouncementVariant, setPlanAnnouncementVariant] = useState<PlanModalVariant>("general");
   const [pendingActivation, setPendingActivation] = useState<PendingActivationNotification | null>(null);
@@ -989,25 +992,24 @@ useEffect(() => {
     } catch {
       // Invalid local data should not block a study session.
     }
+    setSessionQuestionIds([]);
+    setSessionId(null);
+    setRecentSession(null);
+    setResumeModalOpen(false);
     try {
       localStorage.removeItem(RECENT_SESSION_STORAGE_KEY);
       const savedRecent = localStorage.getItem(recentSessionStorageKey(initialUser?.id));
       if (savedRecent) {
-        const parsed = JSON.parse(savedRecent) as SavedRecentSession;
-        if (parsed && Array.isArray(parsed.questionIds) && parsed.questionIds.length > 0
-          && parsed.index < parsed.questionIds.length && questionById.has(parsed.questionIds[parsed.index])) {
-          setRecentSession(parsed);
-          setResumeModalOpen(true);
-        } else {
-          localStorage.removeItem(recentSessionStorageKey(initialUser?.id));
-        }
+        const parsed = parseRecentReviewSession(savedRecent);
+        setRecentSession(parsed);
+        setResumeModalOpen(Boolean(parsed));
       }
     } catch {
       // Corrupt recent session should not block app
     }
     setReinforcementReady(true);
     setStorageReady(true);
-  }, [initialUser]);
+  }, [initialUser?.id]);
 
   useEffect(() => {
     setStudyPlansReady(false);
@@ -1617,24 +1619,14 @@ useEffect(() => {
     : [];
   const currentAnswerCorrect = currentQuestion ? isQuestionAnswerCorrect(currentQuestion, selectedChoice) : false;
   const sessionComplete = sessionQuestionIds.length > 0 && sessionIndex >= sessionQuestionIds.length;
-  const sessionRequiresFullCoverage = !sessionStrictWrongOnly && sessionTargetCount > 0 && sessionTargetCount === sessionPoolIds.length;
-  const sessionHasUnseenQuestions = sessionRequiresFullCoverage
-    && sessionPoolIds.some((id) => !sessionQuestionIds.includes(id));
-  const sessionWrongCount = sessionAttempts.filter((attempt) => !attempt.correct).length;
-  const sessionDynamicTarget = sessionStrictWrongOnly
-    ? sessionTargetCount
-    : Math.max(sessionTargetCount + sessionWrongCount, sessionQuestionIds.length);
-  const sessionCanFinish = sessionStrictWrongOnly
-    ? sessionQuestionIds.length > 0 && sessionAttempts.length >= sessionQuestionIds.length
-    : sessionAttempts.length >= sessionDynamicTarget && !sessionHasUnseenQuestions;
-  const sessionUniqueQuestionCount = new Set(sessionQuestionIds).size;
-  const sessionProgressCount = Math.min(sessionIndex + 1, sessionDynamicTarget);
-
-  const remainingUnansweredInQueue = Math.max(0, sessionQuestionIds.length - sessionAttempts.length);
-  const hasUnseenAdaptiveQuestions = !sessionStrictWrongOnly
-    && (sessionDynamicTarget > sessionQuestionIds.length || sessionHasUnseenQuestions);
-  const totalUnansweredRemaining = remainingUnansweredInQueue + (hasUnseenAdaptiveQuestions ? 1 : 0);
-  const canSkipCurrentQuestion = !answerRevealed && totalUnansweredRemaining > 1;
+  const mastery = useMemo(() => sessionMastery(sessionQuestionIds, sessionAttempts), [sessionQuestionIds, sessionAttempts]);
+  const firstAnswers = useMemo(() => firstSessionAnswers(sessionAttempts), [sessionAttempts]);
+  const sessionCanFinish = mastery.done;
+  const sessionDynamicTarget = mastery.unique;
+  const sessionUniqueQuestionCount = mastery.unique;
+  const sessionProgressCount = mastery.completed;
+  const currentMastery = currentQuestion ? mastery.states.get(currentQuestion.id) : undefined;
+  const canSkipCurrentQuestion = !answerRevealed && sessionQuestionIds.slice(sessionIndex + 1).some(id => id !== currentQuestion?.id);
 
   function toggleTopic(topicId: string) {
     const topic = allAvailableTopics.find((t) => t.id === topicId);
@@ -1703,8 +1695,9 @@ useEffect(() => {
     if (soundEffectsEnabled) void unlockReviewSounds();
 
     const target = Math.min(targetCount, poolIds.length);
-    const initialQuestionIds: string[] = [];
-    for (let i = 0; i < target; i++) {
+    const allIds = allQuestionIds(poolIds, target);
+    const initialQuestionIds: string[] = allIds ?? [];
+    for (let i = 0; !allIds && i < target; i++) {
       const nextId = chooseAdaptiveQuestion(
         poolIds,
         reinforcementLevels,
@@ -1745,6 +1738,7 @@ useEffect(() => {
     setSessionStrictWrongOnly(false);
     setSessionMode(mode);
     const localSessionId = crypto.randomUUID();
+    sessionOwnerRef.current = initialUser?.id ?? "local";
     setSessionId(localSessionId);
     void trustedStudy?.startSession({ localSessionId, mode, questionIds: poolIds, targetCount: initialQuestionIds.length });
     setSessionIndex(0);
@@ -1786,6 +1780,7 @@ useEffect(() => {
     setSessionStrictWrongOnly(true);
     setSessionMode(mode);
     const localSessionId = crypto.randomUUID();
+    sessionOwnerRef.current = initialUser?.id ?? "local";
     setSessionId(localSessionId);
     void trustedStudy?.startSession({ localSessionId, mode, questionIds: strictQuestionIds, targetCount: strictQuestionIds.length });
     setSessionIndex(0);
@@ -1817,8 +1812,8 @@ useEffect(() => {
     setRecentSession(null);
   }
 
-  function timeoutSession() {
-    if (!currentQuestion || sessionQuestionIds.length === 0) return;
+  const saveRecentSession = useCallback(() => {
+    if (!currentQuestion || !sessionId || sessionOwnerRef.current !== (initialUser?.id ?? "local")) return false;
 
     const currentTopic = topicById.get(currentQuestion.topicId);
     const currentSubject = subjectById.get(currentQuestion.subjectId);
@@ -1841,13 +1836,45 @@ useEffect(() => {
       primaryTopicName: currentTopic?.name || "Review Session",
       subjectName: currentSubject?.name || "Review Library",
       skippedIds: sessionSkippedIds,
+      masteryVersion: 1,
+      selectedChoice,
+      matchingSelections,
+      answerRevealed,
+      timedOut,
     };
 
     try {
       localStorage.setItem(recentSessionStorageKey(initialUser?.id), JSON.stringify(saved));
       setRecentSession(saved);
-    } catch {}
+      return true;
+    } catch {
+      setProgressionError("Session could not be saved on this device. Keep this tab open and free local storage before pausing.");
+      return false;
+    }
+  }, [currentQuestion, sessionId, initialUser?.id, topicById, subjectById, sessionPoolIds,
+    sessionTargetCount, sessionQuestionIds, sessionChoiceOrders, sessionStrictWrongOnly, sessionMode,
+    sessionIndex, sessionAttempts, activeTimer, selectedTopicIds, wrongAnswersOnly, selectedBook,
+    sessionSkippedIds, selectedChoice, matchingSelections, answerRevealed, timedOut]);
 
+  useEffect(() => {
+    if (!sessionQuestionIds.length || sessionOwnerRef.current !== (initialUser?.id ?? "local")) return;
+    if (sessionComplete) {
+      try { localStorage.removeItem(recentSessionStorageKey(initialUser?.id)); } catch {}
+      setRecentSession(null);
+      return;
+    }
+    saveRecentSession();
+    const saveWhenHidden = () => { if (document.visibilityState === "hidden") saveRecentSession(); };
+    window.addEventListener("pagehide", saveRecentSession);
+    document.addEventListener("visibilitychange", saveWhenHidden);
+    return () => {
+      window.removeEventListener("pagehide", saveRecentSession);
+      document.removeEventListener("visibilitychange", saveWhenHidden);
+    };
+  }, [saveRecentSession, sessionQuestionIds.length, sessionComplete, initialUser?.id]);
+
+  function timeoutSession() {
+    if (!saveRecentSession()) return;
     answerLockedRef.current = true;
     setSessionPoolIds([]);
     setSessionTargetCount(0);
@@ -1866,32 +1893,13 @@ useEffect(() => {
     setActiveTimer(TIMER_DISABLED);
   }
 
-  useEffect(() => {
-    if (!recentSession || cloudLoading) return;
-    const hasUnauthorizedQuestions = recentSession.questionIds.some((id) => {
-      const q = questionById.get(id);
-      return q && !canAccessQuestionBank(q.book ?? "Harr", entitlement);
-    });
-    if (hasUnauthorizedQuestions) {
-      clearRecentSession();
-      setResumeModalOpen(false);
-    }
-  }, [recentSession, cloudLoading, entitlement, questionById]);
+  const recentSessionAvailable = !cloudLoading && canResumeRecentReview(recentSession, questionById, entitlement);
 
   function continueRecentSession() {
-    const sessionToResume = recentSession;
-    if (!sessionToResume) return;
-
-    const hasUnauthorizedQuestions = sessionToResume.questionIds.some((id) => {
-      const q = questionById.get(id);
-      return q && !canAccessQuestionBank(q.book ?? "Harr", entitlement);
-    });
-    if (hasUnauthorizedQuestions) {
-      clearRecentSession();
-      setResumeModalOpen(false);
-      setPlanAnnouncementOpen(true);
-      return;
-    }
+    if (!recentSession || !recentSessionAvailable) return;
+    const sessionToResume = restoreRecentMasterySession(recentSession);
+    if (sessionToResume.index >= sessionToResume.questionIds.length) clearRecentSession();
+    sessionOwnerRef.current = initialUser?.id ?? "local";
 
     setLibraryMode("mcqs");
     if (sessionToResume.selectedTopicIds) {
@@ -1914,12 +1922,12 @@ useEffect(() => {
     setSessionMode(sessionToResume.sessionMode);
     setSessionIndex(sessionToResume.index);
     setSessionAttempts(sessionToResume.attempts);
-    setSelectedChoice(null);
-    setMatchingSelections([]);
-    setAnswerRevealed(false);
-    setTimedOut(false);
+    setSelectedChoice(sessionToResume.selectedChoice ?? null);
+    setMatchingSelections(sessionToResume.matchingSelections ?? []);
+    setAnswerRevealed(sessionToResume.answerRevealed ?? false);
+    setTimedOut(sessionToResume.timedOut ?? false);
     setActiveTimer(sessionToResume.activeTimer || TIMER_DISABLED);
-    answerLockedRef.current = false;
+    answerLockedRef.current = sessionToResume.answerRevealed ?? false;
 
     setResumeModalOpen(false);
     setActiveView("library");
@@ -1942,9 +1950,6 @@ useEffect(() => {
           "Yes, view results",
           () => {
             clearRecentSession();
-            if (sessionId) {
-              recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
-            }
             scheduleBatchedCloudSync(true);
             const answeredIds = sessionQuestionIds.slice(0, sessionAttempts.length);
             setSessionQuestionIds(answeredIds.length > 0 ? answeredIds : sessionQuestionIds.slice(0, 1));
@@ -2163,6 +2168,12 @@ useEffect(() => {
   function completeQuestion(selectedAnswer: number | null, didTimeOut = false) {
     if (!currentQuestion || answerRevealed || answerLockedRef.current) return;
     if (selectedAnswer === null && !didTimeOut) return;
+    if (sessionOwnerRef.current !== (initialUser?.id ?? "local")) return;
+    if (!canAccessQuestionBank(currentQuestion.book ?? "Harr", entitlement)) {
+      setPlanAnnouncementOpen(true);
+      return;
+    }
+    const isSessionRetry = sessionAttempts.some(item => item.questionId === currentQuestion.id);
     answerLockedRef.current = true;
     const existingQuestionAttempts = attempts.filter((item) => item.questionId === currentQuestion.id);
     const topic = topicById.get(currentQuestion.topicId);
@@ -2179,28 +2190,29 @@ useEffect(() => {
       difficulty: normalizedDifficulty(currentQuestion.difficulty),
       selectedAnswer,
       correct: isQuestionAnswerCorrect(currentQuestion, selectedAnswer),
-      attemptNumber: existingQuestionAttempts.length + 1,
+      attemptNumber: existingQuestionAttempts.length + (isSessionRetry ? sessionAttempts.filter(item => item.questionId === currentQuestion.id).length : 1),
       reviewMode: sessionMode,
       sessionId,
       isAdaptiveRepeat: existingQuestionAttempts.length > 0 || currentReinforcementLevel > 0,
       timestamp: new Date().toISOString(),
     };
-    setAttempts((current) => [...current, attempt]);
+    if (!isSessionRetry) setAttempts((current) => [...current, attempt]);
     setSessionAttempts((current) => [...current, attempt]);
+    setSessionQuestionIds(queueAfterAnswer(sessionQuestionIds, sessionIndex, [...sessionAttempts, attempt]));
     const nextReinforcementLevel = reinforcementLevelAfterAnswer(
       currentReinforcementLevel,
       attempt.correct,
     );
-    setReinforcementLevels((current) => reinforcementAfterAnswer(current, currentQuestion.id, attempt.correct));
+    if (!isSessionRetry) setReinforcementLevels((current) => reinforcementAfterAnswer(current, currentQuestion.id, attempt.correct));
     const isStrasingerSyncBlocked = currentQuestion.book === "Strasinger" && !STRASINGER_CLOUD_SYNC_ENABLED;
-    if (trustedStudy && sessionId) trustedStudy.recordAttempt(sessionId, {
+    if (!isSessionRetry && trustedStudy && sessionId) trustedStudy.recordAttempt(sessionId, {
       id: attempt.id, questionId: attempt.questionId, selectedAnswer, didTimeOut,
       matchingSelections: currentQuestion.matching && !didTimeOut ? matchingSelections : undefined,
     }, currentQuestion);
-    if (!trustedStudy && cloudEnabled && initialUser && (!attempt.correct || currentReinforcementLevel > 0) && !isStrasingerSyncBlocked) {
+    if (!isSessionRetry && !trustedStudy && cloudEnabled && initialUser && (!attempt.correct || currentReinforcementLevel > 0) && !isStrasingerSyncBlocked) {
       queueQuestionReinforcement(initialUser.id, currentQuestion.id, nextReinforcementLevel);
     }
-    if (!trustedStudy && cloudEnabled && initialUser && !isStrasingerSyncBlocked) {
+    if (!isSessionRetry && !trustedStudy && cloudEnabled && initialUser && !isStrasingerSyncBlocked) {
       queueQuestionAttempt(initialUser.id, attempt);
     }
     setSelectedChoice(selectedAnswer);
@@ -2209,7 +2221,7 @@ useEffect(() => {
     if (soundEffectsEnabled) {
       void playReviewSound(didTimeOut ? "timeout" : attempt.correct ? "correct" : "incorrect");
     }
-    if (!isStrasingerSyncBlocked) {
+    if (!isSessionRetry && !isStrasingerSyncBlocked) {
       recordStudyEvent({
         eventKey: `answer:${attempt.id}`,
         eventType: "question_answered",
@@ -2235,73 +2247,26 @@ useEffect(() => {
   }
 
   function nextQuestion() {
+    if (!answerRevealed || !currentQuestion || !answerLockedRef.current
+      || sessionOwnerRef.current !== (initialUser?.id ?? "local")) return;
     answerLockedRef.current = false;
-    setTimedOut(false);
-    const isStrasingerSyncBlocked = currentQuestion?.book === "Strasinger" && !STRASINGER_CLOUD_SYNC_ENABLED;
-    if (sessionStrictWrongOnly) {
-      if (sessionCanFinish && sessionId && !isStrasingerSyncBlocked) {
-        if (trustedStudy) void trustedStudy.completeSession(sessionId);
-        recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
-      }
-      setSessionIndex((current) => current + 1);
-      setSelectedChoice(null);
-      setMatchingSelections([]);
-      setAnswerRevealed(false);
-      if (!isStrasingerSyncBlocked) scheduleBatchedCloudSync(true);
-      return;
-    }
+    const isStrasingerSyncBlocked = currentQuestion.book === "Strasinger" && !STRASINGER_CLOUD_SYNC_ENABLED;
     if (sessionCanFinish) {
+      clearRecentSession();
       if (sessionId && !isStrasingerSyncBlocked) {
         if (trustedStudy) void trustedStudy.completeSession(sessionId);
         recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
       }
-      setSessionIndex((current) => current + 1);
-      setSelectedChoice(null);
-      setMatchingSelections([]);
-      setAnswerRevealed(false);
-      if (!isStrasingerSyncBlocked) scheduleBatchedCloudSync(true);
-      return;
+      setSessionIndex(sessionQuestionIds.length);
+    } else {
+      if (sessionIndex + 1 >= sessionQuestionIds.length) return;
+      setSessionIndex(current => current + 1);
     }
-
-    if (sessionIndex + 1 < sessionQuestionIds.length) {
-      setSessionIndex((current) => current + 1);
-      setSelectedChoice(null);
-      setMatchingSelections([]);
-      setAnswerRevealed(false);
-      if (!isStrasingerSyncBlocked) scheduleBatchedCloudSync(true);
-      return;
-    }
-
-    const nextQuestionId = chooseAdaptiveQuestion(sessionPoolIds, reinforcementLevels, sessionQuestionIds, Math.random, questionPerformance);
-    if (!nextQuestionId) {
-      if (sessionId && !isStrasingerSyncBlocked) {
-        if (trustedStudy) void trustedStudy.completeSession(sessionId);
-        recordProgressOnlyEvent(`study-session:${sessionId}`, "study_session_completed", XP_REWARDS.COMPLETE_STUDY_SESSION);
-      }
-      setSessionIndex((current) => current + 1);
-      setSelectedChoice(null);
-      setMatchingSelections([]);
-      setAnswerRevealed(false);
-      if (!isStrasingerSyncBlocked) scheduleBatchedCloudSync(true);
-      return;
-    }
-    const nextIndex = sessionQuestionIds.length;
-    const nextQ = questionById.get(nextQuestionId);
-    const nextChoiceCount = nextQ?.choices?.length ?? 4;
-    const shouldShuffleNext = !nextQ?.disableShuffle && !nextQ?.matching && !nextQ?.choiceTable;
-    const nextOrder = shouldShuffleNext
-      ? shuffled(Array.from({ length: nextChoiceCount }, (_, i) => i))
-      : Array.from({ length: nextChoiceCount }, (_, i) => i);
-    setSessionQuestionIds((current) => [...current, nextQuestionId]);
-    setSessionChoiceOrders((current) => ({
-      ...current,
-      [`${nextIndex}:${nextQuestionId}`]: nextOrder,
-      [nextQuestionId]: nextOrder,
-    }));
-    setSessionIndex(nextIndex);
     setSelectedChoice(null);
     setMatchingSelections([]);
     setAnswerRevealed(false);
+    setTimedOut(false);
+    if (!isStrasingerSyncBlocked) scheduleBatchedCloudSync(true);
   }
 
   function skipQuestion() {
@@ -2312,31 +2277,6 @@ useEffect(() => {
 
     const nextIds = [...sessionQuestionIds];
     const [removed] = nextIds.splice(sessionIndex, 1);
-
-    if (!sessionStrictWrongOnly && nextIds.length < sessionDynamicTarget) {
-      const nextQuestionId = chooseAdaptiveQuestion(
-        sessionPoolIds,
-        reinforcementLevels,
-        [...nextIds, removed],
-        Math.random,
-        questionPerformance,
-      );
-      if (nextQuestionId && !nextIds.includes(nextQuestionId) && nextQuestionId !== removed) {
-        const nextQ = questionById.get(nextQuestionId);
-        const nextChoiceCount = nextQ?.choices?.length ?? 4;
-        const shouldShuffleNext = !nextQ?.disableShuffle && !nextQ?.matching && !nextQ?.choiceTable;
-        const nextOrder = shouldShuffleNext
-          ? shuffled(Array.from({ length: nextChoiceCount }, (_, i) => i))
-          : Array.from({ length: nextChoiceCount }, (_, i) => i);
-
-        nextIds.push(nextQuestionId);
-        setSessionChoiceOrders((current) => ({
-          ...current,
-          [nextQuestionId]: nextOrder,
-          [`${nextIds.length - 1}:${nextQuestionId}`]: nextOrder,
-        }));
-      }
-    }
 
     nextIds.push(removed);
 
@@ -3059,7 +2999,7 @@ useEffect(() => {
                   />
                 </div>
               )}
-              {activeView === "library" && !isReviewSessionActive && recentSession && (
+              {activeView === "library" && !isReviewSessionActive && recentSessionAvailable && recentSession && (
                 <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
                   <button
                     className="continue-recent-session-button"
@@ -3517,11 +3457,11 @@ useEffect(() => {
           ) : (
             <div className="library-shell">
               {sessionComplete ? (
-                <SessionSummary attempts={sessionAttempts} onDone={leaveSession} cloudEnabled={cloudEnabled && attemptHistoryAvailable} />
+                <SessionSummary attempts={firstAnswers} totalAttempts={sessionAttempts.length} completed={mastery.completed} selectedCount={Math.max(sessionTargetCount, mastery.unique)} onDone={leaveSession} cloudEnabled={cloudEnabled && attemptHistoryAvailable} />
               ) : currentQuestion ? (
               <section className="quiz-card">
                 <div className="quiz-topline">
-                  <div><span>{`Question ${sessionIndex + 1} of ${sessionDynamicTarget}`}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
+                  <div style={{ minWidth: 0 }}><span>{`${sessionUniqueQuestionCount} unique questions · ${sessionAttempts.length} attempts`}</span><strong>{topicById.get(currentQuestion.topicId)?.name}</strong></div>
                   <div className="quiz-topline-actions" style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
                     <button
                       className="secondary-button timeout-button"
@@ -3540,6 +3480,10 @@ useEffect(() => {
                     <button className="secondary-button" type="button" onClick={leaveSession} style={{ whiteSpace: "nowrap" }}>Exit session</button>
                   </div>
                 </div>
+                <p role="status" aria-live="polite" style={{ overflowWrap: "anywhere", color: "var(--muted)" }}>
+                  {mastery.completed} completed · {mastery.awaitingRetry} awaiting retry
+                  {currentMastery?.retry && !currentMastery.complete ? ` · Retry mastery ${currentMastery.streak}/2` : ""}
+                </p>
                 <div className="quiz-progress"><span style={{ width: `${Math.min(100, (sessionProgressCount / Math.max(sessionDynamicTarget, 1)) * 100)}%` }} /></div>
                 <div key={`${currentQuestion.id}-${sessionIndex}`}>
                   <div className="quiz-header-row">
@@ -4419,7 +4363,7 @@ useEffect(() => {
         onCancel={() => setConfirmConfig({ isOpen: false })}
       />
       <ResumeSessionModal
-        isOpen={resumeModalOpen}
+        isOpen={resumeModalOpen && recentSessionAvailable}
         session={recentSession}
         onResume={continueRecentSession}
         onDismiss={() => setResumeModalOpen(false)}
@@ -4446,14 +4390,15 @@ function CloudOfflineState({ feature }: { feature: string }) {
   );
 }
 
-function SessionSummary({ attempts, onDone, cloudEnabled }: { attempts: Attempt[]; onDone: () => void; cloudEnabled: boolean }) {
+function SessionSummary({ attempts, totalAttempts, completed, selectedCount, onDone, cloudEnabled }: { attempts: Attempt[]; totalAttempts: number; completed: number; selectedCount: number; onDone: () => void; cloudEnabled: boolean }) {
   const correct = attempts.filter((attempt) => attempt.correct).length;
   const topicIds = [...new Set(attempts.map((attempt) => attempt.topicId))];
   return (
     <section className="results-card">
       <span className="result-mark">{percent(correct, attempts.length)}%</span>
-      <p className="eyebrow">Review complete</p>
-      <h2>{correct} of {attempts.length} correct</h2>
+      <p className="eyebrow">{completed >= selectedCount ? "Review complete" : "Session ended early"}</p>
+      <h2>{correct} of {attempts.length} correct on first attempt</h2>
+      <p>{selectedCount} unique questions selected · {completed} completed · {totalAttempts} total attempts. Retry practice stays in this session and does not award extra XP.</p>
       <p>Your answers are {cloudEnabled ? "synced to your account" : "saved locally"} and have already updated Progress.</p>
       <div className="result-breakdown">
         {topicIds.map((topicId) => {

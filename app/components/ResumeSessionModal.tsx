@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import type { ReviewerBook } from "../content/reviewerContent";
 import type { ReviewTimerDuration } from "../lib/reviewTimer";
 import type { ReviewMode, QuestionAttempt } from "../lib/domain";
+import { sessionMastery } from "../lib/sessionMastery";
 
 export type SavedRecentSession = {
   id: string;
@@ -24,6 +25,11 @@ export type SavedRecentSession = {
   primaryTopicName: string;
   subjectName: string;
   skippedIds?: string[];
+  masteryVersion?: 1;
+  answerRevealed?: boolean;
+  selectedChoice?: number | null;
+  matchingSelections?: number[];
+  timedOut?: boolean;
 };
 
 type ResumeSessionModalProps = {
@@ -85,11 +91,8 @@ export default function ResumeSessionModal({
 
   if (!isOpen || !mounted || !session) return null;
 
-  const wrongCount = (session.attempts ?? []).filter((a) => !a.correct).length;
-  const dynamicTarget = session.strictWrongOnly
-    ? session.targetCount
-    : Math.max(session.targetCount + wrongCount, session.questionIds.length);
-  const progressPercent = Math.min(100, Math.round(((session.index + 1) / Math.max(dynamicTarget, 1)) * 100));
+  const mastery = sessionMastery(session.questionIds, session.attempts ?? []);
+  const progressPercent = Math.round(mastery.completed / Math.max(mastery.unique, 1) * 100);
 
   const modal = (
     <div
@@ -148,9 +151,10 @@ export default function ResumeSessionModal({
             {session.primaryTopicName}
           </div>
           <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "var(--muted)", marginTop: "10px", marginBottom: "6px" }}>
-            <span>Question {session.index + 1} of {dynamicTarget}</span>
+            <span>{mastery.completed} of {mastery.unique} unique questions completed</span>
             <span>{progressPercent}% completed</span>
           </div>
+          <p style={{ color: "var(--muted)", fontSize: "13px", overflowWrap: "anywhere" }}>{session.attempts.length} attempts · {mastery.awaitingRetry} awaiting retry</p>
           <div style={{ width: "100%", height: "6px", borderRadius: "99px", background: "color-mix(in srgb, var(--line) 80%, transparent)", overflow: "hidden" }}>
             <div style={{ width: `${progressPercent}%`, height: "100%", background: "var(--green)", borderRadius: "99px", transition: "width .2s ease" }} />
           </div>

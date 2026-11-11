@@ -13,6 +13,21 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-12-6",
+    version: "v1.12.6",
+    date: "Pending",
+    type: "minor",
+    title: "Improved MCQ retries",
+    summary: "Wrong answers now need two correct retries in a row, with better pause and resume support.",
+    tags: ["Practice", "Fixes"],
+    highlights: [
+      "Questions answered correctly at first appear only once.",
+      "Wrong answers return later and need two correct retries in a row.",
+      "Paused sessions keep their retry progress when you return.",
+      "Retry practice does not add duplicate XP, cloud attempts, or study history.",
+    ],
+  },
+  {
     id: "update-v1-12-5",
     version: "v1.12.5",
     date: "November 10, 2026",

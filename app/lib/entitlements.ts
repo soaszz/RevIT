@@ -57,6 +57,7 @@ export function canAccessFeature(feature: SubscriptionFeature, entitlement: Subs
 
 export function canAccessQuestionBank(book: ReviewerBook, entitlement: SubscriptionEntitlement | null | undefined) {
   const bank = QUESTION_BANKS[book.toLowerCase() as Lowercase<ReviewerBook>];
+  if (!bank) return false;
   return bank.requiredPlan === "free" || isProActive(entitlement);
 }
 

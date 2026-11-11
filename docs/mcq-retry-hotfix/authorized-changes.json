@@ -1,0 +1,27 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "b934b3cd64f01472b29ae73442f4b045fd6bbe1c60b1d21216d67917348eab15",
+    "after": "59b468bc97c433127b24c13f705ee70872c516fc450f4aa10e155fcb98318292",
+    "reason": "MCQ retry-mastery hotfix only: initially-correct questions appear once, wrong questions require two consecutive correct retries, retries re-queue later and are excluded from duplicate XP/history/cloud writes. No reviewer integration, pricing, subscription, service worker, or BOC/Elsevier changes."
+  },
+  "app/lib/entitlements.ts": {
+    "before": "c37561705c99786e9ce564ae67b0bfe219b3e873947faadfcb7df72d66ab82db",
+    "after": "7c21a6247ba9fed2812d5309f814e772d833a85d26f77a88ea2adc89ccbfede5",
+    "reason": "Defensive guard so canAccessQuestionBank returns false for unpublished/unknown books instead of throwing; known Harr/Ciulla/Rodak/Strasinger behavior unchanged."
+  },
+  "app/components/ResumeSessionModal.tsx": {
+    "before": "9279b5d7c8942e7f1170bb22ef9c060581d85fea77dd9a2c486544a53cf6dc63",
+    "after": "c0fd0b41b23de47426296eaa9552691a15615b9d7015105e3155e6961f611fdc",
+    "reason": "Resume dialog reports mastery (completed of unique, awaiting retry) instead of raw index/target; no layout or behavior change outside numbers."
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "7be65053b75d78c4544da2698f6da38c863eba975f174f7a7db688f65e08d6d0",
+    "after": "61135eac0c2217d3d0a911604c58596fc3801e296168074584ecaa11331eea2a",
+    "reason": "Approved minor v1.12.6 MCQ retry entry; date Pending until actual authorized Manila production day; reversing only the added entry reproduces historical bytes exactly."
+  },
+  "tests/fixes-only-release.test.ts": {
+    "before": "23c05af416e965a98310b1d888d76b5f389271bc108cae01f5cb604ddafdefeb",
+    "after": "b504446c7f7d1f84fd2dcb812be74636dc02c2c1e0324cf61d908b988b66970a",
+    "reason": "Only release-version expectations updated for the approved v1.12.6 entry; previous versions still asserted; four-book, pricing and security assertions unchanged."
+  }
+}

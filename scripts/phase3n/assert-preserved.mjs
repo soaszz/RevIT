@@ -43,5 +43,10 @@ export function assertPreserved(path, expected) {
     assert.equal(security[path].before, current, `${path}: broken subscription-security preservation chain`);
     current = security[path].after;
   }
+  const mcqHotfix = JSON.parse(readFileSync(new URL("docs/mcq-retry-hotfix/authorized-changes.json", root), "utf8"));
+  if (mcqHotfix[path]) {
+    assert.equal(mcqHotfix[path].before, current, `${path}: broken MCQ retry hotfix preservation chain`);
+    current = mcqHotfix[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }
