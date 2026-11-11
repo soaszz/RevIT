@@ -16,8 +16,8 @@
   },
   "app/data/siteUpdates.ts": {
     "before": "7be65053b75d78c4544da2698f6da38c863eba975f174f7a7db688f65e08d6d0",
-    "after": "61135eac0c2217d3d0a911604c58596fc3801e296168074584ecaa11331eea2a",
-    "reason": "Approved minor v1.12.6 MCQ retry entry; date Pending until actual authorized Manila production day; reversing only the added entry reproduces historical bytes exactly."
+    "after": "95a3cb8c255a869a6536d15ea91c41edd0aa7ea4a97d478dff93b23b377bb7a3",
+    "reason": "Approved minor v1.12.6 MCQ retry entry; date bound to the actual Manila deployment date November 12, 2026 (no backdating). Reversing only the added entry reproduces historical bytes exactly."
   },
   "tests/fixes-only-release.test.ts": {
     "before": "23c05af416e965a98310b1d888d76b5f389271bc108cae01f5cb604ddafdefeb",

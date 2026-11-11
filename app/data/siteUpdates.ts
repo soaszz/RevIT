@@ -15,7 +15,7 @@ export const SITE_UPDATES: SiteUpdate[] = [
   {
     id: "update-v1-12-6",
     version: "v1.12.6",
-    date: "Pending",
+    date: "November 12, 2026",
     type: "minor",
     title: "Improved MCQ retries",
     summary: "Wrong answers now need two correct retries in a row, with better pause and resume support.",
