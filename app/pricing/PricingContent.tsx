@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import ProPlanCards from "../components/ProPlanCards";
-import { PUBLIC_REVIEWERS, type PublicQuestionCounts } from "../lib/publicReviewerBooks";
+import { getUpcomingReviewerNames, PUBLIC_REVIEWERS, type PublicQuestionCounts } from "../lib/publicReviewerBooks";
 import { AI_LIMITS, isProActive, type SubscriptionEntitlement } from "../lib/entitlements";
 import { createClient } from "../lib/supabase/client";
 import styles from "./PricingPage.module.css";
+
+const upcomingReviewerNames = getUpcomingReviewerNames();
 
 type Props = {
   initialUser: { id: string; email?: string } | null;
@@ -309,11 +311,11 @@ export default function PricingContent({ initialUser, initialEntitlement, questi
           </p>
         </article>
       </section>
-      <aside data-upcoming-reviewers="true" aria-label="Upcoming reviewer editions" className={styles.freeNote}>
+      {upcomingReviewerNames && <aside data-upcoming-reviewers="true" aria-label="Upcoming reviewer editions" className={styles.freeNote}>
         <strong>More Reviewer Books Coming Soon</strong>
-        <p>We&apos;re working on adding BOC Study Guide 7th Edition and Elsevier&apos;s MLS Examination Review to RevIT Pro.</p>
+        <p>We&apos;re working on adding {upcomingReviewerNames} to RevIT Pro.</p>
         <p>These reviewer editions are not yet available. Their release is subject to final approval, and no availability date has been announced.</p>
-      </aside>
+      </aside>}
     </div>
   );
 }

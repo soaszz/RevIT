@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ReviewerBook } from "../content/reviewerContent";
 import type { QuestionAttempt } from "./domain";
+import { compatibleReviewerBook } from "./reviewerAttemptCompatibility";
 import type {
   CurrentLeaderboardPosition,
   LeaderboardMetric,
@@ -168,10 +169,12 @@ export function computeAttemptStats(
       const isCiulla = isCiullaAttempt(attempt);
       const isRodak = isRodakAttempt(attempt);
       const isStrasinger = isStrasingerAttempt(attempt);
+      const newBook = compatibleReviewerBook(attempt.questionId);
       if (options.book === "Ciulla" && !isCiulla) return false;
       if (options.book === "Rodak" && !isRodak) return false;
       if (options.book === "Strasinger" && !isStrasinger) return false;
-      if (options.book === "Harr" && (isCiulla || isRodak || isStrasinger)) return false;
+      if ((options.book === "BOC" || options.book === "Elsevier") && options.book !== newBook) return false;
+      if (options.book === "Harr" && (isCiulla || isRodak || isStrasinger || newBook)) return false;
     }
     return true;
   });

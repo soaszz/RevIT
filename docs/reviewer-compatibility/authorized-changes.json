@@ -1,0 +1,127 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "b934b3cd64f01472b29ae73442f4b045fd6bbe1c60b1d21216d67917348eab15",
+    "after": "e40ecf3ecfbbe691d42798733e116ecc71b7956d2eb1855865622f9b5266ccbd",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/components/Flashcards.tsx": {
+    "before": "bd30938b762fb25df3d55c91c36f3720c1def23ad2f5d5023f064beb23d96106",
+    "after": "e4504c4e8762a9c7f10716087804242e581419a6323e2841e0216b82ffc663c1",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/components/LeaderboardPage.tsx": {
+    "before": "de2a68598444751fbb6513a27e8245d40c46b541a261a8f3e2b5c4e9b1708244",
+    "after": "37058309d1c02ae3540945eac4aa26029c78bba11500ed8a35a1af5bb1430739",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/components/ProgressPage.tsx": {
+    "before": "754522652395e1d25b425d5117c6267b41fb59927d684ffb92bf2fee32489de5",
+    "after": "e23d65923d0bfccc2dae3cff4874b5ec7ebbb717e85b283b0bfd7c3964f69955",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/components/QuestionStimulus.module.css": {
+    "before": "1cc9ec171d12bdd6b084f5962b23e0e8d77ec6a00fd297cafd295ac29ec335ab",
+    "after": "9f24e73eb9bd92689351a7907b7c31262e95ef99a1ba78f5504e1f543b90b837",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/components/QuestionStimulus.tsx": {
+    "before": "8f214dfa499fe9b2019be9a40a5d74f9092ac53053d84a4fefb53a41d3d270a1",
+    "after": "ae0464779f9aa979bf4e1f029a6d4b5b4076c98076d4e8a392fefebdcc6c7779",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/components/ResumeSessionModal.tsx": {
+    "before": "9279b5d7c8942e7f1170bb22ef9c060581d85fea77dd9a2c486544a53cf6dc63",
+    "after": "f19ad916ca31527b9d3bfb0a5c1df885b2afdaab963835ff7eab135e53247e1f",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/components/ReviewLibrary.tsx": {
+    "before": "012bc7243fe4c12ec8421638debeee59222ba045671cb0aa6e894365f4adbc1f",
+    "after": "b40220aeaa0004c64b741126c11f513cd5bf06f70f39e6b11c18442cdc0bf639",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/components/WeaknessDashboard.tsx": {
+    "before": "f8798d1b7870eec157d103ee3fddce37bc698f1a3915df7bf8339dc6aa9f9450",
+    "after": "ffc1e52d2dc48a8574ce11c521e068eb747f39842e68866047fe1287829dac99",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/content/reviewerContent.ts": {
+    "before": "6d607006ee3b13183551c83484d1678f752dfd770a570a89cfab8efabd6bae11",
+    "after": "456451e557865aa7147f507c5ec03d8571a7562b5e4c1d4943f50df0b9f1340a",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/clientSessionAdapter.ts": {
+    "before": "38b726a93aef40fb90f12d535383916902a464c27e0939534d0f12b0b6f44259",
+    "after": "80837bfac187ff8dfd9b53e1139ecfe4f53816bdb2ce5b8a3a750659daef958d",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/cloudService.ts": {
+    "before": "c6f61644a10ff42392d127c6844d92e3fcc6b20f22fecd54604b60a00e306941",
+    "after": "d0f3328c9ec649c2f316ac6532333690f5e7336135100746264e7c249c299651",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/cloudSyncGate.ts": {
+    "before": "345846ce48c917b06fec2bce0313b7b176c450ebcd839596264e7a7a13ae0575",
+    "after": "7e4610e9fef914dd630633e945fa62821c9ba2a8d8d2a636b47ecf25dada56c6",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/entitlements.ts": {
+    "before": "c37561705c99786e9ce564ae67b0bfe219b3e873947faadfcb7df72d66ab82db",
+    "after": "02dd0c6a30aabe22c5c985223f19fe074086486ee1e6c91df6afc7a3bb48f4ed",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/flashcards.ts": {
+    "before": "542beb7585a8190960c39732df0e85066300c3fd111ce1e5767ca773a7298ca4",
+    "after": "2f58c2190c66b3dc9a84ddb42e73c806511ddb0813abbcfd21f7c40626420bd7",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/leaderboardService.ts": {
+    "before": "cfbe71f5dc6790eff8d6fb8a5c3b7dd7aa305db78a6dc8564b0cb4dfa924b70b",
+    "after": "33546b7a2b0e428524a45cfa3874ca0e1ecb06c88f61e2aad244179b6335da88",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/premiumReviewerService.ts": {
+    "before": "76db463a4501cfa2de37b6ced20171fbff14022cc37fb4d8e6e9115fe4842813",
+    "after": "627682b1781d0bdf289a0e10f495c7c4ff0a6fbbafaaf6451583b5fb35312ffa",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/reviewerLibrary.ts": {
+    "before": "cf51945235428a517a7c401507cf89f97750797e067d8cfb4948b01951b4fd97",
+    "after": "632be786c7147cf0b0598ffde78142cf3694af4c574e25a46aa099575b739b5d",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/server/answerVerification.ts": {
+    "before": "94388c9da6e7b00f54bf26aee68659f4cd24d6157b5dabd19333b7c6a9e326b5",
+    "after": "c960bfcff81ea5a1a1983e119f36c7ae7e392663dc01c346b981f4f1e45f4390",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/server/publicReviewerCounts.ts": {
+    "before": "1d8480c1fae20de8ea645a03b66a2623861b35b374535a57cbb4facd33f2e107",
+    "after": "76cb074708749e83faf6d171e73e1ecd780723b6b2d264f251304c622114a384",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/weaknessAnalytics.ts": {
+    "before": "6a4b38688016563cf9584c07f86060c64459cc92c5bdf345edd5c9cafb02dc3d",
+    "after": "8152c7b9695f052507c02c35c8a163f2041b10bde551c8c377ed068b243b56ed",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "tests/reviewer-topic-availability.test.ts": {
+    "before": "4c016beeca6bf4a18ab959b4d327415505b29805b08e18d8998a39481fc67fb9",
+    "after": "05f2d9e1dcb415ba6ce020035b3636680ba8cc8731a2e0b423bda24831449438",
+    "reason": "Approved reviewer integration and matching restoration; existing four-book projection preserved"
+  },
+  "app/lib/publicReviewerBooks.ts": {
+    "before": "11c43b71fbd8d634962fea45ec4e59dd3a66d3192e0651f5b173153ef2eff314",
+    "after": "4b7de14b59af277ee6dd809e8ff8daff0622fbcf1593c7362b320e80f6dc03a8",
+    "reason": "Publication-aware upcoming notice; preserve exact existing wording while both books remain unpublished"
+  },
+  "app/pricing/PricingContent.tsx": {
+    "before": "d32774cfde74c06dc997f9a6fa6a21b5a4dea4fcbc27f59e63ebf0e96cd184ed",
+    "after": "d9aefe1325d12dfa257ff26d522bc1f39c02e923b02adc68b5c143860d2e047e",
+    "reason": "Publication-aware upcoming notice; preserve exact existing wording while both books remain unpublished"
+  },
+  "app/pro/page.tsx": {
+    "before": "319b297c82b7f01ce359570915844cff5f84094bcd1eca95b0a968b3a766d06b",
+    "after": "820c4be3e475cef84cd7a9ae0d87dedbe4b7dd17f4f416d1eb3c1b8d54c98a7e",
+    "reason": "Publication-aware upcoming notice; preserve exact existing wording while both books remain unpublished"
+  }
+}

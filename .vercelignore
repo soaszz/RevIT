@@ -1,0 +1,27 @@
+# CLI upload allowlist; Git never contains the private runtime pack.
+/*
+!/app/
+!/public/
+!/docs/
+!/scripts/
+!/tests/
+!/types/
+!/package.json
+!/package-lock.json
+!/next.config.ts
+!/next-env.d.ts
+!/tsconfig.json
+!/postcss.config.mjs
+!/proxy.ts
+!/.private-reviewers/
+/.private-reviewers/*
+!/.private-reviewers/runtime/
+# Never upload recovery evidence, source-audit fixtures or environment files.
+/docs/reviewer-compatibility/boc-presentation-source-fixture.json
+/app/content/bocContent.json
+/app/content/elsevierContent.json
+/app/content/bocSourceManifest.json
+/app/content/elsevierSourceManifest.json
+/public/reviewer-assets/boc-7e/
+/public/reviewer-assets/elsevier-1e/
+**/.env*

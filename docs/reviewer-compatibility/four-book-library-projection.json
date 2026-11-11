@@ -1,0 +1,945 @@
+{
+  "baseline": "c6127324280a6d8da80ebc914ab3972951860bf3",
+  "projections": {
+    "Harr": [
+      {
+        "id": "clinical-chemistry",
+        "name": "Clinical Chemistry",
+        "description": "Instrumentation, analytes, organ systems, toxicology, endocrinology, and integrated chemistry cases.",
+        "category": "MTAP 1",
+        "topicIds": [
+          "clinical-chemistry-6-1",
+          "clinical-chemistry-6-2",
+          "clinical-chemistry-6-3",
+          "clinical-chemistry-6-4",
+          "clinical-chemistry-6-5",
+          "clinical-chemistry-6-6",
+          "clinical-chemistry-6-7",
+          "clinical-chemistry-6-8",
+          "clinical-chemistry-6-9",
+          "clinical-chemistry-6-10"
+        ],
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "clinical-chemistry"
+        ]
+      },
+      {
+        "id": "hematology",
+        "name": "Hematology",
+        "description": "Core procedures, anemias, leukocyte disorders, hematologic malignancies, hemostasis, thrombosis, coagulation, and problem-solving.",
+        "category": "MTAP 1",
+        "topicIds": [
+          "hematology-1-1",
+          "hematology-1-2",
+          "hematology-1-3",
+          "hematology-1-4",
+          "hematology-1-5",
+          "hematology-1-6",
+          "hematology-1-7",
+          "hematology-1-8",
+          "hematology-2-1",
+          "hematology-2-2",
+          "hematology-2-3",
+          "hematology-2-4",
+          "hematology-2-5"
+        ],
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "hematology"
+        ]
+      },
+      {
+        "id": "bacteriology",
+        "name": "Bacteriology",
+        "description": "Specimens, culture and identification, clinically important bacteria, anaerobes, and mycobacteria.",
+        "category": "MTAP 1",
+        "topicIds": [
+          "bacteriology-8-1",
+          "bacteriology-8-2",
+          "bacteriology-8-3",
+          "bacteriology-8-4",
+          "bacteriology-8-5",
+          "bacteriology-8-6",
+          "bacteriology-8-7",
+          "bacteriology-8-8"
+        ],
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "bacteriology"
+        ]
+      },
+      {
+        "id": "aubf",
+        "name": "AUBF",
+        "description": "Urinalysis, urine microscopy, body-fluid analysis, and integrated laboratory cases.",
+        "category": "MTAP 1",
+        "topicIds": [
+          "aubf-7-1",
+          "aubf-7-2",
+          "aubf-7-3",
+          "aubf-7-4",
+          "aubf-7-5"
+        ],
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "aubf"
+        ]
+      },
+      {
+        "id": "parasitology",
+        "name": "Parasitology",
+        "description": "Protozoa, helminths, arthropod vectors, diagnostic methods, epidemiology, and clinically important parasitic infections.",
+        "topicIds": [
+          "parasitology-8-11"
+        ],
+        "category": "Other Majors",
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "parasitology"
+        ]
+      },
+      {
+        "id": "mycology-and-virology",
+        "name": "Mycology and Virology",
+        "description": "Fungal specimens and identification, medically important fungi, virology principles, viral diseases, and clinical problem-solving.",
+        "topicIds": [
+          "mycology-and-virology-8-9-1",
+          "mycology-and-virology-8-9-2",
+          "mycology-and-virology-8-10-1",
+          "mycology-and-virology-8-10-2"
+        ],
+        "category": "Other Majors",
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "mycology-and-virology"
+        ]
+      },
+      {
+        "id": "immunohematology",
+        "name": "Immunohematology",
+        "description": "Blood-group genetics, ABO and Rh systems, antibody testing, compatibility, transfusion practice, HDFN, donor testing, and serologic problem-solving.",
+        "topicIds": [
+          "immunohematology-4-1",
+          "immunohematology-4-2",
+          "immunohematology-4-3",
+          "immunohematology-4-4",
+          "immunohematology-4-5",
+          "immunohematology-4-6",
+          "immunohematology-4-7",
+          "immunohematology-4-8",
+          "immunohematology-4-9",
+          "immunohematology-4-10",
+          "immunohematology-4-11"
+        ],
+        "category": "Other Majors",
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "immunohematology"
+        ]
+      },
+      {
+        "id": "immunology",
+        "name": "Immunology",
+        "description": "Immune principles, serologic procedures, infectious and autoimmune diseases, hypersensitivity, cellular testing, tumor markers, transplantation, and problem-solving.",
+        "topicIds": [
+          "immunology-3-1",
+          "immunology-3-2",
+          "immunology-3-3",
+          "immunology-3-4",
+          "immunology-3-5",
+          "immunology-3-6",
+          "immunology-3-7",
+          "immunology-3-8"
+        ],
+        "category": "Other Majors",
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "immunology"
+        ]
+      },
+      {
+        "id": "laboratory-operations",
+        "name": "Laboratory Operations",
+        "description": "Laboratory calculations, quality control, statistics, method evaluation, quality systems, tables, and graph-based data interpretation.",
+        "topicIds": [
+          "laboratory-operations-1",
+          "laboratory-operations-2",
+          "laboratory-operations-3",
+          "laboratory-operations-4",
+          "laboratory-operations-5",
+          "laboratory-operations-6"
+        ],
+        "category": "Other Majors",
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "laboratory-operations"
+        ]
+      }
+    ],
+    "Ciulla": [
+      {
+        "id": "ciulla-clinical-chemistry",
+        "name": "Clinical Chemistry",
+        "description": "General laboratory principles and math, analytical procedures, instrumentation and safety, carbohydrates, lipids, proteins, nonprotein nitrogenous substances, enzymology, liver function, electrolytes and acid-base, endocrinology, toxicology, and case studies.",
+        "topicIds": [
+          "ciulla-cc-instrumentation-and-analytical-principles",
+          "ciulla-cc-proteins-and-tumor-markers",
+          "ciulla-cc-nonprotein-nitrogenous-compounds",
+          "ciulla-cc-carbohydrates",
+          "ciulla-cc-lipids-and-lipoproteins",
+          "ciulla-cc-enzymes-and-cardiac-assessment",
+          "ciulla-cc-liver-function-and-porphyrin-formation",
+          "ciulla-cc-electrolytes-and-osmolality",
+          "ciulla-cc-acid-base-metabolism",
+          "ciulla-cc-endocrinology",
+          "ciulla-cc-toxicology",
+          "ciulla-cc-vitamins"
+        ],
+        "category": "MTAP 1",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-clinical-chemistry"
+        ]
+      },
+      {
+        "id": "ciulla-hematology",
+        "name": "Hematology",
+        "description": "Erythrocyte physiology, anemias, leukocyte physiology, leukocyte disorders, hematologic malignancies, laboratory procedures, and problem solving and case studies.",
+        "topicIds": [
+          "ciulla-hema-physiology-of-the-blood",
+          "ciulla-hema-erythrocytes-and-anemias",
+          "ciulla-hema-leukocytes-and-malignancies",
+          "ciulla-hema-instrumentation-and-methodology",
+          "ciulla-hema-hematology-problem-solving-and-case-studies"
+        ],
+        "category": "MTAP 1",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-hematology"
+        ]
+      },
+      {
+        "id": "ciulla-hemostasis",
+        "name": "Hemostasis",
+        "description": "Physiology of hemostasis, coagulation factors, platelet and vascular disorders, coagulation defects, inhibitors, anticoagulants, and problem solving.",
+        "topicIds": [
+          "ciulla-hemo-normal-hemostasis-and-coagulation-cascade",
+          "ciulla-hemo-hemostatic-disorders-and-thrombosis",
+          "ciulla-hemo-laboratory-evaluation-and-coagulation-testing"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-hemostasis"
+        ]
+      },
+      {
+        "id": "ciulla-immunology-and-serology",
+        "name": "Immunology and Serology",
+        "description": "Immune mechanisms, serologic procedures, infectious serology, autoimmune diseases, hypersensitivity, immunodeficiencies, and clinical problem solving.",
+        "topicIds": [
+          "ciulla-imm-immune-system-and-immunoglobulins",
+          "ciulla-imm-antigen-antibody-reactions-and-serological-testing",
+          "ciulla-imm-autoimmune-diseases-and-hypersensitivity"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-immunology-and-serology"
+        ]
+      },
+      {
+        "id": "ciulla-immunohematology",
+        "name": "Immunohematology",
+        "description": "Blood group genetics, ABO and Rh systems, antibody identification, compatibility testing, transfusion therapy, HDFN, and donor processing.",
+        "topicIds": [
+          "ciulla-bb-blood-collection-preservation-and-quality-control",
+          "ciulla-bb-blood-groups-genetics-and-serology",
+          "ciulla-bb-antibody-identification-and-transfusion-therapy",
+          "ciulla-bb-hemolytic-disease-and-problem-solving"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-immunohematology"
+        ]
+      },
+      {
+        "id": "ciulla-bacteriology",
+        "name": "Bacteriology",
+        "description": "Specimen collection and processing, staining and morphology, gram-positive cocci, gram-negative bacilli, fastidious bacteria, anaerobes, mycobacteria, and antimicrobial susceptibility.",
+        "topicIds": [
+          "ciulla-bact-specimen-collection-processing-and-staining",
+          "ciulla-bact-gram-positive-cocci",
+          "ciulla-bact-gram-negative-bacilli-and-cocci",
+          "ciulla-bact-fastidious-and-anaerobic-bacteria",
+          "ciulla-bact-mycobacteria-and-spirochetes",
+          "ciulla-bact-antimicrobial-susceptibility-and-case-studies"
+        ],
+        "category": "MTAP 1",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-bacteriology"
+        ]
+      },
+      {
+        "id": "ciulla-mycology-and-virology",
+        "name": "Mycology and Virology",
+        "description": "Fungal physiology, cutaneous, subcutaneous, and systemic mycoses, opportunistic fungi, viral structure, DNA and RNA viruses, and diagnostic virology techniques.",
+        "topicIds": [
+          "ciulla-myco-fungal-physiology-and-taxonomy",
+          "ciulla-myco-cutaneous-subcutaneous-and-systemic-mycoses",
+          "ciulla-viro-viral-structure-and-taxonomy",
+          "ciulla-viro-diagnostic-virology-and-serology"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-mycology-and-virology"
+        ]
+      },
+      {
+        "id": "ciulla-parasitology",
+        "name": "Parasitology",
+        "description": "Intestinal, blood, and tissue protozoa, helminths, diagnostic methods, and clinical parasitology.",
+        "topicIds": [
+          "ciulla-para-protozoa-intestinal-blood-and-tissue",
+          "ciulla-para-helminths-and-diagnostic-methods"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-parasitology"
+        ]
+      },
+      {
+        "id": "ciulla-molecular-diagnostics",
+        "name": "Molecular Diagnostics",
+        "description": "Molecular biology principles, nucleic acid extraction, amplification techniques, sequencing, and clinical diagnostic applications.",
+        "topicIds": [
+          "ciulla-mol-nucleic-acid-principles-and-isolation",
+          "ciulla-mol-molecular-amplification-and-sequencing"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-molecular-diagnostics"
+        ]
+      },
+      {
+        "id": "ciulla-urinalysis-and-body-fluids",
+        "name": "Urinalysis and Body Fluids",
+        "description": "Renal anatomy and physiology, chemical urinalysis, microscopic examination of urinary sediment, cerebrospinal fluid, and serous and synovial fluids.",
+        "topicIds": [
+          "ciulla-aubf-renal-physiology-and-physical-chemical-urinalysis",
+          "ciulla-aubf-microscopic-sediment-and-body-fluids"
+        ],
+        "category": "MTAP 1",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-urinalysis-and-body-fluids"
+        ]
+      },
+      {
+        "id": "ciulla-laboratory-calculations",
+        "name": "Laboratory Calculations",
+        "description": "Solution preparation, dilutions, molarity and normality, standard curves, concentration conversions, and clinical formulas.",
+        "topicIds": [
+          "ciulla-calc-dilutions-solutions-and-concentration",
+          "ciulla-calc-spectrophotometry-beer-s-law-and-enzymology"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-laboratory-calculations"
+        ]
+      },
+      {
+        "id": "ciulla-general-laboratory-principles",
+        "name": "General Laboratory Principles, Quality Assessment, and Safety",
+        "description": "Laboratory safety, quality control, Westgard multirules, method validation, statistics, and standard laboratory precautions.",
+        "topicIds": [
+          "ciulla-genlab-laboratory-safety-hazards-and-regulations",
+          "ciulla-genlab-quality-control-westgard-rules-and-statistics"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-general-laboratory-principles"
+        ]
+      },
+      {
+        "id": "ciulla-laboratory-management",
+        "name": "Laboratory Management",
+        "description": "Laboratory leadership, budgeting and finances, staffing, workflow management, compliance, and laboratory information systems.",
+        "topicIds": [
+          "ciulla-mgmt-regulatory-standards-and-accreditation",
+          "ciulla-mgmt-budgeting-staffing-and-operations"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-laboratory-management"
+        ]
+      }
+    ],
+    "Rodak": [
+      {
+        "id": "rodak-hematology",
+        "name": "Hematology",
+        "description": "Comprehensive hematology and hemostasis principles, cellular physiology, anemias, leukocyte disorders, hematologic malignancies, hemostasis, coagulation testing, and instrumentation from Rodak's Hematology, 6th Edition.",
+        "topicIds": [
+          "rodak-ch02",
+          "rodak-ch03",
+          "rodak-ch04",
+          "rodak-ch05",
+          "rodak-ch06",
+          "rodak-ch07",
+          "rodak-ch08",
+          "rodak-ch09",
+          "rodak-ch10",
+          "rodak-ch11",
+          "rodak-ch12",
+          "rodak-ch13",
+          "rodak-ch14",
+          "rodak-ch15",
+          "rodak-ch16",
+          "rodak-ch17",
+          "rodak-ch18",
+          "rodak-ch19",
+          "rodak-ch20",
+          "rodak-ch21",
+          "rodak-ch22",
+          "rodak-ch23",
+          "rodak-ch24",
+          "rodak-ch25",
+          "rodak-ch26",
+          "rodak-ch27",
+          "rodak-ch28",
+          "rodak-ch29",
+          "rodak-ch30",
+          "rodak-ch31",
+          "rodak-ch32",
+          "rodak-ch33",
+          "rodak-ch34",
+          "rodak-ch35",
+          "rodak-ch36",
+          "rodak-ch37",
+          "rodak-ch38",
+          "rodak-ch39",
+          "rodak-ch40",
+          "rodak-ch41",
+          "rodak-ch42",
+          "rodak-ch43"
+        ],
+        "category": "MTAP 1",
+        "book": "Rodak",
+        "books": [
+          "Rodak"
+        ],
+        "sourceSubjectIds": [
+          "rodak-hematology"
+        ]
+      }
+    ],
+    "Strasinger": [
+      {
+        "id": "strasinger-aubf",
+        "name": "Clinical Microscopy",
+        "description": "Complete original study questions across 17 chapters from Strasinger's Urinalysis and Body Fluids, 7th Edition.",
+        "topicIds": [
+          "strasinger-ch01",
+          "strasinger-ch02",
+          "strasinger-ch03",
+          "strasinger-ch04",
+          "strasinger-ch05",
+          "strasinger-ch06",
+          "strasinger-ch07",
+          "strasinger-ch08",
+          "strasinger-ch09",
+          "strasinger-ch10",
+          "strasinger-ch11",
+          "strasinger-ch12",
+          "strasinger-ch13",
+          "strasinger-ch14",
+          "strasinger-ch15",
+          "strasinger-ch16",
+          "strasinger-ch17"
+        ],
+        "category": "MTAP 1",
+        "book": "Strasinger",
+        "books": [
+          "Strasinger"
+        ],
+        "sourceSubjectIds": [
+          "strasinger-aubf"
+        ]
+      }
+    ],
+    "all": [
+      {
+        "id": "clinical-chemistry",
+        "name": "Clinical Chemistry",
+        "category": "MTAP 1",
+        "description": "Instrumentation, analytical principles, carbohydrates, lipids, enzymes, organ function, electrolytes, acid-base balance, endocrinology, and toxicology from Harr and Ciulla.",
+        "topicIds": [
+          "clinical-chemistry-6-1",
+          "clinical-chemistry-6-2",
+          "clinical-chemistry-6-3",
+          "clinical-chemistry-6-4",
+          "clinical-chemistry-6-5",
+          "clinical-chemistry-6-6",
+          "clinical-chemistry-6-7",
+          "clinical-chemistry-6-8",
+          "clinical-chemistry-6-9",
+          "clinical-chemistry-6-10",
+          "ciulla-cc-instrumentation-and-analytical-principles",
+          "ciulla-cc-proteins-and-tumor-markers",
+          "ciulla-cc-nonprotein-nitrogenous-compounds",
+          "ciulla-cc-carbohydrates",
+          "ciulla-cc-lipids-and-lipoproteins",
+          "ciulla-cc-enzymes-and-cardiac-assessment",
+          "ciulla-cc-liver-function-and-porphyrin-formation",
+          "ciulla-cc-electrolytes-and-osmolality",
+          "ciulla-cc-acid-base-metabolism",
+          "ciulla-cc-endocrinology",
+          "ciulla-cc-toxicology",
+          "ciulla-cc-vitamins"
+        ],
+        "books": [
+          "Harr",
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "clinical-chemistry",
+          "ciulla-clinical-chemistry"
+        ]
+      },
+      {
+        "id": "hematology",
+        "name": "Hematology",
+        "category": "MTAP 1",
+        "description": "Physiology of blood, erythrocyte disorders, leukopoiesis, malignancies, and methodology from Harr, Ciulla, and Rodak.",
+        "topicIds": [
+          "hematology-1-1",
+          "hematology-1-2",
+          "hematology-1-3",
+          "hematology-1-4",
+          "hematology-1-5",
+          "hematology-1-6",
+          "hematology-1-7",
+          "hematology-1-8",
+          "hematology-2-1",
+          "hematology-2-2",
+          "hematology-2-3",
+          "hematology-2-4",
+          "hematology-2-5",
+          "ciulla-hema-physiology-of-the-blood",
+          "ciulla-hema-erythrocytes-and-anemias",
+          "ciulla-hema-leukocytes-and-malignancies",
+          "ciulla-hema-instrumentation-and-methodology",
+          "ciulla-hema-hematology-problem-solving-and-case-studies",
+          "rodak-ch02",
+          "rodak-ch03",
+          "rodak-ch04",
+          "rodak-ch05",
+          "rodak-ch06",
+          "rodak-ch07",
+          "rodak-ch08",
+          "rodak-ch09",
+          "rodak-ch10",
+          "rodak-ch11",
+          "rodak-ch12",
+          "rodak-ch13",
+          "rodak-ch14",
+          "rodak-ch15",
+          "rodak-ch16",
+          "rodak-ch17",
+          "rodak-ch18",
+          "rodak-ch19",
+          "rodak-ch20",
+          "rodak-ch21",
+          "rodak-ch22",
+          "rodak-ch23",
+          "rodak-ch24",
+          "rodak-ch25",
+          "rodak-ch26",
+          "rodak-ch27",
+          "rodak-ch28",
+          "rodak-ch29",
+          "rodak-ch30",
+          "rodak-ch31",
+          "rodak-ch32",
+          "rodak-ch33",
+          "rodak-ch34",
+          "rodak-ch35",
+          "rodak-ch36",
+          "rodak-ch37",
+          "rodak-ch38",
+          "rodak-ch39",
+          "rodak-ch40",
+          "rodak-ch41",
+          "rodak-ch42",
+          "rodak-ch43"
+        ],
+        "books": [
+          "Harr",
+          "Ciulla",
+          "Rodak"
+        ],
+        "sourceSubjectIds": [
+          "hematology",
+          "ciulla-hematology",
+          "rodak-hematology"
+        ]
+      },
+      {
+        "id": "bacteriology",
+        "name": "Bacteriology",
+        "category": "MTAP 1",
+        "description": "Specimen collection, staining, gram-positive cocci, gram-negative bacilli, fastidious bacteria, mycobacteria, and antimicrobial susceptibility from Harr and Ciulla.",
+        "topicIds": [
+          "bacteriology-8-1",
+          "bacteriology-8-2",
+          "bacteriology-8-3",
+          "bacteriology-8-4",
+          "bacteriology-8-5",
+          "bacteriology-8-6",
+          "bacteriology-8-7",
+          "bacteriology-8-8",
+          "ciulla-bact-specimen-collection-processing-and-staining",
+          "ciulla-bact-gram-positive-cocci",
+          "ciulla-bact-gram-negative-bacilli-and-cocci",
+          "ciulla-bact-fastidious-and-anaerobic-bacteria",
+          "ciulla-bact-mycobacteria-and-spirochetes",
+          "ciulla-bact-antimicrobial-susceptibility-and-case-studies"
+        ],
+        "books": [
+          "Harr",
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "bacteriology",
+          "ciulla-bacteriology"
+        ]
+      },
+      {
+        "id": "aubf",
+        "name": "Clinical Microscopy",
+        "category": "MTAP 1",
+        "description": "Renal physiology, physical and chemical urinalysis, microscopic sediment examination, cerebrospinal fluid, and body fluids from Harr, Ciulla, and Strasinger.",
+        "topicIds": [
+          "aubf-7-1",
+          "aubf-7-2",
+          "aubf-7-3",
+          "aubf-7-4",
+          "aubf-7-5",
+          "ciulla-aubf-renal-physiology-and-physical-chemical-urinalysis",
+          "ciulla-aubf-microscopic-sediment-and-body-fluids",
+          "strasinger-ch01",
+          "strasinger-ch02",
+          "strasinger-ch03",
+          "strasinger-ch04",
+          "strasinger-ch05",
+          "strasinger-ch06",
+          "strasinger-ch07",
+          "strasinger-ch08",
+          "strasinger-ch09",
+          "strasinger-ch10",
+          "strasinger-ch11",
+          "strasinger-ch12",
+          "strasinger-ch13",
+          "strasinger-ch14",
+          "strasinger-ch15",
+          "strasinger-ch16",
+          "strasinger-ch17"
+        ],
+        "books": [
+          "Harr",
+          "Ciulla",
+          "Strasinger"
+        ],
+        "sourceSubjectIds": [
+          "aubf",
+          "ciulla-urinalysis-and-body-fluids",
+          "strasinger-aubf"
+        ]
+      },
+      {
+        "id": "immunohematology",
+        "name": "Immunohematology",
+        "category": "Other Majors",
+        "description": "Blood collection, preservation, blood group genetics, antibody detection and identification, compatibility testing, transfusion reactions, and HDN from Harr and Ciulla.",
+        "topicIds": [
+          "immunohematology-4-1",
+          "immunohematology-4-2",
+          "immunohematology-4-3",
+          "immunohematology-4-4",
+          "immunohematology-4-5",
+          "immunohematology-4-6",
+          "immunohematology-4-7",
+          "immunohematology-4-8",
+          "immunohematology-4-9",
+          "immunohematology-4-10",
+          "immunohematology-4-11",
+          "ciulla-bb-blood-collection-preservation-and-quality-control",
+          "ciulla-bb-blood-groups-genetics-and-serology",
+          "ciulla-bb-antibody-identification-and-transfusion-therapy",
+          "ciulla-bb-hemolytic-disease-and-problem-solving"
+        ],
+        "books": [
+          "Harr",
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "immunohematology",
+          "ciulla-immunohematology"
+        ]
+      },
+      {
+        "id": "parasitology",
+        "name": "Parasitology",
+        "category": "Other Majors",
+        "description": "Intestinal, blood, and tissue protozoa, helminths, and clinical diagnostic methods from Harr and Ciulla.",
+        "topicIds": [
+          "parasitology-8-11",
+          "ciulla-para-protozoa-intestinal-blood-and-tissue",
+          "ciulla-para-helminths-and-diagnostic-methods"
+        ],
+        "books": [
+          "Harr",
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "parasitology",
+          "ciulla-parasitology"
+        ]
+      },
+      {
+        "id": "immunology",
+        "name": "Immunology & Serology",
+        "category": "Other Majors",
+        "description": "Immune system principles, antigen-antibody interactions, serological testing, autoimmune disorders, and hypersensitivity from Harr and Ciulla.",
+        "topicIds": [
+          "immunology-3-1",
+          "immunology-3-2",
+          "immunology-3-3",
+          "immunology-3-4",
+          "immunology-3-5",
+          "immunology-3-6",
+          "immunology-3-7",
+          "immunology-3-8",
+          "ciulla-imm-immune-system-and-immunoglobulins",
+          "ciulla-imm-antigen-antibody-reactions-and-serological-testing",
+          "ciulla-imm-autoimmune-diseases-and-hypersensitivity"
+        ],
+        "books": [
+          "Harr",
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "immunology",
+          "ciulla-immunology-and-serology"
+        ]
+      },
+      {
+        "id": "mycology-and-virology",
+        "name": "Mycology and Virology",
+        "category": "Other Majors",
+        "description": "Fungal physiology, cutaneous, subcutaneous, and systemic mycoses, opportunistic fungi, viral structure, DNA and RNA viruses, and diagnostic virology techniques from Harr and Ciulla.",
+        "topicIds": [
+          "mycology-and-virology-8-9-1",
+          "mycology-and-virology-8-9-2",
+          "mycology-and-virology-8-10-1",
+          "mycology-and-virology-8-10-2",
+          "ciulla-myco-fungal-physiology-and-taxonomy",
+          "ciulla-myco-cutaneous-subcutaneous-and-systemic-mycoses",
+          "ciulla-viro-viral-structure-and-taxonomy",
+          "ciulla-viro-diagnostic-virology-and-serology"
+        ],
+        "books": [
+          "Harr",
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "mycology-and-virology",
+          "ciulla-mycology-and-virology"
+        ]
+      },
+      {
+        "id": "laboratory-operations",
+        "name": "Laboratory Operations",
+        "description": "Laboratory calculations, quality control, statistics, method evaluation, quality systems, tables, and graph-based data interpretation.",
+        "topicIds": [
+          "laboratory-operations-1",
+          "laboratory-operations-2",
+          "laboratory-operations-3",
+          "laboratory-operations-4",
+          "laboratory-operations-5",
+          "laboratory-operations-6"
+        ],
+        "category": "Other Majors",
+        "book": "Harr",
+        "books": [
+          "Harr"
+        ],
+        "sourceSubjectIds": [
+          "laboratory-operations"
+        ]
+      },
+      {
+        "id": "ciulla-hemostasis",
+        "name": "Hemostasis",
+        "description": "Physiology of hemostasis, coagulation factors, platelet and vascular disorders, coagulation defects, inhibitors, anticoagulants, and problem solving.",
+        "topicIds": [
+          "ciulla-hemo-normal-hemostasis-and-coagulation-cascade",
+          "ciulla-hemo-hemostatic-disorders-and-thrombosis",
+          "ciulla-hemo-laboratory-evaluation-and-coagulation-testing"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-hemostasis"
+        ]
+      },
+      {
+        "id": "ciulla-molecular-diagnostics",
+        "name": "Molecular Diagnostics",
+        "description": "Molecular biology principles, nucleic acid extraction, amplification techniques, sequencing, and clinical diagnostic applications.",
+        "topicIds": [
+          "ciulla-mol-nucleic-acid-principles-and-isolation",
+          "ciulla-mol-molecular-amplification-and-sequencing"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-molecular-diagnostics"
+        ]
+      },
+      {
+        "id": "ciulla-laboratory-calculations",
+        "name": "Laboratory Calculations",
+        "description": "Solution preparation, dilutions, molarity and normality, standard curves, concentration conversions, and clinical formulas.",
+        "topicIds": [
+          "ciulla-calc-dilutions-solutions-and-concentration",
+          "ciulla-calc-spectrophotometry-beer-s-law-and-enzymology"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-laboratory-calculations"
+        ]
+      },
+      {
+        "id": "ciulla-general-laboratory-principles",
+        "name": "General Laboratory Principles, Quality Assessment, and Safety",
+        "description": "Laboratory safety, quality control, Westgard multirules, method validation, statistics, and standard laboratory precautions.",
+        "topicIds": [
+          "ciulla-genlab-laboratory-safety-hazards-and-regulations",
+          "ciulla-genlab-quality-control-westgard-rules-and-statistics"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-general-laboratory-principles"
+        ]
+      },
+      {
+        "id": "ciulla-laboratory-management",
+        "name": "Laboratory Management",
+        "description": "Laboratory leadership, budgeting and finances, staffing, workflow management, compliance, and laboratory information systems.",
+        "topicIds": [
+          "ciulla-mgmt-regulatory-standards-and-accreditation",
+          "ciulla-mgmt-budgeting-staffing-and-operations"
+        ],
+        "category": "Other Majors",
+        "book": "Ciulla",
+        "books": [
+          "Ciulla"
+        ],
+        "sourceSubjectIds": [
+          "ciulla-laboratory-management"
+        ]
+      }
+    ]
+  }
+}

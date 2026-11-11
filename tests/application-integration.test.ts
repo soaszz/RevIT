@@ -14,7 +14,7 @@ test("AI descriptions and fallback use only the same published editions as publi
     .map(statement => statement.getText(ast)).join("\n");
   const code = ts.transpileModule(parts, { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
   for (const hidden of [null, "ciulla", "rodak", "strasinger"] as const) {
-    const registry = Object.fromEntries(Object.entries(QUESTION_BANKS).map(([id, bank]) => [id, { ...bank, published: id !== hidden }]));
+    const registry = Object.fromEntries(Object.entries(QUESTION_BANKS).map(([id, bank]) => [id, { ...bank, published: bank.published !== false && id !== hidden }]));
     const books = getPublicReviewerBooks(registry);
     const result = new Function("PUBLIC_REVIEWERS", "SITE_UPDATES", `${code};return [getRevItSystemInstructions(), demoAnswer("What is RevIT?")];`)(books, []) as string[];
     for (const text of result) {

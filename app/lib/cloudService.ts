@@ -16,7 +16,8 @@ import type {
 import { CURRENT_PRIVACY_VERSION, CURRENT_TERMS_VERSION } from "./legal";
 import { validateAvatarFile } from "./avatarValidation";
 import { FREE_ENTITLEMENT, type SubscriptionEntitlement } from "./entitlements";
-import { isCloudSyncAllowedForQuestion } from "./cloudSyncGate";
+import { isCloudSyncAllowedForQuestion, REVIEWER_COMPATIBILITY_ENABLED } from "./cloudSyncGate";
+import { compatibleReviewerBook, reviewerResponseFromLocal, reviewerHistoryAnswer, type ReviewerAnswerResponse } from "./reviewerAttemptCompatibility";
 import { normalizeCloudSelectedAnswer } from "./matchingAttemptPersistence";
 
 const PROFILE_COLUMNS = "id,username,first_name,avatar_url,onboarding_complete,terms_accepted_at,terms_version,privacy_accepted_at,privacy_version";
@@ -86,6 +87,7 @@ type QuestionAttemptRow = {
   subtopic: string;
   difficulty: QuestionAttempt["difficulty"];
   selected_answer: number | null;
+  answer_response?: ReviewerAnswerResponse | null;
   is_correct: boolean;
   attempt_number: number;
   review_mode: QuestionAttempt["reviewMode"];
@@ -105,7 +107,7 @@ function questionAttemptFromRow(row: QuestionAttemptRow): QuestionAttempt {
     topicName: row.topic_name,
     subtopic: row.subtopic,
     difficulty: row.difficulty,
-    selectedAnswer: row.selected_answer,
+    selectedAnswer: reviewerHistoryAnswer(row.question_id,row.selected_answer,row.answer_response),
     correct: row.is_correct,
     attemptNumber: row.attempt_number,
     reviewMode: row.review_mode,
@@ -115,7 +117,7 @@ function questionAttemptFromRow(row: QuestionAttemptRow): QuestionAttempt {
   };
 }
 
-const QUESTION_ATTEMPT_COLUMNS = "id,user_id,question_id,subject_id,subject_name,topic_id,topic_name,subtopic,difficulty,selected_answer,is_correct,attempt_number,review_mode,session_id,is_adaptive_repeat,answered_at";
+const QUESTION_ATTEMPT_COLUMNS = "id,user_id,question_id,subject_id,subject_name,topic_id,topic_name,subtopic,difficulty,selected_answer,is_correct,attempt_number,review_mode,session_id,is_adaptive_repeat,answered_at" + (REVIEWER_COMPATIBILITY_ENABLED ? ",answer_response" : "");
 const SNAPSHOT_ROW_LIMIT = 1000;
 const REINFORCEMENT_PAGE_LIMIT = 1000;
 const REINFORCEMENT_MAX_ROWS = 10000;
@@ -273,9 +275,20 @@ export async function acknowledgeProActivation(client: SupabaseClient, notificat
   }
 }
 
-export async function saveQuestionAttempt(client: SupabaseClient, attempt: QuestionAttempt) {
+export async function saveQuestionAttempt(client: SupabaseClient, attempt: QuestionAttempt, owner?: string) {
   if (!isCloudSyncAllowedForQuestion(attempt.questionId, attempt.subjectId, attempt.topicId)) {
     throw new Error("Strasinger cloud synchronization is disabled.");
+  }
+  const book = compatibleReviewerBook(attempt.questionId);
+  if (book) {
+    if (!owner) throw new Error("Account binding required.");
+    const response = await fetch("/api/reviewer/attempt",{method:"POST",headers:{"Content-Type":"application/json","x-revit-account":owner},
+      body:JSON.stringify({id:attempt.id,book,questionId:attempt.questionId,response:reviewerResponseFromLocal(attempt.questionId,attempt.selectedAnswer),
+        reviewMode:attempt.reviewMode,sessionId:attempt.sessionId,isAdaptiveRepeat:attempt.isAdaptiveRepeat,answeredAt:attempt.timestamp})});
+    if (!response.ok) throw new Error("Reviewer persistence unavailable.");
+    const row = await response.json() as QuestionAttemptRow;
+    if (row.id!==attempt.id || row.user_id!==owner || row.question_id!==attempt.questionId) throw new Error("Attempt acknowledgment mismatch.");
+    return questionAttemptFromRow(row);
   }
   const { data, error } = await client.rpc("record_question_attempt", {
     p_id: attempt.id,
@@ -314,7 +327,7 @@ export async function migrateLocalQuestionAttempts(
   const eligible = unmigrated.filter((a) => isCloudSyncAllowedForQuestion(a.questionId, a.subjectId, a.topicId));
   for (const attempt of [...eligible].sort((a, b) => a.timestamp.localeCompare(b.timestamp))) {
     try {
-      await saveQuestionAttempt(client, attempt);
+      await saveQuestionAttempt(client, attempt, userId);
     } catch {
       return;
     }
@@ -407,7 +420,7 @@ export async function flushQuestionAttemptQueue(client: SupabaseClient, userId: 
       failed.add(attempt.id);
       continue;
     }
-    try { await saveQuestionAttempt(client, queued[index]); }
+    try { await saveQuestionAttempt(client, queued[index], userId); }
     catch {
       queued.slice(index).forEach((attempt) => failed.add(attempt.id));
       break;

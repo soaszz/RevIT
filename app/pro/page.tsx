@@ -1,4 +1,4 @@
-import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
+import { getUpcomingReviewerNames, PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
 import { PRO_PLANS, PRO_PLAN_SUMMARY } from "../lib/proPlans";
 import type { Metadata } from "next";
 import Image from "next/image";
@@ -6,6 +6,8 @@ import Link from "next/link";
 import PublicThemeToggle from "../components/PublicThemeToggle";
 import { AI_LIMITS } from "../lib/entitlements";
 import styles from "./ProPage.module.css";
+
+const upcomingReviewerNames = getUpcomingReviewerNames();
 
 export const metadata: Metadata = {
   title: "RevIT Free and Pro Plans | Review It Thoroughly",
@@ -175,11 +177,11 @@ export default function ProPage() {
             </p>
           </article>
         </section>
-        <aside data-upcoming-reviewers="true" aria-label="Upcoming reviewer editions" className={styles.heroLead}>
+        {upcomingReviewerNames && <aside data-upcoming-reviewers="true" aria-label="Upcoming reviewer editions" className={styles.heroLead}>
           <strong>More Reviewer Books Coming Soon</strong>
-          <p>We&apos;re working on adding BOC Study Guide 7th Edition and Elsevier&apos;s MLS Examination Review to RevIT Pro.</p>
+          <p>We&apos;re working on adding {upcomingReviewerNames} to RevIT Pro.</p>
           <p>These reviewer editions are not yet available. Their release is subject to final approval, and no availability date has been announced.</p>
-        </aside>
+        </aside>}
       </div>
 
       <footer className={styles.footer}>

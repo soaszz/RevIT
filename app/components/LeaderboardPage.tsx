@@ -17,6 +17,7 @@ import {
 } from "../lib/leaderboard";
 import { loadLeaderboard } from "../lib/leaderboardService";
 import { createClient } from "../lib/supabase/client";
+import { isQuestionBankPublished } from "../lib/entitlements";
 import { levelForXp, levelTitle } from "../lib/xpConfig";
 import { MorphingInfinity } from "./loading-ui/morphing-infinity";
 import styles from "./LeaderboardPage.module.css";
@@ -339,6 +340,16 @@ export default function LeaderboardPage({
             >
               Strasinger
             </button>
+            {isQuestionBankPublished("Elsevier") && (
+              <button type="button" className={selectedBook === "Elsevier" ? styles.active : ""} aria-pressed={selectedBook === "Elsevier"} onClick={() => { setSelectedBook("Elsevier"); setSubjectId(null); }}>
+                Elsevier
+              </button>
+            )}
+            {isQuestionBankPublished("BOC") && (
+              <button type="button" className={selectedBook === "BOC" ? styles.active : ""} aria-pressed={selectedBook === "BOC"} onClick={() => { setSelectedBook("BOC"); setSubjectId(null); }}>
+                BOC
+              </button>
+            )}
           </div>
         </div>
 

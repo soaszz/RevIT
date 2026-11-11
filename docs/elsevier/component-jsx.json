@@ -1,0 +1,51 @@
+{
+  "before": "55afa631aa828fb06c537cabab417ee653c9f64a4c914b25eb405ebd40eab44b",
+  "after": "4d5224872f5e02d0650c60e28b38e88e6cd3f734234abd02a9215205b4a441eb",
+  "reason": "User-authorized Elsevier preview counts, source-preserving answer text, and optional original rationale images after answering. Existing JSX snapshot remains immutable; this exact replacement hash permits no additional edits. User-authorized Free-only general plan-announcement eligibility; resolved current-user server entitlement required, automatic trigger and rendered visibility gated, dismissal/gift workflow unchanged. User-approved BOC source notation: safe optional SourceText in existing prompt, choices, answer reveal and rationale; source strings without ranges produce identical text and no extra DOM wrapper. Existing styling, layout and source content unchanged. User-approved optional ordered question sections for genuinely interleaved BOC prose/tables/images, rendered with existing SourceText and QuestionStimulus in MCQ/Flashcards; normal choices retained, existing-book fallback JSX unchanged, no styling or source-bank changes. User-approved optional per-choice table rendering and answer reveal, preserving normal choice buttons and source-index grading.",
+  "history": [
+    {
+      "before": "9436366c8ded7839e39e94dad352491dba2128e61b2b43aee2aa3af274142c8f",
+      "after": "af02298f5283dee82e26a20ad64ce5455c000fe1827dbf56c2a867703a6bdf61",
+      "reason": "User-authorized Free-only general plan-announcement eligibility; resolved current-user server entitlement required, automatic trigger and rendered visibility gated, dismissal/gift workflow unchanged."
+    },
+    {
+      "before": "af02298f5283dee82e26a20ad64ce5455c000fe1827dbf56c2a867703a6bdf61",
+      "after": "10ec61fa06be24b19b3159482d4856048dafe8eb1c9ef70dc74127451f998d06",
+      "reason": "User-authorized Elsevier source ordering and ordered rationale sections only; existing JSX snapshot retained."
+    },
+    {
+      "before": "10ec61fa06be24b19b3159482d4856048dafe8eb1c9ef70dc74127451f998d06",
+      "after": "3d7d4befde5cb25afc796ba9fef4bd9fc7fea24db7eb5d5c3278c0893876652e",
+      "reason": "Preserve the existing Elsevier MCQ image action setting after moving its stimulus."
+    },
+    {
+      "before": "3d7d4befde5cb25afc796ba9fef4bd9fc7fea24db7eb5d5c3278c0893876652e",
+      "after": "f12488ea72b4e780b5af1a398c7e030edc2d82e8d890a9979b2175fa2cc39c49",
+      "reason": "User-approved BOC source notation: safe optional SourceText in existing prompt, choices, answer reveal and rationale; source strings without ranges produce identical text and no extra DOM wrapper. Existing styling, layout and source content unchanged."
+    },
+    {
+      "before": "f12488ea72b4e780b5af1a398c7e030edc2d82e8d890a9979b2175fa2cc39c49",
+      "after": "02f750cb12722794be30f27e2f873834e75d60e464a108dd5fbee2222c3baffa",
+      "reason": "User-approved optional ordered question sections for genuinely interleaved BOC prose/tables/images, rendered with existing SourceText and QuestionStimulus in MCQ/Flashcards; normal choices retained, existing-book fallback JSX unchanged, no styling or source-bank changes."
+    },
+    {
+      "before": "02f750cb12722794be30f27e2f873834e75d60e464a108dd5fbee2222c3baffa",
+      "after": "9ceb312e568d03e75d6cf97531bfd7972a253aef500433b342188db903b0b595",
+      "reason": "User-approved optional per-choice table rendering and answer reveal, preserving normal choice buttons and source-index grading."
+    },
+    {
+      "before": "9ceb312e568d03e75d6cf97531bfd7972a253aef500433b342188db903b0b595",
+      "after": "5bb9fb16c85c041f1ebd9242bb0973d7413f5b0061bd146a9d3b326474d75ca5",
+      "reason": "Reconcile stale JSX-only pin against already approved whole-file checkpoint f7ce1e3a001d22cd412cd4a0ca87286b036af047ed0a02b7841cd12a0d9c0ac5. Persistence change modifies four non-JSX gate arguments only; before/after JSX hashes identical.",
+      "evidence": "scratch/cloud-persistence-fix/preservation-proof.json"
+    },
+    {
+      "before": "5bb9fb16c85c041f1ebd9242bb0973d7413f5b0061bd146a9d3b326474d75ca5",
+      "after": "4d5224872f5e02d0650c60e28b38e88e6cd3f734234abd02a9215205b4a441eb",
+      "reason": "Authorized recovery-required status banner only, using existing sync-banner styles, wrapping text and40px retry target. Removing exactly this banner reproduces prior JSX hash; existing cards/layouts untouched.",
+      "evidence": [
+        "scratch/cloud-persistence-fix/recovery-preservation-proof.json"
+      ]
+    }
+  ]
+}

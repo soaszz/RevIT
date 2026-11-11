@@ -1,4 +1,5 @@
 import type { ReviewerQuestion, Subject, Topic } from "../content/reviewerContent";
+import { isQuestionBankPublished } from "./entitlements";
 
 export type PremiumReviewerPayload = {
   subjects: Subject[];
@@ -32,6 +33,62 @@ let inFlightFetchRodak: Promise<FetchRodakResult> | null = null;
 
 let cachedStrasinger: PremiumReviewerPayload | null = null;
 let inFlightFetchStrasinger: Promise<FetchStrasingerResult> | null = null;
+
+let cachedBoc: PremiumReviewerPayload | null = null;
+let inFlightFetchBoc: Promise<FetchStrasingerResult> | null = null;
+
+export async function fetchBocReviewer(): Promise<FetchStrasingerResult> {
+  if (!isQuestionBankPublished("BOC")) return { status: "error", message: "Reviewer book is not published." };
+  if (cachedBoc) return { status: "success", data: cachedBoc };
+  if (inFlightFetchBoc) return inFlightFetchBoc;
+  inFlightFetchBoc = (async () => {
+    try {
+      const response = await fetch("/api/reviewer/boc", { headers: { "Cache-Control": "no-cache" } });
+      if (response.status === 401) return { status: "unauthenticated" } as const;
+      if (response.status === 403) return { status: "pro_required" } as const;
+      if (!response.ok) return { status: "error", message: `Server returned ${response.status}` } as const;
+      const data = await response.json() as PremiumReviewerPayload;
+      if (!Array.isArray(data.questions) || !data.questions.length) return { status: "error", message: "Invalid payload from server" } as const;
+      cachedBoc = data;
+      return { status: "success", data } as const;
+    } catch (error) {
+      return { status: "error", message: error instanceof Error ? error.message : "Fetch failed" } as const;
+    } finally {
+      inFlightFetchBoc = null;
+    }
+  })();
+  return inFlightFetchBoc;
+}
+
+export function clearBocReviewerCache() { cachedBoc = null; }
+
+let cachedElsevier: PremiumReviewerPayload | null = null;
+let inFlightFetchElsevier: Promise<FetchStrasingerResult> | null = null;
+
+export async function fetchElsevierReviewer(): Promise<FetchStrasingerResult> {
+  if (!isQuestionBankPublished("Elsevier")) return { status: "error", message: "Reviewer book is not published." };
+  if (cachedElsevier) return { status: "success", data: cachedElsevier };
+  if (inFlightFetchElsevier) return inFlightFetchElsevier;
+  inFlightFetchElsevier = (async () => {
+    try {
+      const response = await fetch("/api/reviewer/elsevier", { headers: { "Cache-Control": "no-cache" } });
+      if (response.status === 401) return { status: "unauthenticated" } as const;
+      if (response.status === 403) return { status: "pro_required" } as const;
+      if (!response.ok) return { status: "error", message: `Server returned ${response.status}` } as const;
+      const data = await response.json() as PremiumReviewerPayload;
+      if (!Array.isArray(data.questions) || !data.questions.length) return { status: "error", message: "Invalid payload from server" } as const;
+      cachedElsevier = data;
+      return { status: "success", data } as const;
+    } catch (error) {
+      return { status: "error", message: error instanceof Error ? error.message : "Fetch failed" } as const;
+    } finally {
+      inFlightFetchElsevier = null;
+    }
+  })();
+  return inFlightFetchElsevier;
+}
+
+export function clearElsevierReviewerCache() { cachedElsevier = null; }
 
 export async function fetchCiullaReviewer(): Promise<FetchCiullaResult> {
   if (cachedCiulla) return { status: "success", data: cachedCiulla };

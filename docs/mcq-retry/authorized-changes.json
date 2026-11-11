@@ -1,0 +1,66 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "e40ecf3ecfbbe691d42798733e116ecc71b7956d2eb1855865622f9b5266ccbd",
+    "after": "2e2e53edcd95770eff1342327297bddb7e330b7ded7ea318a0c64bc33b82d582",
+    "reason": "Combined reviewer integration; retain publication guards/source rendering and verified MCQ mastery/history behavior",
+    "verifiedMcqInputSha256": "fba62cc9c2b48773528b26d7aabc1ab48f243b1f0e090228e697b0ed9a6b524f",
+    "productionBaseBefore": "b934b3cd64f01472b29ae73442f4b045fd6bbe1c60b1d21216d67917348eab15"
+  },
+  "app/components/ResumeSessionModal.tsx": {
+    "before": "f19ad916ca31527b9d3bfb0a5c1df885b2afdaab963835ff7eab135e53247e1f",
+    "after": "c0fd0b41b23de47426296eaa9552691a15615b9d7015105e3155e6961f611fdc",
+    "reason": "Combined reviewer integration; retain publication guards/source rendering and verified MCQ mastery/history behavior",
+    "verifiedMcqInputSha256": "c0fd0b41b23de47426296eaa9552691a15615b9d7015105e3155e6961f611fdc",
+    "productionBaseBefore": "9279b5d7c8942e7f1170bb22ef9c060581d85fea77dd9a2c486544a53cf6dc63"
+  },
+  "app/content/reviewerContent.ts": {
+    "before": "456451e557865aa7147f507c5ec03d8571a7562b5e4c1d4943f50df0b9f1340a",
+    "after": "cd3427e30caa3210b0e2ac0e2ae5f0ab8b34c3db219f629a59b04d67ae9b21f8",
+    "reason": "Combined reviewer integration; retain publication guards/source rendering and verified MCQ mastery/history behavior",
+    "verifiedMcqInputSha256": "043e0db31b5c9dfa039aa47a251c030608923a5ced85f6b31298f5db046f3dae",
+    "productionBaseBefore": "6d607006ee3b13183551c83484d1678f752dfd770a570a89cfab8efabd6bae11"
+  },
+  "app/lib/server/answerVerification.ts": {
+    "before": "c960bfcff81ea5a1a1983e119f36c7ae7e392663dc01c346b981f4f1e45f4390",
+    "after": "ab32d205f2f69754fe2a972f535593a8642c19a52521fd35bb4ac988fbc3a928",
+    "reason": "Combined reviewer integration; retain publication guards/source rendering and verified MCQ mastery/history behavior",
+    "verifiedMcqInputSha256": "7be84d8ab38a6bd455cb7c01887f7e86c3367990d73d4605943b0282b8bf76e6",
+    "productionBaseBefore": "94388c9da6e7b00f54bf26aee68659f4cd24d6157b5dabd19333b7c6a9e326b5"
+  },
+  "app/lib/server/publicReviewerCounts.ts": {
+    "before": "76cb074708749e83faf6d171e73e1ecd780723b6b2d264f251304c622114a384",
+    "after": "e2eb9fc0d4da629fe7fcfddf33a8a037161ca86e268db16105455b583420f96f",
+    "reason": "Combined reviewer integration; retain publication guards/source rendering and verified MCQ mastery/history behavior",
+    "verifiedMcqInputSha256": "4920a315c8e93d493911906a1aad248ee92b6e6b80ac9cacde92716cf4065fbd",
+    "productionBaseBefore": "1d8480c1fae20de8ea645a03b66a2623861b35b374535a57cbb4facd33f2e107"
+  },
+  "tests/public-landing-pricing.test.ts": {
+    "before": "1d65b9c3f6b9d91c4bb61344d50c5f12bf2948e76debac964aba854d6174a936",
+    "after": "acebe68f1a8e1d38f2887f2309f2954446386736e7ef914c6e5cc69dce1583c0",
+    "reason": "Combined reviewer integration; retain publication guards/source rendering and verified MCQ mastery/history behavior",
+    "verifiedMcqInputSha256": "acebe68f1a8e1d38f2887f2309f2954446386736e7ef914c6e5cc69dce1583c0",
+    "productionBaseBefore": "1d65b9c3f6b9d91c4bb61344d50c5f12bf2948e76debac964aba854d6174a936"
+  },
+  "tests/fixes-only-release.test.ts": {
+    "before": "23c05af416e965a98310b1d888d76b5f389271bc108cae01f5cb604ddafdefeb",
+    "after": "7bff38aa7ae48fff79620917193d2863636030c3be828b67047b936914840c50",
+    "reason": "Combined reviewer integration; retain publication guards/source rendering and verified MCQ mastery/history behavior",
+    "verifiedMcqInputSha256": "4024de58e8945a04302b4cb62e027107c3134d9ea238a6f6a4ec84346cc74904",
+    "productionBaseBefore": "23c05af416e965a98310b1d888d76b5f389271bc108cae01f5cb604ddafdefeb"
+  },
+  "tests/application-integration.test.ts": {
+    "before": "d4b9b379593be71823546cc7289eeda113bd114ec23cc379c748bcdbd434aa34",
+    "after": "ba4478ea0971c754154579e0bd08450b01f80e1e0c5f8e9837bcfff031371fb7",
+    "reason": "Retain original assertions with exact authorized six-book/retry context and immutable asset/JSX transition pins"
+  },
+  "tests/phase3d.test.ts": {
+    "before": "1c3dfdb840616723fd79c26a99fe5f066f791301325a649bb3d8f632d9f3406e",
+    "after": "e1eb61f885d7e3db2e1f3363b5d8387f42d1bd997ae193af79cfe769ad97cc63",
+    "reason": "Retain original assertions with exact authorized six-book/retry context and immutable asset/JSX transition pins"
+  },
+  "tests/trusted-integration.test.ts": {
+    "before": "79cc22c32c0276d31df6ae3c691f68237bf4a1db0ede04bcaffad6e388699ed7",
+    "after": "3dd419a25cfdaedf95bd56a097afb5fe632b773b39f09f0dcce506139dac3c00",
+    "reason": "Retain original assertions with exact authorized six-book/retry context and immutable asset/JSX transition pins"
+  }
+}

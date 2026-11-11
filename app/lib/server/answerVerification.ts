@@ -2,6 +2,7 @@ import "server-only";
 import { createHash } from "node:crypto";
 import type { ReviewerBook, ReviewerQuestion } from "../../content/reviewerContent";
 import { encodeMatchingAnswers, isQuestionAnswerCorrect } from "../matchingQuestion";
+import { isQuestionBankPublished } from "../entitlements";
 
 export type GradingRequest = {
   questionId: string;
@@ -114,7 +115,7 @@ function freeze<T>(value: T): DeepReadonly<T> {
 export function createCanonicalRegistry(banks: readonly { book: ReviewerBook; questions: readonly unknown[] }[]): ReadonlyMap<string, CanonicalQuestion> {
   const entries = new Map<string, CanonicalQuestion>();
   for (const { book, questions } of banks) {
-    if (!["Harr", "Ciulla", "Rodak", "Strasinger"].includes(book) || !Array.isArray(questions) || !questions.length) {
+    if (!["Harr", "Ciulla", "Rodak", "Strasinger", "Elsevier", "BOC"].includes(book) || !Array.isArray(questions) || !questions.length) {
       throw new AnswerVerificationError("CONTENT_UNAVAILABLE");
     }
     for (const question of questions) {
@@ -141,9 +142,12 @@ function getRegistry() {
   return canonicalRegistry ??= Promise.all([
     import("../../content/reviewerContent"), import("./ciullaServerContent"),
     import("./rodakServerContent"), import("./strasingerServerContent"),
-  ]).then(([harr, ciulla, rodak, strasinger]) => createCanonicalRegistry([
-    { book: "Harr", questions: harr.harrQuestions }, { book: "Ciulla", questions: ciulla.ciullaQuestions },
+  ]).then(async ([harr, ciulla, rodak, strasinger]) => createCanonicalRegistry([
+    { book: "Harr", questions: harr.harrLegacyQuestions },
+    { book: "Harr", questions: harr.harrSourceQuestions }, { book: "Ciulla", questions: ciulla.ciullaQuestions },
     { book: "Rodak", questions: rodak.rodakQuestions }, { book: "Strasinger", questions: strasinger.strasingerQuestions },
+    ...(isQuestionBankPublished("BOC") ? [{ book: "BOC" as const, questions: (await import("./bocServerContent")).bocQuestions }] : []),
+    ...(isQuestionBankPublished("Elsevier") ? [{ book: "Elsevier" as const, questions: (await import("./elsevierServerContent")).elsevierQuestions }] : []),
   ]));
 }
 

@@ -43,10 +43,25 @@ export function assertPreserved(path, expected) {
     assert.equal(security[path].before, current, `${path}: broken subscription-security preservation chain`);
     current = security[path].after;
   }
-  const mcqHotfix = JSON.parse(readFileSync(new URL("docs/mcq-retry-hotfix/authorized-changes.json", root), "utf8"));
-  if (mcqHotfix[path]) {
-    assert.equal(mcqHotfix[path].before, current, `${path}: broken MCQ retry hotfix preservation chain`);
-    current = mcqHotfix[path].after;
+  const reviewer = JSON.parse(readFileSync(new URL("docs/reviewer-compatibility/authorized-changes.json", root), "utf8"));
+  if (reviewer[path]) {
+    assert.equal(reviewer[path].before, current, `${path}: broken reviewer-compatibility preservation chain`);
+    current = reviewer[path].after;
+  }
+  const retry = JSON.parse(readFileSync(new URL("docs/mcq-retry/authorized-changes.json", root), "utf8"));
+  if (retry[path]) {
+    assert.equal(retry[path].before, current, `${path}: broken combined MCQ preservation chain`);
+    current = retry[path].after;
+  }
+  const delivery = JSON.parse(readFileSync(new URL("docs/private-reviewers/authorized-changes.json", root), "utf8"));
+  if (delivery[path]) {
+    assert.equal(delivery[path].before, current, `${path}: broken private-delivery preservation chain`);
+    current = delivery[path].after;
+  }
+  const publication = JSON.parse(readFileSync(new URL("docs/reviewer-release/authorized-changes.json", root), "utf8"));
+  if (publication[path]) {
+    assert.equal(publication[path].before, current, path + ": broken prepared publication preservation chain");
+    current = publication[path].after;
   }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

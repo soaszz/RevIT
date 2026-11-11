@@ -1,0 +1,442 @@
+{
+  "status": "PASS_25_RECORD_SCOPE_ONLY",
+  "method": "Separate complete visual source-vs-final review of original PDF pages2–9 after text extraction; questions1–25, all100 choices/order,25 official keys and25 complete rationales; no tables/figures in this source section",
+  "sourceSha256": "fcef9fae8aa80ff3f83cbe8457cd1b748baa047332d3b0c30d3db044d998258d",
+  "contentSha256": "7705062d67309ea76089427786631ec96c6dd1ba166d6016c9f40004d601d015",
+  "questionCount": 25,
+  "questionPages": {
+    "1": 2,
+    "2": 2,
+    "3": 2,
+    "4": 3,
+    "5": 3,
+    "6": 3,
+    "7": 3,
+    "8": 4,
+    "9": 4,
+    "10": 4,
+    "11": 4,
+    "12": 4,
+    "13": 5,
+    "14": 5,
+    "15": 6,
+    "16": 6,
+    "17": 6,
+    "18": 6,
+    "19": 6,
+    "20": 7,
+    "21": 7,
+    "22": 7,
+    "23": 7,
+    "24": 8,
+    "25": 8
+  },
+  "answerPages": {
+    "1": 2,
+    "2": 3,
+    "3": 3,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "8": 5,
+    "9": 5,
+    "10": 5,
+    "11": 5,
+    "12": 5,
+    "13": 5,
+    "14": 6,
+    "15": 6,
+    "16": 7,
+    "17": 7,
+    "18": 7,
+    "19": 7,
+    "20": 8,
+    "21": 8,
+    "22": 8,
+    "23": 8,
+    "24": 8,
+    "25": 8
+  },
+  "corrections": [
+    {
+      "id": "harr-hemostasis-2-1-source-001",
+      "field": "explanation",
+      "before": "TF– VIIa",
+      "after": "TF–VIIa",
+      "basis": "Original rendered source pages 2–9 inspected independently after extraction"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-001",
+      "field": "explanation",
+      "before": "Ca2+",
+      "after": "Ca²⁺",
+      "basis": "Original rendered source pages 2–9 inspected independently after extraction"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-023",
+      "field": "explanation",
+      "before": "Ca2+",
+      "after": "Ca²⁺",
+      "basis": "Original rendered source pages 2–9 inspected independently after extraction"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-016",
+      "field": "choices[2]",
+      "before": "α2 -Antiplasmin",
+      "after": "α₂-Antiplasmin",
+      "basis": "Original PDF page6, alpha with subscript2 and attached hyphen"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-016",
+      "field": "choices[3]",
+      "before": "α2 -Macroglobulin",
+      "after": "α₂-Macroglobulin",
+      "basis": "Original PDF page6, alpha with subscript2 and attached hyphen"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-016",
+      "field": "explanation",
+      "before": "α2 -",
+      "after": "α₂-",
+      "basis": "Original rendered source pages 2–9 inspected independently after extraction"
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-025",
+      "field": "explanation",
+      "before": "D￾dimer",
+      "after": "D-dimer",
+      "basis": "Original rendered source pages 2–9 inspected independently after extraction"
+    }
+  ],
+  "scientificSourceQuirksPreserved": true,
+  "scopeLimit": "Does not certify the other original Harr topics or restart BOC certification",
+  "sourceImageReleasePaths": [],
+  "records": [
+    {
+      "id": "harr-hemostasis-2-1-source-001",
+      "sourceQuestion": 1,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "906d0dbd361e3638002923ee853f695b7488f1f93cee7f31106293afd9eb324a",
+        "choices": "b70cb05566fbff58ce6d3fb1028aad836485350513d10712de6f3dcce5792a1f",
+        "correctAnswer": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "officialAnswer": "1595a6aeddf422cabb1396160b01a22e5fc8aba594c45b2ae27685a0d09c2562",
+        "explanation": "29e6fc30caaf1373e0986485d453a00b618a75a5f79051e4113263e8f181fa59",
+        "source": "a9f8b88675465549c418b306c3415c52f11da91600746312f50ce2817dbd1d3f"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-002",
+      "sourceQuestion": 2,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "1c9ff9fb85a241059dde24b16f5f3bc6b2f6aec4526ee43630c33a8b0e1469a0",
+        "choices": "a001536cf904592f6cfcc99937f0167f5798946a939319e96ce10d61ba497c8b",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "b2122da6c105ffc2d399da31e1a11ea5e9ee65a52298380ec25703b9c932dd6a",
+        "explanation": "d0cb834ee5eb35b7c36b2efbc3a5190b85c577cd806d4cbc953d184b841c9776",
+        "source": "a9f8b88675465549c418b306c3415c52f11da91600746312f50ce2817dbd1d3f"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-003",
+      "sourceQuestion": 3,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "69b203387d38ae4fe0a55841d16649df6c8fce978bc242bcd561af486c101c55",
+        "choices": "bd4a983bd07814a5d2aaaf1d26b118c046d746343ea1b138cc59264ebbe74bd2",
+        "correctAnswer": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "officialAnswer": "b018048132127ba3f520c08d4d9ccd8009a7d11dbdea54e4fd5d535d4728ad9a",
+        "explanation": "dadb55960f41db8c0733d5eb1fb1d900d2aeb224265051ec10c675731c13284b",
+        "source": "a9f8b88675465549c418b306c3415c52f11da91600746312f50ce2817dbd1d3f"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-004",
+      "sourceQuestion": 4,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "3bb530b4a5f8cbda15acfd31f0ce827fae95624286f2d045327b0512ed8fc846",
+        "choices": "dbd84b8511e6fa5f5f2c28276bc558bcfed866ad56ea0ecdc7514dd5f100355e",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "05fb4db769f72183dce81f90a19e66f82fdcfdce2abacee2d2ab1f87697beb53",
+        "explanation": "57387d805b2ebd310e278f6b629e6c71ab45944e4a239f700c511eace4204de0",
+        "source": "02206e9af404dc88781663c940444e89ef55ee90595ab053223913da1a9531a6"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-005",
+      "sourceQuestion": 5,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "9b93eb2a3b9d16d185b14e9128e0900eb509b9d6ef4fa92c29b33b07a873a32e",
+        "choices": "7150bd7f12f8357694d139de759ddacb4c5d21447267b27e8bed2678e75051ad",
+        "correctAnswer": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+        "officialAnswer": "fb338edceb5fe86d11ae045fee8e7c6cb4bb67f98a7645b4a78d9416f1c9e9e4",
+        "explanation": "fd0af2298ce80e801edf3d6d26c2c8329d636db05f8c57e88f83db8bf334f79f",
+        "source": "02206e9af404dc88781663c940444e89ef55ee90595ab053223913da1a9531a6"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-006",
+      "sourceQuestion": 6,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "a6f71a871621e001f963b7db8a2e24c3ef374a2d02d74cb0b0960d71e22ee0d3",
+        "choices": "45042929ac34f3c10a94943fe22e198de38495f6fd993a61dcd81190735bbd99",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "f0800ce4bf3cb3291780e012eacdc783471a0998f145d34631b81335c869d18e",
+        "explanation": "25fc66fb14262b3d8516c4f4448847404ff84df6a7eadd0d2c07245c093c2c3f",
+        "source": "02206e9af404dc88781663c940444e89ef55ee90595ab053223913da1a9531a6"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-007",
+      "sourceQuestion": 7,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "ea64862bdfe870eb98043419deea5e74de0026e3594eb50cbf787611ffc55d52",
+        "choices": "d13ff9c6c14c2471e1713f02bda13c39347a23913248a5f6bc663c0281a71474",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "ebd3e9197be913685ba80af38ff8922e925385544494e12dcd8d0f701c51cec0",
+        "explanation": "c0d805fc98dd4ecef9ef355748e588814ff4927a3d3dadf5f7bfc95dea9cfeb8",
+        "source": "02206e9af404dc88781663c940444e89ef55ee90595ab053223913da1a9531a6"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-008",
+      "sourceQuestion": 8,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "081a5e0f0e09c88460f6cf4ef88b256d2f3d89186f10cd92b7bcf26e7013bdad",
+        "choices": "ce934605192a5bb4c826656cdccb608019e5101b6f494fac279c4359b244ed68",
+        "correctAnswer": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+        "officialAnswer": "a075cc35d837198cfca02f8818e50b28cf38728f9150e6e65c7d2e277e5e0d72",
+        "explanation": "c4437902b6926476db5aeab992ea9922899f5c544e097d9588763f0185de3c74",
+        "source": "9600100991ca8dc0d1bf7d235f71f49c3a4b98269dd20f8c321adf94bfe333cf"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-009",
+      "sourceQuestion": 9,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "201a05755351807e8dfd90280d504fa61137bf0154629592f5dc626dd45a29bc",
+        "choices": "a309c2f3680072b733261e511a2d07ddd6cd309fe175390eea885d4758893a79",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "1787b7f74daa04e6cfed36700e00f04ec1b39eb87ed30e08ef38ebc87f91e89b",
+        "explanation": "d25aff8c7d18aa8c64dbceb428f8eb60932c1a96d9d9c9b4cc17f080acceba89",
+        "source": "9600100991ca8dc0d1bf7d235f71f49c3a4b98269dd20f8c321adf94bfe333cf"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-010",
+      "sourceQuestion": 10,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "697caa9daa66ed13ea5913070be4d0dd3f1ae154a2958374dc9eb3f04db1f9ed",
+        "choices": "90c9280f39552efa77e88db1f4c7f220daa5bc3529e9d0d0450f62c53ea9de03",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "160502744d703457c367a3484fb7103149394443095a62ceaa55255bd6545daa",
+        "explanation": "9e78272e1a9654ba09deebfd04c1f03d5c662e442ce65e6303c8fa41df08bafe",
+        "source": "9600100991ca8dc0d1bf7d235f71f49c3a4b98269dd20f8c321adf94bfe333cf"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-011",
+      "sourceQuestion": 11,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "56c1c87c9cb18e4ad31a61d6997d98c46ca18ce366ea1135f20da3eef5efa505",
+        "choices": "1c7671b15cabcfe7b03618abf37fff56bc1502f2f1c72fb8f229fa2a330f4817",
+        "correctAnswer": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+        "officialAnswer": "b0b42de14f2b3aef5b54e52e212c35d84ee700cc26e34ad4812df12c6d7cde0e",
+        "explanation": "1633bedfc49778609f9192ba6af8553db5a05aaf0b705dfb886cfcd70448a06d",
+        "source": "9600100991ca8dc0d1bf7d235f71f49c3a4b98269dd20f8c321adf94bfe333cf"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-012",
+      "sourceQuestion": 12,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "6680ec4ac572676a785ec58631e2cdfc1914e9d24e70a968fad16ade8ba83a82",
+        "choices": "33b3198280e7170fd85c06a13622b11338db5388252ce89dab022301f982fb34",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "d308394f7763af57a2dfe9c506aed9201c221876cdc6fa2b5acb40bfe5a632d1",
+        "explanation": "c7e7b8bc20e3320b0242a515c0700a070239531496b1b683f697c5d5ef005e82",
+        "source": "9600100991ca8dc0d1bf7d235f71f49c3a4b98269dd20f8c321adf94bfe333cf"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-013",
+      "sourceQuestion": 13,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "732c6cada2782f92472edf2aff360c9eef0735f34bdf550b3a40ae5472152f7e",
+        "choices": "d4348f47026bc2bf3b2a9b910b79cb2927b4dac4abb2b2049e6f1853df15aa6c",
+        "correctAnswer": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "officialAnswer": "ebd3e9197be913685ba80af38ff8922e925385544494e12dcd8d0f701c51cec0",
+        "explanation": "420739164f682dc1584fbb58d64c1cd494519d9f1462f7801e7aa427a998973e",
+        "source": "44fd5b46c1f1c920f166ba2376bf5526b2d5d49a5372d63bab4530b14875da40"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-014",
+      "sourceQuestion": 14,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "d8f66922efe86de1dadcf71213bdf8baa1a956477a0ba429d7b135211285a538",
+        "choices": "97e62cb5ce0289d88704416e7f78c42e3c5bfb5615d7b2be79e9e1ff1a9ed359",
+        "correctAnswer": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "officialAnswer": "526c4e7eecdf301741230d79907e3ea09aac833e3e7b3549f9d24d09eb397932",
+        "explanation": "18c5df9115bd5153ca05fc7b75abd08e54f4096ec877c918ec0bb27ea1611087",
+        "source": "44fd5b46c1f1c920f166ba2376bf5526b2d5d49a5372d63bab4530b14875da40"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-015",
+      "sourceQuestion": 15,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "4ccaaf1b16ff7eac33c51f9754e242b7e3198e790de468755ef0b33e8cd6c921",
+        "choices": "51100157029fbb57e198ba85cd81a869ac96839ac5161d35acec66a095937a13",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "43e820f5611909102fddcc0a2fcc49ad2c7d34d639ce66771b17207042e1a103",
+        "explanation": "29ac28469371822c0a862a0620dedc183c3f93339f64eebd13770b1bf3fd7ed4",
+        "source": "1c302f26514c5cc43251c769892a07a10635f5d7df7c7b5982048e0b400d7782"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-016",
+      "sourceQuestion": 16,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "3f3850165d8033f39c38a80d213343a5fde767020948f183217fa73943739b4b",
+        "choices": "93227d14c22c55949cb33c631a1c4d41db41586afd8295d4affc7c2b2352446b",
+        "correctAnswer": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+        "officialAnswer": "bef1250ecdbe238b66fcbb5c7d9c05340de752968a146ed6fd49ef822b2ec4bb",
+        "explanation": "626716e0216f44412f4079523a83e1f01910c09d5b794df2059f07b0a57f3cbc",
+        "source": "1c302f26514c5cc43251c769892a07a10635f5d7df7c7b5982048e0b400d7782"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-017",
+      "sourceQuestion": 17,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "2eb0d11068650fc8ecd10f1906c8a64bf7101d2955a29707e842cd2621bd6458",
+        "choices": "bafd1a74d29c88d51950b4305e7838d7569eb2ff766a58ad701fc9cf2ecb92a7",
+        "correctAnswer": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+        "officialAnswer": "deee7b8d25bab70162333baedf056caec951bb7e52880d041f6e86472699ba38",
+        "explanation": "20030b55b7caecee48e21ab9aecea5f1e4dd68c21a614f9d56ade5fe44088909",
+        "source": "1c302f26514c5cc43251c769892a07a10635f5d7df7c7b5982048e0b400d7782"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-018",
+      "sourceQuestion": 18,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "7bd8844229f4bdbbebd13aded7031195577afa7920443cad0434a2c36c79fa93",
+        "choices": "f549d577bbd419447b047a8acf3a325130c9f0ebcfed46e41c8e4d62fba78349",
+        "correctAnswer": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+        "officialAnswer": "8b5dfaaba3504bfab2faec0b110c3f5c1a670aa052e819216757f6423197fe13",
+        "explanation": "998d1c9d9a5151983e3bdb2a3912156f05dca0c857845ec306815aaef3e800cd",
+        "source": "1c302f26514c5cc43251c769892a07a10635f5d7df7c7b5982048e0b400d7782"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-019",
+      "sourceQuestion": 19,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "c37ae22b9b9d2d4cf1fd27ce6de25a058edcc25482a7b8ba95c32a6486e8bf06",
+        "choices": "4e3cb72ebc11236f8d2f526902cc525d10f5adf2d22686f4016e511bce73667b",
+        "correctAnswer": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "officialAnswer": "60859dc46a996d9ea62499470bf0e71864f7b1ecc7905f569e62acdacc54e71f",
+        "explanation": "ba97b75d2b34775fb7a6b12eb892640513878e5ce308b1d7b7adbd46272e7a75",
+        "source": "1c302f26514c5cc43251c769892a07a10635f5d7df7c7b5982048e0b400d7782"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-020",
+      "sourceQuestion": 20,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "d5d96076da04b33e24f9b92e8b98b986c66d1564f0256d9432b20d26c29450d0",
+        "choices": "b8ffe8018bb923b9433ebc0a11315654c87bdeefcf5ccf2d943f542d849f0fff",
+        "correctAnswer": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+        "officialAnswer": "3fef198f48447f2f599a67a4b6ef8e930a62bd692bc323a06352ae09adbc2ff7",
+        "explanation": "6c9f0f550b01e6e845b10837fc5d0be79faf0587ad36ee3d9c3851b83bfa6205",
+        "source": "552983534f27171ec612cfa591978f830ba8bc2ea171b197102c33a6eaed5209"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-021",
+      "sourceQuestion": 21,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "5624424049af9173788ef095c5fb35ed34091b5e27a8e01c45b0daf2e75ce5cd",
+        "choices": "85d4b9e934a535fff1885445a451c906f07f229e6f953a23ef70acf0a199fba6",
+        "correctAnswer": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "officialAnswer": "2745e1e9ccff81d78108b4ec28d687dfdc4368fe8e51b700f4cc1d3abc3e1023",
+        "explanation": "150537afeba6dfbe9491c22f32d3a4f24f257828ba8b8442aee435107f5c1a94",
+        "source": "552983534f27171ec612cfa591978f830ba8bc2ea171b197102c33a6eaed5209"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-022",
+      "sourceQuestion": 22,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "83a94850f959985f05449070c9cfd5145d40354120282c272b7ece8342faaa0e",
+        "choices": "ef17c7b10a30087cc23bfbb0ca2ca2afed7e2621e84049bb1ffa9dc5c8c5a0cf",
+        "correctAnswer": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "officialAnswer": "1a2b9ccb242b70349816265305fe3cda68785112a786fc3df6515da45c711d6a",
+        "explanation": "d7f0f9c2414422747d4dec2f4e1eb0f215b569e8bc4ace7a223faaafb94eb5bf",
+        "source": "552983534f27171ec612cfa591978f830ba8bc2ea171b197102c33a6eaed5209"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-023",
+      "sourceQuestion": 23,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "8ac3c3eff300149c0d878aba34abf197835368dcc0f1fdfd5a85fca25e67fccf",
+        "choices": "f018c9c1ccdcde31f3c129a77517920a4255cba341e67d5bad3a8bbe99454264",
+        "correctAnswer": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+        "officialAnswer": "371507c268a3a6ba32aefea41ae962be19cbd078a82a238525e605aaea9a5528",
+        "explanation": "403767f8a4c17e1b2e4ab6c389567ddccff5480aa71fe183c595fcf57bb457a1",
+        "source": "552983534f27171ec612cfa591978f830ba8bc2ea171b197102c33a6eaed5209"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-024",
+      "sourceQuestion": 24,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "b79fca14341b6517559d60353ed59ea16fac6d9204a9207c4a08f3cee5e95541",
+        "choices": "e9714c95ac6bff8ca70a50dd392e4e9cbca9e112c3110715dd46555e15e6d8c3",
+        "correctAnswer": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+        "officialAnswer": "bb371d1fcdbc2860c40c13cb1adfab8cd2483324602f1da63dc28f0da747ec51",
+        "explanation": "50ab7918baaa6ea1405e9e0fad108883faba2ff165a54937139cd53ea96f46a6",
+        "source": "63d6b0a1d93eca17fa912476eb859593db97394caf693a22d32a18d2eaa81ab4"
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-1-source-025",
+      "sourceQuestion": 25,
+      "status": "EXACT",
+      "fieldSha256": {
+        "prompt": "06ce0212a59cf3b993946affccb74fda3281335cfd166c7d9a97a8fa7a09f1f2",
+        "choices": "115545b270c24e6e487fb406d3a282123a7fae93f7d1bf6c1907885e4c8f0e81",
+        "correctAnswer": "4e07408562bedb8b60ce05c1decfe3ad16b72230967de01f640b7e4729b49fce",
+        "officialAnswer": "77db671dec85a4c2ae0141bf2e6facf06a8ebc910d92c7ab2ee5b42cf2a9345c",
+        "explanation": "ab62483bf55b964bff1236de607ca837cd6f51e73fd9332ecc75a0d8013bae52",
+        "source": "63d6b0a1d93eca17fa912476eb859593db97394caf693a22d32a18d2eaa81ab4"
+      }
+    }
+  ]
+}

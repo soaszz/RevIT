@@ -18,6 +18,7 @@ import MtapOnboarding from "./components/MtapOnboarding";
 import MtapPreferenceControl from "./components/MtapPreferenceControl";
 import Onboarding from "./components/Onboarding";
 import QuestionStimulus, { QuestionReferences } from "./components/QuestionStimulus";
+import SourceText from "./components/SourceText";
 import MatchingQuestion from "./components/MatchingQuestion";
 import QuestionChoiceTable from "./components/QuestionChoiceTable";
 import QuestionTimer from "./components/QuestionTimer";
@@ -89,7 +90,7 @@ import { encodeMatchingAnswers, isQuestionAnswerCorrect } from "./lib/matchingQu
 import { createClient } from "./lib/supabase/client";
 import { hasCurrentLegalConsent } from "./lib/legal";
 import { canAccessFeature } from "./lib/features";
-import { ALL_MAJORS_CATEGORY, buildSubjectSections, filterSubjectsBySearch, getUnifiedSubjects, MTAP_1_CATEGORY, OTHER_MAJORS_CATEGORY, type UnifiedSubject } from "./lib/reviewerLibrary";
+import { ALL_MAJORS_CATEGORY, buildSubjectSections, filterSubjectsBySearch, getSubjectDisplayName as canonicalSubjectDisplayName, getUnifiedSubjects, MTAP_1_CATEGORY, OTHER_MAJORS_CATEGORY, type UnifiedSubject } from "./lib/reviewerLibrary";
 import { LOCAL_PREFERENCES_STORAGE_KEY, normalizeUserPreferences, withMtapFeaturePreference } from "./lib/userPreferences";
 import { withTimeout } from "./lib/withTimeout";
 import {
@@ -142,9 +143,13 @@ import {
   clearCiullaReviewerCache,
   clearRodakReviewerCache,
   clearStrasingerReviewerCache,
+  clearBocReviewerCache,
+  clearElsevierReviewerCache,
   fetchCiullaReviewer,
   fetchRodakReviewer,
   fetchStrasingerReviewer,
+  fetchBocReviewer,
+  fetchElsevierReviewer,
 } from "./lib/premiumReviewerService";
 import {
   ciullaPreviewSubjects,
@@ -164,7 +169,10 @@ import {
   strasingerTopicQuestionCounts,
   STRASINGER_TOTAL_QUESTIONS,
 } from "./content/strasingerMetadata";
-import { STRASINGER_CLOUD_SYNC_ENABLED } from "./lib/cloudSyncGate";
+import { bocPreviewSubjects, bocPreviewTopics, bocTopicQuestionCounts } from "./content/bocMetadata";
+import { elsevierPreviewSubjects, elsevierPreviewTopics, elsevierTopicQuestionCounts } from "./content/elsevierMetadata";
+import { isQuestionBankPublished } from "./lib/entitlements";
+import { isCloudSyncAllowedForBook } from "./lib/cloudSyncGate";
 import { createTrustedStudyClient } from "./lib/trustedStudyClient";
 import {
   DEFAULT_AI_ACADEMIC_PERMISSIONS,
@@ -440,16 +448,21 @@ function activityAfterEvent(current: DailyActivity[], activityDate: string, inpu
 
 export type InitialUser = { id: string; email: string; username?: string };
 
+function getSubjectDisplayName(subjectId: string, fallback: string, topicId?: string) {
+  return isQuestionBankPublished("BOC") || isQuestionBankPublished("Elsevier") ? canonicalSubjectDisplayName(subjectId,fallback,topicId) : fallback;
+}
+
 export default function RevITApp({ initialUser = null, cloudEnabled = false, offlineMode = false, turnstileSiteKey, trustedStudyTransport = false }: { initialUser?: InitialUser | null; cloudEnabled?: boolean; offlineMode?: boolean; turnstileSiteKey?: string; trustedStudyTransport?: boolean }) {
   const [reviewerContent, setReviewerContent] = useState<{ subjects: Subject[]; topics: Topic[]; questions: ReviewerQuestion[] }>({
     subjects: freeSubjects,
     topics: freeTopics,
     questions: freeQuestions,
   });
-  const { subjects, topics, questions } = reviewerContent;
+  const { subjects: sourceSubjects, topics, questions } = reviewerContent;
+  const subjects = useMemo(() => sourceSubjects.map(subject => subject.book === "BOC" || subject.book === "Elsevier" ? ({ ...subject, name: getSubjectDisplayName(subject.id, subject.name) }) : subject), [sourceSubjects]);
   const subjectById = useMemo(() => new Map(subjects.map((subject) => [subject.id, subject])), [subjects]);
   const topicById = useMemo(() => new Map(topics.map((topic) => [topic.id, topic])), [topics]);
-  const questionById = useMemo(() => new Map(questions.map((question) => [question.id, question])), [questions]);
+  const questionById = useMemo(() => new Map([...freeQuestionById, ...questions.map((question) => [question.id, question] as const)]), [questions]);
   const router = useRouter();
   const online = useOnlineStatus();
   const cloudAvailable = cloudEnabled && online && !offlineMode;
@@ -479,6 +492,8 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
     if (typeof window === "undefined") return "Harr";
     try {
       const saved = localStorage.getItem("revit-selected-book-v1");
+      if (saved === "BOC" && isQuestionBankPublished("BOC")) return saved;
+      if (saved === "Elsevier" && isQuestionBankPublished("Elsevier")) return saved;
       if (saved === "Harr" || saved === "Ciulla" || saved === "Rodak" || saved === "Strasinger" || saved === "all") return saved;
     } catch {}
     return "Harr";
@@ -1365,6 +1380,8 @@ useEffect(() => {
       clearCiullaReviewerCache();
       clearRodakReviewerCache();
       clearStrasingerReviewerCache();
+      clearElsevierReviewerCache();
+      clearBocReviewerCache();
       setEntitlement((current) => ({ ...current, effectivePlan: "free" }));
     };
     expireWhenDue();
@@ -1385,7 +1402,7 @@ useEffect(() => {
     let cancelled = false;
     setPremiumContentLoading(true);
     setPremiumContentError("");
-    void Promise.all([fetchCiullaReviewer(), fetchRodakReviewer(), fetchStrasingerReviewer()]).then(([ciullaResult, rodakResult, strasingerResult]) => {
+    void Promise.all([fetchCiullaReviewer(), fetchRodakReviewer(), fetchStrasingerReviewer(), isQuestionBankPublished("Elsevier") ? fetchElsevierReviewer() : undefined, isQuestionBankPublished("BOC") ? fetchBocReviewer() : undefined]).then(([ciullaResult, rodakResult, strasingerResult, elsevierResult, bocResult]) => {
       if (cancelled) return;
       const extraSubjects: Subject[] = [];
       const extraTopics: Topic[] = [];
@@ -1406,6 +1423,17 @@ useEffect(() => {
         extraTopics.push(...strasingerResult.data.topics);
         extraQuestions.push(...strasingerResult.data.questions);
       }
+      if (elsevierResult?.status === "success") {
+        extraSubjects.push(...elsevierResult.data.subjects);
+        extraTopics.push(...elsevierResult.data.topics);
+        extraQuestions.push(...elsevierResult.data.questions);
+      }
+
+      if (bocResult?.status === "success") {
+        extraSubjects.push(...bocResult.data.subjects);
+        extraTopics.push(...bocResult.data.topics);
+        extraQuestions.push(...bocResult.data.questions);
+      }
 
       if (extraQuestions.length > 0) {
         setReviewerContent({
@@ -1425,14 +1453,14 @@ useEffect(() => {
   }, [cloudEnabled, offlineMode, proActive]);
 
   const allAvailableSubjects = useMemo(() => {
-    const base = proActive ? subjects : [...freeSubjects, ...ciullaPreviewSubjects, ...rodakPreviewSubjects, ...strasingerPreviewSubjects];
+    const base = proActive ? subjects : [...freeSubjects, ...ciullaPreviewSubjects, ...rodakPreviewSubjects, ...strasingerPreviewSubjects, ...(isQuestionBankPublished("Elsevier") ? elsevierPreviewSubjects : []), ...(isQuestionBankPublished("BOC") ? bocPreviewSubjects : [])];
     const map = new Map<string, Subject>();
     for (const s of base) map.set(s.id, s);
     return Array.from(map.values());
   }, [proActive, subjects]);
 
   const allAvailableTopics = useMemo(() => {
-    const base = proActive ? topics : [...freeTopics, ...ciullaPreviewTopics, ...rodakPreviewTopics, ...strasingerPreviewTopics];
+    const base = proActive ? topics : [...freeTopics, ...ciullaPreviewTopics, ...rodakPreviewTopics, ...strasingerPreviewTopics, ...(isQuestionBankPublished("Elsevier") ? elsevierPreviewTopics : []), ...(isQuestionBankPublished("BOC") ? bocPreviewTopics : [])];
     const map = new Map<string, Topic>();
     for (const t of base) map.set(t.id, t);
     return Array.from(map.values());
@@ -1516,7 +1544,7 @@ useEffect(() => {
 
   const progressSubjects = useMemo(() => {
     return getUnifiedSubjects(progressBook, subjects, topics);
-  }, [progressBook]);
+  }, [progressBook, subjects, topics]);
 
   const availableBooks: ReviewerBook[] = useMemo(() => {
     const set = new Set<ReviewerBook>();
@@ -1533,7 +1561,7 @@ useEffect(() => {
   const progressTopics = useMemo(() => {
     if (progressBook === "all") return topics;
     return topics.filter((t) => t.book === progressBook);
-  }, [progressBook]);
+  }, [progressBook, topics]);
 
   const visibleProgressSubjects = useMemo(
     () => filterSubjectsBySearch(progressSubjects, progressTopics, progressSearch),
@@ -1571,10 +1599,11 @@ useEffect(() => {
   const progressSubjectStats = useMemo(() => {
     const grouped = new Map<string, { attempts: number; correct: number }>();
     for (const attempt of progressAttempts) {
-      const current = grouped.get(attempt.subjectName) ?? { attempts: 0, correct: 0 };
+      const subjectName = getSubjectDisplayName(attempt.subjectId, attempt.subjectName, attempt.topicId);
+      const current = grouped.get(subjectName) ?? { attempts: 0, correct: 0 };
       current.attempts += 1;
       current.correct += attempt.correct ? 1 : 0;
-      grouped.set(attempt.subjectName, current);
+      grouped.set(subjectName, current);
     }
     return [...grouped.entries()].map(([name, value]) => ({ name, ...value, accuracy: percent(value.correct, value.attempts) }));
   }, [progressAttempts]);
@@ -1598,7 +1627,7 @@ useEffect(() => {
   const practicedTopics = topicStats.filter((topic) => topic.attempts > 0);
   const topicsLeft = Math.max(0, topics.length - practicedTopics.length);
   const weakestTopic = [...practicedTopics].sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts)[0];
-  const weakestTopicSubject = weakestTopic ? (subjectById.get(weakestTopic.subjectId)?.name ?? "Clinical Subject") : "Clinical Subject";
+  const weakestTopicSubject = weakestTopic ? getSubjectDisplayName(weakestTopic.subjectId, subjectById.get(weakestTopic.subjectId)?.name ?? "Clinical Subject", weakestTopic.id) : "Clinical Subject";
   const upNextTopic = useMemo(() => {
     const remaining = [...practicedTopics].filter((t) => t.id !== weakestTopic?.id).sort((a, b) => a.accuracy - b.accuracy || b.attempts - a.attempts);
     if (remaining.length > 0) return remaining[0];
@@ -1834,7 +1863,7 @@ useEffect(() => {
       book: selectedBook,
       pausedAt: new Date().toISOString(),
       primaryTopicName: currentTopic?.name || "Review Session",
-      subjectName: currentSubject?.name || "Review Library",
+      subjectName: getSubjectDisplayName(currentQuestion.subjectId, currentSubject?.name || "Review Library", currentQuestion.topicId),
       skippedIds: sessionSkippedIds,
       masteryVersion: 1,
       selectedChoice,
@@ -2099,8 +2128,8 @@ useEffect(() => {
 
   useEffect(() => {
     if (sessionComplete) {
-      const hasStrasinger = sessionQuestionIds.some((id) => questionById.get(id)?.book === "Strasinger");
-      if (!hasStrasinger || STRASINGER_CLOUD_SYNC_ENABLED) {
+      const hasStrasinger = sessionQuestionIds.some((id) => !isCloudSyncAllowedForBook(questionById.get(id)?.book));
+      if (!hasStrasinger) {
         scheduleBatchedCloudSync(true);
       }
     }
@@ -2204,7 +2233,7 @@ useEffect(() => {
       attempt.correct,
     );
     if (!isSessionRetry) setReinforcementLevels((current) => reinforcementAfterAnswer(current, currentQuestion.id, attempt.correct));
-    const isStrasingerSyncBlocked = currentQuestion.book === "Strasinger" && !STRASINGER_CLOUD_SYNC_ENABLED;
+    const isStrasingerSyncBlocked = !isCloudSyncAllowedForBook(currentQuestion.book);
     if (!isSessionRetry && trustedStudy && sessionId) trustedStudy.recordAttempt(sessionId, {
       id: attempt.id, questionId: attempt.questionId, selectedAnswer, didTimeOut,
       matchingSelections: currentQuestion.matching && !didTimeOut ? matchingSelections : undefined,
@@ -2250,7 +2279,7 @@ useEffect(() => {
     if (!answerRevealed || !currentQuestion || !answerLockedRef.current
       || sessionOwnerRef.current !== (initialUser?.id ?? "local")) return;
     answerLockedRef.current = false;
-    const isStrasingerSyncBlocked = currentQuestion.book === "Strasinger" && !STRASINGER_CLOUD_SYNC_ENABLED;
+    const isStrasingerSyncBlocked = !isCloudSyncAllowedForBook(currentQuestion.book);
     if (sessionCanFinish) {
       clearRecentSession();
       if (sessionId && !isStrasingerSyncBlocked) {
@@ -2784,7 +2813,10 @@ useEffect(() => {
   const isReviewSessionActive = (libraryMode === "mcqs" && sessionQuestionIds.length > 0) || (libraryMode === "flashcards" && isFlashcardReviewing);
   const currentSessionTopicIds = libraryMode === "mcqs" ? selectedTopicIds : activeFlashcardTopics;
   const currentSessionTopicNames = currentSessionTopicIds.map((id) => topicById.get(id)?.name).filter((name): name is string => Boolean(name));
-  const currentSessionSubjects = Array.from(new Set(currentSessionTopicIds.map((id) => topicById.get(id)?.subjectId).filter((id): id is string => Boolean(id)).map((id) => subjectById.get(id)?.name).filter((name): name is string => Boolean(name))));
+  const currentSessionSubjects = Array.from(new Set(currentSessionTopicIds.flatMap((id) => {
+    const topic = topicById.get(id);
+    return topic ? [getSubjectDisplayName(topic.subjectId, subjectById.get(topic.subjectId)?.name ?? "Uncategorized", id)] : [];
+  })));
   const pendingSyncCount = initialUser ? getQueuedQuestionAttemptsCount(initialUser.id)
     + getQueuedQuestionReinforcementCount(initialUser.id)
     + getQueuedCloudProgressEventsCount(initialUser.id) : 0;
@@ -3366,7 +3398,7 @@ useEffect(() => {
                 <div className="source-summary-list">
                   {overviewSubjects.map((subject) => {
                     let subjectQuestionCount = questions.filter(
-                      (q) => subject.sourceSubjectIds?.includes(q.subjectId) || (subject.topicIds && subject.topicIds.includes(q.topicId))
+                      (q) => subject.topicIds ? subject.topicIds.includes(q.topicId) : subject.sourceSubjectIds?.includes(q.subjectId)
                     ).length;
                     if (!proActive && subject.topicIds) {
                       const ciullaAdd = subject.topicIds.reduce(
@@ -3451,6 +3483,8 @@ useEffect(() => {
               ciullaTopicQuestionCounts={ciullaTopicQuestionCounts}
               rodakTopicQuestionCounts={rodakTopicQuestionCounts}
               strasingerTopicQuestionCounts={strasingerTopicQuestionCounts}
+              bocTopicQuestionCounts={isQuestionBankPublished("BOC") ? bocTopicQuestionCounts : undefined}
+              elsevierTopicQuestionCounts={isQuestionBankPublished("Elsevier") ? elsevierTopicQuestionCounts : undefined}
               onOpenProModal={() => setPlanAnnouncementOpen(true)}
               onRequestConfirm={requestConfirm}
             />
@@ -3489,7 +3523,7 @@ useEffect(() => {
                   <div className="quiz-header-row">
                     <p className="question-source">
                       {currentQuestion.book ? `${currentQuestion.book} · ` : ""}
-                      {subjectById.get(currentQuestion.subjectId)?.name}
+                      {getSubjectDisplayName(currentQuestion.subjectId, subjectById.get(currentQuestion.subjectId)?.name ?? "Uncategorized", currentQuestion.topicId)}
                     </p>
                     {activeTimer.enabled && (
                       <div className="quiz-timer-wrap">
@@ -3508,16 +3542,23 @@ useEffect(() => {
                       <p>{currentQuestion.caseStudy}</p>
                     </div>
                   )}
-                  {currentQuestion.book !== "Rodak" && <QuestionStimulus stimulus={currentQuestion.stimulus} />}
+                  {currentQuestion.questionSections ? currentQuestion.questionSections.map((section, index) => section.kind === "text" ? (
+                    index === 0
+                      ? <div className="quiz-question-heading" key={index}><h2><SourceText text={section.text} marks={section.sourceFormatting} /></h2></div>
+                      : <p className="quiz-question-heading" key={index}><SourceText text={section.text} marks={section.sourceFormatting} /></p>
+                  ) : <QuestionStimulus key={index} stimulus={section.stimulus} />) : <>
+                  {currentQuestion.book !== "Rodak" && currentQuestion.book !== "Elsevier" && <QuestionStimulus stimulus={currentQuestion.stimulus} />}
                   <div className="quiz-question-heading" style={{ marginTop: currentQuestion.caseStudy ? "1rem" : undefined }}>
                     <h2>
                       {currentQuestion.matching
                         ? currentQuestion.prompt.split(/\n+(?:(?:Disorders|Statements|Significance|1\.)|\n)/)[0].trim()
-                        : currentQuestion.prompt}
+                        : <SourceText text={currentQuestion.prompt} marks={currentQuestion.sourceFormatting?.prompt} />}
                     </h2>
                   </div>
                   {currentQuestion.book === "Rodak" && <QuestionReferences question={currentQuestion} />}
-                  {currentQuestion.promptAfterReferences && <p className="quiz-question-heading">{currentQuestion.promptAfterReferences}</p>}
+                  {currentQuestion.book === "Elsevier" && <QuestionStimulus stimulus={currentQuestion.stimulus} />}
+                  {currentQuestion.promptAfterReferences && <p className="quiz-question-heading"><SourceText text={currentQuestion.promptAfterReferences} marks={currentQuestion.sourceFormatting?.promptAfterReferences} /></p>}
+                  </>}
                   {currentQuestion.matching ? (
                     <MatchingQuestion
                       question={currentQuestion}
@@ -3553,7 +3594,7 @@ useEffect(() => {
                             aria-pressed={selectedChoice === choiceIndex}
                           >
                             <span className="choice-index">{String.fromCharCode(65 + displayIndex)}</span>
-                            <b className="choice-copy">{choice}</b>
+                            <b className="choice-copy">{currentQuestion.choiceTables?.[choiceIndex] ? <QuestionStimulus stimulus={currentQuestion.choiceTables[choiceIndex]!} inlineTable /> : <SourceText text={choice} marks={currentQuestion.sourceFormatting?.choices?.[choiceIndex]} />}</b>
                             {isCorrect && <i className="choice-result-icon" aria-hidden="true">✓</i>}
                             {isWrong && <i className="choice-result-icon" aria-hidden="true">!</i>}
                           </button>
@@ -3574,12 +3615,15 @@ useEffect(() => {
                           : (() => {
                               const displayedIndex = currentChoiceOrder.indexOf(currentQuestion.correctAnswer);
                               const displayedLetter = displayedIndex >= 0 ? String.fromCharCode(65 + displayedIndex) : "";
+                              const answerTable = currentQuestion.choiceTables?.[currentQuestion.correctAnswer];
+                              if (answerTable) return <>{displayedLetter ? `${displayedLetter}. ` : ""}<QuestionStimulus stimulus={answerTable} inlineTable /></>;
                               const rawChoiceText = currentQuestion.choices?.[currentQuestion.correctAnswer] ?? currentQuestion.officialAnswer;
-                              const answerText = rawChoiceText.replace(/^[A-Za-z]\.\s+/, "");
+                              const answerText = currentQuestion.book === "Elsevier" || currentQuestion.book === "BOC" || currentQuestion.sourceFormatting ? rawChoiceText : rawChoiceText.replace(/^[A-Za-z]\.\s+/, "");
+                              if (currentQuestion.sourceFormatting) return <>{displayedLetter ? `${displayedLetter}. ` : ""}<SourceText text={answerText} marks={currentQuestion.sourceFormatting.choices?.[currentQuestion.correctAnswer]} /></>;
                               return `${displayedLetter ? `${displayedLetter}. ` : ""}${answerText}`;
                             })()}
                       </p>
-                      <div className="answer-rationale"><span>Rationale</span><p>{currentQuestion.explanation}</p></div>
+                      <div className="answer-rationale"><span>Rationale</span>{currentQuestion.rationaleSections ? currentQuestion.rationaleSections.map((section, index) => section.kind === "text" ? <p key={index}><SourceText text={section.text} marks={section.sourceFormatting} /></p> : <QuestionStimulus key={index} stimulus={section.stimulus} allowEnlarge />) : <><p><SourceText text={currentQuestion.explanation} marks={currentQuestion.sourceFormatting?.explanation} /></p>{currentQuestion.rationaleImages?.map((stimulus, index) => <QuestionStimulus key={index} stimulus={stimulus} allowEnlarge />)}</>}</div>
                       {!currentAnswerCorrect && <p className="reinforcement-note">We’ll bring this concept back later.</p>}
                     </div>
                   )}

@@ -280,6 +280,8 @@ export function isStrasingerSessionBlocked(
   questionOrTopicIds: string[],
   syncEnabled = STRASINGER_CLOUD_SYNC_ENABLED,
 ): boolean {
+  // New books use the separately approved compatibility writer, never the held trusted cutover.
+  if (questionOrTopicIds.some(id => id.startsWith("boc-") || id.startsWith("elsevier-"))) return true;
   if (syncEnabled) return false;
   return questionOrTopicIds.some((id) => {
     const lower = id.toLowerCase();

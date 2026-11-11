@@ -57,3 +57,13 @@ changelog-private.md
 supabase/.temp/
 /scratch/
 /.scratch/
+
+# Commercial reviewer inputs: local/private deployment pack, never public Git.
+/.private-reviewers/
+/app/content/bocContent.json
+/app/content/elsevierContent.json
+/app/content/bocSourceManifest.json
+/app/content/elsevierSourceManifest.json
+/docs/reviewer-compatibility/boc-presentation-source-fixture.json
+/public/reviewer-assets/boc-7e/
+/public/reviewer-assets/elsevier-1e/

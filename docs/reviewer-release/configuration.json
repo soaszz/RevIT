@@ -1,0 +1,25 @@
+{
+  "version": "v1.13.0",
+  "releaseDate": "Pending",
+  "status": "PREPARED_NOT_AUTHORIZED_FOR_PUBLICATION",
+  "buildEnvironment": {
+    "NEXT_PUBLIC_REVIEWER_COMPATIBILITY_ENABLED": "true"
+  },
+  "runtimeEnvironment": {
+    "REVIT_REVIEWER_COMPATIBILITY_ENABLED": "true",
+    "REVIT_MAINTENANCE_MODE": "false"
+  },
+  "publicationIsBuildTime": true,
+  "defaultPublicationEnabled": false,
+  "privateRuntimeFiles": 308,
+  "privateVerificationFilesExcluded": 3,
+  "productionProject": "prj_68CZaEktoP8E4AGkrpSFNg19ti6a",
+  "requiredBeforeProduction": [
+    "BOC independent source-comparison gate",
+    "Owner redistribution authorization",
+    "Final Manila date binding and exact hash reconciliation",
+    "Fresh guarded SQL approval and execution",
+    "Protected private-pack deployment verification",
+    "Explicit promotion approval"
+  ]
+}
