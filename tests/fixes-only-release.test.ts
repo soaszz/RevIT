@@ -32,10 +32,13 @@ test("four published banks retain all 4,441 historical records; prepared edition
   assert.equal(existsSync("app/components/SourceText.tsx"), true);
 });
 
-test("release and platform footer share v1.12.5; current plan copy names only published books", () => {
-  assert.equal(SITE_UPDATES[0].version, "v1.12.5");
-  assert.equal(SITE_UPDATES[1].version, "v1.12.4");
-  assert.equal(SITE_UPDATES[0].type, "minor");
+test("prepared release and platform footer share v1.13.0; current plan copy names only published books", () => {
+  assert.equal(SITE_UPDATES[0].version, "v1.13.0");
+  assert.equal(SITE_UPDATES[0].date, JSON.parse(read("docs/reviewer-release/configuration.json")).releaseDate);
+  assert.equal(SITE_UPDATES[1].version, "v1.12.5");
+  assert.equal(SITE_UPDATES[2].version, "v1.12.4");
+  assert.equal(SITE_UPDATES[1].type, "minor");
+  assert.equal(SITE_UPDATES[0].type, "major");
   assert.match(read("app/components/SiteUpdatesModal.tsx"), /RevIT Platform \{SITE_UPDATES\[0\]\?\.version/);
   const pricing = currentReviewerCopy(renderPublicPricing());
   for (const count of ["1,606", "2,848", "4,454"]) assert.ok(pricing.includes(count));

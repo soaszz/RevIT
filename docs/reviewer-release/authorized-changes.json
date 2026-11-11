@@ -1,0 +1,32 @@
+{
+  "app/lib/entitlements.ts": {
+    "before": "02dd0c6a30aabe22c5c985223f19fe074086486ee1e6c91df6afc7a3bb48f4ed",
+    "after": "3e353c52187175c119930555ee4fd0c6c3f2994bcbe5c62aef49ec216108ac3b",
+    "reason": "Approved local combined-release publication profile and Pending v1.13.0 entry; immutable history and default-OFF/authentication boundaries retained"
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "7be65053b75d78c4544da2698f6da38c863eba975f174f7a7db688f65e08d6d0",
+    "after": "06bd169770fa01323bd89f6cec85a61ff825cc65069bd5f421f1a869368e1c46",
+    "reason": "Approved local combined-release publication profile and Pending v1.13.0 entry; immutable history and default-OFF/authentication boundaries retained"
+  },
+  "tests/fixes-only-release.test.ts": {
+    "before": "5b8f580ce8f9f0c8e6c107efe842744bcfd4cdf02b138613776c39f5e1f7718c",
+    "after": "f78d0c69148d9a0d69cad698fd4d5d29f599a2f76218c44ee65e374d15beddf0",
+    "reason": "Approved local combined-release publication profile and Pending v1.13.0 entry; immutable history and default-OFF/authentication boundaries retained"
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "b68ef654cae279d5f3de7a904e7446cc7da9ade97e91ead24e8f8338801b9ff6",
+    "after": "6582db0e255b71fbc4d9cd17b7bdfa9469604c7b2a5150ded133664bb43d9332",
+    "reason": "Approved local combined-release publication profile and Pending v1.13.0 entry; immutable history and default-OFF/authentication boundaries retained"
+  },
+  "docs/private-reviewers/README.md": {
+    "before": "9709f5c1c3a9a32eefd97bcb84590804c8894831bfa9670e8d5931686bb25291",
+    "after": "2598ea8f2350cd46c6b252b9a1468f6b5a58431cd1cfc4412ea02a682b1c2776",
+    "reason": "Approved local combined-release publication profile and Pending v1.13.0 entry; immutable history and default-OFF/authentication boundaries retained"
+  },
+  ".gitattributes": {
+    "before": "96c7562146d0cfd97e36285b42459d5a03cdcdb7eb38caa500e10b01d4193373",
+    "after": "d9b34190f4806807f52d86f8d9996d0edebc823639b724d24b2cb1c7635d90a7",
+    "reason": "Explicit checkout endings for new LF-pinned release inputs; all existing attribute lines preserved"
+  }
+}

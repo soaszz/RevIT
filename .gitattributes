@@ -176,3 +176,9 @@ app/content/bocSourceManifest.json text eol=crlf
 app/content/elsevierContent.json text eol=crlf
 app/content/elsevierMetadata.ts text eol=crlf
 app/content/elsevierSourceManifest.json text eol=crlf
+
+# Prepared combined-release LF pins; earlier rules remain byte-for-byte unchanged.
+docs/private-reviewers/README.md text eol=lf
+docs/reviewer-release/configuration.json text eol=lf
+docs/reviewer-release/authorized-changes.json text eol=lf
+tests/reviewer-release-profile.test.ts text eol=lf

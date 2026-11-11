@@ -23,6 +23,9 @@ export const FREE_ENTITLEMENT: SubscriptionEntitlement = Object.freeze({
   serverNow: null,
 });
 
+// Frozen into the artifact at build time. Default OFF; no runtime publication toggle.
+const preparedReviewerPublication = process.env.NEXT_PUBLIC_REVIEWER_COMPATIBILITY_ENABLED === "true";
+
 export const QUESTION_BANKS: Readonly<Record<Lowercase<ReviewerBook>, {
   id: Lowercase<ReviewerBook>;
   label: ReviewerBook;
@@ -33,8 +36,8 @@ export const QUESTION_BANKS: Readonly<Record<Lowercase<ReviewerBook>, {
   ciulla: { id: "ciulla", label: "Ciulla", requiredPlan: "pro" },
   rodak: { id: "rodak", label: "Rodak", requiredPlan: "pro" },
   strasinger: { id: "strasinger", label: "Strasinger", requiredPlan: "pro" },
-  boc: { id: "boc", label: "BOC", requiredPlan: "pro", published: false },
-  elsevier: { id: "elsevier", label: "Elsevier", requiredPlan: "pro", published: false },
+  boc: { id: "boc", label: "BOC", requiredPlan: "pro", published: preparedReviewerPublication },
+  elsevier: { id: "elsevier", label: "Elsevier", requiredPlan: "pro", published: preparedReviewerPublication },
 });
 
 export const AI_LIMITS: Readonly<Record<SubscriptionPlan, {

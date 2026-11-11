@@ -13,6 +13,21 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-13-0",
+    version: "v1.13.0",
+    date: "Pending",
+    type: "major",
+    title: "Added BOC and Elsevier Reviewers",
+    summary: "Added two Pro reviewers, corrected Harr questions, and improved MCQ retries.",
+    tags: ["Reviewers", "Practice"],
+    highlights: [
+      "Added BOC Study Guide 7th Edition and Elsevier's MLS Examination Review for active Pro members.",
+      "Corrected a Harr Hematology topic to 25 source-checked questions while keeping past records.",
+      "Questions answered incorrectly at first now need two correct retries in a row.",
+      "Kept pause and resume support without counting retry answers as extra progress or rewards.",
+    ],
+  },
+  {
     id: "update-v1-12-5",
     version: "v1.12.5",
     date: "November 10, 2026",

@@ -58,5 +58,10 @@ export function assertPreserved(path, expected) {
     assert.equal(delivery[path].before, current, `${path}: broken private-delivery preservation chain`);
     current = delivery[path].after;
   }
+  const publication = JSON.parse(readFileSync(new URL("docs/reviewer-release/authorized-changes.json", root), "utf8"));
+  if (publication[path]) {
+    assert.equal(publication[path].before, current, path + ": broken prepared publication preservation chain");
+    current = publication[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

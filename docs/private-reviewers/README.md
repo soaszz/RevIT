@@ -1,7 +1,11 @@
 # Private BOC / Elsevier delivery
 
-Preparation only. Both publication constants remain false. No new environment
-variables, Supabase objects, Storage bucket, credentials or dependencies are needed.
+Preparation only. Both new books remain OFF by default. The existing
+NEXT_PUBLIC_REVIEWER_COMPATIBILITY_ENABLED build flag freezes their publication
+state into the artifact as well as enabling compatible client persistence. No new
+environment variable or runtime publication switch is introduced. The exact
+prepared profile is ../reviewer-release/configuration.json; it has not been applied
+to production. No Supabase object, Storage bucket, credential or dependency is added.
 
 ## Source custody and upload
 
@@ -68,14 +72,14 @@ can inspect private deployment source; Vercel project access must remain restric
 1. Resolve documented BOC independent comparisons and owner redistribution clearance.
 2. Obtain explicit combined release, guarded SQL and publication approval. Keep date
    Pending until the actual authorized Asia/Manila release day. Review the exact
-   Updates/publication/compatibility changes and append exact hash transitions.
+   Updates/publication/compatibility configuration and append exact hash transitions.
 3. Revalidate live baseline, recovery cutoff/limitations, SQL guards and Pro RPC
    return shape. Execute only INSTALL.PROPOSAL.sql then LEADERBOARD.PROPOSAL.sql,
    verify preservation and refresh PostgREST once. Do not replay migrations 23–31.
 4. Run changed-input release gates, review exact public commit inventory and push
    only the approved branch. Keep the private pack out of Git.
 5. Stage verified runtime pack into the clean upload checkout. Verify server traces,
-   public-output absence and upload inventory. Create one protected, unaliased
+   public-output absence and upload inventory. Use the exact build/runtime profile, then create one protected, unaliased
    production-target artifact using the existing project and --prod --skip-domain.
 6. Existing Vercel Authentication must protect the artifact; --skip-domain alone is
    not privacy. No authentication bypass. Owner-authenticated verification must
