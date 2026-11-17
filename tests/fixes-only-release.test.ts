@@ -34,7 +34,7 @@ test("four published banks retain all 4,441 historical records; prepared edition
 
 test("Pending Harr hotfix preserves released history and platform footer", () => {
   assert.equal(SITE_UPDATES[0].version, "v1.13.1");
-  assert.equal(SITE_UPDATES[0].date, "Pending");
+  assert.equal(SITE_UPDATES[0].date, "November 17, 2026");
   assert.equal(SITE_UPDATES[0].type, "minor");
   const releaseHistory = SITE_UPDATES.slice(1);
   assert.equal(releaseHistory[0].version, "v1.13.0");

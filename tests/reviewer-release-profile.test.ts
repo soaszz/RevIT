@@ -124,7 +124,7 @@ test("production-enabled canonical registry preserves five-choice/matching gradi
 
 test("combined entry matches the reviewed profile and preserves historical Updates bytes/footer", () => {
   const r = fixture(), allUpdates = r.load("app/data/siteUpdates.ts").SITE_UPDATES;
-  assert.equal(allUpdates[0].version, "v1.13.1"); assert.equal(allUpdates[0].date, "Pending");
+  assert.equal(allUpdates[0].version, "v1.13.1"); assert.equal(allUpdates[0].date, "November 17, 2026");
   const updates = allUpdates.slice(1);
   assert.equal(updates[0].id, "update-v1-13-0"); assert.equal(updates[0].date, profile.releaseDate); assert.equal(updates[0].type, "major");
   for (const word of ["BOC", "Elsevier", "Harr", "two correct"]) assert.ok(JSON.stringify(updates[0]).includes(word));

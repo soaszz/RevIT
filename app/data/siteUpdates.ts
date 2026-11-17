@@ -15,7 +15,7 @@ export const SITE_UPDATES: SiteUpdate[] = [
   {
     id: "update-v1-13-1",
     version: "v1.13.1",
-    date: "Pending",
+    date: "November 17, 2026",
     type: "minor",
     title: "Completed Harr Hematology 2 Questions and Fixed Rodak",
     summary: "Added 110 original Harr questions and split two Rodak hematology questions that were joined together.",

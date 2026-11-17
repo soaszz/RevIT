@@ -25,7 +25,7 @@
   },
   "app/data/siteUpdates.ts": {
     "before": "07e40847763fedd64e76bb33133cfe54700e5e84a9ce7456916dff8a04cdff27",
-    "after": "427714c45a6a76e9930004b8244d59c585f6e4325c0f00614eec3a8344182ced",
-    "reason": "Harr Hema2 audited source presentation only; preserve other editions/history; Pending v1.13.1 metadata."
+    "after": "4a562db0de7afd9ce4f8c001d7ec4a57393e176497c75f4cb41b1b597b8f3e41",
+    "reason": "Harr Hema2 audited source presentation and v1.13.1 Manila date binding only; preserve other editions/history."
   }
 }
