@@ -102,7 +102,7 @@ test("unpublished production profile denies both banks before session or databas
 test("enabled public counts/labels include six books without a Coming Soon claim or private payload", () => {
   const r = fixture("true"), counts = r.load("app/lib/server/publicReviewerCounts.ts").getPublicQuestionCounts();
   const books = r.load("app/lib/publicReviewerBooks.ts");
-  assert.deepEqual(counts, { free: 1606, proOnly: 6147, total: 7753 });
+  assert.deepEqual(counts, { free: 1668, proOnly: 6147, total: 7815 });
   assert.equal(books.getUpcomingReviewerNames(), "");
   assert.deepEqual(books.getPublicReviewerBooks().books.map((b: { label: string }) => b.label), ["Harr", "Ciulla", "Rodak", "Strasinger", "BOC", "Elsevier"]);
   assert.deepEqual(r.calls(), { user: 0, entitlement: 0 });
@@ -123,11 +123,16 @@ test("production-enabled canonical registry preserves five-choice/matching gradi
 });
 
 test("combined entry matches the reviewed profile and preserves historical Updates bytes/footer", () => {
-  const r = fixture(), updates = r.load("app/data/siteUpdates.ts").SITE_UPDATES;
+  const r = fixture(), allUpdates = r.load("app/data/siteUpdates.ts").SITE_UPDATES;
+  assert.equal(allUpdates[0].version, "v1.13.1"); assert.equal(allUpdates[0].date, "Pending");
+  const updates = allUpdates.slice(1);
   assert.equal(updates[0].id, "update-v1-13-0"); assert.equal(updates[0].date, profile.releaseDate); assert.equal(updates[0].type, "major");
   for (const word of ["BOC", "Elsevier", "Harr", "two correct"]) assert.ok(JSON.stringify(updates[0]).includes(word));
   const source = readFileSync("app/data/siteUpdates.ts", "utf8");
-  const reverse = source
+  const hotfixReversed = source.replace(/  \{\r?\n    id: "update-v1-13-1",[\s\S]*?\r?\n  \},\r?\n/, "");
+  const hotfixLedger = JSON.parse(readFileSync("docs/harr-hemostasis/authorized-changes.json", "utf8"));
+  assert.equal(createHash("sha256").update(hotfixReversed).digest("hex"), hotfixLedger["app/data/siteUpdates.ts"].before);
+  const reverse = hotfixReversed
     .replace(/  \{\r?\n    id: "update-v1-13-0",[\s\S]*?\r?\n  \},\r?\n/, "")
     .replace(/  \{\r?\n    id: "update-v1-12-6",[\s\S]*?\r?\n  \},\r?\n/, "");
   assert.notEqual(reverse, source);

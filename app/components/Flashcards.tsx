@@ -330,6 +330,7 @@ export default function Flashcards({
                 <span>{cardIndex + 1} / {deck.length}</span>
               </div>
               <div className={reviewerStyles.questionArea}>
+                {currentCard.caseStudy && <p>{currentCard.caseStudy}</p>}
                 {currentCard.questionSections ? currentCard.questionSections.map((section, index) => section.kind === "text" ? (
                   index === 0
                     ? <h2 key={index}><SourceText text={section.text} marks={section.sourceFormatting} /></h2>

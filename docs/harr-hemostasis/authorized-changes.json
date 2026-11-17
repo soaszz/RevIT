@@ -1,0 +1,31 @@
+{
+  "app/content/reviewerContent.ts": {
+    "before": "cd3427e30caa3210b0e2ac0e2ae5f0ab8b34c3db219f629a59b04d67ae9b21f8",
+    "after": "501cd269913cf0543e34aeacf67653bb775c0a55915b00a662bb788eab6465d7",
+    "reason": "Harr Hematology 2 source‑pool repair: added hemostasis‑II source‑pool with verified source‑PDF offsets and preserved superscript symbols",
+    "verifiedMcqInputSha256": "ce38b3953c6cfb6f373cdedec6ca43f54e2490a7e08db1397c95d9f06614e45a",
+    "productionBaseBefore": "cd3427e30caa3210b0e2ac0e2ae5f0ab8b34c3db219f629a59b04d67ae9b21f8"
+  },
+  "app/lib/harrQuestionPool.ts": {
+    "before": "f10e9ea873ba512cd356ab4b8a4a1feb46a8c174e61885993bdd411f26291705",
+    "after": "ef647639009ce450d412ed8d979fa7d94709e753de5a4682cc4294f001c8caf8",
+    "reason": "Harr Hematology 2 source‑pool repair: added hemostasis‑II source‑pool with verified source‑PDF offsets and preserved superscript symbols",
+    "verifiedMcqInputSha256": "ce38b3953c6cfb6f373cdedec6ca43f54e2490a7e08db1397c95d9f06614e45a",
+    "productionBaseBefore": "f10e9ea873ba512cd356ab4b8a4a1feb46a8c174e61885993bdd411f26291705"
+  },
+  "app/components/Flashcards.tsx": {
+    "before": "e4504c4e8762a9c7f10716087804242e581419a6323e2841e0216b82ffc663c1",
+    "after": "0bf0e19e30cf73e7fbbb7da9448604a3b8d7b8169f818a3bf989a554008c38e8",
+    "reason": "Harr Hema2 audited source presentation only; preserve other editions/history; Pending v1.13.1 metadata."
+  },
+  "app/lib/flashcards.ts": {
+    "before": "2f58c2190c66b3dc9a84ddb42e73c806511ddb0813abbcfd21f7c40626420bd7",
+    "after": "3c6f95d7531b716e725228990308382c36db748d6ca7761904beba2229c00c19",
+    "reason": "Harr Hema2 audited source presentation only; preserve other editions/history; Pending v1.13.1 metadata."
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "07e40847763fedd64e76bb33133cfe54700e5e84a9ce7456916dff8a04cdff27",
+    "after": "427714c45a6a76e9930004b8244d59c585f6e4325c0f00614eec3a8344182ced",
+    "reason": "Harr Hema2 audited source presentation only; preserve other editions/history; Pending v1.13.1 metadata."
+  }
+}

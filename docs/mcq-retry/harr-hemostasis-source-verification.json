@@ -1,0 +1,94 @@
+{
+  "status": "PASS_RENDERED_SOURCE_110_RECORD_SCOPE",
+  "baseline": "v1.13.0 production commit 25f050f (branch codex/boc-elsevier-v1.13.0-reconciled)",
+  "sourceFile": "Chapter_2_Hematology 2.pdf",
+  "sourceSha256": "fcef9fae8aa80ff3f83cbe8457cd1b748baa047332d3b0c30d3db044d998258d",
+  "contentSha256": "ce38b3953c6cfb6f373cdedec6ca43f54e2490a7e08db1397c95d9f06614e45a",
+  "method": "Independent visual comparison of original rendered PDF pages10-48 against every prepared record; all stems, choices, official keys, complete rationales, numerical values, source order, superscript/subscript marks and result-table rows inspected. No OCR-only certification.",
+  "sections": {
+    "hematology-2-2": {
+      "sourcePdfPages": "10-16",
+      "records": 23
+    },
+    "hematology-2-3": {
+      "sourcePdfPages": "17-23",
+      "records": 23
+    },
+    "hematology-2-4": {
+      "sourcePdfPages": "24-35",
+      "records": 44
+    },
+    "hematology-2-5": {
+      "sourcePdfPages": "36-48",
+      "records": 20
+    }
+  },
+  "totalRecords": 110,
+  "tables": {
+    "hematology-2-5": [
+      1,
+      2,
+      12,
+      13,
+      14,
+      20
+    ]
+  },
+  "unresolved": [],
+  "caveats": [
+    "Source2.5Q1 PLT result retains printed trailing L in 18 × 10^3/µL L. Earlier report incorrectly attributed this caveat to2.2Q11.",
+    "Source typos and medically questionable statements retained as printed, including Ananlyzer-100, ratio2:5 and original official rationales.",
+    "No commercial BOC/Elsevier content or historical Harr records changed."
+  ],
+  "preVisualAuditContentSha256": "a2f90ecb19ccfc3a550868c840b197cc084403196612d10068d39a91798ebaa0",
+  "previousStatus": "DETERMINISTIC_EXTRACTION_BUILT_NOT_READY",
+  "visualAuditDate": "November 17, 2026",
+  "recordsVisuallyCompared": 110,
+  "recordsCorrected": 14,
+  "releaseReady": false,
+  "releaseLimitations": [
+    "No commit/push/deployment authorized in this preparation.",
+    "Preview Git deployments are enabled; effective suppression requires approval/readback before push.",
+    "v1.13.1 date remains Pending until actual Manila production release date is authorized and known."
+  ],
+  "resultBlockRecords": {
+    "hematology-2-3": [
+      7,
+      15
+    ],
+    "hematology-2-4": [
+      43
+    ],
+    "hematology-2-5": [
+      1,
+      2,
+      3,
+      5,
+      6,
+      12,
+      13,
+      14,
+      19,
+      20
+    ]
+  },
+  "auditEvidence": "scratch/hema2-source-visual-audit/audit.json",
+  "postAuditPresentationReconciliation": {
+    "beforeSha256": "b43ce8390c1c3c008c3909501a771d2d2b6d857ac9b7e8019323c94ffa95efe1",
+    "change": "Use existing questionSections for2.5Q1/14/20 so source tables precede their questions in both modes; table content and original question text unchanged."
+  },
+  "localPostAuditVerification": {
+    "status": "PASS",
+    "focusedTests": 43,
+    "preservationAssertions": 559,
+    "typeScript": "PASS",
+    "productionBuild": "PASS",
+    "secretScan": "PASS",
+    "browserChecks": 158,
+    "structuredRecords": 13,
+    "scope": "Exact audited content; Harr-only flashcard case-history forwarding; source-table order; Pending hotfix metadata",
+    "evidence": "scratch/hema2-post-audit-finalization/REPORT.txt"
+  },
+  "contentGitBlobSha256": "ffcaa7f1aad5f852634132fc8bc94adab9f31e77a8daafb62866abb22b0f0b7f",
+  "contentHashNote": "contentSha256 pins raw CRLF working bytes; contentGitBlobSha256 pins LF Git blob bytes. Content equivalence independently verified; no renormalization or attribute change."
+}

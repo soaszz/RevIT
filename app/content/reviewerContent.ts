@@ -1,5 +1,5 @@
 import rawContent from "./reviewerContent.json";
-import { activeHarrQuestions, allHarrHistoryQuestions, sourceHarrQuestions, HARR_COAGULATION_TOPIC } from "../lib/harrQuestionPool";
+import { activeHarrQuestions, allHarrHistoryQuestions, sourceHarrQuestions } from "../lib/harrQuestionPool";
 
 export type ReviewerBook = "Harr" | "Ciulla" | "Rodak" | "Strasinger" | "Elsevier" | "BOC";
 
@@ -106,9 +106,17 @@ const content = rawContent as {
   questions: ReviewerQuestion[];
 };
 
+const HARR_SOURCE_PDF_RANGES: Record<string, string> = {
+  "hematology-2-1": "2–9",
+  "hematology-2-2": "10–16",
+  "hematology-2-3": "17–23",
+  "hematology-2-4": "24–35",
+  "hematology-2-5": "36–48",
+};
+
 export const harrSubjects: Subject[] = content.subjects.map((s) => ({ ...s, book: "Harr" as ReviewerBook }));
 export const harrTopics: Topic[] = content.topics.map((t) => ({ ...t,
-  sourcePdfs: t.id === HARR_COAGULATION_TOPIC ? [{ fileName: "Chapter_2_Hematology 2.pdf", pageRange: "2–9", kind: "Original supplied MCQ reviewer" }] : t.sourcePdfs,
+  sourcePdfs: HARR_SOURCE_PDF_RANGES[t.id] ? [{ fileName: "Chapter_2_Hematology 2.pdf", pageRange: HARR_SOURCE_PDF_RANGES[t.id], kind: "Original supplied MCQ reviewer" }] : t.sourcePdfs,
   book: "Harr" as ReviewerBook }));
 export const harrQuestions: ReviewerQuestion[] = activeHarrQuestions.map((q) => ({ ...q, book: "Harr" as ReviewerBook }));
 export const harrHistoryQuestions: ReviewerQuestion[] = allHarrHistoryQuestions.map(q => ({ ...q, book: "Harr" as ReviewerBook }));

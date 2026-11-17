@@ -68,5 +68,15 @@ export function assertPreserved(path, expected) {
     assert.equal(landing[path].before, current, path + ": broken landing-screenshots preservation chain");
     current = landing[path].after;
   }
+  const hemostasis = JSON.parse(readFileSync(new URL("docs/harr-hemostasis/authorized-changes.json", root), "utf8"));
+  if (hemostasis[path]) {
+    assert.equal(hemostasis[path].before, current, path + ": broken Harr hemostasis preservation chain");
+    current = hemostasis[path].after;
+  }
+  const rodakCh17 = JSON.parse(readFileSync(new URL("docs/rodak-ch17/authorized-changes.json", root), "utf8"));
+  if (rodakCh17[path]) {
+    assert.equal(rodakCh17[path].before, current, path + ": broken Rodak Chapter 17 preservation chain");
+    current = rodakCh17[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

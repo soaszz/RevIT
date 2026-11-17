@@ -5260,16 +5260,16 @@
       "topicId": "rodak-ch17",
       "subtopic": "Disorders of Iron Kinetics and Heme Metabolism",
       "difficulty": "Medium",
-      "prompt": "A bone marrow biopsy was performed on an anemic patient with rheumatoid arthritis. Prussian blue staining reveals abundant iron within macrophages but absent siderotic granules in erythroid normoblasts. This pattern is diagnostic of:",
+      "prompt": "A bone marrow biopsy was performed as part of the cancer staging protocol for a patient with Hodgkin lymphoma. Although no evidence of spread of the tumor was apparent in the bone marrow, other abnormal findings were noted, including a slightly elevated myeloid-to-erythroid ratio. WBC and RBC morphology appeared normal, however. The Prussian blue stain showed abundant stainable iron in the marrow macrophages. The patient’s CBC revealed a hemoglobin of 10.8 g/dL, but RBC indices were within reference intervals. RBC morphology was unremarkable. These findings are consistent with:",
       "choices": [
         "Anemia of chronic inflammation",
-        "Iron deficiency anemia",
         "Sideroblastic anemia",
-        "Hereditary hemochromatosis"
+        "Thalassemia",
+        "Iron deficiency anemia"
       ],
       "correctAnswer": 0,
       "officialAnswer": "Anemia of chronic inflammation",
-      "explanation": "In anemia of chronic inflammation (ACI), inflammatory cytokines (IL-6) induce high hepcidin levels that degrade ferroportin, trapping recycled iron inside macrophage storage compartments. Consequently, Prussian blue marrow staining shows abundant macrophage iron but an absence of iron transfer to developing normoblasts (sideroblasts). In iron deficiency anemia, marrow storage iron is completely absent. (Rodak's Hematology, 6th ed., Ch. 17, Book pp. 269–271, PDF pp. 282–284; Appendix C, PDF p. 862).",
+      "explanation": "Abundant stainable iron in marrow macrophages with a normocytic anemia, normal RBC indices, and normal RBC morphology is the pattern of anemia of chronic inflammation. Inflammatory cytokines raise hepcidin, which blocks macrophage iron release and intestinal iron absorption despite adequate iron stores, so macrophages remain iron-loaded while iron delivery to erythroid precursors is reduced. Iron deficiency anemia would show depleted marrow macrophage iron, sideroblastic anemia would show ring sideroblasts, and thalassemia would produce microcytic hypochromic indices with abnormal RBC morphology. (Rodak's Hematology, 6th ed., Ch. 17, Book pp. 265–271, PDF pp. 278–284; Appendix C, PDF p. 862).",
       "source": {
         "fileName": "Rodak's Hematology 6th Edition.pdf",
         "page": 266,
@@ -5285,16 +5285,16 @@
       "topicId": "rodak-ch17",
       "subtopic": "Disorders of Iron Kinetics and Heme Metabolism",
       "difficulty": "Easy",
-      "prompt": "Predict the expected iron study profile (Serum Iron, Ferritin, TIBC, Transferrin Saturation) for a patient with uncomplicated classic Stage 3 iron deficiency anemia:",
+      "prompt": "Predict the iron study results for the patient with Hodgkin lymphoma described in question 2.",
       "choices": [
-        "Decreased, Increased, Decreased, Normal",
-        "Increased, Increased, Decreased, Increased",
-        "Normal, Decreased, Normal, Decreased",
-        "Decreased, Decreased, Increased, Decreased"
+        "Decreased, Increased, Decreased, Decreased",
+        "Increased, Normal, Increased, Normal",
+        "Increased, Increased, Normal, Increased",
+        "Decreased, Decreased, Normal, Normal"
       ],
       "correctAnswer": 3,
-      "officialAnswer": "Decreased, Decreased, Increased, Decreased",
-      "explanation": "Classic iron deficiency anemia demonstrates: decreased serum ferritin (depleted storage iron), decreased total serum iron, increased total iron-binding capacity (compensatory hepatic synthesis of transferrin), and markedly decreased transferrin saturation (<15%). (Rodak's Hematology, 6th ed., Ch. 17, Book pp. 266–268, PDF pp. 279–281; Appendix C, PDF p. 862).",
+      "officialAnswer": "Decreased, Decreased, Normal, Normal",
+      "explanation": "Because the patient has anemia of chronic inflammation, iron is present in marrow macrophages but is not released for erythropoiesis. Serum iron is decreased and TIBC is decreased rather than increased because inflammation reduces transferrin synthesis; transferrin saturation is normal, and serum ferritin is normal as an acute-phase reactant. In iron deficiency anemia, by contrast, TIBC is increased and serum ferritin is decreased. (Rodak's Hematology, 6th ed., Ch. 17, Book pp. 269–271, PDF pp. 282–284; Appendix C, PDF p. 862).",
       "source": {
         "fileName": "Rodak's Hematology 6th Edition.pdf",
         "page": 266,
@@ -5304,10 +5304,10 @@
       "caseStudy": "A bone marrow biopsy was performed as part of the cancer staging protocol for a patient with Hodgkin lymphoma. Although no evidence of spread of the tumor was apparent in the bone marrow, other abnormal findings were noted, including a slightly elevated myeloid-to-erythroid ratio. WBC and RBC morphology appeared normal, however. The Prussian blue stain showed abundant stainable iron in the marrow macrophages. The patient’s CBC revealed a hemoglobin of 10.8 g/dL, but RBC indices were within reference intervals. RBC morphology was unremarkable.",
       "choiceTable": {
         "columns": [
-          "Serum iron level",
+          "Serum Iron Level",
           "TIBC",
-          "% transferrin saturation",
-          "Serum ferritin level"
+          "% Transferrin Saturation",
+          "Serum Ferritin Level"
         ],
         "rows": [
           [

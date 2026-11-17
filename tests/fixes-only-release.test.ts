@@ -14,7 +14,7 @@ test("four published banks retain all 4,441 historical records; prepared edition
   for (const [name, count] of [["reviewer", 1593], ["ciulla", 1890], ["rodak", 491], ["strasinger", 467]] as const) {
     assert.equal(JSON.parse(read(`app/content/${name}Content.json`)).questions.length, count);
   }
-  assert.equal(activeHarrQuestions.length, 1606);
+  assert.equal(activeHarrQuestions.length, 1668);
   for (const book of ["BOC", "Elsevier"] as const) {
     const key = book.toLowerCase() as "boc" | "elsevier";
     assert.equal(QUESTION_BANKS[key].published, false);
@@ -32,19 +32,23 @@ test("four published banks retain all 4,441 historical records; prepared edition
   assert.equal(existsSync("app/components/SourceText.tsx"), true);
 });
 
-test("prepared release and platform footer share v1.13.0; current plan copy names only published books", () => {
-  assert.equal(SITE_UPDATES[0].version, "v1.13.0");
-  assert.equal(SITE_UPDATES[0].date, JSON.parse(read("docs/reviewer-release/configuration.json")).releaseDate);
-  assert.equal(SITE_UPDATES[1].version, "v1.12.6");
-  assert.equal(SITE_UPDATES[1].date, "November 12, 2026");
-  assert.equal(SITE_UPDATES[2].version, "v1.12.5");
-  assert.equal(SITE_UPDATES[3].version, "v1.12.4");
-  assert.equal(SITE_UPDATES[1].type, "minor");
-  assert.equal(SITE_UPDATES[2].type, "minor");
-  assert.equal(SITE_UPDATES[0].type, "major");
+test("Pending Harr hotfix preserves released history and platform footer", () => {
+  assert.equal(SITE_UPDATES[0].version, "v1.13.1");
+  assert.equal(SITE_UPDATES[0].date, "Pending");
+  assert.equal(SITE_UPDATES[0].type, "minor");
+  const releaseHistory = SITE_UPDATES.slice(1);
+  assert.equal(releaseHistory[0].version, "v1.13.0");
+  assert.equal(releaseHistory[0].date, JSON.parse(read("docs/reviewer-release/configuration.json")).releaseDate);
+  assert.equal(releaseHistory[1].version, "v1.12.6");
+  assert.equal(releaseHistory[1].date, "November 12, 2026");
+  assert.equal(releaseHistory[2].version, "v1.12.5");
+  assert.equal(releaseHistory[3].version, "v1.12.4");
+  assert.equal(releaseHistory[1].type, "minor");
+  assert.equal(releaseHistory[2].type, "minor");
+  assert.equal(releaseHistory[0].type, "major");
   assert.match(read("app/components/SiteUpdatesModal.tsx"), /RevIT Platform \{SITE_UPDATES\[0\]\?\.version/);
   const pricing = currentReviewerCopy(renderPublicPricing());
-  for (const count of ["1,606", "2,848", "4,454"]) assert.ok(pricing.includes(count));
+  for (const count of ["1,668", "2,848", "4,516"]) assert.ok(pricing.includes(count));
   assert.doesNotMatch(pricing, /999|1,884|2,883|Elsevier|BOC/);
   for (const path of ["app/auth/page.tsx", "app/components/Onboarding.tsx", "app/components/PlanAnnouncementModal.tsx", "app/components/ProActivationModal.tsx", "app/pro/page.tsx"]) {
     const source = path === "app/pro/page.tsx" ? currentReviewerCopy(renderPublicPro()) : read(path);

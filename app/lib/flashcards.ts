@@ -4,6 +4,7 @@ export type Flashcard = {
   id: string;
   subjectId: string;
   topicId: string;
+  caseStudy?: string;
   prompt: string;
   choices: string[];
   answer: string;
@@ -23,7 +24,7 @@ export type Flashcard = {
 
 type FlashcardQuestion = Pick<
   ReviewerQuestion,
-  "id" | "subjectId" | "topicId" | "prompt" | "choices" | "correctAnswer" | "officialAnswer" | "explanation" | "book" | "matching" | "stimulus" | "rationaleImages" | "rationaleSections" | "promptAfterReferences" | "questionSections" | "choiceTable" | "choiceTables" | "sourceFormatting"
+  "id" | "subjectId" | "topicId" | "caseStudy" | "prompt" | "choices" | "correctAnswer" | "officialAnswer" | "explanation" | "book" | "matching" | "stimulus" | "rationaleImages" | "rationaleSections" | "promptAfterReferences" | "questionSections" | "choiceTable" | "choiceTables" | "sourceFormatting"
 >;
 
 function cleanAnswerLabel(answer: string) {
@@ -46,6 +47,7 @@ export function toFlashcard(question: FlashcardQuestion): Flashcard {
     prompt: question.matching
       ? `${question.prompt}\n${question.matching.items.map((item, index) => `${index + 1}. ${item}`).join("\n")}`
       : question.prompt,
+    ...(question.id.startsWith("harr-hemostasis-2-") && question.caseStudy ? { caseStudy: question.caseStudy } : {}),
     choices: question.choices,
     answer: resolveFlashcardAnswer(question),
     explanation: question.explanation,

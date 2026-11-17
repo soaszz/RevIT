@@ -1,0 +1,3441 @@
+{
+  "questions": [
+    {
+      "id": "harr-hemostasis-2-2-source-001",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Thrombotic thrombocytopenic purpura (TTP) is characterized by:",
+      "choices": [
+        "Prolonged PT",
+        "Increased PLT aggregation",
+        "Thrombocytosis",
+        "Prolonged APTT"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Increased PLT aggregation",
+      "explanation": "TTP is a quantitative PLT disorder associated with increased intravascular PLT activation and aggregation resulting in thrombocytopenia. PT and APTT results are normal in TTP.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-002",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Thrombocytopenia may be associated with:",
+      "choices": [
+        "Splenectomy",
+        "Hypersplenism",
+        "Acute blood loss",
+        "Increased proliferation of pluripotent stem cells"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Hypersplenism",
+      "explanation": "Hypersplenism is associated with thrombocytopenia. In this condition, up to 90% of PLTs can be sequestered in the spleen, causing decreases in circulatory PLTs. Splenectomy, acute blood loss, and increased proliferation of pluripotent stem cells are associated with thrombocytosis.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-003",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Aspirin prevents PLT aggregation by inhibiting the action of which enzyme?",
+      "choices": [
+        "Phospholipase",
+        "Cyclo-oxygenase",
+        "Thromboxane A2 (TXA2) synthetase",
+        "Prostacyclin synthetase"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Cyclo-oxygenase",
+      "explanation": "Aspirin prevents PLT aggregation by inhibiting the activity of the enzyme cyclo-oxygenase. This inhibition prevents the formation of TXA2, which serves as a potent PLT aggregator.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "sourceFormatting": {
+        "choices": [
+          [],
+          [],
+          [
+            {
+              "start": 13,
+              "end": 14,
+              "script": "sub"
+            }
+          ],
+          []
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-004",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Normal PLT adhesion depends on:",
+      "choices": [
+        "Fibrinogen",
+        "Glycoprotein Ib",
+        "Glycoprotein IIb–IIIa complex",
+        "Calcium"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Glycoprotein Ib",
+      "explanation": "Glycoprotein Ib is a PLT receptor for VWF. Glycoprotein Ib and VWF are both necessary for a normal PLT adhesion. Other proteins that play a role in PLT adhesion are glycoproteins V and IX.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-005",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which of the following test results is normal in a patient with classic von Willebrand disease?",
+      "choices": [
+        "PLT aggregation",
+        "APTT",
+        "PLT count",
+        "Factor VIII:C and von Willebrand factor (VWF) levels"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "PLT count",
+      "explanation": "Von Willebrand disease is an inherited, qualitative PLT disorder that results in increased bleeding, prolonged APTT, and decreased factor VIII:C and VWF levels. The PLT count and morphology are generally normal in von Willebrand disease, but PLT aggregation in the PLT function assay is abnormal.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-006",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Bernard–Soulier syndrome is associated with:",
+      "choices": [
+        "Decreased factor IX",
+        "Decreased factor VIII",
+        "Thrombocytopenia and giant PLTs",
+        "Abnormal PLT function test results"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Thrombocytopenia and giant PLTs",
+      "explanation": "Bernard–Soulier syndrome is associated with thrombocytopenia and giant PLTs. It is a qualitative PLT disorder caused by the deficiency of glycoprotein Ib. In Bernard–Soulier syndrome, PLT aggregation in the PLT function assay is abnormal. Factor VIII and IX assays are not indicated for this diagnosis.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 10,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-007",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "When performing PLT aggregation studies, which set of PLT aggregation results would most likely be associated with Bernard–Soulier syndrome?",
+      "choices": [
+        "Normal PLT aggregation to collagen, adenosine diphosphate (ADP), and ristocetin",
+        "Normal PLT aggregation to collagen, ADP, and epinephrine (EPI); decreased aggregation to ristocetin",
+        "Normal PLT aggregation to EPI and ristocetin; decreased aggregation to collagen and ADP",
+        "Normal PLT aggregation to EPI, ristocetin, and collagen; decreased aggregation to ADP"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Normal PLT aggregation to collagen, ADP, and epinephrine (EPI); decreased aggregation to ristocetin",
+      "explanation": "Bernard–Soulier syndrome is a disorder of PLT adhesion caused by deficiency of glycoprotein Ib. PLT aggregation is normal in response to collagen, ADP, and EPI but abnormal in response to ristocetin.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-008",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which set of PLT responses would be most likely associated with Glanzmann thrombasthenia?",
+      "choices": [
+        "Normal PLT aggregation to ADP and ristocetin; decreased aggregation to collagen",
+        "Normal PLT aggregation to collagen; decreased aggregation to ADP and ristocetin",
+        "Normal PLT aggregation to ristocetin; decreased aggregation to collagen, ADP, and EPI",
+        "Normal PLT aggregation to ADP; decreased aggregation to collagen and ristocetin"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Normal PLT aggregation to ristocetin; decreased aggregation to collagen, ADP, and EPI",
+      "explanation": "Glanzmann thrombasthenia is a disorder of PLT aggregation. PLT aggregation is normal in response to ristocetin, but abnormal in response to collagen, ADP, and EPI.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-009",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which of the following is a characteristic of acute immune thrombocytopenic purpura?",
+      "choices": [
+        "Spontaneous remission within a few weeks",
+        "Predominantly seen in adults",
+        "Nonimmune PLT destruction",
+        "Insidious onset"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Spontaneous remission within a few weeks",
+      "explanation": "Acute immune thrombocytopenic purpura is an immune-mediated disorder found predominantly in children. It is commonly associated with infection (primarily viral). It is characterized by abrupt onset, and spontaneous remission usually occurs within several weeks.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 11,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-010",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "TTP differs from DIC in that:",
+      "choices": [
+        "APTT is normal in TTP but prolonged in DIC",
+        "Schistocytes are not present in TTP but are present in DIC",
+        "PLT count is decreased in TTP but normal in DIC",
+        "PT is prolonged in TTP but decreased in DIC"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "APTT is normal in TTP but prolonged in DIC",
+      "explanation": "TTP is a PLT disorder in which PLT aggregation increases, resulting in thrombocytopenia. Schistocytes are present in TTP as a result of microangiopathic hemolytic anemia (MAHA); however, the PT and APTT are both normal. In DIC, the PT and APTT are both prolonged, the PLT count is decreased, and schistocytes are seen in the peripheral blood smear.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-011",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Several hours after birth, a baby boy develops petechiae and purpura and hemorrhagic diathesis. The PLT count is 18 × 109/L. What is the most likely explanation for the low PLT count?",
+      "choices": [
+        "Drug-induced thrombocytopenia",
+        "Secondary thrombocytopenia",
+        "Neonatal alloimmune thrombocytopenia",
+        "Neonatal DIC"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Neonatal alloimmune thrombocytopenia",
+      "explanation": "Neonatal alloimmune thrombocytopenia is similar to the hemolytic disease of the fetus and newborn. It results from immunization of the mother by fetal PLT antigens. The offending antibodies are commonly anti-PLT antigen A1 (PlA1), also referred to as human platelet antigen (HPA) 1a. These alloantibodies are directed against glycoproteins IIb/IIIa, Ib/IX, Ia/IIb, and CD 109. Maternal antibodies cross the placenta, resulting in thrombocytopenia in the fetus.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "sourceFormatting": {
+        "prompt": [
+          {
+            "start": 120,
+            "end": 121,
+            "script": "sup"
+          }
+        ],
+        "explanation": [
+          {
+            "start": 221,
+            "end": 222,
+            "script": "sup"
+          },
+          {
+            "start": 226,
+            "end": 228,
+            "script": "sup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-012",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which of the following is associated with post-transfusion purpura (PTP)?",
+      "choices": [
+        "Nonimmune thrombocytopenia/alloantibodies",
+        "Immune-mediated thrombocytopenia/alloantibodies",
+        "Immune-mediated thrombocytopenia/autoantibodies",
+        "Nonimmune-mediated thrombocytopenia/autoantibodies"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Immune-mediated thrombocytopenia/alloantibodies",
+      "explanation": "PTP is a rare form of alloimmune thrombocytopenia characterized by severe thrombocytopenia occurring after transfusion of blood or blood products. PTP is caused by antibody-related PLT destruction in previously immunized patients. In the majority of cases, the alloantibody produced is against PlA1 (HPA-1a).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 12,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "sourceFormatting": {
+        "explanation": [
+          {
+            "start": 296,
+            "end": 298,
+            "script": "sup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-013",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Hemolytic uremic syndrome (HUS) is associated with:",
+      "choices": [
+        "Fever, thrombocytosis, anemia, and renal failure",
+        "Fever, granulocytosis, and thrombocytosis",
+        "Escherichia coli 0157:H7",
+        "Leukocytosis and thrombocytosis"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Escherichia coli 0157:H7",
+      "explanation": "HUS is caused by E. coli 0157:H7. It is associated with ingestion of E. coli–contaminated foods and is commonly seen in children. The clinical manifestations in HUS are fever, diarrhea, thrombocytopenia, MAHA, and renal failure.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-014",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Storage pool deficiencies are defects of:",
+      "choices": [
+        "PLT adhesion",
+        "PLT aggregation",
+        "PLT granules",
+        "PLT production"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "PLT granules",
+      "explanation": "Storage pool deficiencies are defects of PLT granules. Most commonly, a decrease in PLT-dense granules is present with decreased release of ADP, ATP, calcium, and serotonin from PLT-dense granules.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-015",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Lumi-aggregation measures:",
+      "choices": [
+        "PLT aggregation only",
+        "PLT aggregation and adenosine triphosphate (ATP) release",
+        "PLT adhesion",
+        "PLT glycoprotein Ib"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "PLT aggregation and adenosine triphosphate (ATP) release",
+      "explanation": "Lumi-aggregation measures PLT aggregation and ATP release. It is performed on whole blood diluted with saline. PLT aggregation is measured by impedance, whereas ATP release is measured by addition of luciferin to a blood sample. There is no ATP release in storage pool deficiencies.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-016",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Neurological findings may be commonly associated with which of the following disorders?",
+      "choices": [
+        "HUS",
+        "TTP",
+        "ITP",
+        "PTP"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "TTP",
+      "explanation": "TTP is characterized by neurological problems, fever, thrombocytopenia, MAHA, and renal failure.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-017",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which of the following is correct regarding acquired TTP?",
+      "choices": [
+        "Autoimmune disease",
+        "Decreased VWF",
+        "Decreased PLT aggregation",
+        "Decreased PLT adhesion"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Autoimmune disease",
+      "explanation": "Acquired TTP is an autoimmune disease associated with autoantibodies produced against VWF cleaving enzyme (ADAMTS-13). This deficiency results in an increase in plasma VWF and consequently increased PLT aggregation and thrombocytopenia.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-018",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Hereditary hemorrhagic telangiectasia is a disorder of:",
+      "choices": [
+        "PLTs",
+        "Clotting proteins",
+        "Fibrinolysis",
+        "Connective tissue"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Connective tissue",
+      "explanation": "Hereditary hemorrhagic telangiectasia (Osler–Weber–Rendu syndrome) is a connective tissue disorder associated with telangiectases (dilated capillaries) of the mucous membranes and skin. Lesions may develop on the tongue, lips, palate, face, hands, and nasal mucosa and throughout the gastrointestinal tract. This disorder is an autosomal dominant condition that usually manifests in adolescence or early adulthood.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 13,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-019",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which of the following prevents PLT aggregation?",
+      "choices": [
+        "TXA2",
+        "Thromboxane B2",
+        "Prostacyclin",
+        "Antithrombin (AT)"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Prostacyclin",
+      "explanation": "Prostacyclin is released from the endothelium and is an inhibitor of PLT aggregation. TXA2 promotes PLT aggregation. Thromboxane B2 is an oxidized form of TXA2 and is excreted in urine. AT is a physiological anticoagulant.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 14,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "sourceFormatting": {
+        "choices": [
+          [],
+          [
+            {
+              "start": 13,
+              "end": 14,
+              "script": "sub"
+            }
+          ],
+          [],
+          []
+        ],
+        "explanation": [
+          {
+            "start": 130,
+            "end": 131,
+            "script": "sub"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-020",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which defect characterizes Gray syndrome?",
+      "choices": [
+        "PLT adhesion defect",
+        "Dense granule defect",
+        "Alpha granule defect",
+        "Coagulation defect"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Alpha granule defect",
+      "explanation": "Gray syndrome is a PLT granule defect associated with a decrease in alpha granules resulting in decreased production of alpha granule proteins, such as PF4 and beta thromboglobulin. Alpha granule deficiency results in the appearance of agranular PLTs when viewed in a Wright-stained blood smear.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 14,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-021",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "The P2Y12 ADP receptor agonist assay may be used to monitor PLT aggregation inhibition to which of the following drugs?",
+      "choices": [
+        "Warfarin",
+        "Heparin",
+        "Low-molecular-weight heparin (LMWH)",
+        "Clopidogrel (Plavix)"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Clopidogrel (Plavix)",
+      "explanation": "The VerifyNow P2Y12 test is used to assess a patient’s response to antiplatelet drugs, such as clopidogrel (Plavix) and prasugrel (Effient). These drugs are given orally along with aspirin for prevention of thrombosis or as alternative antiplatelet drugs for patients who cannot tolerate or are not sensitive to aspirin. Clopidogrel and prasugrel prevent PLT aggregation by irreversibly binding to P2Y12, which is a PLT membrane receptor for ADP. The VerifyNow P2Y12 test is a whole blood test and uses ADP as an aggregating agent to measure the level of PLT aggregation impaired by these medications. The baseline value for PLT aggregation is established. The percent (%) change from baseline aggregation is calculated and reported as % P2Y12 inhibition.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 14,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-022",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which of the following instruments can be used to evaluate PLT function?",
+      "choices": [
+        "PLT aggregometer",
+        "VerifyNow",
+        "PFA-100",
+        "All of the above"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "All of the above",
+      "explanation": "All of the instruments listed can be used to evaluate PLT function. PLT function testing is done either to determine the cause of bleeding in a patient with normal PLT count and normal coagulation tests or to assess the efficacy of antiplatelet drugs. PLT aggregometry is used for the diagnosis of inherited PLT disorders. A PLT aggregometer uses PLT-rich plasma to measure PLT aggregation in response to different PLT aggregating agents by measuring light transmission. A Lumi-aggregometer uses whole blood and has the ability to measure dense-granule secretion (by using a luminescent marker) in addition to PLT aggregation. The VerifyNow measures a patient’s response to multiple antiplatelet drugs, including aspirin, P2Y12 inhibitors, and glycoprotein IIb/IIIa inhibitors. The Platelet Function Ananlyzer-100 (PFA-100) is used as a screening tool for PLT function, and has replaced the bleeding time test. It uses citrated whole blood and two cartridges. Whole blood (800 μL) is put into each test cartridge. Vacuum is used to move the blood through a very thin glass tube that has been coated with a membrane containing collagen and either EPI or ADP. This coating activates the PLTs in the moving sample and promotes PLT adhesion and aggregation. The time it takes for the clot to form inside the glass tube and prevent further flow is measured as the closure time (CT). Initial screening is done with collagen/EPI. If CT is normal, it is unlikely that PLT dysfunction exists. The collagen/ADP membrane is used to confirm an abnormal collagen/EPI test result. If both tests show abnormal results, it is likely that the patient has a PLT dysfunction, and further testing for inherited and acquired bleeding disorders is indicated. If collagen/ADP is normal, then the abnormal collagen/EPI test result is likely caused by aspirin sensitivity.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 15,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-2-source-023",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-2",
+      "prompt": "Which of the following PLT aggregating agents demonstrates a monophasic aggregation curve when used in the optimal concentration?",
+      "choices": [
+        "Thrombin",
+        "Collagen",
+        "ADP",
+        "EPI"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Collagen",
+      "explanation": "Collagen is the only commonly used agent that demonstrates a single-wave (monophasic) response preceded by a lag time.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 15,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-001",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "The APTT is sensitive to a deficiency of which clotting factor?",
+      "choices": [
+        "Factor VII",
+        "Factor X",
+        "PF3",
+        "Calcium"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factor X",
+      "explanation": "The APTT is sensitive to the deficiency of coagulation factors in the intrinsic pathway (factors XII, XI, IX, and VIII) and the common pathway (factors X, V, II, and I).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 17,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-002",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Which test result would be normal in a patient with dysfibrinogenemia?",
+      "choices": [
+        "TT",
+        "APTT",
+        "PT",
+        "Immunologic fibrinogen level"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Immunologic fibrinogen level",
+      "explanation": "The level of plasma fibrinogen determined immunologically is normal. In a patient with dysfibrinogenemia, fibrinogen is not polymerized properly, causing abnormal results of the fibrinogen-dependent coagulation tests.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 17,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-003",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "A patient with a prolonged PT is given intravenous vitamin K. PT is corrected to normal after 24 hours. Which clinical condition most likely caused these results?",
+      "choices": [
+        "Necrotic liver disease",
+        "Factor X deficiency",
+        "Fibrinogen deficiency",
+        "Obstructive jaundice"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Obstructive jaundice",
+      "explanation": "Obstructive jaundice contributes to coagulation disorders by preventing vitamin K absorption. Vitamin K is fat soluble and requires bile salts for absorption. Parenteral administration of vitamin K bypasses the bowel, hence the need for bile salts.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 17,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-004",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Which factor deficiency is associated with prolonged PT and APTT?",
+      "choices": [
+        "Factor X",
+        "Factor VIII",
+        "Factor IX",
+        "Factor XI"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Factor X",
+      "explanation": "Factor X, a common pathway factor deficiency, is most likely suspected because both PT and APTT are prolonged. Other causes may include liver disease, vitamin K deficiency, and anticoagulant drugs, such as warfarin and heparin.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 17,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-005",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Prolonged APTT is corrected with factor VIII–deficient plasma but not with factor IX–deficient plasma. Which factor is deficient?",
+      "choices": [
+        "Factor V",
+        "Factor VIII",
+        "Factor IX",
+        "Factor X"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Factor IX",
+      "explanation": "Because prolonged APTT is not corrected with factor IX–deficient plasma, factor IX is suspected to be deficient in the test plasma.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 17,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-006",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Which of the following is a characteristic of classic hemophilia A?",
+      "choices": [
+        "Abnormal PLT aggregation",
+        "Autosomal recessive inheritance",
+        "Mild to severe bleeding episodes",
+        "Prolonged PT"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Mild to severe bleeding episodes",
+      "explanation": "Hemophilia A (factor VIII deficiency) is characterized by mild to severe bleeding episodes, depending on the concentration of factor VIII:C. Hemophilia A is inherited as a sex-linked disease. PLT aggregation and PT are both normal in hemophilia A.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 17,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-007",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Refer to the following results: PT = prolonged APTT = prolonged PLT count = decreased Which disorder may be indicated?",
+      "choices": [
+        "Factor VIII deficiency",
+        "von Willebrand disease",
+        "DIC",
+        "Factor IX deficiency"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "DIC",
+      "explanation": "In DIC, there is a diffuse intravascular generation of thrombin and fibrin. As a result, clotting factors and PLTs are consumed, resulting in decreased PLT count and increased PT and APTT.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 18,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "questionSections": [
+        {
+          "kind": "text",
+          "text": "Refer to the following results:"
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [],
+            "rows": [
+              [
+                "PT = prolonged"
+              ],
+              [
+                "APTT = prolonged"
+              ],
+              [
+                "PLT count = decreased"
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "Which disorder may be indicated?"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-008",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Which of the following is a predisposing condition for the development of DIC?",
+      "choices": [
+        "Adenocarcinoma",
+        "Idiopathic thrombocytopenic purpura (ITP)",
+        "Post transfusion purpura (PTP)",
+        "Heparin-induced thrombocytopenia (HIT)"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Adenocarcinoma",
+      "explanation": "Adenocarcinoma can liberate procoagulant (thromboplastic) substances that can activate prothrombin intravascularly. ITP is a thrombocytopenia caused by an autoantibody; PTP is an alloimmune thrombocytopenia caused by transfusion of blood or blood products; HIT results from an antibody to heparin–PF4 complex causing thrombocytopenia in 1% to 5% of patients who are on heparin therapy. In some affected persons, thrombosis may also occur.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 18,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-009",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Factor XII deficiency is associated with:",
+      "choices": [
+        "Bleeding episodes",
+        "Epistaxis",
+        "Decreased risk of thrombosis",
+        "Increased risk of thrombosis"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Increased risk of thrombosis",
+      "explanation": "Factor XII–deficient patients commonly have thrombotic episodes. In vitro, activated factor XII (XIIa) activates factor XI to factor XIa. In vivo, however, factor XII plays a major role in the fibrinolytic system by activating plasminogen to form plasmin. Hemorrhagic manifestations are not associated with factor XII deficiency because VIIa/TF can activate factor IX to factor IXa and factor X to factor Xa to generate thrombin.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 18,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-010",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "The following results were obtained on a patient: normal PLT count and function, normal PT, and prolonged APTT. Which of the following disorders is most consistent with these results?",
+      "choices": [
+        "Hemophilia A",
+        "Bernard–Soulier syndrome",
+        "von Willebrand disease",
+        "Glanzmann thrombasthenia"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Hemophilia A",
+      "explanation": "Hemophilia A is associated with deficiency of factor VIII, resulting in bleeding and abnormal APTT. The PLT number and function are normal in this disorder. Von Willebrand disease is a disorder of PLT adhesion associated with decreased VWF and factor VIII, causing an abnormal PLT function test result and abnormal APTT. Both Glanzmann thrombasthenia and Bernard–Soulier syndrome cause abnormal PLT aggregation but do not cause abnormal APTT.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 19,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-011",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "The following laboratory results were obtained from a 40-year-old woman: PT = 20 sec; APTT = 50 sec; TT = 18 sec. What is the most probable diagnosis?",
+      "choices": [
+        "Factor VII deficiency",
+        "Factor VIII deficiency",
+        "Factor X deficiency",
+        "Hypofibrinogenemia"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Hypofibrinogenemia",
+      "explanation": "Fibrinogen (factor I) is a clotting protein of the common pathway and is evaluated by TT. In hypofibrinogenemia (fibrinogen concentration less than 100 mg/dL), PT, APTT, and TT are prolonged. In factor VII deficiency, APTT is normal; in factor VIII deficiency, PT is normal; and in factor X deficiency, TT is normal.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 19,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-012",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "When performing a factor VIII activity assay, a patient’s plasma is mixed with:",
+      "choices": [
+        "Normal patient plasma",
+        "Factor VIII–deficient plasma",
+        "Plasma with a high concentration of factor VIII",
+        "Normal control plasma"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factor VIII–deficient plasma",
+      "explanation": "Coagulation factor assays are based on the ability of the patient’s plasma to correct any specific factor–deficient plasma. To measure for factor VIII activity in a patient’s plasma, diluted patient plasma is mixed with factor VIII–deficient plasma. The APTT test is performed on the mixture. Each laboratory should calculate its own normal ranges, which are based on the patient population, reagents, and instrument used. A range of 50% to 150% is considered normal.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 19,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-013",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "The most suitable product for treatment of factor VIII deficiency is:",
+      "choices": [
+        "Fresh frozen plasma (FFP)",
+        "Factor VIII concentrate",
+        "Prothrombin complex concentrate",
+        "Factor V Leiden"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factor VIII concentrate",
+      "explanation": "Factor VIII concentrate (human or recombinant) is the treatment of choice for patients with factor VIII deficiency. FFP contains factor VIII; however, it is no longer used as the primary treatment for factor VIII deficiency. Prothrombin complex concentrate is used to treat patients with factor VIII inhibitor.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 20,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-014",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Which of the following is associated with an abnormal PLT aggregation test result?",
+      "choices": [
+        "Factor VIII deficiency",
+        "Factor VIII inhibitor",
+        "Lupus anticoagulant",
+        "Afibrinogenemia"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Afibrinogenemia",
+      "explanation": "Fibrinogen is a plasma protein that is essential for PLT aggregation as well as fibrin formation. In afibrinogenemia, PLT aggregation is abnormal.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 20,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-015",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Refer to the following results: PT = normal APTT = prolonged PLT count = normal PLT aggregation to ristocetin = abnormal Which of the following disorders may be indicated?",
+      "choices": [
+        "Factor VIII deficiency",
+        "DIC",
+        "von Willebrand disease",
+        "Factor IX deficiency"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "von Willebrand disease",
+      "explanation": "VWF is involved in both PLT adhesion and coagulation via complexing with factor VIII. Therefore, in von Willebrand disease (deficiency or functional abnormality of VWF) factor VIII is also decreased, causing abnormal APTT as well as abnormal PLT aggregation to ristocetin. The PLT count and PT are not affected in VWF deficiency.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 20,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "questionSections": [
+        {
+          "kind": "text",
+          "text": "Refer to the following results:"
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [],
+            "rows": [
+              [
+                "PT = normal"
+              ],
+              [
+                "APTT = prolonged"
+              ],
+              [
+                "PLT count = normal"
+              ],
+              [
+                "PLT aggregation to ristocetin = abnormal"
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "Which of the following disorders may be indicated?"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-016",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Which results are associated with hemophilia A?",
+      "choices": [
+        "Prolonged APTT, normal PT",
+        "Prolonged PT and APTT",
+        "Prolonged PT, normal APTT",
+        "Normal PT and APTT"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Prolonged APTT, normal PT",
+      "explanation": "Hemophilia A is associated with factor VIII deficiency. Factor VIII is a factor in the intrinsic coagulation pathway that is evaluated by the APTT test and not the PT test. The PT test evaluates the extrinsic and common pathways.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 20,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-017",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Fibrin monomers are increased in which of the following conditions?",
+      "choices": [
+        "Primary fibrinolysis",
+        "DIC",
+        "Factor VIII deficiency",
+        "Fibrinogen deficiency"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "DIC",
+      "explanation": "Increased fibrin monomers result from coagulation activation. DIC is an acquired condition associated with spontaneous activation of coagulation and fibrinolysis. In primary fibrinolysis, the fibrinolytic system is activated, and fibrin monomers are normal.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 20,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-018",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Which of the following is associated with multiple factor deficiencies?",
+      "choices": [
+        "An inherited disorder of coagulation",
+        "Severe liver disease",
+        "Dysfibrinogenemia",
+        "Lupus anticoagulant"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Severe liver disease",
+      "explanation": "Most of the clotting factors are made in the liver. Therefore, severe liver disease results in multiple-factor deficiencies. An inherited disorder of coagulation is commonly associated with a single-factor deficiency. Lupus anticoagulant is directed against the phospholipid-dependent coagulation factors. Dysfibrinogenemia results from an abnormal fibrinogen molecule.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 21,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-019",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Normal PT and APTT results in a patient with poor wound healing may be associated with:",
+      "choices": [
+        "Factor VII deficiency",
+        "Factor VIII deficiency",
+        "Factor XII deficiency",
+        "Factor XIII deficiency"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Factor XIII deficiency",
+      "explanation": "Factor XIII deficiency can lead to impaired wound healing and may cause severe bleeding problems. Factor XIII is a fibrin stabilizing factor that changes the fibrinogen bonds in fibrin polymers to stable covalent bonds. Factor XIII is not involved in the process of fibrin formation and, therefore, PT and APTT are both normal.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 21,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-020",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Fletcher factor (prekallikrein) deficiency may be associated with:",
+      "choices": [
+        "Bleeding",
+        "Thrombosis",
+        "Thrombocytopenia",
+        "Thrombocytosis"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Thrombosis",
+      "explanation": "Fletcher factor (prekallikrein) is referred to as a contact factor. Activated prekallikrein is named kallikrein. In vitro, kallikrein is involved in activation of factor XI to XIa causing prolonged APTT. In vivo, it plays a role in the fibrinolytic system and, similar to factor XII deficiency, Fletcher factor deficiency may be associated with thrombosis.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 22,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-021",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "One of the complications associated with a severe hemophilia A is:",
+      "choices": [
+        "Hemarthrosis",
+        "Mucous membrane bleeding",
+        "Mild bleeding during surgery",
+        "Immune-mediated thrombocytopenia"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Hemarthrosis",
+      "explanation": "In severe hemophilia A, factor VIII activity is less than 1%, resulting in a severe bleeding diathesis, such as hemarthrosis (bleeding into the joints).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 22,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-022",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "The most common subtype of classic von Willebrand disease is:",
+      "choices": [
+        "Type 1",
+        "Type 2A",
+        "Type 2B",
+        "Type 3"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Type 1",
+      "explanation": "VWF is a multimeric plasma glycoprotein that results in different subtypes of von Willebrand disease with varied severity. The most common subtype is subtype 1, and 70% to 80% of these cases are associated with mild bleeding. Subtype 3 involves the total absence of the von Willebrand molecule and is associated with severe bleeding. Subtypes 2A and 2B result in deficiency of intermediate- and/or high-molecular-weight portions of the von Willebrand molecule and are associated with 10% to 12% and 3% to 6% of cases of von Willebrand disease, respectively.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 22,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-3-source-023",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-3",
+      "prompt": "Prolonged APTT and PT are corrected when mixed with normal plasma. Which factor is most likely deficient?",
+      "choices": [
+        "Factor VIII",
+        "Factor V",
+        "Factor XI",
+        "Factor IX"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factor V",
+      "explanation": "Factor V (common pathway factor) deficiency is most likely suspected because both PT and APTT are prolonged, and both are corrected when mixed with normal plasma.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 22,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-001",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which characteristic describes antithrombin (AT)?",
+      "choices": [
+        "It is synthesized in megakaryocytes",
+        "It is activated by protein C",
+        "It is a cofactor of heparin",
+        "It is a pathological inhibitor of coagulation"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "It is a cofactor of heparin",
+      "explanation": "AT is a heparin cofactor and is the most important naturally occurring physiological inhibitor of blood coagulation. It represents about 75% of antithrombotic activity and is an α2-globulin made by the liver.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 24,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "sourceFormatting": {
+        "explanation": [
+          {
+            "start": 179,
+            "end": 180,
+            "script": "sub"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-002",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which laboratory test is affected by heparin therapy?",
+      "choices": [
+        "Thrombin time",
+        "Fibrinogen assay",
+        "Protein C assay",
+        "Protein S assay"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Thrombin time",
+      "explanation": "Heparin is an AT drug and therefore increases TT along with APTT and PT. Heparin therapy has no effect on fibrinogen, protein C, or protein S assays.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 24,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-003",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Abnormal APTT caused by a pathological circulating anticoagulant is:",
+      "choices": [
+        "Corrected with factor VIII–deficient plasma",
+        "Corrected with factor IX–deficient plasma",
+        "Corrected with normal plasma",
+        "Not corrected with normal plasma"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Not corrected with normal plasma",
+      "explanation": "In the presence of a pathological circulating anticoagulant, a mixing test using normal plasma does not correct abnormal APTT. These anticoagulants are pathological substances and are endogenously produced. They are either directed against a specific clotting factor or against a group of factors. Prolonged APTT caused by a factor deficiency is corrected when mixed with normal plasma. Factors VIII– and factor IX–deficient plasmas are used for assaying the activities of factors VIII and IX, respectively.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 24,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-004",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "The lupus anticoagulant affects which of the following tests?",
+      "choices": [
+        "Factor VIII assay",
+        "Factor IX assay",
+        "VWF assay",
+        "Phospholipid-dependent assays"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Phospholipid-dependent assays",
+      "explanation": "The lupus anticoagulant interferes with phospholipid-dependent coagulation assays, such as the PT and APTT tests. The lupus anticoagulant does not inhibit clotting factor assays and does not inhibit in vivo coagulation.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 24,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-005",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which statement about warfarin (Coumadin) is accurate?",
+      "choices": [
+        "It is a vitamin B antagonist",
+        "It is not recommended for pregnant and lactating women",
+        "It needs AT as a cofactor",
+        "APTT test is used to monitor its dosage"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "It is not recommended for pregnant and lactating women",
+      "explanation": "Warfarin (Coumadin) crosses the placenta and is present in human milk; it is not recommended for pregnant and lactating women. Warfarin is a vitamin K antagonist drug that retards synthesis of the active form of vitamin K–dependent factors (II, VII, IX, and X). AT is a heparin (not warfarin) cofactor. The INR is used to monitor warfarin dosage.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 24,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-006",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which statement regarding protein C is correct?",
+      "choices": [
+        "It is a vitamin K–independent zymogen",
+        "It is activated by fibrinogen",
+        "It activates cofactors V and VIII",
+        "Its activity is enhanced by protein S"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Its activity is enhanced by protein S",
+      "explanation": "Protein S functions as a cofactor of protein C and, as such, enhances its activity. Activated protein C (APC) inactivates factors Va and VIIIa.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 25,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-007",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following is an appropriate screening test for the diagnosis of lupus anticoagulant?",
+      "choices": [
+        "Thrombin time",
+        "Diluted Russell viper venom test (DRVVT)",
+        "D-dimer test",
+        "Fibrinogen assay"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Diluted Russell viper venom test (DRVVT)",
+      "explanation": "Russell viper venom (RVV) reagent contains factors X and V, activating enzymes that are strongly phospholipid dependent. The reagent also contains RVV, Ca2+, and phospholipid. In the presence of phospholipid autoantibodies, such as lupus anticoagulant, the reagent phospholipid is partially neutralized, causing prolongation of clotting time. TT evaluates fibrinogen. D-dimer tests evaluate fibrin degradation products. Fibrinogen assay and TT are not indicated for the diagnosis of lupus anticoagulant.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 25,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "sourceFormatting": {
+        "explanation": [
+          {
+            "start": 154,
+            "end": 156,
+            "script": "sup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-008",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following is most commonly associated with activated protein C resistance (APCR)?",
+      "choices": [
+        "Bleeding",
+        "Thrombosis",
+        "Epistaxis",
+        "Menorrhagia"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Thrombosis",
+      "explanation": "APCR is the single most common cause of inherited thrombosis. In 90% of individuals, the cause is gene mutation of factor V (factor V Leiden). Affected individuals are predisposed to thrombosis, mainly after age 40 years. Heterozygous individuals may not manifest thrombosis unless other clinical conditions coexist.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 25,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-009",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "A 50-year-old man has been on heparin for the past 7 days. Which combination of tests is expected to be abnormal?",
+      "choices": [
+        "PT and APTT only",
+        "APTT, TT only",
+        "APTT, TT, fibrinogen assay",
+        "PT, APTT, TT"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "PT, APTT, TT",
+      "explanation": "Heparin is a therapeutic anticoagulant with an AT activity. Heparin also inhibits factors XIIa, XIa, Xa, and IXa. In patients receiving heparin therapy, PT, APTT, and TT are all prolonged. Quantitative fibrinogen assay, however, is not affected by heparin therapy.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 25,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-010",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following drugs inhibits ADP-mediated PLT aggregation?",
+      "choices": [
+        "Heparin",
+        "Warfarin",
+        "Aspirin",
+        "Prasugrel"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Prasugrel",
+      "explanation": "Prasugrel (Effient) is an antiplatelet drug that reduces PLT aggregation by irreversibly blocking P2Y12 receptors on the PLT surface membrane, thereby inhibiting PLT aggregation to ADP. Aspirin is another antiplatelet drug that inhibits PLT aggregation by blocking the action of the enzyme cyclo-oxygenase. Warfarin and heparin are anticoagulant drugs that act against clotting factors.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 26,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-011",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Thrombin–TM complex is necessary for activation of:",
+      "choices": [
+        "Protein C",
+        "AT",
+        "Protein S",
+        "Factors V and VIII"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Protein C",
+      "explanation": "Protein C is activated by thrombin–TM complex. TM is a transmembrane protein that accelerates protein C activation 1,000-fold by forming a complex with thrombin. When thrombin binds to TM, it loses its clotting function, including activation of factors V and VIII. APC deactivates factors Va and VIIIa. Protein S is a cofactor necessary for the activation of protein C.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 26,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-012",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which test is used to monitor heparin therapy?",
+      "choices": [
+        "INR",
+        "Chromogenic anti–factor Xa assay",
+        "TT",
+        "PT"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Chromogenic anti–factor Xa assay",
+      "explanation": "Heparin dosage can be best monitored by the chromogenic anti–factor Xa assay. In anti–factor Xa assay, the concentration of heparin is determined by inhibition of factor Xa by AT. Anti–factor Xa assay uses a reagent with a fixed concentration of factor Xa and AT. Heparin forms a complex with AT and factor Xa reagents. Excess factor Xa combines with the chromogenic substrate to form a colored product; the color intensity is inversely proportional to the concentration of heparin. PT would be prolonged in heparin therapy, but the PT test is not sensitive enough to be used to monitor heparin therapy. Heparin inhibits thrombin and, therefore, causes prolonged TT. The TT test, however, is not used to monitor heparin therapy either.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 27,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-013",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which test is commonly used to monitor warfarin therapy?",
+      "choices": [
+        "INR",
+        "APTT",
+        "TT",
+        "Ecarin time"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "INR",
+      "explanation": "Warfarin is a vitamin K–antagonist drug. It inhibits vitamin K–dependent factors (II, VII, IX, and X) and other vitamin K–dependent proteins, such as proteins C and S. Warfarin therapy is monitored with the INR. An INR of 2.0 to 3.0 is used as the target when monitoring warfarin therapy for prophylaxis and treatment of deep vein thrombosis (DVT). A higher dose of warfarin (giving an INR of 2.5–3.5) is required for patients with mechanical heart valves.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 27,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-014",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which clotting factors (cofactors) are inhibited by protein S?",
+      "choices": [
+        "Factors V and X",
+        "Factors Va and VIIIa",
+        "Factors VIII and IX",
+        "Factors VIII and X"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factors Va and VIIIa",
+      "explanation": "Factors Va and VIIIa are deactivated by protein S and activated by protein C.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 27,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-015",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which drug promotes fibrinolysis?",
+      "choices": [
+        "Warfarin",
+        "Heparin",
+        "Urokinase",
+        "Aspirin"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Urokinase",
+      "explanation": "Urokinase is a thrombolytic drug that can be used to treat acute arterial thrombosis. Urokinase can also be used for the treatment of venous thromboembolism, myocardial infarction, and clotted catheters. Warfarin and heparin are anticoagulant drugs, whereas aspirin prevents PLT aggregation by inhibiting cyclo-oxygenase.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 27,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-016",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Diagnosis of lupus anticoagulant is confirmed by which of the following criteria?",
+      "choices": [
+        "Decreased APTT",
+        "Correction of APPT by mixing studies",
+        "Neutralization of the antibody by high concentration of phospholipids",
+        "Confirmation that abnormal coagulation tests are related to factor deficiencies"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Neutralization of the antibody by high concentration of phospholipids",
+      "explanation": "The International Society of Hemostasis and Thrombosis has recommended four criteria for the diagnosis of lupus anticoagulant: (1) prolongation of one or more of the phospholipid-dependent clotting tests, such as APTT or DRVVT; (2) presence of an inhibitor confirmed by mixing studies (not corrected); (3) evidence that the inhibitor is directed against phospholipids by neutralizing the antibodies with a high concentration of phospholipids (PLT neutralization test or DRVVT with platelet rich plasma or confirming phospholipid reagent); and (4) lack of any other causes for thrombosis.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 27,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-017",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following abnormalities is consistent with the presence of lupus anticoagulant?",
+      "choices": [
+        "Decreased APTT/bleeding complications",
+        "Prolonged APTT/thrombosis",
+        "Prolonged APTT/thrombocytosis",
+        "Thrombocytosis/thrombosis"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Prolonged APTT/thrombosis",
+      "explanation": "Lupus anticoagulant interferes with phospholipids in the APTT reagent, resulting in prolongation of APTT. However, in vivo, lupus anticoagulant decreases fibrinolytic activity, causing an increased risk of thrombosis. Lupus anticoagulant does not result in a bleeding tendency unless there is a coexisting thrombocytopenia or other coagulation abnormality.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 27,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-018",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following is a characteristic of LMWH?",
+      "choices": [
+        "Generally requires monitoring",
+        "Specifically acts on factor Va",
+        "Has a longer half-life compared with unfractionated heparin (UFH)",
+        "Can be used as a fibrinolytic agent"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Has a longer half-life compared with unfractionated heparin (UFH)",
+      "explanation": "LMWH is a small glycosaminoglycan that is derived from UFH. LMWH has a low affinity for plasma proteins and endothelial cells and therefore has a longer half-life. The half-life of the drug does not depend on the dosage. LMWH has an inhibitory effect on factors Xa and IIa. It does not require routine monitoring except in patients with renal failure, obese patients, pediatric patients, and pregnant patients.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 28,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-019",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following tests is most likely to be abnormal in patients taking aspirin?",
+      "choices": [
+        "PLT morphology",
+        "PLT count",
+        "PLT aggregation",
+        "PT"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "PLT aggregation",
+      "explanation": "Aspirin is an antiplatelet drug. It prevents PLT aggregation by inhibition of cyclo-oxygenase. Aspirin has no effect on the PLT count, PLT morphology, or PT.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 28,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-020",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following is associated with AT deficiency?",
+      "choices": [
+        "Thrombocytosis",
+        "Thrombosis",
+        "Thrombocytopenia",
+        "Bleeding"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Thrombosis",
+      "explanation": "AT is a physiological anticoagulant. It inhibits factors IIa, Xa, IXa, XIa, and XIIa. Deficiency of AT is associated with thrombosis. Thrombotic events commonly occur when AT deficiency is associated with another risk factor, such as pregnancy, surgery, or an inherited thrombotic disorder (e.g., factor V Leiden).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 28,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-021",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following may be associated with thrombotic events?",
+      "choices": [
+        "Decreased protein C",
+        "Increased fibrinolysis",
+        "Afibrinogenemia",
+        "Idiopathic thrombocytopenic purpura"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Decreased protein C",
+      "explanation": "Protein C is a physiological inhibitor of coagulation. It is activated by thrombin–TM complex. APC inhibits cofactors Va and VIIIa. Protein C deficiency is associated with thrombosis. Increased fibrinolysis, afibrinogenemia, and ITP are associated with bleeding.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 29,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-022",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Aspirin resistance may be associated with:",
+      "choices": [
+        "Bleeding",
+        "Factor VIII deficiency",
+        "Thrombosis",
+        "Thrombocytosis"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Thrombosis",
+      "explanation": "Up to 22% of patients taking aspirin become resistant to aspirin’s antiplatelet effect. Patients who are aspirin resistant have a higher risk of thrombosis (heart attacks and strokes).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 29,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-023",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Prolonged TT is indicative of which of the following antithrombotic agents?",
+      "choices": [
+        "Prasugrel",
+        "Clopidogrel",
+        "Aspirin",
+        "Heparin"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Heparin",
+      "explanation": "Heparin is an AT drug causing prolonged TT in patients who are on heparin therapy. Prasugrel, clopidogrel, and aspirin are antiplatelet drugs causing inhibition of PLT aggregation.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 29,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-024",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Screening tests for thrombophilia should be performed on:",
+      "choices": [
+        "All pregnant women because of the risk of thrombosis",
+        "Patients with a negative family history",
+        "Patients with thrombotic events occurring at a young age",
+        "Patients who are receiving anticoagulant therapy"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Patients with thrombotic events occurring at a young age",
+      "explanation": "Laboratory tests for evaluation of thrombophilia are justified in young patients with thrombotic events, in patients with a positive family history after a single thrombotic event, in those with recurrent spontaneous thrombosis, and in pregnancies associated with thrombosis.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 29,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-025",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Prothrombin G20210A is characterized by which of the following causes and conditions?",
+      "choices": [
+        "Single mutation of prothrombin molecule/bleeding",
+        "Single mutation of prothrombin molecule/thrombosis",
+        "Decreased levels of prothrombin in plasma/thrombosis",
+        "Increased levels of prothrombin in plasma/bleeding"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Single mutation of prothrombin molecule/thrombosis",
+      "explanation": "Prothrombin G20210A is defined as a single-point mutation of the prothrombin gene, resulting in increased concentration of plasma prothrombin and, thus, is a risk factor for thrombosis. Prothrombin G20210A is the second most common cause of inherited hypercoagulability (after factor V Leiden). It has the highest incidence in white people from southern Europe. The thrombotic episodes generally occur before age 40 years.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 30,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-026",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Factor V Leiden promotes thrombosis by preventing:",
+      "choices": [
+        "Inactivation of factor Va",
+        "Activation of factor V",
+        "Activation of protein C",
+        "Activation of protein S"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Inactivation of factor Va",
+      "explanation": "Factor V Leiden is a single-point mutation in the factor V gene that inhibits factor Va inactivation by protein C. APC enhances deactivation of factors Va and VIIIa.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 30,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-027",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "What is the approximate incidence of antiphospholipid antibodies in the general population?",
+      "choices": [
+        "Less than 1%",
+        "1%–2%",
+        "3%–8%",
+        "10%–15%"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "1%–2%",
+      "explanation": "The incidence of antiphospholipid antibodies in the general population is about 1% to 2%.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 30,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-028",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following laboratory tests is helpful in the diagnosis of aspirin resistance?",
+      "choices": [
+        "APTT",
+        "PT",
+        "PLT count and morphology",
+        "PLT aggregation"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "PLT aggregation",
+      "explanation": "Currently, the PLT aggregation test is considered the gold standard for evaluation of aspirin resistance. In aspirin resistance, PLT aggregation is not inhibited by aspirin ingestion. Aspirin resistance has no effect on PLT count and morphology.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 30,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-029",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following complications may occur as a result of decreased tissue factor pathway inhibitor (TFPI)?",
+      "choices": [
+        "Increased episodes of hemorrhage",
+        "Increased risk of thrombosis",
+        "Impaired PLT plug formation",
+        "Immune thrombocytopenia"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Increased risk of thrombosis",
+      "explanation": "TFPI is released from the vasculature and is the most important inhibitor of the extrinsic pathway. TFPI inhibits factors Xa and VIIa–TF complex. Therefore, the deficiency of TFPI is associated with thrombosis.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 30,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-030",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Factor VIII inhibitors occur in __________ of patients with factor VIII deficiency.",
+      "choices": [
+        "40%–50%",
+        "30%–40%",
+        "25%–30%",
+        "20%–25%"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "20%–25%",
+      "explanation": "Factor VIII inhibitors (alloantibodies) occur in 20% to 25% of patients who have factor VIII deficiency and are receiving factor VIII replacement.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 31,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-031",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which therapy and resulting mode of action are appropriate for the treatment of a patient with a high titer of factor VIII inhibitors?",
+      "choices": [
+        "Factor VIII concentrate to neutralize the antibodies",
+        "Recombinant factor VIIa (rVIIa) to activate factor X",
+        "Factor X concentrate to activate the common pathway",
+        "FFP to replace factor VIII"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Recombinant factor VIIa (rVIIa) to activate factor X",
+      "explanation": "rVIIa is effective for the treatment of a high-titer factor VIII inhibitor. Factor VIIa can directly activate factor X to factor Xa in the absence of factors VIII and IX. rVIIa does not stimulate anamnestic responses in patients with factor VIII inhibitor. Factor VIII concentrate is used for a low-titer factor VIII inhibitor. Factor X concentrate and FFP are not the treatments of choice for factor VIII inhibitor.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 31,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-032",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "The Bethesda assay is used for which determination?",
+      "choices": [
+        "Lupus anticoagulant titer",
+        "Factor VIII inhibitor titer",
+        "Factor V Leiden titer",
+        "Protein S deficiency"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factor VIII inhibitor titer",
+      "explanation": "The Bethesda assay is a quantitative assay for factor VIII inhibitor. In this assay, normal plasma is incubated with different dilutions of the patient’s plasma or with a normal control. The inhibitor inactivates factor VIII present in normal plasma following incubation for 2 hours at 37°C. The residual activities in the sample are determined, and the inhibitor titer is calculated.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 31,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-033",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Hyperhomocysteinemia may be a risk factor for:",
+      "choices": [
+        "Bleeding",
+        "Thrombocythemia",
+        "Thrombosis",
+        "Thrombocytopenia"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Thrombosis",
+      "explanation": "Elevated plasma homocysteine is a risk factor for the development of DVT, coronary heart disease and stroke. Homocystinemia may be inherited or acquired. Acquired homocystinemia is caused by dietary deficiencies of vitamins B6, B12, and folic acid.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 31,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "sourceFormatting": {
+        "explanation": [
+          {
+            "start": 225,
+            "end": 226,
+            "script": "sub"
+          },
+          {
+            "start": 229,
+            "end": 231,
+            "script": "sub"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-034",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which drug may be associated with DVT?",
+      "choices": [
+        "Aspirin",
+        "tPA",
+        "Oral contraceptives",
+        "Clopidogrel (Plavix)"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Oral contraceptives",
+      "explanation": "Oral contraceptive drugs are acquired risk factors for thrombosis. Aspirin and clopidogrel are antiplatelet drugs, and tPA is a fibrinolytic drug used for the treatment of thrombosis.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 32,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-035",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Argatroban may be used as an anticoagulant drug in patients with:",
+      "choices": [
+        "DVT",
+        "Hemorrhage",
+        "TTP",
+        "Thrombocytosis"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "DVT",
+      "explanation": "Argatroban is a direct thrombin-inhibiting drug and may be used as an anticoagulant in patients with HIT to prevent thrombosis. Argatroban is a small synthetic molecule that binds to free and clot-bound thrombin. Argatroban affects TT, PT, APTT, and activated clotting time (ACT) tests. The APTT test is recommended for monitoring the dosage with the target therapeutic range of 1.5 to 3.0 times the mean of the laboratory reference range. In patients with lupus anticoagulant or factor deficiencies, baseline APTT is prolonged; in these conditions, Ecarin time can be used as an alternative assay.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 32,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-036",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Heparin-induced thrombocytopenia (HIT) results from:",
+      "choices": [
+        "Antibodies to heparin",
+        "Antibodies to PLTs",
+        "Antibodies to PF4",
+        "Antibodies to heparin–PF4 complex"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Antibodies to heparin–PF4 complex",
+      "explanation": "HIT is an immune process caused by the production of antibodies to heparin–PF4 complex. This immune complex binds to PLT Fc receptors, causing PLT activation and formation of PLT microparticles, which, in turn, induce hypercoagulability and thrombocytopenia.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 32,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-037",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which laboratory test is used to screen for APCR?",
+      "choices": [
+        "Mixing studies with normal plasma",
+        "Mixing studies with factor-deficient plasma",
+        "Modified APTT with and without APC",
+        "Modified PT with and without APC"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Modified APTT with and without APC",
+      "explanation": "APCR can be evaluated by performing a two-part APTT test. The APTT is measured on the patient’s plasma with and without the addition of APC. The result is expressed as the ratio of the APTT with APC to the APTT without APC. The normal ratio is 2:5. Patients with APCR have a lower ratio than the reference range. A positive screening test should be followed by a confirmatory test, such as polymerase chain reaction (PCR) for factor V Leiden.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 33,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-038",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Ecarin clotting time may be used to monitor:",
+      "choices": [
+        "Heparin therapy",
+        "Warfarin therapy",
+        "Fibrinolytic therapy",
+        "Bivalirudin"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Bivalirudin",
+      "explanation": "Ecarin clotting time, a snake venom–based clotting assay, may be used to monitor bivalirudin therapy in instances when the baseline APTT is prolonged as a result of lupus anticoagulant or factor deficiencies. Heparin therapy is monitored by using the anti–factor Xa assay; warfarin therapy is monitored with the INR. Fibrinolytic therapy may be monitored by using the D-dimer test.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 33,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-039",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following may interfere with the APCR screening test?",
+      "choices": [
+        "Lupus anticoagulant",
+        "Protein C deficiency",
+        "AT deficiency",
+        "Protein S deficiency"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Lupus anticoagulant",
+      "explanation": "The lupus anticoagulant interferes with the APCR screening assay based on the APTT ratio with and without the addition of APC. Persons with the lupus anticoagulant have a prolonged APTT that renders the test invalid for APCR screening.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 33,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-040",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Thrombophilia may be associated with which of the following disorders?",
+      "choices": [
+        "Afibrinogenemia",
+        "Hypofibrinogenemia",
+        "Factor VIII inhibitor",
+        "Hyperfibrinogenemia"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Hyperfibrinogenemia",
+      "explanation": "Hyperfibrinogenemia is a risk factor for thrombophilia. Fibrinogen is an acute-phase reactant and may be increased in inflammation, stress, obesity, smoking, and medications, such as oral contraceptives. Hypofibrinogenemia, afibrinogenemia, and factor VIII inhibitors are associated with bleeding.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 33,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-041",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following anticoagulant drugs can be used in patients with HIT?",
+      "choices": [
+        "Warfarin",
+        "Heparin",
+        "Aspirin",
+        "Argatroban"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Argatroban",
+      "explanation": "Argatroban is a direct thrombin inhibitor drug and used in patients with HIT who cannot tolerate heparin or LMWH therapy. Warfarin should not be used for anticoagulation in persons with HIT because it causes a fall in protein C concentration and vitamin K–dependent coagulation factors. Aspirin is an antiplatelet drug.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 33,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-042",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which of the following is the preferred method to monitor heparin therapy at the point of care during cardiac surgery?",
+      "choices": [
+        "APTT",
+        "ACT",
+        "PT",
+        "TT"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "ACT",
+      "explanation": "ACT is a point-of-care coagulation test used to monitor high-dose heparin therapy during cardiac surgery, cardiac angioplasty, hemodialysis, and other major surgeries. It is the preferred method to determine if sufficient heparin was administered to prevent clotting during surgery because it is more rapid than the APTT test. The test uses a clot activator, such as kaolin or Celite, to stimulate coagulation, and the time in seconds is linearly related to the dose of heparin administered. The ACT test is available in different formats, and the reference range varies, depending on the method used. At low to moderate heparin doses, the ACT test does not correlate well with the APTT test or the anti–factor Xa assay.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 34,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-043",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Mrs. Smith has the following laboratory results and no history of bleeding: APTT = prolonged APTT results on a 1:1 mixture of the patient’s plasma with normal plasma: Preincubation: prolonged APTT 2-hour incubation: prolonged APTT These results are consistent with:",
+      "choices": [
+        "Factor VIII deficiency",
+        "Factor VIII inhibitor",
+        "Lupus anticoagulant",
+        "Protein C deficiency"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Lupus anticoagulant",
+      "explanation": "Mixing studies differentiate factor deficiencies from factor inhibitors. Lupus anticoagulant is associated with thrombosis, and it is directed against phospholipid-dependent coagulation tests, such as the APTT test. In patients with lupus anticoagulant, after the patient’s plasma is mixed with normal plasma, APTT remains prolonged immediately after mixing and following 2 hours of incubation. Factor VIII deficiency and factor VIII inhibitor are associated with bleeding.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 34,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "questionSections": [
+        {
+          "kind": "text",
+          "text": "Mrs. Smith has the following laboratory results and no history of bleeding:"
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [],
+            "rows": [
+              [
+                "APTT = prolonged"
+              ],
+              [
+                "APTT results on a 1:1 mixture of the patient’s plasma with normal plasma:"
+              ],
+              [
+                "Preincubation: prolonged APTT"
+              ],
+              [
+                "2-hour incubation: prolonged APTT"
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "These results are consistent with:"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-4-source-044",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-4",
+      "prompt": "Which test may be used to monitor LMWH therapy?",
+      "choices": [
+        "APTT",
+        "INR",
+        "Anti–factor Xa heparin assay",
+        "ACT"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Anti–factor Xa heparin assay",
+      "explanation": "The anti–factor Xa heparin assay is used to monitor LMWH therapy, when required, because the APTT test is insensitive to LMWH. The assay can be performed by chromogenic endpoint detection used on automated analyzers. The principle of the test is to measure the inhibition of factor Xa by heparin. The reagent is a mixture of a fixed concentration of factor Xa, a substrate which is specific for factor Xa, and a fixed concentration of AT. Some kits rely on the AT in the patient’s plasma. Heparin forms a complex with AT and factor Xa (AT–heparin–factor Xa). Excess free factor Xa cleaves the chromogenic substrate and releases a yellow product. The color intensity of the product is inversely proportional to plasma heparin concentration and is measured by a photodetector at 405 nm. LMWH therapy usually does not require monitoring; however, exceptions include pediatric, obese, and pregnant patients and those with renal failure.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 34,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-001",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "These clinical manifestations and laboratory results are consistent with which condition?",
+      "choices": [
+        "TTP",
+        "DIC",
+        "ITP",
+        "HUS"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "ITP",
+      "explanation": "These clinical manifestations and laboratory results are consistent with ITP. ITP is an autoimmune thrombocytopenia. In children, acute ITP occurs after a viral infection, as was the case in this 3-year-old patient. Clinical manifestations are associated with petechiae, purpura, and mucous membrane bleeding, such as epistaxis and gingival bleeding. Abnormal laboratory tests include a very low PLT count, and other causes of thrombocytopenia should be ruled out in patients with suspected ITP.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 36,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "caseStudy": "Patient History\nA 3-year-old male was admitted with scattered petechiae and epistaxis. The patient had normal growth and had no other medical problems except for chickenpox 3 weeks earlier. His family history was unremarkable.",
+      "questionSections": [
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "Laboratory Results",
+            "columns": [
+              "",
+              "Patient",
+              "Reference Range"
+            ],
+            "rows": [
+              [
+                "PT",
+                "11 sec",
+                "10–13 sec"
+              ],
+              [
+                "APTT",
+                "32 sec",
+                "28–37 sec"
+              ],
+              [
+                "PLT count",
+                "18 × 103/µL L",
+                "150–450 × 103/μL"
+              ]
+            ],
+            "sourceFormatting": {
+              "rows": [
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [
+                    {
+                      "start": 7,
+                      "end": 8,
+                      "script": "sup"
+                    }
+                  ],
+                  [
+                    {
+                      "start": 13,
+                      "end": 14,
+                      "script": "sup"
+                    }
+                  ]
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "kind": "text",
+          "text": "These clinical manifestations and laboratory results are consistent with which condition?"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-002",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "These clinical manifestations and laboratory results are consistent with which diagnosis?",
+      "choices": [
+        "Factor VIII deficiency",
+        "von Willebrand disease",
+        "Glanzmann thrombasthenia",
+        "Bernard-Soulier syndrome"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "von Willebrand disease",
+      "explanation": "These clinical manifestations and laboratory results are consistent with von Willebrand disease. von Willebrand disease is an inherited bleeding disorder caused by abnormal PLT adhesion and aggregation. In von Willebrand disease, VWF is deficient or dysfunctional. VWF enhances the release of factor VIII from the liver, and it also forms a complex with factor VIII in the circulation. Deficient or dysfunctional VWF results in decreased factor VIII as well and, therefore, an increase in APTT values. The clinical manifestations associated with von Willebrand disease are easy bruising, epistaxis, and bleeding after surgery. The diagnostic laboratory test shows abnormal PLT aggregation to ristocetin, which is corrected by addition of normal plasma containing VWF. APTT is prolonged as a result of the deficiency of factor VIII. Factor VIII activity (VIII:C), VWF ristocetin cofactor activity (VWF:Rco), and VWF: antigenic activity (VWF:antigen) are abnormal. The PLT count and PT are normal in von Willebrand disease.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 36,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "caseStudy": "Patient History\nA 12-year-old white male has the following symptoms: visible bruising on arms and legs, bruising after sports activities, and excessive postoperative hemorrhage after tonsillectomy 3 months ago. His family history revealed that his mother suffers from heavy menstrual bleeding, and his maternal grandfather had recurrent nosebleeds and bruising.",
+      "questionSections": [
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "Laboratory Results",
+            "columns": [
+              "",
+              "Patient",
+              "Reference Range"
+            ],
+            "rows": [
+              [
+                "PLT count:",
+                "350 × 103/μL",
+                "200–450 × 103/μL"
+              ],
+              [
+                "PT",
+                "11 sec",
+                "10–12 sec"
+              ],
+              [
+                "APTT",
+                "70 sec",
+                "28–37 sec"
+              ],
+              [
+                "TT",
+                "13 sec",
+                "10–15 sec"
+              ]
+            ],
+            "sourceFormatting": {
+              "rows": [
+                [
+                  [],
+                  [
+                    {
+                      "start": 8,
+                      "end": 9,
+                      "script": "sup"
+                    }
+                  ],
+                  [
+                    {
+                      "start": 13,
+                      "end": 14,
+                      "script": "sup"
+                    }
+                  ]
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "PLT AGGREGATION",
+            "columns": [],
+            "rows": [
+              [
+                "Normal aggregation with collagen, EPI, ADP"
+              ],
+              [
+                "Abnormal aggregation with ristocetin"
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [
+              "CONFIRMATORY TESTS",
+              "PATIENT",
+              "REFERENCE RANGE"
+            ],
+            "rows": [
+              [
+                "VWF:Rco",
+                "25%",
+                "45%–140%"
+              ],
+              [
+                "VIII:C",
+                "20%",
+                "50%–150%"
+              ],
+              [
+                "VWF:antigen",
+                "10%",
+                "45%–185%"
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "These clinical manifestations and laboratory results are consistent with which diagnosis?"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-003",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "The following results are obtained from a patient who developed severe bleeding: Prolonged PT and APTT PLT count = 100 × 109/L Fibrinogen = 40 mg/dL Which of the following blood products should be recommended for transfusion?",
+      "choices": [
+        "Factor VIII concentrate",
+        "PLTs",
+        "FFP",
+        "Cryoprecipitate"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Cryoprecipitate",
+      "explanation": "Cryoprecipitate contains fibrinogen, factor VIII, and VWF. FFP has all of the clotting factors; however, it is not the best choice if cryoprecipitate is available.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 37,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "questionSections": [
+        {
+          "kind": "text",
+          "text": "The following results are obtained from a patient who developed severe bleeding:"
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [],
+            "rows": [
+              [
+                "Prolonged PT and APTT"
+              ],
+              [
+                "PLT count = 100 × 109/L"
+              ],
+              [
+                "Fibrinogen = 40 mg/dL"
+              ]
+            ],
+            "sourceFormatting": {
+              "rows": [
+                [
+                  []
+                ],
+                [
+                  [
+                    {
+                      "start": 20,
+                      "end": 21,
+                      "script": "sup"
+                    }
+                  ]
+                ],
+                [
+                  []
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "kind": "text",
+          "text": "Which of the following blood products should be recommended for transfusion?"
+        }
+      ],
+      "sourceFormatting": {
+        "prompt": [
+          {
+            "start": 123,
+            "end": 124,
+            "script": "sup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-004",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A 30-year-old woman develops signs and symptoms of thrombosis in her left lower leg after 5 days of heparin therapy. The patient had had open-heart surgery 3 days previously and has been on heparin ever since. Which of the following would be most helpful in making the diagnosis?",
+      "choices": [
+        "Fibrinogen assay",
+        "PT",
+        "PLT count",
+        "Increased heparin dose"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "PLT count",
+      "explanation": "The PLT count should be checked every other day in patients receiving heparin therapy. HIT should be suspected in patients who are not responding to heparin therapy and/or are developing thrombocytopenia (50% below the baseline value) and thrombotic complications while on heparin therapy. Increase in heparin dose should be avoided in patients with the clinical symptoms of thrombosis while they are receiving heparin. Fibrinogen assay and PT are not the appropriate assays for monitoring heparin therapy, nor are they used to test for HIT.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 37,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-005",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "The following laboratory results were obtained on a 25-year-old woman with menorrhagia after delivery of her second son. The patient has no previous bleeding history. Normal PLT count; normal PT; prolonged APTT Mixing of the patient’s plasma with normal plasma corrected the prolonged APTT on immediate testing. However, mixing followed by 2-hour incubation at 37°C caused prolonged APTT. What is the most probable cause of these laboratory results?",
+      "choices": [
+        "Lupus anticoagulant",
+        "Factor VIII deficiency",
+        "Factor IX deficiency",
+        "Factor VIII inhibitor"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Factor VIII inhibitor",
+      "explanation": "Factor VIII inhibitor is found in 20% to 25% of patients with hemophilia receiving replacement therapy. It may also develop in patients with immunologic problems, women after childbirth, and patients with lymphoproliferative and plasma cell disorders, or it may develop in response to medications. Factor VIII inhibitor is an IgG with an inhibitory effect that is time and temperature dependent. The presence of factor VIII inhibitor causes elevated APTT in the face of a normal PT. Mixing studies in factors VIII and IX deficiencies will correct the prolonged APTT both at the immediate mixing stage and after incubation for 2 hours. APTT would not be corrected by mixing studies in the presence of factor VIII inhibitor. In addition, factor VIII inhibitor is associated with bleeding. Lupus anticoagulant is associated with thrombosis and not bleeding unless it coexists with thrombocytopenia, which is not the case in this patient.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 38,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "questionSections": [
+        {
+          "kind": "text",
+          "text": "The following laboratory results were obtained on a 25-year-old woman with menorrhagia after delivery of her second son. The patient has no previous bleeding history."
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [],
+            "rows": [
+              [
+                "Normal PLT count; normal PT; prolonged APTT"
+              ],
+              [
+                "Mixing of the patient’s plasma with normal plasma corrected the prolonged APTT on immediate testing."
+              ],
+              [
+                "However, mixing followed by 2-hour incubation at 37°C caused prolonged APTT."
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "What is the most probable cause of these laboratory results?"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-006",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A 62-year-old female presents with jaundice and the following laboratory data: Peripheral blood smear = macrocytosis, target cells PLT count = 355 × 109/L PT = 25 sec (reference range = 10–14) APTT = 65 sec (reference range = 28–36) Transaminases = elevated (AST:ALT ratio greater than 1) Total and direct bilirubin = elevated These clinical presentations and laboratory results are consistent with:",
+      "choices": [
+        "Inherited factor VII deficiency",
+        "DIC",
+        "Cirrhosis of the liver",
+        "von Willebrand disease"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Cirrhosis of the liver",
+      "explanation": "The clinical presentation and laboratory results in this patient are indicative of cirrhosis of the liver. Most of the clotting factors are made in the liver. A decrease in multiple clotting factors is associated with prolonged PT and APTT. Macrocytosis and target cells are present in liver disease. The liver changes the unconjugated bilirubin to conjugated bilirubin. Conjugated bilirubin is excreted into the intestines, where bilirubin is converted to urobilinogen and excreted into feces. In cirrhosis of the liver, both necrosis and obstruction caused by scarring produce increases in unconjugated and conjugated bilirubin, respectively. In addition, the liver enzymes are elevated (the AST:ALT ratio is less than 1 in necrotic liver diseases, such as hepatitis, but not in cirrhosis).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 38,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "questionSections": [
+        {
+          "kind": "text",
+          "text": "A 62-year-old female presents with jaundice and the following laboratory data:"
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [],
+            "rows": [
+              [
+                "Peripheral blood smear = macrocytosis, target cells"
+              ],
+              [
+                "PLT count = 355 × 109/L"
+              ],
+              [
+                "PT = 25 sec (reference range = 10–14)"
+              ],
+              [
+                "APTT = 65 sec (reference range = 28–36)"
+              ],
+              [
+                "Transaminases = elevated (AST:ALT ratio greater than 1)"
+              ],
+              [
+                "Total and direct bilirubin = elevated"
+              ]
+            ],
+            "sourceFormatting": {
+              "rows": [
+                [
+                  []
+                ],
+                [
+                  [
+                    {
+                      "start": 20,
+                      "end": 21,
+                      "script": "sup"
+                    }
+                  ]
+                ],
+                [
+                  []
+                ],
+                [
+                  []
+                ],
+                [
+                  []
+                ],
+                [
+                  []
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "kind": "text",
+          "text": "These clinical presentations and laboratory results are consistent with:"
+        }
+      ],
+      "sourceFormatting": {
+        "prompt": [
+          {
+            "start": 151,
+            "end": 152,
+            "script": "sup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-007",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "When performing a mixing study, the patient’s APTT is corrected to 12% of normal. What is the most appropriate interpretation of these findings?",
+      "choices": [
+        "The APTT is considered corrected",
+        "The APTT is considered uncorrected",
+        "The laboratory protocol should be followed for the interpretation of correction",
+        "A circulating anticoagulant can be ruled out"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "The laboratory protocol should be followed for the interpretation of correction",
+      "explanation": "Interpretation of correction studies varies among different laboratories. Some define correction when the mixing study result falls within 10% of the normal plasma; other laboratories conclude correction when the mixing result falls within 5 seconds of normal plasma, or a value within the APTT reference range. Only 50% factor activity is required for normal PT or APTT. A circulating anticoagulant typically results in failure to correct the APTT with normal plasma.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 39,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-008",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A standard blue-top tube filled appropriately (with 4.5 mL blood) was submitted to the laboratory for preoperative PT and APTT testing. The results of both tests were elevated. The patient’s PT and APTT from the previous day were within normal limits, and he was not on heparin therapy. Which is the most appropriate first step to investigate the abnormal results?",
+      "choices": [
+        "Report the result as obtained",
+        "Perform a mixing study",
+        "Check the sample for a clot",
+        "Report APTT only"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Check the sample for a clot",
+      "explanation": "A clot can form because of inadequate mixing of the sample after venipuncture, if the blood fills the evacuated tube at a slow rate, or with traumatic venipuncture. In vitro, blood clots result in consumption of the clotting factors and, therefore, prolongation of PT, APTT, and other clot-based assays. If the clotting factors have been activated but the clot formation is incomplete, it may result in shortening of PT and APTT. Checking the sample for a clot is the most reasonable step in this case.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 40,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-009",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A plasma sample submitted to the laboratory for PT testing has been stored for 25 hours at 4°C. PT is shortened. What is the most probable cause?",
+      "choices": [
+        "Factor VII deficiency",
+        "Activation of factor VII caused by exposure to cold temperature",
+        "Lupus inhibitor",
+        "Factor X inhibitor"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Activation of factor VII caused by exposure to cold temperature",
+      "explanation": "Samples for evaluation of PT are stable for 24 hours if kept at room temperature. Prolonged exposure to cold will activate factor VII, resulting in decreased PT.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 40,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-010",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "APTT is not increased in a patient receiving heparin. Which of the following factors may be associated with the lack of response to heparin therapy in this patient?",
+      "choices": [
+        "Protein C deficiency",
+        "AT deficiency",
+        "Protein S deficiency",
+        "Factor VIII deficiency"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "AT deficiency",
+      "explanation": "AT deficiency in patients receiving heparin therapy may lead to heparin resistance and, therefore, lack of prolongation of APTT. AT is a heparin cofactor and, as such, increases heparin activity by 1,000-fold. Deficiency of AT is associated with poor response to heparin therapy.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 40,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-011",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A 50-year-old patient was admitted to the emergency department with a complaint of pain in the right leg. The leg was red, swollen, and warm to the touch. DVT was suspected, and the patient was started on heparin therapy. Which of the following is (are) the proper protocol(s) to evaluate patients receiving heparin therapy?",
+      "choices": [
+        "Baseline APTT and PLT count; APTT testing every 4 to 6 hours after the initial heparin bolus",
+        "Repeat APTT 5 days after heparin therapy to adjust the therapeutic dose",
+        "Monitor the PLT count daily and every other day after heparin therapy is completed",
+        "Monitor PT daily to adjust the therapeutic dose"
+      ],
+      "correctAnswer": 0,
+      "officialAnswer": "Baseline APTT and PLT count; APTT testing every 4 to 6 hours after the initial heparin bolus",
+      "explanation": "Baseline PLT count and APTT should be performed on all patients prior to administration of heparin. APTT should be repeated every 4 to 6 hours after bolus injection (high dose). Response to heparin therapy varies among patients for the following reasons: heparin half-life is decreased in extended thrombosis, and the anticoagulant activities of heparin change based on nonspecific binding of heparin to plasma proteins. Therefore, heparin therapy should be closely monitored. Heparin dosage can be adjusted based on the anti–factor Xa assay. In addition, the PLT count should be monitored regularly during heparin therapy because decrease of the PLT count to 50% below the baseline value is significant and may be associated with HIT. PT is not used to monitor heparin therapy.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 40,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-012",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "These clinical manifestations and laboratory results are consistent with:",
+      "choices": [
+        "ITP",
+        "von Willebrand disease",
+        "TTP",
+        "DIC"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "TTP",
+      "explanation": "The clinical manifestations and laboratory results in this patient are consistent with TTP. The clinical manifestations of TTP include MAHA, thrombocytopenia, fever, renal failure, and neurological symptoms. The neurological symptoms in this patient are manifested by headache, dizziness, nausea, and vomiting. Weakness and lethargy are signs and symptoms of anemia. Low Hgb and Hct with normal MCV and MCHC indicate a normocytic normochromic anemia. The presence of schistocytes in peripheral blood, with low platelet counts and low haptoglobin, are consistent with MAHA. The high BUN and creatinine levels are characteristic of renal failure. The platelet count, performed on admission, was done on a hematology analyzer and was falsely elevated because of the presence of microcytes or fragmented RBCs. The manual platelet count was much lower. The coagulation tests are normal in TTP. In von Willebrand disease, the platelet count is normal and the APTT is usually abnormal. ITP is characterized by thrombocytopenia but not hemolytic anemia (HA). DIC is associated with a low platelet count, HA, and abnormal coagulation studies. The acute onset of symptoms in this patient may be related to mitomycin used for the treatment of gastric carcinoma in this patient.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 41,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "caseStudy": "Patient History:\nA 46-year-old female was admitted to the emergency department with complaints of headache, dizziness, lethargy, nausea, vomiting, and weakness. The patient had undergone a gastrectomy procedure 4 months earlier for removal of adenocarcinoma of the stomach and had been placed on mitomycin therapy. Diagnostic procedures indicated recurrence of the carcinoma.",
+      "questionSections": [
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "Admission Complete Blood Count (CBC) Results",
+            "columns": [
+              "",
+              "Patient",
+              "Reference Range"
+            ],
+            "rows": [
+              [
+                "WBCs",
+                "17.1 × 109/L",
+                "4.8–10.8 × 109/L"
+              ],
+              [
+                "RBCs",
+                "2.29 × 1012/L",
+                "3.80–5.50 × 1012/L"
+              ],
+              [
+                "Hgb",
+                "8.1 g/dL",
+                "12.0–15.2 g/dL"
+              ],
+              [
+                "Hct",
+                "23%",
+                "37%–46%"
+              ],
+              [
+                "MCV",
+                "95.7 fL",
+                "79–101 fL"
+              ],
+              [
+                "MCH",
+                "35.4 pg",
+                "27–33 pg"
+              ],
+              [
+                "MCHC",
+                "35.0 %",
+                "31%–34 %"
+              ],
+              [
+                "RDW",
+                "18.5",
+                "11.5–14.5"
+              ],
+              [
+                "PLTs",
+                "48.0 × 109/L",
+                "140–450 × 109/L"
+              ],
+              [
+                "MPV",
+                "11.2",
+                "7.4–9.4"
+              ]
+            ],
+            "sourceFormatting": {
+              "rows": [
+                [
+                  [],
+                  [
+                    {
+                      "start": 9,
+                      "end": 10,
+                      "script": "sup"
+                    }
+                  ],
+                  [
+                    {
+                      "start": 14,
+                      "end": 15,
+                      "script": "sup"
+                    }
+                  ]
+                ],
+                [
+                  [],
+                  [
+                    {
+                      "start": 9,
+                      "end": 11,
+                      "script": "sup"
+                    }
+                  ],
+                  [
+                    {
+                      "start": 15,
+                      "end": 17,
+                      "script": "sup"
+                    }
+                  ]
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [
+                    {
+                      "start": 9,
+                      "end": 10,
+                      "script": "sup"
+                    }
+                  ],
+                  [
+                    {
+                      "start": 13,
+                      "end": 14,
+                      "script": "sup"
+                    }
+                  ]
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "DIFFERENTIAL COUNTS (%)",
+            "columns": [],
+            "rows": [
+              [
+                "Segmented neutrophils",
+                "79",
+                "30%–70%"
+              ],
+              [
+                "Band neutrophils",
+                "3",
+                "0%–10%"
+              ],
+              [
+                "Lymphocytes",
+                "11",
+                "20%–50%"
+              ],
+              [
+                "Monocytes",
+                "6",
+                "2%–12%"
+              ],
+              [
+                "Basophils",
+                "1",
+                "0%–2%"
+              ],
+              [
+                "NRBCs (/100 WBCs)",
+                "3",
+                "0"
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [],
+            "rows": [
+              [
+                "Manual platelet count",
+                "18 × 109/L",
+                "140–450 × 109/L"
+              ],
+              [
+                "Marked anisocytosis",
+                "",
+                "None"
+              ],
+              [
+                "Marked RBC fragmentation",
+                "",
+                "None"
+              ],
+              [
+                "PT, APTT, and TT",
+                "Normal",
+                ""
+              ]
+            ],
+            "sourceFormatting": {
+              "rows": [
+                [
+                  [],
+                  [
+                    {
+                      "start": 7,
+                      "end": 8,
+                      "script": "sup"
+                    }
+                  ],
+                  [
+                    {
+                      "start": 13,
+                      "end": 14,
+                      "script": "sup"
+                    }
+                  ]
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "ADDITIONAL LABORATORY DATA",
+            "columns": [
+              "Urinalysis",
+              "PATIENT",
+              "REFERENCE RANGE"
+            ],
+            "rows": [
+              [
+                "pH",
+                "5.0",
+                "5–7"
+              ],
+              [
+                "Protein",
+                "30.0 mg/dL",
+                "0–15 mg/dL"
+              ],
+              [
+                "RBCs",
+                "60–100/μ.",
+                ""
+              ],
+              [
+                "Casts",
+                "10/high-power field (hpf) granular/hyaline",
+                "Not detectable"
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [
+              "Plasma",
+              "PATIENT",
+              "REFERENCE RANGE"
+            ],
+            "rows": [
+              [
+                "Creatinine",
+                "3.1 mg/dL",
+                "0.7–1.3 mg/dL"
+              ],
+              [
+                "BUN",
+                "39 mg/dL",
+                "8–22 mg/dL"
+              ],
+              [
+                "Haptoglobin",
+                "5.0 mg/dL",
+                "50–150 mg/dL"
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "These clinical manifestations and laboratory results are consistent with:"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-013",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "These clinical manifestations and laboratory results are consistent with which condition?",
+      "choices": [
+        "von Willebrand disease",
+        "Bernard-Soulier syndrome",
+        "Glanzmann thrombasthenia",
+        "Factor VIII deficiency"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Glanzmann thrombasthenia",
+      "explanation": "These clinical manifestations and laboratory results are consistent with Glanzmann thrombasthenia. Epistaxis and easy bruising are characteristics of platelet disorders. The positive family history is indicative of an inherited bleeding disorder. Laboratory tests reveal a low Hgb level caused by epistaxis. The normal platelet count rules out any quantitative platelet disorder. The platelet count is typically low in Bernard–Soulier syndrome. Normal PT and APTT, combined with a normal factor VIII assay, rule out coagulation disorders. The laboratory tests that confirm an inherited platelet disorder are PLT aggregation studies. PLT aggregation is normal to ristocetin and abnormal to ADP, EPI, and thrombin. These results are consistent with Glanzmann thrombasthenia. PLT aggregation is abnormal to ristocetin in von Willebrand disease and Bernard–Soulier syndrome.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 43,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "caseStudy": "Patient History\nA 1-year-old infant was admitted with recurrent epistaxis for the past 5 days. Past medical history revealed easy bruising and a severe nosebleed that had occurred when he was 3 months of age, necessitating transfusion therapy. The mother had a severe nosebleed 8 years ago. The father was reported to bleed easily after lacerations. The patient was transfused with 2 units of packed RBCs on admission.",
+      "questionSections": [
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "Admission Laboratory Results",
+            "columns": [
+              "",
+              "Patient",
+              "Reference Range"
+            ],
+            "rows": [
+              [
+                "Hgb",
+                "4.5 g/dL",
+                "13–15 g/dL"
+              ],
+              [
+                "Platelet count",
+                "249 × 109/L",
+                "150–450 × 109/L"
+              ],
+              [
+                "PT",
+                "11.2 sec",
+                "11–13 sec"
+              ],
+              [
+                "APTT",
+                "34 sec",
+                "28–37 sec"
+              ]
+            ],
+            "sourceFormatting": {
+              "rows": [
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [
+                    {
+                      "start": 8,
+                      "end": 9,
+                      "script": "sup"
+                    }
+                  ],
+                  [
+                    {
+                      "start": 13,
+                      "end": 14,
+                      "script": "sup"
+                    }
+                  ]
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ],
+                [
+                  [],
+                  [],
+                  []
+                ]
+              ]
+            }
+          }
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "ADDITIONAL LABORATORY TESTS",
+            "columns": [],
+            "rows": [
+              [
+                "Factor VIII assay",
+                "70%",
+                "50%–150%"
+              ],
+              [
+                "PLT aggregation:",
+                "Abnormal to ADP, EPI, and thrombin; normal to ristocetin",
+                ""
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "These clinical manifestations and laboratory results are consistent with which condition?"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-014",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "These clinical manifestations and laboratory results are consistent with:",
+      "choices": [
+        "Factor VIII inhibitor",
+        "Factor VIII deficiency",
+        "Anticardiolipin antibodies",
+        "Lupus anticoagulant"
+      ],
+      "correctAnswer": 3,
+      "officialAnswer": "Lupus anticoagulant",
+      "explanation": "These clinical manifestations and laboratory results are consistent with lupus anticoagulant. Pain and swelling in the patient’s right leg may be indicative of thrombosis. As many as 48% of women with repeated spontaneous abortions have lupus anticoagulant or/and antibody to phospholipid, such as anticardiolipin antibodies. The unremarkable family history in this patient rules out an inherited thrombotic disorder. Normal TT rules out fibrinogen disorders. Prolonged PT and APTT in the absence of bleeding history eliminate the diagnosis of factor deficiency. The APTT test performed on a mixture of patient plasma and normal plasma did not correct the prolonged APTT. This result is indicative of an inhibitor. However, because the patient is not bleeding, factor VIII inhibitor is not indicated. A negative anticardiolipin antibody result rules out the possibility of anticardiolipin antibodies being responsible for the patient’s clinical symptoms. The laboratory test result that confirms the presence of a lupus anticoagulant is prolonged APTT that is not corrected when mixed with normal plasma and that is neutralized by preincubation with platelet phospholipid (an excess of platelet phospholipid neutralizes the antibody, resulting in normal APTT).",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 44,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "caseStudy": "Patient History:\nA 30-year-old female was referred to the hospital for evaluation for multiple spontaneous abortions and current complaint of pain and swelling in her right leg. Her family history is unremarkable.",
+      "questionSections": [
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [
+              "Laboratory Tests",
+              "Patient",
+              "Reference Range"
+            ],
+            "rows": [
+              [
+                "PT",
+                "14.5 sec",
+                "11–13 sec"
+              ],
+              [
+                "APTT",
+                "63.0 sec",
+                "28–37 sec"
+              ],
+              [
+                "TT",
+                "12.0 sec",
+                "10–15 sec"
+              ],
+              [
+                "Mixing Study APTT",
+                "",
+                ""
+              ],
+              [
+                "Preincubation and after 2-hour incubation at 37°C",
+                "57.0 sec",
+                ""
+              ],
+              [
+                "Platelet neutralization procedure",
+                "",
+                ""
+              ],
+              [
+                "Patient plasma + freeze-thawed platelets",
+                "APTT = 35 sec",
+                ""
+              ],
+              [
+                "Patient plasma + saline",
+                "APTT = 59 sec",
+                ""
+              ],
+              [
+                "Anticardiolipin antibodies done by ELISA",
+                "Negative",
+                ""
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "These clinical manifestations and laboratory results are consistent with:"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-015",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A 60-year-old patient was admitted to a hospital for a liver biopsy. The biopsy was scheduled for 11:00 a.m. The coagulation results obtained at the time of admission revealed prolonged PT with an INR of 4.5. What is the physician’s most appropriate course of action?",
+      "choices": [
+        "Proceed with biopsy because prolonged PT is expected in liver disease",
+        "Postpone the procedure for a couple of days",
+        "Cancel the procedure and start the patient on vitamin K therapy",
+        "Put patient on vitamin K therapy and proceed with the procedure immediately"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "Cancel the procedure and start the patient on vitamin K therapy",
+      "explanation": "Performing liver biopsy in a patient with a prolonged PT and a high INR could have life-threatening consequences. In this patient, the prolonged PT is likely caused by liver disease. Vitamin K is stored in the liver and is essential for activation of factors II, VII, IX, and X. Vitamin K needs bile (secreted by the liver) for its absorption. In liver disease characterized by obstruction, bile is not secreted into the gastrointestinal tract, and therefore, vitamin K is poorly absorbed. The most logical course of action is the following: Start the patient on vitamin K therapy, repeat the PT test 4 days after starting vitamin K administration, and cancel the biopsy until the patient’s PT returns to normal.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 44,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-016",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A fresh blood sample was sent to the laboratory at 8:00 a.m. for the PT test. At 4:00 p.m., the doctor requested for the APTT test to be done on the same sample. What should the technologist do?",
+      "choices": [
+        "Rerun the APTT on the 8:00 a.m. sample and report the result",
+        "Request a new sample for APTT",
+        "Run the APTT in duplicate and report the average",
+        "Mix patient plasma with normal plasma and run the APTT"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Request a new sample for APTT",
+      "explanation": "According to the CLSI guidelines, samples for APTT should be centrifuged and tested within 2 hours after collection. However, the sample is stable for 4 hours if stored at 4°C. APTT evaluates the clotting factors in the intrinsic and common coagulation pathways, including factor VIII (intrinsic) and factor V (common). Factors VIII and V are cofactors necessary for fibrin formation. However, they are both labile. Storage beyond 4 hours causes falsely elevated APTT results. The medical laboratory scientist should request a new sample for the APTT test.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 45,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-017",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "An APTT test is performed on a patient and the result is 50 sec (reference range 27–37 sec). The instrument flags the result because of failure of the delta check. The patient had had an APTT of 35 sec the previous day. The technologist calls the nursing unit to check whether the patient is on heparin therapy. The patient is not receiving heparin. What is the next appropriate step?",
+      "choices": [
+        "Check the patient’s family history for inherited factor VIII deficiency",
+        "Check to see if the patient has received any other anticoagulant medications",
+        "Perform mixing studies",
+        "Perform a factor VIII assay"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Check to see if the patient has received any other anticoagulant medications",
+      "explanation": "Traditional anticoagulant drugs, such as heparin and warfarin, are well known. Newer anticoagulant drugs are available for the treatment and prevention of thrombosis. Some of these new drugs have AT or anti–factor Xa effects and, therefore, increase PT, APTT, and TT. Examples of these drugs are argatroban, which inhibits thrombin, and fondaparinux, which inhibits factor Xa.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 45,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr"
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-018",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A patient was put on heparin therapy postoperatively for prevention of thrombosis. The patient had the following laboratory results on admission: Platelet count = 350 × 109/L; PT = 12 sec (reference: 10–13 sec); APTT = 35 sec (reference: 28–37). After 6 days of heparin therapy, the patient complained of pain and swelling in her left leg. Her platelet count dropped to 85 × 109/L, and her APTT result was 36 sec. The physician suspected HIT and ordered the PLT aggregation test to be performed immediately. The heparin-induced PLT aggregation test result was negative. Heparin therapy was continued. Several days later, the patient developed a massive clot in her left leg that necessitated amputation. Which of the following should have been recognized or initiated?",
+      "choices": [
+        "The patient should have been placed on LMWH",
+        "The heparin dose should have been increased",
+        "The negative PLT aggregation does not rule out HIT",
+        "The patient should have been placed on warfarin therapy"
+      ],
+      "correctAnswer": 2,
+      "officialAnswer": "The negative PLT aggregation does not rule out HIT",
+      "explanation": "Heparin therapy should be stopped immediately when clinical symptoms indicate HIT. The blood sample should be tested at least 4 hours after heparin therapy is discontinued. Early sampling for HIT testing may give a false-negative result because of the neutralization of antibody by heparin. LMWH should not be used in patients who develop HIT because LMWH can also cause HIT. Warfarin therapy can be started in patients who respond to heparin therapy. Heparin therapy must overlap warfarin therapy until the INR reaches a stable therapeutic range (2.0–3.0). Warfarin therapy could not be used in this patient because of lack of response to heparin therapy. The first step in the treatment of HIT is discontinuation of heparin, including intravenous catheter flushes, heparin-coated indwelling catheters, UFH, and LMWH.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 45,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "sourceFormatting": {
+        "prompt": [
+          {
+            "start": 171,
+            "end": 172,
+            "script": "sup"
+          },
+          {
+            "start": 377,
+            "end": 378,
+            "script": "sup"
+          }
+        ]
+      }
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-019",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "A 50-year-old female was admitted to a hospital for hip replacement surgery. Preoperative tests were performed, and the results showed the following: Hgb = 13.5 g/dL; Hct = 42%; PT = 12 sec; APTT = 36 sec. The patient was bleeding during surgery, and postoperative test results revealed the following Hgb = 5.0 g/dL; Hct = 16%; PT = 8 sec; APTT = 25 sec. What steps should be taken before releasing these results?",
+      "choices": [
+        "No follow-up steps are needed; report the results as obtained",
+        "Report Hgb and Hct results, adjust the anticoagulant volume, and redraw a new sample for PT and APTT",
+        "Call the nurse and ask if the patient is receiving heparin",
+        "Because the patient is severely anemic, multiply the PT and APTT results by two and report the results"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Report Hgb and Hct results, adjust the anticoagulant volume, and redraw a new sample for PT and APTT",
+      "explanation": "The anticoagulant:blood ratio should be adjusted for the PT and APTT tests in patients with a severe anemia. The standard anticoagulant volume (0.5 mL) is not sufficient for the large quantity of plasma in these patients, causing unreliable PT and APTT results. The low Hgb and Hct in this patient were caused by severe bleeding during surgery. To get accurate PT and APTT results, the amount of anticoagulant is adjusted according to the following formula: (0.00185)(V) (100–H) = C, where V = blood volume in mL; H = patient’s Hct; and C = volume of anticoagulant in mL. A new sample should be drawn to rerun the PT and APTT. There are other causes for decreased PT and APTT, such as increased fibrinogen and increased factor VIII; however, the preanalytical variables affecting unreliable results should be ruled out first. Heparin therapy would increase PT and APTT.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 46,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "questionSections": [
+        {
+          "kind": "text",
+          "text": "A 50-year-old female was admitted to a hospital for hip replacement surgery. Preoperative tests were performed, and the results showed the following:"
+        },
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [],
+            "rows": [
+              [
+                "Hgb = 13.5 g/dL; Hct = 42%; PT = 12 sec; APTT = 36 sec."
+              ],
+              [
+                "The patient was bleeding during surgery, and postoperative test results revealed the following"
+              ],
+              [
+                "Hgb = 5.0 g/dL; Hct = 16%; PT = 8 sec; APTT = 25 sec."
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "What steps should be taken before releasing these results?"
+        }
+      ]
+    },
+    {
+      "id": "harr-hemostasis-2-5-source-020",
+      "subjectId": "hematology",
+      "topicId": "hematology-2-5",
+      "prompt": "These clinical manifestations and laboratory results are consistent with:",
+      "choices": [
+        "Factor VIII inhibitor",
+        "Factor V inhibitor",
+        "Factor VIII deficiency",
+        "Lupus anticoagulant"
+      ],
+      "correctAnswer": 1,
+      "officialAnswer": "Factor V inhibitor",
+      "explanation": "The absence of a positive family history in this patient indicates acquired coagulopathy. Because both the PT and APTT test results are abnormal, the clotting factor involved is most probably in the common pathway. The lack of correction by mixing studies suggests the presence of an inhibitor. Factor V antibodies are the most common antibodies among the clotting factors of the common pathway (I, II, V, and X). Factor V antibodies are reported to be associated with surgery; some antibiotics, such as streptomycin; exposure to blood products or the bovine form of “fibrin glue.” Patients with antibodies to factor V may require long-term therapy with immunosuppressive drugs. Acute bleeding episodes may be treated by platelet transfusions. The PT test is normal in patients with factor VIII deficiency and factor VIII inhibitor. Lupus anticoagulant is not present with bleeding unless associated with coexisting thrombocytopenia.",
+      "source": {
+        "fileName": "Chapter_2_Hematology 2.pdf",
+        "page": 47,
+        "kind": "Original supplied MCQ reviewer"
+      },
+      "book": "Harr",
+      "caseStudy": "A 45-year-old woman visited her doctor complaining of easy bruising and menorrhagia occurring for the past few weeks. The patient had no history of excessive bleeding during child birth several years earlier or during a tonsillectomy in childhood. Her family history was unremarkable.",
+      "questionSections": [
+        {
+          "kind": "visual",
+          "stimulus": {
+            "kind": "table",
+            "caption": "",
+            "columns": [
+              "Laboratory Tests",
+              "Patient",
+              "Reference Range"
+            ],
+            "rows": [
+              [
+                "PT",
+                "45 sec",
+                "11–13 sec"
+              ],
+              [
+                "APTT",
+                "125 sec",
+                "28–37 sec"
+              ],
+              [
+                "TT",
+                "14 sec",
+                "10–15 sec"
+              ],
+              [
+                "Mixing studies (patient plasma + normal plasma):",
+                "PT = 40 sec; APTT = 90 sec",
+                ""
+              ],
+              [
+                "Platelet count and morphology:",
+                "normal",
+                ""
+              ],
+              [
+                "Liver function tests:",
+                "normal",
+                ""
+              ]
+            ]
+          }
+        },
+        {
+          "kind": "text",
+          "text": "These clinical manifestations and laboratory results are consistent with:"
+        }
+      ]
+    }
+  ]
+}

@@ -13,6 +13,20 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-13-1",
+    version: "v1.13.1",
+    date: "Pending",
+    type: "minor",
+    title: "Completed Harr Hematology 2 Questions and Fixed Rodak",
+    summary: "Added 110 original Harr questions and split two Rodak hematology questions that were joined together.",
+    tags: ["Reviewers", "Fixes"],
+    highlights: [
+      "Harr Hematology 2 now includes 135 questions across all five topics.",
+      "Kept existing question history and saved progress.",
+      "Split Rodak Hematology Chapter 17 Questions 2 and 3 into two separate questions with the original patient case and iron-study table.",
+    ],
+  },
+  {
     id: "update-v1-13-0",
     version: "v1.13.0",
     date: "November 12, 2026",

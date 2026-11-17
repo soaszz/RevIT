@@ -26,7 +26,7 @@ test("public edition lists use canonical publication flags, excluding developmen
 
 });
 test("static MCQ totals match source lengths and future publication changes update without hardcoded book totals",()=>{
- assert.deepEqual(getCounts(),{free:1606,proOnly:2848,total:4454});
+ assert.deepEqual(getCounts(),{free:1668,proOnly:2848,total:4516});
  const original=structuredClone(QUESTION_BANKS);
  for(const [key,file] of [["harr","reviewer"],["ciulla","ciulla"],["rodak","rodak"],["strasinger","strasinger"]] as const){const registry=Object.fromEntries(Object.entries(QUESTION_BANKS).map(([id,book])=>[id,{...book,published:id===key}]));assert.equal(getCounts(registry).total,key==="harr"?activeHarrQuestions.length:JSON.parse(readFileSync(`app/content/${file}Content.json`,"utf8")).questions.length);}
  assert.equal(JSON.parse(readFileSync("app/content/reviewerContent.json","utf8")).questions.length,1593,"historical Harr bank retained");
@@ -63,7 +63,7 @@ test("Pricing and Pro distinguish upcoming editions without adding them to curre
   assert.doesNotMatch(current,/BOC|Elsevier/);
   for(const name of ["Harr","Ciulla","Rodak","Strasinger"]) assert.ok(current.includes(name));
  }
- assert.deepEqual(getCounts(),{free:1606,proOnly:2848,total:4454});
+ assert.deepEqual(getCounts(),{free:1668,proOnly:2848,total:4516});
  assert.deepEqual(PUBLIC_REVIEWERS.books.map(book=>book.label),["Harr","Ciulla","Rodak","Strasinger"]);
  assert.doesNotMatch(JSON.stringify(PUBLIC_REVIEWERS),/BOC|Elsevier/);
  const config=readFileSync("next.config.ts","utf8");

@@ -1,0 +1,15 @@
+{
+  "app/content/rodakContent.json": {
+    "before": "bef8e50d3a23c467e4bf7613d5332a87c6699da61d6c291778a86d368c3ab070",
+    "after": "0f1e51734bbed7ce2ec6eaabec2a7d96c5125baf8776f85a2302ae4c7c09edac",
+    "reason": "Split Rodak Chapter 17 Questions 2 and 3 into two source-faithful records; preserved both existing IDs and question counts.",
+    "productionBaseBefore": "25f050f54acfee88cb2be635577c5ebbdece8a25",
+    "contentGitBlobSha256": "b47704ac1b57e36269ef70f1e8a5fa708cd3911213bd7589efed70fb19f70624"
+  },
+  "app/components/QuestionChoiceTable.module.css": {
+    "before": "39e19c7aa1608ffe4671c7efbf5dbcd0d858490a8e6644149b07dd54e93a2f6a",
+    "after": "9f1542564e0ff2d183e4ac204e6e23bebe4c092a7b6a1d7a278a7aa517235bec",
+    "reason": "Keep laboratory-result values on one line while preserving the existing controlled horizontal scroll and desktop layout.",
+    "productionBaseBefore": "25f050f54acfee88cb2be635577c5ebbdece8a25"
+  }
+}
