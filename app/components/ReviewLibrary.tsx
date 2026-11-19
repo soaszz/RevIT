@@ -1,4 +1,5 @@
 "use client";
+import { MTAP_2_CATEGORY } from "../lib/mtap2Preset";
 
 import React, { useState, useMemo } from "react";
 import styles from "./ReviewLibrary.module.css";
@@ -8,7 +9,7 @@ import type { ReviewTimerDuration } from "../lib/reviewTimer";
 import type { ReviewLibraryMode } from "./ReviewModeSwitch";
 import ReviewModeSwitch from "./ReviewModeSwitch";
 import Flashcards from "./Flashcards";
-import CollectionHeader from "./CollectionHeader";
+import CollectionHeader, { CollectionPanel } from "./CollectionHeader";
 import {
   ALL_MAJORS_CATEGORY,
   MTAP_1_CATEGORY,
@@ -97,6 +98,14 @@ export default function ReviewLibrary({
   onRequestConfirm,
 }: ReviewLibraryProps) {
   // Collapsed / Expanded state per subject
+  const [expandedCollectionIds, setExpandedCollectionIds] = useState<Set<string>>(() => new Set());
+  function toggleCollection(id: string) {
+    setExpandedCollectionIds((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
   const [expandedSubjectIds, setExpandedSubjectIds] = useState<Set<string>>(() => new Set());
   // Active navigation tab per subject: "Harr" | "Ciulla" (default "Harr")
   const [activeEditionBySubject, setActiveEditionBySubject] = useState<Record<string, ReviewerBook>>({});
@@ -196,7 +205,7 @@ export default function ReviewLibrary({
   // If in Flashcards mode, render Flashcards component directly
   if (libraryMode === "flashcards") {
     return (
-      <div className={styles.libraryShell}>
+      <div className={`${styles.libraryShell} ${preferences.mtap_features_enabled ? styles.nuLibrary : ""}`}>
         {!isFlashcardReviewing && (
           <div className={styles.topControlStrip}>
             <div className={styles.modeSwitcherWrapper}>
@@ -206,6 +215,8 @@ export default function ReviewLibrary({
         )}
         <Flashcards
           isNuRevit={preferences.mtap_features_enabled}
+          expandedCollectionIds={expandedCollectionIds}
+          onToggleCollection={toggleCollection}
           selectedBook={selectedBook}
           proActive={proActive}
           subjects={allAvailableSubjects}
@@ -223,7 +234,7 @@ export default function ReviewLibrary({
   }
 
   return (
-    <div className={styles.libraryShell}>
+    <div className={`${styles.libraryShell} ${preferences.mtap_features_enabled ? styles.nuLibrary : ""}`}>
       {/* ─── Top Control Strip: Mode Selector ─── */}
       <div className={styles.topControlStrip}>
         <div className={styles.modeSwitcherWrapper}>
@@ -277,6 +288,7 @@ export default function ReviewLibrary({
             >
               MTAP 1
             </button>
+            <button type="button" className={`${styles.categoryChipBtn} ${subjectSearch.trim().toLowerCase() === "mtap 2" ? styles.active : ""}`} onClick={() => onSubjectSearchChange(MTAP_2_CATEGORY)}>MTAP 2</button>
             <button
               type="button"
               className={`${styles.categoryChipBtn} ${isOtherMajorsActive ? styles.active : ""}`}
@@ -306,12 +318,17 @@ export default function ReviewLibrary({
             <div className={styles.subjectCategory} key={section.id}>
               {section.title && (
                 <CollectionHeader
+                  collection={section.id}
                   kicker={preferences.mtap_features_enabled ? "NU RevIT collection" : "Standard RevIT collection"}
                   title={section.title}
                   description={section.description}
+                  expanded={expandedCollectionIds.has(section.id)}
+                  panelId={`mcq-nu-${section.id}`}
+                  onToggle={preferences.mtap_features_enabled ? () => toggleCollection(section.id) : undefined}
                 />
               )}
 
+              <CollectionPanel enabled={preferences.mtap_features_enabled} panelId={`mcq-nu-${section.id}`} expanded={expandedCollectionIds.has(section.id)}>
               {section.subjects.map((subject: UnifiedSubject) => {
                 // Get all topics for this subject
                 const subjectTopics = allAvailableTopics.filter((t) =>
@@ -581,6 +598,7 @@ export default function ReviewLibrary({
                   </section>
                 );
               })}
+              </CollectionPanel>
             </div>
           ))}
 

@@ -1,4 +1,5 @@
 "use client";
+import { MTAP_2_CATEGORY } from "../lib/mtap2Preset";
 
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -23,7 +24,7 @@ import {
 } from "../lib/reviewerLibrary";
 import reviewerStyles from "./Flashcards.module.css";
 import styles from "./ReviewLibrary.module.css";
-import CollectionHeader from "./CollectionHeader";
+import CollectionHeader, { CollectionPanel } from "./CollectionHeader";
 import QuestionStimulus from "./QuestionStimulus";
 import SourceText from "./SourceText";
 import { QUESTION_BANKS, isQuestionBankPublished } from "../lib/entitlements";
@@ -63,6 +64,8 @@ function getBookBadgeStyle(book: "Harr" | "Ciulla" | "Rodak" | "Strasinger" | st
 
 export default function Flashcards({
   isNuRevit,
+  expandedCollectionIds,
+  onToggleCollection,
   selectedBook: controlledBook,
   proActive = false,
   subjects = freeSubjects,
@@ -76,6 +79,8 @@ export default function Flashcards({
   onUpgradePro,
 }: {
   isNuRevit: boolean;
+  expandedCollectionIds: ReadonlySet<string>;
+  onToggleCollection: (id: string) => void;
   selectedBook?: ReviewerBook | "all";
   proActive?: boolean;
   subjects?: Subject[];
@@ -125,8 +130,8 @@ export default function Flashcards({
   }, [unifiedSubjects, topics, subjectSearch]);
 
   const subjectSections = useMemo(() => {
-    return buildSubjectSections(visibleSubjects, isNuRevit);
-  }, [visibleSubjects, isNuRevit]);
+    return buildSubjectSections(visibleSubjects, isNuRevit, subjectSearch);
+  }, [visibleSubjects, isNuRevit, subjectSearch]);
 
   const topicQuestionCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -466,6 +471,7 @@ export default function Flashcards({
             >
               MTAP 1
             </button>
+            <button type="button" className={`${styles.categoryChipBtn} ${subjectSearch.trim().toLowerCase() === "mtap 2" ? styles.active : ""}`} onClick={() => setSubjectSearch(MTAP_2_CATEGORY)}>MTAP 2</button>
             <button
               type="button"
               className={`${styles.categoryChipBtn} ${isOtherMajorsActive ? styles.active : ""}`}
@@ -495,12 +501,17 @@ export default function Flashcards({
             <div className={styles.subjectCategory} key={section.id}>
               {section.title && (
                 <CollectionHeader
+                  collection={section.id}
                   kicker={isNuRevit ? "NU RevIT collection" : "Standard RevIT collection"}
                   title={section.title}
                   description={section.description}
+                  expanded={expandedCollectionIds.has(section.id)}
+                  panelId={`flashcard-nu-${section.id}`}
+                  onToggle={isNuRevit ? () => onToggleCollection(section.id) : undefined}
                 />
               )}
 
+              <CollectionPanel enabled={isNuRevit} panelId={`flashcard-nu-${section.id}`} expanded={expandedCollectionIds.has(section.id)}>
               {section.subjects.map((subject: UnifiedSubject) => {
                 const subjectTopics = topics.filter((t) =>
                   subject.topicIds ? subject.topicIds.includes(t.id) : t.subjectId === subject.id,
@@ -780,6 +791,7 @@ export default function Flashcards({
                   </section>
                 );
               })}
+              </CollectionPanel>
             </div>
           ))}
 

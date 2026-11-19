@@ -1,4 +1,5 @@
 import type { ReviewerBook, Subject, Topic } from "../content/reviewerContent";
+import { MTAP_2_CATEGORY, MTAP_2_SUBJECTS } from "./mtap2Preset";
 
 export const MTAP_1_CATEGORY = "MTAP 1" as const;
 export const OTHER_MAJORS_CATEGORY = "Other Majors" as const;
@@ -265,6 +266,9 @@ export function filterSubjectsBySearch<T extends Subject>(
 ): T[] {
   const query = search.trim().toLocaleLowerCase();
   if (!query) return allSubjects;
+  const collection = ACADEMIC_COLLECTIONS.find(c => c.title.toLowerCase() === query);
+  if (collection?.entries) return allSubjects.filter(subject => collection.entries!.some(entry => entry.collections.includes(getCanonicalSubjectId(subject.id))));
+  if (query === OTHER_MAJORS_CATEGORY.toLowerCase()) return buildSubjectSections(allSubjects, true).find(s => s.id === "other-majors")?.subjects ?? [];
 
   return allSubjects.filter((subject) => {
     const subjectTopics = allTopics.filter((topic) =>
@@ -280,31 +284,44 @@ export function filterSubjectsBySearch<T extends Subject>(
   });
 }
 
-export function buildSubjectSections<T extends Subject = UnifiedSubject>(visibleSubjects: T[], isNuRevit: boolean): SubjectSection<T>[] {
-  if (!isNuRevit) {
-    return [{
-      id: "all-majors",
-      title: ALL_MAJORS_CATEGORY,
-      description: "Every available Medical Technology major in one collection.",
-      subjects: visibleSubjects,
-    }];
-  }
+export type AcademicCollection = {
+  id: string;
+  title: string;
+  description: string;
+  entries?: readonly { id: string; name: string; collections: readonly string[] }[];
+};
 
-  const mtapOneSubjects = visibleSubjects.filter((subject) => subject.category === MTAP_1_CATEGORY);
-  const otherMajors = visibleSubjects.filter((subject) => subject.category !== MTAP_1_CATEGORY);
+// Register named collections here; ordering and Other Majors exclusion share this inventory.
+export const ACADEMIC_COLLECTIONS: readonly AcademicCollection[] = [
+  { id: "mtap-1", title: MTAP_1_CATEGORY, description: "Core Medical Technology subjects included in NU MTAP 1." },
+  { id: "mtap-2", title: MTAP_2_CATEGORY, description: "Core Medical Technology subjects included in NU MTAP 2.", entries: MTAP_2_SUBJECTS },
+];
 
-  return [
-    {
-      id: "mtap-1",
-      title: MTAP_1_CATEGORY,
-      description: "Core Medical Technology subjects included in NU MTAP 1.",
-      subjects: mtapOneSubjects,
-    },
-    {
-      id: "other-majors",
-      title: OTHER_MAJORS_CATEGORY,
-      description: "Additional Medical Technology subjects outside MTAP 1.",
-      subjects: otherMajors,
-    },
-  ].filter((section) => section.subjects.length > 0);
+export function buildSubjectSections<T extends Subject = UnifiedSubject>(visibleSubjects: T[], isNuRevit: boolean, search = "", collections: readonly AcademicCollection[] = ACADEMIC_COLLECTIONS): SubjectSection<T>[] {
+  if (!isNuRevit) return [{ id: "all-majors", title: ALL_MAJORS_CATEGORY,
+    description: "Every available Medical Technology major in one collection.", subjects: visibleSubjects }];
+
+  const assigned = new Set<string>();
+  const named = collections.map(collection => {
+    const subjects = collection.entries ? collection.entries.flatMap(entry => {
+      const matches = entry.collections.flatMap(id => visibleSubjects.filter(subject => getCanonicalSubjectId(subject.id) === id));
+      for (const match of matches) assigned.add(match.id);
+      if (!matches.length) return [];
+      return [{ ...matches[0], id: `${collection.id === "mtap-2" ? "mtap2" : collection.id}-${entry.id}`, name: entry.name,
+        topicIds: Array.from(new Set(matches.flatMap(s => s.topicIds))),
+        books: Array.from(new Set(matches.flatMap(s => (s as Partial<UnifiedSubject>).books ?? (s.book ? [s.book] : [])))),
+        sourceSubjectIds: Array.from(new Set(matches.flatMap(s => (s as Partial<UnifiedSubject>).sourceSubjectIds ?? [s.id]))),
+      }];
+    }) : visibleSubjects.filter(subject => {
+      if (subject.category !== collection.title) return false;
+      assigned.add(subject.id); return true;
+    });
+    return { id: collection.id, title: collection.title, description: collection.description, subjects };
+  });
+  const sections: SubjectSection<T>[] = [...named, { id: "other-majors", title: OTHER_MAJORS_CATEGORY,
+    description: "Explore additional Medical Technology subjects not covered by the existing NU RevIT collections.",
+    subjects: visibleSubjects.filter(subject => !assigned.has(subject.id)) }];
+  const query = search.trim().toLowerCase();
+  const isCollectionFilter = [...collections.map(c => c.title), OTHER_MAJORS_CATEGORY].some(title => title.toLowerCase() === query);
+  return sections.filter(section => section.subjects.length > 0 && (!isCollectionFilter || section.title?.toLowerCase() === query));
 }

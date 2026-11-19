@@ -13,6 +13,22 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-14-0",
+    version: "v1.14.0",
+    date: "Pending",
+    type: "major",
+    title: "Added MTAP 2 and Improved Study Tools",
+    summary: "Added MTAP 2 collections and grades, with clearer study screens and loading feedback.",
+    tags: ["MTAP", "Improvements"],
+    highlights: [
+      "Added MTAP 2 review collections and separate grades without changing saved MTAP 1 grades.",
+      "Organized NU collections with independent expand and collapse controls and Other Majors last.",
+      "Improved grade cards, the grade simulator and its hypothetical score control.",
+      "Showed the full published Question Bank catalog with a Free feature label.",
+      "Improved startup feedback, paused-session details, theme controls, pricing displays and the RevIT AI composer.",
+    ],
+  },
+  {
     id: "update-v1-13-1",
     version: "v1.13.1",
     date: "November 17, 2026",

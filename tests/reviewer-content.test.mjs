@@ -194,7 +194,10 @@ test("gradebook groups all subjects under assessment categories without number s
   assert.match(grades, /Oral Revalida/);
   assert.match(grades, /Written Revalida/);
   assert.match(grades, /Comprehensive Exam/);
-  assert.match(grades, /SUBJECT_LABELS/);
+  assert.match(grades, /const gradeSubjectLabel = \(subject: string\) => isMtap2 \? MTAP_2_GRADE_LABELS\[subject\] \?\? subject : subject/);
+  assert.match(grades, /Hematology: "Hematology 2"/);
+  assert.match(grades, /"Clinical Chemistry": "Clinical Chemistry 2"/);
+  assert.match(grades, /<strong>\{gradeSubjectLabel\(subject\)\}<\/strong>/);
   assert.match(grades, /Percentage/);
   assert.match(grades, /Save all grades/);
   assert.doesNotMatch(css, /\.grade-save-bar\s*\{[^}]*position:\s*sticky/);
@@ -322,7 +325,9 @@ test("gates startup behind the branded initialization screen", async () => {
   const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
   assert.match(app, /const \[isInitializing, setIsInitializing\] = useState\(true\)/);
-  assert.match(app, /if \(isInitializing\) return <RevITLoadingScreen \/>/);
+  assert.match(app, /if \(isInitializing \|\| startupAccess\.owner !== accessOwner \|\| startupAccess\.status === "loading"\) return <RevITLoadingScreen \/>/);
+  assert.match(app, /if \(startupAccess\.status === "error"\) return <RevITLoadingScreen error onRetry=/);
+  assert.match(app, /setStartupAccess\(\{ owner: accessOwner, status: "loading" \}\); setAccessRetry\(\(value\) => value \+ 1\)/);
   assert.match(app, /const DEFAULT_PROFILE: LearnerProfile = \{ name: "Student"/);
   assert.doesNotMatch(app, /Jamie/);
   assert.match(loader, /src="(\/icons\/neu\/revit-wordmark\.png|\/revit-logo\.png)"/);

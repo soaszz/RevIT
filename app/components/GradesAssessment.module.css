@@ -1,0 +1,105 @@
+.assessment {
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--ink) 4%, transparent);
+}
+.assessment::before { content: none; }
+.assessment :global(.grade-category-heading),
+.assessment :global(.custom-category-header) {
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.assessment :global(.grade-category-heading) > div,
+.assessment :global(.category-title-group) { min-width: 0; flex: 1; }
+.assessment :global(.grade-category-heading) h2,
+.assessment :global(.category-title-group) h4 {
+  margin: 6px 0 0;
+  font-size: clamp(20px, 2vw, 24px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.assessment :global(.eyebrow) { font-size: 10px; letter-spacing: .06em; color: var(--green-dark); }
+.assessment :global(.grade-weight-pill),
+.assessment :global(.category-weight-badge),
+.assessment :global(.category-contribution-pill) {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--green-dark);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.6;
+}
+.assessment :global(.grade-weight-pill) { margin-top: 3px; white-space: nowrap; }
+.assessment :global(.grade-subject-list) label {
+  grid-template-columns: minmax(0, 1fr) minmax(104px, 132px);
+  min-height: 68px;
+  gap: 16px;
+  padding: 13px 0;
+}
+.assessment :global(.grade-entry-label),
+.assessment :global(.assessment-name) { min-width: 0; overflow-wrap: anywhere; }
+.assessment :global(.grade-entry-label) strong { font-size: 13px; line-height: 1.5; font-weight: 600; }
+.assessment :global(.grade-entry-label) small { font-size: 10px; line-height: 1.5; }
+.assessment :global(.grade-score-control) { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.assessment :global(.grade-score-input), .control {
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 11px;
+  border: 1px solid color-mix(in srgb, var(--muted) 75%, var(--paper));
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: none;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+.assessment :global(.grade-score-input)::placeholder { color: var(--muted); opacity: 1; }
+.assessment :global(.grade-score-input):focus-visible, .control:focus-visible {
+  outline: 2px solid var(--green-dark);
+  outline-offset: 2px;
+  border-color: var(--green-dark);
+}
+.assessment :global(.grade-score-input):disabled, .control:disabled { opacity: .6; cursor: not-allowed; background: var(--surface-soft); }
+.assessment :global(.grade-score-input):invalid { border-color: var(--ink); }
+.assessment :global(.grade-category-total) { gap: 12px; flex-wrap: wrap; padding-top: 18px; }
+.assessment :global(.grade-category-total) span { font-size: 10px; line-height: 1.5; letter-spacing: .04em; }
+.assessment :global(.grade-category-total) strong { font-size: 27px; font-variant-numeric: tabular-nums; }
+.assessment :global(.category-actions) { flex-wrap: wrap; }
+.assessment :global(.assessment-row) { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; padding: 12px 0; }
+.assessment :global(.assessment-name) { white-space: normal; line-height: 1.5; }
+.assessment :global(.grade-score-input.inline) { width: 80px; }
+.assessment :global(.text-button-subtle),
+.assessment :global(.delete-assessment-btn) { min-width: 40px; min-height: 40px; border: 0; }
+@media (max-width: 640px) {
+  .assessment { padding: 18px; }
+  .assessment :global(.grade-subject-list) label { grid-template-columns: minmax(0, 1fr) 112px; gap: 12px; }
+}
+@media (max-width: 375px) {
+  .assessment { padding: 16px; }
+  .assessment :global(.grade-subject-list) label { grid-template-columns: minmax(0, 1fr) 104px; gap: 10px; }
+}
+
+.control[type="number"] { text-align: right; }
+
+.control { width: 100%; font-family: inherit; }
+
+/* Summary metadata shares the same neutral card/clean-text language. */
+.overview:global(.grade-overview-card) { border: 1px solid var(--line); border-radius: 16px; }
+.overview :global(.grade-summary-grid) > div { border: 1px solid var(--line); border-radius: 14px; }
+.overview :global(.grade-mode-badge), .overview :global(.state-pill), .overview .contextLabel {
+  padding: 0; border: 0; border-radius: 0; background: transparent;
+  color: var(--green-dark); font-size: 11px; font-weight: 650; line-height: 1.5;
+}

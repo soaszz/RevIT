@@ -1,0 +1,4 @@
+.header { flex-wrap: wrap; }
+.header > :first-child { flex-shrink: 0; }
+.header > :last-child { margin-left: auto; }
+.free { flex-shrink: 0; padding: 2px 6px; border-radius: 4px; background: var(--green-soft); color: var(--green-dark); font-size: 10px; line-height: 1.4; font-weight: 750; letter-spacing: .04em; white-space: nowrap; }

@@ -45,10 +45,7 @@ test("NU RevIT groups Harr subjects under MTAP 1 and Other Majors", () => {
     "aubf",
   ]);
   assert.deepEqual(otherMajors.subjects.map((subject) => subject.id), [
-    "parasitology",
-    "mycology-and-virology",
     "immunohematology",
-    "immunology",
     "laboratory-operations",
   ]);
   assert.ok(mtapOne.subjects.every((subject) => subject.category === "MTAP 1"));
@@ -69,11 +66,7 @@ test("NU RevIT groups Ciulla subjects under MTAP 1 and Other Majors", () => {
     "ciulla-urinalysis-and-body-fluids",
   ]);
   assert.deepEqual(otherMajors.subjects.map((subject) => subject.id), [
-    "ciulla-hemostasis",
-    "ciulla-immunology-and-serology",
     "ciulla-immunohematology",
-    "ciulla-mycology-and-virology",
-    "ciulla-parasitology",
     "ciulla-molecular-diagnostics",
     "ciulla-laboratory-calculations",
     "ciulla-general-laboratory-principles",
@@ -92,7 +85,7 @@ test("NU RevIT groups combined subjects under MTAP 1 and Other Majors", () => {
   assert.ok(mtapOne);
   assert.ok(otherMajors);
   assert.equal(mtapOne.subjects.length, 8);
-  assert.equal(otherMajors.subjects.length, 14);
+  assert.equal(otherMajors.subjects.length, 7);
   assert.ok(mtapOne.subjects.every((subject) => subject.category === "MTAP 1"));
   assert.ok(otherMajors.subjects.every((subject) => subject.category === "Other Majors"));
 });
@@ -137,7 +130,7 @@ test("MCQ and flashcard libraries expose shared category choices, search, and co
   assert.match(app, /libraryMode=\{libraryMode\}/);
   assert.match(flashcards, /isNuRevit:\s*boolean/);
   assert.match(reviewLibrary, /isNuRevit=\{preferences\.mtap_features_enabled\}/);
-  assert.match(flashcards, /buildSubjectSections\(visibleSubjects, isNuRevit\)/);
+  assert.match(flashcards, /buildSubjectSections\(visibleSubjects, isNuRevit, subjectSearch\)/);
   assert.match(search, /type="search"/);
   assert.match(search, /STANDARD_CATEGORY_CHOICES/);
   assert.match(search, /All Majors/);

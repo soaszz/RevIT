@@ -88,7 +88,7 @@ export default async function AuthPage({ searchParams }: { searchParams: Promise
         <div className={styles.headerInner}>
           <a className={styles.brand} href="#main" aria-label="RevIT — Review It Thoroughly"><Image src="/icons/neu/revit-wordmark.png" alt="RevIT" width={132} height={44} /></a>
           <nav className={styles.navigation} aria-label="Public navigation"><a href="#features">Features</a><a href="#plans">Plans</a></nav>
-          <div className={styles.headerActions}><PublicThemeToggle />{!signedIn && <a className={styles.signIn} href={authHref("login")}>Sign In</a>}<a className={`primary-button ${styles.primary}`} href={startHref}>{signedIn ? "Open RevIT" : "Get Started"}<span aria-hidden="true">↗</span></a></div>
+          <div className={styles.headerActions}><PublicThemeToggle iconOnly />{!signedIn && <a className={styles.signIn} href={authHref("login")}>Sign In</a>}<a className={`primary-button ${styles.primary}`} href={startHref}>{signedIn ? "Open RevIT" : "Get Started"}<span aria-hidden="true">↗</span></a></div>
         </div>
       </header>
       <main id="main" className={styles.main}>

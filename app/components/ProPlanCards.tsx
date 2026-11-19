@@ -11,7 +11,9 @@ export default function ProPlanCards({ renew = false }: { renew?: boolean }) {
           return <article key={plan.months} className={styles.prepaidCard} data-best-value={plan.months === 6 ? "true" : undefined}>
             <p className={styles.planLabel}>{plan.months === 6 ? "Best Value" : "RevIT Pro"}</p>
             <h3>{plan.months} {plan.months === 1 ? "month" : "months"}</h3>
-            <p className={styles.upfrontPrice}>₱{plan.price}</p>
+            <p className={styles.upfrontPrice}>₱{plan.price}{savings > 0 && <>
+              <del className={styles.monthlyComparison} aria-label={`₱${PRO_PLANS[0].price * plan.months}, compared with purchasing the ₱${PRO_PLANS[0].price} monthly plan for the same duration.`} title={`Compared with purchasing the ₱${PRO_PLANS[0].price} monthly plan for the same duration.`}>₱{PRO_PLANS[0].price * plan.months}</del>
+            </>}</p>
             <p className={styles.paymentTerm}>One upfront payment</p>
             <p className={styles.equivalent}>₱{(plan.price / plan.months).toFixed(2)} per month equivalent</p>
             <p className={styles.savings}>{savings ? `Save ₱${savings} versus monthly purchases` : "Standard monthly price"}</p>

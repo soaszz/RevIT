@@ -1,0 +1,10 @@
+.details { min-width: 0; padding: 16px; border-radius: 14px; background: var(--surface-soft); border: 1px solid var(--line); margin-bottom: 22px; }
+.topic { margin: 0; color: var(--ink); font-size: 16px; line-height: 1.4; font-weight: 750; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.identity { margin: 5px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+.progress { display: grid; gap: 8px; margin-top: 16px; }
+.completion { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 12px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.completion span { min-width: 0; overflow-wrap: anywhere; }
+.completion strong { color: var(--ink); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.track { height: 7px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.fill { height: 100%; background: var(--green); border-radius: inherit; }
+.retry { margin: 10px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }

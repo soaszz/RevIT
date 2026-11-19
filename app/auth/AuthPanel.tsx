@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { Factor } from "@supabase/supabase-js";
 import { type FormEvent, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
@@ -358,7 +359,7 @@ export default function AuthPanel({ next = "/overview", turnstileSiteKey, initia
   return (
     <form className="auth-card" onSubmit={submit}>
       <div className="auth-heading">
-        <p className="eyebrow">RevIT</p>
+        <Image className="auth-wordmark" src="/icons/neu/revit-wordmark.png" alt="RevIT" width={132} height={44} />
         <h2>{mode === "login" ? "Welcome back" : "Create your RevIT account"}</h2>
         <p>{mode === "login" ? "Continue your review and pick up where you left off." : "Build your review history, track your progress, and keep your study activity connected to your account."}</p>
       </div>

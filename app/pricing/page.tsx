@@ -52,7 +52,7 @@ export default async function PricingPage() {
           </span>
           <span>Review It Thoroughly.</span>
         </Link>
-        <PublicThemeToggle />
+        <PublicThemeToggle iconOnly />
       </header>
 
       <div className={styles.subHeaderNav}>

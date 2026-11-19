@@ -187,7 +187,8 @@
 .signedIn { display: grid; gap: 24px; padding: 36px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
 .signedIn p { color: var(--muted); }
 .signedIn p a { color: var(--green-dark); }
-.landing :global(.auth-card) { gap: 20px; padding: 32px; }
+.landing :global(.auth-card) { gap: 20px; padding: 32px; border-radius: 18px; overflow: clip; }
+.landing :global(.auth-wordmark) { display: block; width: 132px; max-width: 100%; height: auto; }
 .landing :global(.auth-heading) { padding-right: 0; gap: 12px; }
 .landing :global(.auth-heading) h2 { font-size: 30px; letter-spacing: -.035em; }
 .landing :global(.auth-heading) > p:last-child { font-size: 14px; }

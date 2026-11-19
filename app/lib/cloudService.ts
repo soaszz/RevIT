@@ -157,7 +157,26 @@ async function loadQuestionReinforcement(client: SupabaseClient, userId: string)
   return { data: rows, error: null };
 }
 
-export async function loadCloudSnapshot(client: SupabaseClient, userId: string): Promise<CloudSnapshot> {
+// Share only pending requests for the same client/identity; never cache entitlement decisions.
+const pendingEntitlements = new WeakMap<SupabaseClient, Map<string, { promise: Promise<Awaited<ReturnType<SupabaseClient["rpc"]>>>; isCurrentOwner: () => boolean }>>();
+function loadSnapshotEntitlement(client: SupabaseClient, userId: string, isCurrentOwner: () => boolean) {
+  let requests = pendingEntitlements.get(client);
+  if (!requests) { requests = new Map(); pendingEntitlements.set(client, requests); }
+  const existing = requests.get(userId);
+  if (existing?.isCurrentOwner()) return existing.promise;
+  let timer: ReturnType<typeof setTimeout>;
+  const timeout = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Request timed out.")), 12_000); });
+  const request = Promise.race([Promise.resolve(client.rpc("get_my_entitlement")), timeout])
+    .finally(() => { clearTimeout(timer); if (requests.get(userId)?.promise === request) requests.delete(userId); });
+  requests.set(userId, { promise: request, isCurrentOwner });
+  return request;
+}
+
+export async function loadCloudSnapshot(client: SupabaseClient, userId: string, onAccessReady?: (profile: Profile | null, entitlement: SubscriptionEntitlement) => void, isCurrentOwner: () => boolean = () => true): Promise<CloudSnapshot> {
+  // The caller binds this read to the server-verified owner and existing auth generation.
+  // Stored session users are not identity evidence; getSession is token lifecycle only.
+  const assertCurrentOwner = () => { if (!isCurrentOwner()) throw new Error("AUTH_SESSION_CHANGED"); };
+  assertCurrentOwner();
   if (client.auth && typeof client.auth.getSession === "function") {
     const { data: sessionData } = await client.auth.getSession();
     if (!sessionData?.session) {
@@ -167,6 +186,7 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
       }
     }
   }
+  assertCurrentOwner();
 
   const preferencesPromise = (async () => {
     const mtap = await client.from("user_preferences")
@@ -202,9 +222,22 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
       } : null,
     };
   })();
+  const profilePromise = client.from("profiles").select(`${PROFILE_COLUMNS},plan,pro_started_at,pro_expires_at`).eq("id", userId).maybeSingle()
+    .then((res) => res.error ? client.from("profiles").select(PROFILE_COLUMNS).eq("id", userId).maybeSingle() : res);
+  const entitlementPromise = loadSnapshotEntitlement(client, userId, isCurrentOwner).then(async (result) => {
+    if (onAccessReady) {
+      const row = Array.isArray(result.data) ? result.data[0] : result.data;
+      if (result.error || !row || !["free", "pro"].includes(row.effective_plan)) throw new Error("Entitlement could not be verified.");
+      const profile = await profilePromise;
+      if (profile.error) throw new Error(profile.error.message);
+      assertCurrentOwner();
+      if (!profile.data || profile.data.id !== userId) throw new Error("AUTH_SESSION_CHANGED");
+      onAccessReady(profile.data as Profile | null, subscriptionEntitlement(result.data));
+    }
+    return result;
+  });
   const [profile, grades, activity, exams, preferences, reinforcement, attempts, entitlement, customGradebooks, pendingActivation] = await Promise.all([
-    client.from("profiles").select(`${PROFILE_COLUMNS},plan,pro_started_at,pro_expires_at`).eq("id", userId).maybeSingle()
-      .then((res) => res.error ? client.from("profiles").select(PROFILE_COLUMNS).eq("id", userId).maybeSingle() : res),
+    profilePromise,
     client.from("grades").select("id,user_id,subject,pre_test,post_test,comprehensive,written_revalida,oral_revalida").eq("user_id", userId),
     client.from("daily_activity").select("id,user_id,activity_date,questions_answered,correct_answers,review_count,subjects_studied").eq("user_id", userId)
       .order("activity_date", { ascending: false }).limit(SNAPSHOT_ROW_LIMIT),
@@ -213,7 +246,7 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
     loadQuestionReinforcement(client, userId),
     client.from("question_attempts").select(QUESTION_ATTEMPT_COLUMNS).eq("user_id", userId)
       .order("answered_at", { ascending: false }).limit(1000),
-    client.rpc("get_my_entitlement"),
+    entitlementPromise,
     loadCustomGradebooks(client, userId).catch(() => []),
     Promise.resolve(
       client
@@ -228,6 +261,8 @@ export async function loadCloudSnapshot(client: SupabaseClient, userId: string):
       .then((res: any) => (res?.error ? null : res?.data))
       .catch(() => null),
   ]);
+  assertCurrentOwner();
+  if (profile.data && profile.data.id !== userId) throw new Error("AUTH_SESSION_CHANGED");
   const failure = [profile, grades, activity, exams, preferences].find((result) => result.error)?.error;
   if (failure) throw new Error(failure.message);
   if (reinforcement.error && !isMissingQuestionReinforcementTableError(reinforcement.error)) {

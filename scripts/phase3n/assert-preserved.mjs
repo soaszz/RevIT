@@ -78,5 +78,10 @@ export function assertPreserved(path, expected) {
     assert.equal(rodakCh17[path].before, current, path + ": broken Rodak Chapter 17 preservation chain");
     current = rodakCh17[path].after;
   }
+  const mtap2 = JSON.parse(readFileSync(new URL("docs/mtap2-banner/authorized-changes.json", root), "utf8"));
+  if (mtap2[path]) {
+    assert.equal(mtap2[path].before, current, path + ": broken MTAP 2/banner preservation chain");
+    current = mtap2[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

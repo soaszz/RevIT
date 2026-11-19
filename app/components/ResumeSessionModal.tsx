@@ -6,6 +6,7 @@ import type { ReviewerBook } from "../content/reviewerContent";
 import type { ReviewTimerDuration } from "../lib/reviewTimer";
 import type { ReviewMode, QuestionAttempt } from "../lib/domain";
 import { sessionMastery } from "../lib/sessionMastery";
+import styles from "./ResumeSessionModal.module.css";
 
 export type SavedRecentSession = {
   id: string;
@@ -135,29 +136,21 @@ export default function ResumeSessionModal({
           You have an active review session saved. Would you like to pick up where you left off?
         </p>
 
-        <div
-          style={{
-            padding: "14px 16px",
-            borderRadius: "14px",
-            background: "var(--surface-soft)",
-            border: "1px solid var(--line)",
-            marginBottom: "22px",
-          }}
-        >
-          <div style={{ color: "var(--green)", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>
+        <div className={styles.details}>
+          <h3 className={styles.topic}>{session.primaryTopicName}</h3>
+          <p className={styles.identity}>
             {session.subjectName}{session.book ? ` · ${session.book}` : ""}
+          </p>
+          <div className={styles.progress}>
+            <div className={styles.completion}>
+              <span>{mastery.completed} of {mastery.unique} unique questions completed</span>
+              <strong>{progressPercent}%</strong>
+            </div>
+            <div className={styles.track} role="progressbar" aria-label="Unique-question completion" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent} aria-valuetext={`${mastery.completed} of ${mastery.unique} unique questions completed`}>
+              <div className={styles.fill} style={{ width: `${progressPercent}%` }} />
+            </div>
           </div>
-          <div style={{ color: "var(--ink)", fontSize: "15px", fontWeight: 750, marginTop: "3px", letterSpacing: "-.02em" }}>
-            {session.primaryTopicName}
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "var(--muted)", marginTop: "10px", marginBottom: "6px" }}>
-            <span>{mastery.completed} of {mastery.unique} unique questions completed</span>
-            <span>{progressPercent}% completed</span>
-          </div>
-          <p style={{ color: "var(--muted)", fontSize: "13px", overflowWrap: "anywhere" }}>{session.attempts.length} attempts · {mastery.awaitingRetry} awaiting retry</p>
-          <div style={{ width: "100%", height: "6px", borderRadius: "99px", background: "color-mix(in srgb, var(--line) 80%, transparent)", overflow: "hidden" }}>
-            <div style={{ width: `${progressPercent}%`, height: "100%", background: "var(--green)", borderRadius: "99px", transition: "width .2s ease" }} />
-          </div>
+          <p className={styles.retry}>{session.attempts.length} attempts · {mastery.awaitingRetry} awaiting retry</p>
         </div>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "10px", flexWrap: "wrap" }}>

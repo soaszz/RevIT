@@ -1,0 +1,166 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "2e2e53edcd95770eff1342327297bddb7e330b7ded7ea318a0c64bc33b82d582",
+    "after": "870d4f744a0558dbea340ba502a870a7da4af8bb6373733ae4aa4dbeaa8c8426",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved. Owner-approved available-question summary now uses consistent contributing topic/count/source scope; canonical mappings and access rules unchanged. Owner-approved unconditional FREE feature label in Question Bank header; no count/visibility/access change. Owner superseded available-only summary: restore public-safe published catalog for every account mode; FREE styling and content access unchanged. Owner-approved auth correction: server-verified bootstrap owner, revocation-only auth event binding and generation guard; no session.user identity reads in snapshot, no added requests.",
+    "renderer": {
+      "before": "8f1c71e72bcf33a3e99cb125fa920664c5ce07c1435724db0894938ac2673957",
+      "after": "74009afe500831b6f523d179cd8a668206b898711d116ac2e207c5734fc91318",
+      "sourceBefore": "2e2e53edcd95770eff1342327297bddb7e330b7ded7ea318a0c64bc33b82d582",
+      "sourceAfter": "870d4f744a0558dbea340ba502a870a7da4af8bb6373733ae4aa4dbeaa8c8426",
+      "reason": "Exact frozen owner-approved student UI from initial-inventory.json. Original released digest reproduced independently from HEAD, no baseline replacement. Auth-only startup correction leaves this renderer digest unchanged; raw source pin reconciled."
+    }
+  },
+  "app/components/CollectionHeader.module.css": {
+    "before": "43fd5ae2fb1e93f6eb9539180f95b9929f8b29fdda08416485be7f73a3c24961",
+    "after": "9fd7633b74c30a3b8b2f4d6c3a1b6c00e921e53053e7f37b4faff64d5a40fe87",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved."
+  },
+  "app/components/CollectionHeader.tsx": {
+    "before": "3a2b9d0bef8389d8da3b49e994d26e414c091eb0e9dab6683393037a15b235d0",
+    "after": "51ce48fc2429de28a5877c80a5b12a7fcb45c4638bce72061b10459e6a3d4f47",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved."
+  },
+  "app/components/Flashcards.tsx": {
+    "before": "0bf0e19e30cf73e7fbbb7da9448604a3b8d7b8169f818a3bf989a554008c38e8",
+    "after": "a21ed629790576532e7a8a81438b947971554855b7511279450130d26ac8b4cc",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved. Owner-approved independent, initially collapsed shared NU collection Set; preserve expansion across review-mode switches."
+  },
+  "app/components/GradesPage.tsx": {
+    "before": "78fcb916def1c9b465c43ae3b05b766a28bdd8ff724dc0e9f83a5c9d0fab0d49",
+    "after": "1b214c42b25579c8a3be2717e92e3642b4be919504ca5be6aefe65e036723947",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved."
+  },
+  "app/components/ReviewLibrary.tsx": {
+    "before": "b40220aeaa0004c64b741126c11f513cd5bf06f70f39e6b11c18442cdc0bf639",
+    "after": "604d86facaab79bfef048f5f5759fe9d058a576706a8b7b08121e29fddc024a8",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved. Owner-approved independent, initially collapsed shared NU collection Set; preserve expansion across review-mode switches."
+  },
+  "app/lib/reviewerLibrary.ts": {
+    "before": "632be786c7147cf0b0598ffde78142cf3694af4c574e25a46aa099575b739b5d",
+    "after": "300d04b20123572d8b86b25f6140375c7299ce9a25c8cd7452fa0efc8be843e2",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "27b64f50d28b3e8869311b0880fcc44109f6b2a21c0192b126e2267f883913b3",
+    "after": "65dbd40bf99ab55227f649793dda38a07b0c87b77056bbd0b29d1429acff795e",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved."
+  },
+  "tests/reviewer-library.test.ts": {
+    "before": "608534b723be8af3851364ea99a849acb1497829adda45680588db6cf56a5662",
+    "after": "b6cb23304db13c665332c31ea0b60f511e0e997f8cf42eb430d914293f6cd9e5",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved."
+  },
+  "tests/reviewer-topic-availability.test.ts": {
+    "before": "82df20d87562a910e7affd5f867620ca67f5ebb292cfdb6bf3c217115655a63b",
+    "reason": "Approved MTAP 2 integration: retain original source assertions and validate authentic existing Rodak hotfix transition.",
+    "after": "67cbd0b84f21b9ce7f7fc34f94bd487bd17024113513b0b2cf48e2fb44ea404a"
+  },
+  "AGENTS.md": {
+    "before": "be308c01c586588e12a97f693d11b815d5c580d9c3695c1a3afa95dc5f924322",
+    "reason": "Owner-approved canonical design guidance and local card/style consistency. No data or application logic changes.",
+    "after": "557791c4537ce9a7752fa1f5a2f5a4806f2915eb243d31f8b5837c2ac78ffddd"
+  },
+  "docs/UI_DESIGN_RULES.md": {
+    "before": "27ffcc7227a6f8087578509585d2fb5203a9294d899952cc0dee0b475d02a5f5",
+    "reason": "Owner-approved canonical design guidance and local card/style consistency. No data or application logic changes.",
+    "after": "978b24ca89dfea761fbba2630422fce8bcaa02629c9cc35abc6c4112244ec0f9"
+  },
+  "app/globals.css": {
+    "before": "c00104f3f04efa3d94f9334473ec29d5a111dbd0d6e644868e29a7fcfd814592",
+    "after": "365ec4f6c43089efde24618c0802920b0e4636a2f5e982dc90cb2d90da152cd4",
+    "reason": "Remove only obsolete decorative simulator-summary green surface/border override; retain shared neutral metric surface and restore normal-text contrast."
+  },
+  "app/auth/page.tsx": {
+    "before": "656653269c8fdb6037fe3781036e98fd63998fb283d439daf376f5d30367c766",
+    "reason": "Owner-approved public icon-only theme control and PRO label placement; existing theme, analytics and entitlement logic preserved.",
+    "after": "d12c9e8667a80747a15e1e19baef08ab3716e3b7ce05a55176068348132b59d9"
+  },
+  "app/components/MobileNavDock.tsx": {
+    "before": "7cb3f64538c2a7aa2d953f427708ae4ae612a4489672d0d6ea93ff254eb42384",
+    "reason": "Owner-approved public icon-only theme control and PRO label placement; existing theme, analytics and entitlement logic preserved.",
+    "after": "f561f179da9be32c698de16f620bdb98029298ff430344ef1e3d42ed46524d2f"
+  },
+  "app/components/PublicThemeToggle.tsx": {
+    "before": "b6f302645750ed16f211543b3c7fb6e3dcd6c203ec61a880040c8880a844f62e",
+    "reason": "Owner-approved public icon-only theme control and PRO label placement; existing theme, analytics and entitlement logic preserved.",
+    "after": "d1d1b05683dbb57849ece6c3767787b2ba3da425f83bd76930a2c3ebbde35b0b"
+  },
+  "app/pricing/page.tsx": {
+    "before": "f52a6ef34935c6b2387aafebe41cd92616cae991a2b3ae02b5f34adf5ab6a75b",
+    "reason": "Owner-approved public icon-only theme control and PRO label placement; existing theme, analytics and entitlement logic preserved.",
+    "after": "3545641d7ee063b4aa6b6682b9fbf938348873f8cc66e40e2d6f8c1f66f7e3bd"
+  },
+  "app/components/ProPlanCards.tsx": {
+    "before": "0b580c2c1a2b65607b028ab3d13181e5571ddd2ba2342a5d8616d0ba6d743293",
+    "reason": "Owner-approved Pro monthly-price comparison display; actual plan constants, savings, links, billing and entitlements unchanged.",
+    "after": "1a6c0bb224cfb04d35754178b098a18e8a9253957f7d166eae9e8bddb7cce492"
+  },
+  "app/pricing/PricingPage.module.css": {
+    "before": "fa1754312d3a0c20bd918da6103428f542557896ae092df231ab3e6cef459a84",
+    "reason": "Owner-approved Pro monthly-price comparison display; actual plan constants, savings, links, billing and entitlements unchanged.",
+    "after": "0f1f32a332d0fc8024abfa3bb9a703fd8407aa06aefeb92e0865328e25128b5d"
+  },
+  "app/auth/AuthPanel.tsx": {
+    "before": "c0f313f3eb929075cfe6d1d460d1a54ca56b1582fa71c2f66a889cae1fcddb70",
+    "reason": "Owner-approved authentication corner/official-wordmark and paused-session inner-card presentation only; existing handlers, progress calculations and storage preserved.",
+    "after": "05b2bbb8317de6d51598da23b7ee0c457aeccd08eddb45215b666d0b0f2b11c2"
+  },
+  "app/auth/Landing.module.css": {
+    "before": "0c93d541a152f0356dbd22f62deeccb688b4fe2c4c9d17001729a9ef27353e0c",
+    "reason": "Owner-approved authentication corner/official-wordmark and paused-session inner-card presentation only; existing handlers, progress calculations and storage preserved.",
+    "after": "b8d7b87971b2958d410f83a7a25e8a8619439fd51f9c98dfe977f5cb980afefc"
+  },
+  "app/components/ResumeSessionModal.tsx": {
+    "before": "c0fd0b41b23de47426296eaa9552691a15615b9d7015105e3155e6961f611fdc",
+    "reason": "Owner-approved authentication corner/official-wordmark and paused-session inner-card presentation only; existing handlers, progress calculations and storage preserved.",
+    "after": "0fc71cb2cdc4ccebc209fc7a8ad7dab9249581b5903f7e0586a6e7edcfcddac3"
+  },
+  "app/components/RevITLoadingScreen.tsx": {
+    "before": "9e0347c69b477ce48a50ce3159a532eecbeb791628476d0a57b595bf653a01b8",
+    "reason": "Owner-approved startup readiness: reuse original auth/profile/entitlement requests, bounded in-flight deduplication and explicit recovery; all other cloud persistence and server authorization unchanged.",
+    "after": "a680f57ff45e644e29871642cf61cf50cab4f8447ea170b8a9b96ce71c83cfa0"
+  },
+  "app/lib/cloudService.ts": {
+    "before": "d0f3328c9ec649c2f316ac6532333690f5e7336135100746264e7c249c299651",
+    "reason": "Owner-approved startup readiness: reuse original auth/profile/entitlement requests, bounded in-flight deduplication and explicit recovery; all other cloud persistence and server authorization unchanged. Owner-approved auth correction: server-verified bootstrap owner, revocation-only auth event binding and generation guard; no session.user identity reads in snapshot, no added requests.",
+    "after": "0e171643eeb1b53e8c06091111d05dbcffb7b7ae0281484993f737fdd7b9d6e0"
+  },
+  "app/components/ReviewLibrary.module.css": {
+    "before": "07eb373b1d334298ba4a9c6144895fcaf7e403700828103d9fc743fca73f41df",
+    "reason": "Owner-approved NU-only stable document scrollbar gutter, scoped by the visible NU library class; other CSS and Standard pages unchanged.",
+    "after": "5d2068daaee830a34d91585c1d4a18268c514b53210915694e050307ca822d90"
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "4a562db0de7afd9ce4f8c001d7ec4a57393e176497c75f4cb41b1b597b8f3e41",
+    "after": "18f2fd73183daa1da4574d526fba12002efcbb434080d9fa4a0f40aacb1f138e",
+    "reason": "Owner-approved student-only v1.14.0 release preparation. Date Pending; reversing only new entry reproduces live history exactly. Admin Dashboard excluded.",
+    "version": "v1.14.0",
+    "releaseDate": "Pending"
+  },
+  "tests/fixes-only-release.test.ts": {
+    "before": "e509bddea27ea49fecae160065577d0cd72d14496c42b7a104f1b4df596d6d54",
+    "after": "dca8a8ab0279771c469617e7e5a7171c514d1bc9c8b83f3194f2603ab9321e5a",
+    "reason": "Owner-authorized focused v1.14.0 assertion reconciliation. Keep original release/content/security pins and strengthen checks for approved display/readiness and append-only evidence."
+  },
+  "tests/phase3d.test.ts": {
+    "before": "917b6131f1ed0a1dcdf15111cf59fdb5aad2f28adabf33a5812eccb1f7abdf66",
+    "after": "bde2bd2988f82243b683e883f5edd9ae7c1134d6e504d85224811c184515b1b2",
+    "reason": "Owner-authorized focused v1.14.0 assertion reconciliation. Keep original release/content/security pins and strengthen checks for approved display/readiness and append-only evidence."
+  },
+  "tests/reviewer-release-profile.test.ts": {
+    "before": "87eee18098d38d1c632e2e5b4e7b9850980916fe40f090650af787912e8fd1ee",
+    "after": "46f9a3009bf13df5cb3d8ad115a8c4ad115da9edf2a7914b96f66902d1ac3770",
+    "reason": "Owner-authorized focused v1.14.0 assertion reconciliation. Keep original release/content/security pins and strengthen checks for approved display/readiness and append-only evidence."
+  },
+  "tests/trusted-integration.test.ts": {
+    "before": "3dd419a25cfdaedf95bd56a097afb5fe632b773b39f09f0dcce506139dac3c00",
+    "after": "76697f052b2f771d15c8bbf040d70cdb0e58eeaca2dd36adf6c15da8e131e038",
+    "reason": "Owner-authorized focused v1.14.0 assertion reconciliation. Keep original release/content/security pins and strengthen checks for approved display/readiness and append-only evidence."
+  },
+  "tests/reviewer-content.test.mjs": {
+    "before": "7127d94476907f94b2532283e6f316c9e83c96fa248f7fa0b7612e2ebec69542",
+    "after": "ead7a4309f2fb2f8a074e22f0d58c5600dd52db3db15e76df08cbdd75603cd04",
+    "reason": "Owner-authorized focused v1.14.0 assertion reconciliation. Keep original release/content/security pins and strengthen checks for approved display/readiness and append-only evidence."
+  }
+}

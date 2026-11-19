@@ -1,6 +1,10 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, type CSSProperties } from "react";
+import assessmentStyles from "./GradesAssessment.module.css";
+import simulatorStyles from "./GradeSimulator.module.css";
+import { gradeSimulationPreview } from "../lib/gradeSimulationPreview";
+import { buildMtap2Gradebooks, MTAP_2_GRADE_SUBJECTS, presetCategoryPercentage, isMtap2Gradebook, mergeMtap2Gradebooks, mtap2Matrix, retainPendingMtap2, syncMtap2Gradebooks } from "../lib/mtap2Grades";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   GRADE_FIELDS,
@@ -19,7 +23,6 @@ import {
   calculateUniversalGrade,
   sanitizeGradeScore,
   simulateUniversalTarget,
-  simulateUniversalWhatIf,
   nuSubjectToUniversalCategories,
   type UniversalCategoryInput,
   type UniversalGradeSummary,
@@ -34,7 +37,7 @@ import {
   universalGradebooksStorageKey,
 } from "../lib/cloudService";
 
-type GradeMatrix = Record<GradeSubject, GradeValues>;
+type GradeMatrix = Record<string, GradeValues>;
 
 const DISPLAY_FIELD_KEYS: GradeField[] = [
   "pre_test",
@@ -44,19 +47,18 @@ const DISPLAY_FIELD_KEYS: GradeField[] = [
   "comprehensive",
 ];
 
-const SUBJECT_LABELS: Record<GradeSubject, string> = {
-  Hematology: "Hema 1",
-  "Clinical Chemistry": "CC 1",
-  Bacteriology: "Bacteriology",
-  AUBF: "AUBF",
+// Presentation only: canonical matrix keys and persisted subject identifiers stay unchanged.
+const MTAP_2_GRADE_LABELS: Record<string, string> = {
+  Hematology: "Hematology 2",
+  "Clinical Chemistry": "Clinical Chemistry 2",
 };
 
-const CATEGORY_LABELS: Record<GradeField, { title: string; rowPrefix: string; numberSeparator: string }> = {
-  pre_test: { title: "Pre-Tests", rowPrefix: "Pre-Test", numberSeparator: " " },
-  post_test: { title: "Post-Tests", rowPrefix: "Post-Test", numberSeparator: " " },
-  comprehensive: { title: "Comprehensive Exam", rowPrefix: "CE", numberSeparator: "" },
-  written_revalida: { title: "Written Revalida", rowPrefix: "WR", numberSeparator: "" },
-  oral_revalida: { title: "Oral Revalida", rowPrefix: "OR", numberSeparator: "" },
+const CATEGORY_LABELS: Record<GradeField, string> = {
+  pre_test: "Pre-Tests",
+  post_test: "Post-Tests",
+  comprehensive: "Comprehensive Exam",
+  written_revalida: "Written Revalida",
+  oral_revalida: "Oral Revalida",
 };
 
 const DISPLAY_FIELDS = DISPLAY_FIELD_KEYS.map((key) => {
@@ -77,10 +79,6 @@ function matrixFromRecords(records: GradeRecord[]): GradeMatrix {
   ) as GradeMatrix;
 }
 
-function categoryPercentage(matrix: GradeMatrix, field: (typeof GRADE_FIELDS)[number]) {
-  const totalScore = SUBJECTS.reduce((total, subject) => total + (matrix[subject][field.key] ?? 0), 0);
-  return (totalScore / (field.max * SUBJECTS.length)) * field.weight * 100;
-}
 
 type DeleteTarget =
   | { type: "gradebook"; id: string; name: string }
@@ -94,6 +92,7 @@ export default function GradesPage({
   showSimulator,
   mtapFeaturesEnabled = true,
   initialCustomGradebooks,
+  onMtap2Synced,
   userId,
   cloudClient,
 }: {
@@ -102,14 +101,22 @@ export default function GradesPage({
   showSimulator: boolean;
   mtapFeaturesEnabled?: boolean;
   initialCustomGradebooks?: CustomGradebook[];
+  onMtap2Synced?: (books: CustomGradebook[]) => void;
   userId?: string | null;
   cloudClient?: SupabaseClient | null;
 }) {
   // Mode selection: "nu_preset" | "custom"
-  const [activeMode, setActiveMode] = useState<"nu_preset" | "custom">(() => (
+  const [activeMode, setActiveMode] = useState<"nu_preset" | "mtap2_preset" | "custom">(() => (
     mtapFeaturesEnabled ? "nu_preset" : "custom"
   ));
   const effectiveMode = mtapFeaturesEnabled ? activeMode : "custom";
+
+  const isMtap2 = effectiveMode === "mtap2_preset";
+  const gradeSubjectLabel = (subject: string) => isMtap2 ? MTAP_2_GRADE_LABELS[subject] ?? subject : subject;
+  const presetSubjects: readonly string[] = isMtap2 ? MTAP_2_GRADE_SUBJECTS.map(s => s.name) : SUBJECTS;
+  const isPreset = effectiveMode !== "custom";
+  const [mtap2Draft, setMtap2Draft] = useState<GradeMatrix | null>(null);
+  useEffect(() => { setMtap2Draft(null); }, [userId]);
 
   // NU MTAP state
   const [matrix, setMatrix] = useState<GradeMatrix>(() => matrixFromRecords(grades));
@@ -126,7 +133,9 @@ export default function GradesPage({
   // Custom Gradebooks state
   const storageKey = universalGradebooksStorageKey(userId);
   const [customGradebooks, setCustomGradebooks] = useState<CustomGradebook[]>(() => {
-    if (initialCustomGradebooks && initialCustomGradebooks.length > 0) return initialCustomGradebooks;
+    if (initialCustomGradebooks && initialCustomGradebooks.length > 0) {
+      try { return retainPendingMtap2(initialCustomGradebooks, JSON.parse(localStorage.getItem(storageKey) ?? "[]"), userId ?? "local"); } catch { return initialCustomGradebooks; }
+    }
     if (typeof window !== "undefined") {
       try {
         const stored = localStorage.getItem(storageKey);
@@ -139,20 +148,23 @@ export default function GradesPage({
   });
 
   const [selectedGradebookId, setSelectedGradebookId] = useState<string | null>(() => (
-    customGradebooks[0]?.id ?? null
+    customGradebooks.find(b => !isMtap2Gradebook(b))?.id ?? null
   ));
 
   // Sync customGradebooks if initialCustomGradebooks updates from cloud
   useEffect(() => {
     if (initialCustomGradebooks && initialCustomGradebooks.length > 0) {
-      setCustomGradebooks(initialCustomGradebooks);
+      setCustomGradebooks(local => retainPendingMtap2(initialCustomGradebooks, local, userId ?? "local"));
     }
   }, [initialCustomGradebooks]);
 
+  const regularGradebooks = customGradebooks.filter(b => !isMtap2Gradebook(b));
+  const presetMatrix = isMtap2 ? mtap2Draft ?? mtap2Matrix(customGradebooks, userId ?? "local") : matrix;
+
   // Sync selectedGradebookId if list changes
   useEffect(() => {
-    if (customGradebooks.length > 0 && (!selectedGradebookId || !customGradebooks.some((b) => b.id === selectedGradebookId))) {
-      setSelectedGradebookId(customGradebooks[0].id);
+    if (regularGradebooks.length > 0 && (!selectedGradebookId || !regularGradebooks.some((b) => b.id === selectedGradebookId))) {
+      setSelectedGradebookId(regularGradebooks[0].id);
     }
   }, [customGradebooks, selectedGradebookId]);
 
@@ -183,23 +195,24 @@ export default function GradesPage({
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget>(null);
 
   // Simulator State
-  const [simSubject, setSimSubject] = useState<GradeSubject>("Hematology");
+  const [simSubject, setSimSubject] = useState<string>("Hematology");
   const [simTargetCategory, setSimTargetCategory] = useState<string>("");
   const [simTargetGrade, setSimTargetGrade] = useState<string>("75");
   const [simHypotheticalScore, setSimHypotheticalScore] = useState<number>(85);
 
+  const activeEntryCount = presetSubjects.length * GRADE_FIELDS.length;
+
   // NU MTAP Calculations
   const categoryPercentages = useMemo(
-    () => Object.fromEntries(GRADE_FIELDS.map((field) => [field.key, categoryPercentage(matrix, field)])) as Record<GradeField, number>,
-    [matrix],
+    () => Object.fromEntries(GRADE_FIELDS.map((field) => [field.key, presetCategoryPercentage(presetMatrix, field, presetSubjects)])) as Record<GradeField, number>,
+    [presetMatrix, isMtap2],
   );
   const overallPercentage = GRADE_FIELDS.reduce((total, field) => total + categoryPercentages[field.key], 0);
-  const completedEntries = SUBJECTS.reduce(
-    (count, subject) => count + GRADE_FIELDS.filter((field) => matrix[subject][field.key] !== null).length,
-    0,
-  );
+  const completedEntries = GRADE_FIELDS.reduce((count, field) =>
+    count + presetSubjects.filter(subject => presetMatrix[subject][field.key] !== null).length, 0);
 
-  function updateNuScore(subject: GradeSubject, field: GradeField, raw: string, max: number) {
+  function updateNuScore(subject: string, field: GradeField, raw: string, max: number) {
+    if (isMtap2) { setMtap2Draft(current => ({ ...(current ?? presetMatrix), [subject]: { ...(current ?? presetMatrix)[subject], [field]: sanitizeGradeScore(raw, max) } })); setStatus(""); return; }
     setMatrix((current) => ({
       ...current,
       [subject]: { ...current[subject], [field]: sanitizeGradeScore(raw, max) },
@@ -208,9 +221,26 @@ export default function GradesPage({
   }
 
   async function saveAll() {
+    let localMtap2Saved = false;
     setPending(true);
     setStatus("");
     try {
+      if (isMtap2) {
+        const books = await buildMtap2Gradebooks(presetMatrix, userId ?? "local");
+        const pendingBooks = books.map(b => ({ ...b, mtap2Pending: true }));
+        const next = mergeMtap2Gradebooks(customGradebooks, pendingBooks);
+        localStorage.setItem(storageKey, JSON.stringify(next));
+        localMtap2Saved = true;
+        setCustomGradebooks(next);
+        if (cloudClient && userId) {
+          await syncMtap2Gradebooks(cloudClient, books, userId);
+          onMtap2Synced?.(books);
+          setCustomGradebooks(current => mergeMtap2Gradebooks(current, books));
+          setStatus("MTAP 2 grades were saved and synced.");
+        } else setStatus("MTAP 2 grades were saved on this device. Sign in to sync across devices.");
+        setMtap2Draft(null); setStatusType("success");
+        return;
+      }
       await Promise.all(SUBJECTS.map((subject) => onSave({
         ...grades.find((record) => record.subject === subject),
         ...matrix[subject],
@@ -220,7 +250,7 @@ export default function GradesPage({
       setStatus("All subject grades were saved.");
     } catch {
       setStatusType("error");
-      setStatus("Grades could not be saved. Please try again.");
+      setStatus(isMtap2 && localMtap2Saved ? "Cloud sync did not complete. Saved local MTAP 2 grades remain on this device; retry Save all grades." : "Grades could not be saved. Please try again.");
     } finally {
       setPending(false);
     }
@@ -228,7 +258,7 @@ export default function GradesPage({
 
   // Currently selected custom gradebook
   const activeCustomBook = useMemo(
-    () => customGradebooks.find((b) => b.id === selectedGradebookId) ?? null,
+    () => regularGradebooks.find((b) => b.id === selectedGradebookId) ?? null,
     [customGradebooks, selectedGradebookId],
   );
 
@@ -240,11 +270,11 @@ export default function GradesPage({
 
   // NU subject categories for Universal Simulator
   const nuSimCategories = useMemo(() => {
-    return nuSubjectToUniversalCategories(matrix[simSubject]);
-  }, [matrix, simSubject]);
+    return nuSubjectToUniversalCategories(presetMatrix[presetSubjects.includes(simSubject) ? simSubject : presetSubjects[0]]);
+  }, [presetMatrix, simSubject, isMtap2]);
 
   // Determine active simulator categories & passing grade
-  const isNuSim = effectiveMode === "nu_preset";
+  const isNuSim = isPreset;
   const activeSimCategories: UniversalCategoryInput[] = isNuSim
     ? nuSimCategories
     : (activeCustomBook?.categories ?? []);
@@ -263,20 +293,22 @@ export default function GradesPage({
   const targetSimResult = useMemo(() => {
     if (!simTargetCategory || activeSimCategories.length === 0) return null;
     const target = Number(simTargetGrade);
-    if (!Number.isFinite(target) || target <= 0) return null;
+    if (!Number.isFinite(target) || target < 1 || target > 100) return null;
     return simulateUniversalTarget(activeSimCategories, simTargetCategory, target, 75);
   }, [activeSimCategories, simTargetCategory, simTargetGrade]);
 
   // What-If Simulator output
   const whatIfResult = useMemo(() => {
     if (!simTargetCategory || activeSimCategories.length === 0) return null;
-    return simulateUniversalWhatIf(
+    return gradeSimulationPreview(
       activeSimCategories,
       simTargetCategory,
       simHypotheticalScore,
       activeSimPassingGrade,
     );
   }, [activeSimCategories, simTargetCategory, simHypotheticalScore, activeSimPassingGrade]);
+
+  const targetGradeValid = simTargetGrade.trim() !== "" && Number.isFinite(Number(simTargetGrade)) && Number(simTargetGrade) >= 1 && Number(simTargetGrade) <= 100;
 
   // Subject CRUD
   function openAddSubject() {
@@ -562,14 +594,14 @@ export default function GradesPage({
   return (
     <div className="grades-shell">
       {/* Top Header & Mode Navigation */}
-      <section className="grade-overview-card grade-ledger-overview">
+      <section className={`${assessmentStyles.overview} grade-overview-card grade-ledger-overview`}>
         <div className="grade-ledger-heading">
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "4px" }}>
               <p className="eyebrow" style={{ margin: 0 }}>Academic Gradebook</p>
               {mtapFeaturesEnabled && (
                 <span className="grade-mode-badge">
-                  {effectiveMode === "nu_preset" ? "NU MOA MTAP 1 Preset" : "Custom Gradebook"}
+                  {isPreset ? (isMtap2 ? "NU MOA MTAP 2 Preset" : "NU MOA MTAP 1 Preset") : "Custom Gradebook"}
                 </span>
               )}
             </div>
@@ -581,7 +613,7 @@ export default function GradesPage({
 
           <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
             {mtapFeaturesEnabled && (
-              <div className="theme-segmented-control" role="tablist" aria-label="Gradebook mode">
+              <div className="theme-segmented-control" role="tablist" aria-label="Gradebook mode" style={{ flexWrap: "wrap", maxWidth: "100%", minWidth: 0 }}>
                 <button
                   type="button"
                   role="tab"
@@ -591,6 +623,7 @@ export default function GradesPage({
                 >
                   NU MOA · MTAP 1
                 </button>
+                <button type="button" role="tab" aria-selected={isMtap2} className={`theme-segment-btn ${isMtap2 ? "active" : ""}`} onClick={() => setActiveMode("mtap2_preset")} disabled={pending}>NU MOA · MTAP 2</button>
                 <button
                   type="button"
                   role="tab"
@@ -598,12 +631,12 @@ export default function GradesPage({
                   className={`theme-segment-btn ${effectiveMode === "custom" ? "active" : ""}`}
                   onClick={() => setActiveMode("custom")}
                 >
-                  Custom Subjects ({customGradebooks.length})
+                  Custom Subjects ({regularGradebooks.length})
                 </button>
               </div>
             )}
             <span className="state-pill">
-              Pass mark {effectiveMode === "nu_preset" ? PASSING_GRADE : (activeCustomBook?.passingGrade ?? 75)}%
+              Pass mark {isPreset ? PASSING_GRADE : (activeCustomBook?.passingGrade ?? 75)}%
             </span>
           </div>
         </div>
@@ -615,20 +648,20 @@ export default function GradesPage({
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px" }}>
                 <span>Grade Simulator</span>
                 {mtapFeaturesEnabled && (
-                  <span style={{ fontSize: "9px", padding: "2px 7px", borderRadius: "6px", background: "var(--green)", color: "var(--accent-ink)", fontWeight: 750, letterSpacing: "0.02em" }}>
-                    {effectiveMode === "nu_preset" ? "For NU MOA" : "Universal"}
+                  <span className={assessmentStyles.contextLabel}>
+                    {isPreset ? "For NU MOA" : "Universal"}
                   </span>
                 )}
               </div>
               <strong>
-                {effectiveMode === "nu_preset"
+                {isPreset
                   ? `${overallPercentage.toFixed(2)}%`
                   : customSummary?.currentPerformance !== null
                   ? `${customSummary?.currentPerformance.toFixed(1)}%`
                   : "—"}
               </strong>
               <small>
-                {effectiveMode === "nu_preset"
+                {isPreset
                   ? "Projected weighted grade calibrated for NU MOA Students"
                   : customSummary?.status ?? "Current Performance"}
               </small>
@@ -638,15 +671,15 @@ export default function GradesPage({
           <div>
             <span>Grades recorded</span>
             <strong>
-              {effectiveMode === "nu_preset"
-                ? `${completedEntries} / ${SUBJECTS.length * GRADE_FIELDS.length}`
+              {isPreset
+                ? `${completedEntries} / ${activeEntryCount}`
                 : activeCustomBook
                 ? `${customSummary?.categorySummaries.reduce((sum, c) => sum + c.completedCount, 0)} assessments`
                 : "0"}
             </strong>
             <small>
-              {effectiveMode === "nu_preset"
-                ? "Across four subjects and five assessments"
+              {isPreset
+                ? `Across four subjects and five assessments`
                 : activeCustomBook
                 ? `${activeCustomBook.categories.length} grading categories`
                 : "Add your first subject to start"}
@@ -656,15 +689,15 @@ export default function GradesPage({
           <div>
             <span>Points Secured</span>
             <strong>
-              {effectiveMode === "nu_preset"
+              {isPreset
                 ? `${overallPercentage.toFixed(1)} / 100%`
                 : customSummary
                 ? `${customSummary.earnedPoints.toFixed(1)} / 100%`
                 : "—"}
             </strong>
             <small>
-              {effectiveMode === "nu_preset"
-                ? `${SUBJECTS.length * GRADE_FIELDS.length - completedEntries} assessments remaining`
+              {isPreset
+                ? `${activeEntryCount - completedEntries} assessments remaining`
                 : customSummary?.isWeightValid
                 ? `${(100 - customSummary.completedWeight).toFixed(0)}% weight unassessed`
                 : "Weights must total 100%"}
@@ -676,40 +709,35 @@ export default function GradesPage({
       {/* ====================================================================
           MODE 1: NU MOA MTAP 1 PRESET
           ==================================================================== */}
-      {effectiveMode === "nu_preset" && (
+      {isPreset && (
         <>
           <div className="grade-category-grid">
             {DISPLAY_FIELDS.map((field) => (
-              <section className={`grade-category-card grade-category-${field.key}`} key={field.key}>
+              <section className={`${assessmentStyles.assessment} grade-category-card grade-category-${field.key}`} key={field.key}>
                 <div className="grade-category-heading">
                   <div>
                     <p className="eyebrow">{Math.round(field.weight * 100)}% of final grade</p>
-                    <h2>{CATEGORY_LABELS[field.key].title} <span>({field.max})</span></h2>
+                    <h2>{CATEGORY_LABELS[field.key]} <span>({field.max})</span></h2>
                   </div>
                   <span className="grade-weight-pill">{field.max} points</span>
                 </div>
                 <div className="grade-subject-list">
-                  {SUBJECTS.map((subject, subjectIndex) => (
+                  {presetSubjects.map((subject) => (
                     <label key={subject}>
                       <span className="grade-entry-label">
-                        <strong>
-                          {CATEGORY_LABELS[field.key].rowPrefix}
-                          {CATEGORY_LABELS[field.key].numberSeparator}
-                          {subjectIndex + 1} - {SUBJECT_LABELS[subject]}
-                        </strong>
-                        <small>{subject}</small>
+                        <strong>{gradeSubjectLabel(subject)}</strong>
                       </span>
                       <div className="grade-score-control">
                         <input
                           className="grade-score-input"
-                          aria-label={`${field.label} ${subject} score`}
+                          aria-label={`${field.label} ${gradeSubjectLabel(subject)} score`}
                           type="number"
                           inputMode="decimal"
                           min={0}
                           max={field.max}
                           step="0.01"
                           placeholder="—"
-                          value={matrix[subject][field.key] ?? ""}
+                          value={presetMatrix[subject][field.key] ?? ""}
                           onChange={(event) => updateNuScore(subject, field.key, event.target.value, field.max)}
                         />
                         <span>/ {field.max}</span>
@@ -746,7 +774,7 @@ export default function GradesPage({
           {/* Subject Navigation Bar */}
           <div className="subject-nav-bar">
             <div className="subject-tabs-scroll">
-              {customGradebooks.map((book) => {
+              {regularGradebooks.map((book) => {
                 const bookSummary = calculateUniversalGrade(book.categories, book.passingGrade);
                 const isActive = book.id === selectedGradebookId;
                 return (
@@ -770,7 +798,7 @@ export default function GradesPage({
           </div>
 
           {/* Empty State: No subjects yet */}
-          {customGradebooks.length === 0 && (
+          {regularGradebooks.length === 0 && (
             <section className="gradebook-empty-state">
               <svg className="empty-state-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-0.5-.05" />
@@ -856,7 +884,7 @@ export default function GradesPage({
                 {activeCustomBook.categories.map((category) => {
                   const catSummary = customSummary?.categorySummaries.find((c) => c.id === category.id);
                   return (
-                    <section className="custom-category-card" key={category.id}>
+                    <section className={`${assessmentStyles.assessment} custom-category-card`} key={category.id}>
                       <div className="custom-category-header">
                         <div className="category-title-group">
                           <h4>{category.name}</h4>
@@ -907,6 +935,7 @@ export default function GradesPage({
                                     max={assessment.maxScore}
                                     placeholder="—"
                                     className="grade-score-input inline"
+                                    aria-label={`${assessment.name} score`}
                                     value={assessment.score ?? ""}
                                     onChange={(e) => handleUpdateScoreInline(category.id, assessment.id, e.target.value, assessment.maxScore)}
                                   />
@@ -957,144 +986,120 @@ export default function GradesPage({
           Works for both NU MOA MTAP 1 & Custom Gradebooks
           ==================================================================== */}
       {showSimulator && activeSimCategories.length > 0 && (
-        <section className="universal-simulator-card" aria-labelledby="grade-simulator-heading">
-          <div className="simulator-header">
-            <div className="simulator-header-copy">
-              <div className="simulator-eyebrow-row">
-                <p className="eyebrow" style={{ margin: 0 }}>What-If &amp; Target Planning</p>
-                <span className="simulator-interactive-tag">• Interactive</span>
+        <section className={`${assessmentStyles.assessment} ${simulatorStyles.simulator}`} aria-labelledby="grade-simulator-heading">
+          <header className={simulatorStyles.header}>
+            <div className={simulatorStyles.copy}>
+              <div className={simulatorStyles.heading}>
+                <h3 id="grade-simulator-heading">Grade Simulator</h3>
+                <span className={simulatorStyles.indicator}>Interactive preview</span>
               </div>
-              <h3 id="grade-simulator-heading">Grade Simulator</h3>
-              <p className="simulator-subtext">Simulate target score requirements or explore how a hypothetical grade impacts your projected final standing.</p>
+              <p>Plan a target or try a category score. Your saved grades stay unchanged.</p>
             </div>
-
-            {/* If in NU mode, allow picking which of the 4 subjects to simulate */}
             {isNuSim && (
-              <div className="sim-subject-picker">
-                <label htmlFor="sim-subject-select">
-                  Subject:
-                </label>
-                <select
-                  id="sim-subject-select"
-                  className="revit-select compact"
-                  value={simSubject}
-                  onChange={(e) => setSimSubject(e.target.value as GradeSubject)}
-                >
-                  {SUBJECTS.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
+              <div className={simulatorStyles.subject}>
+                <label htmlFor="sim-subject-select">Subject</label>
+                <select id="sim-subject-select" className={assessmentStyles.control}
+                  value={presetSubjects.includes(simSubject) ? simSubject : presetSubjects[0]}
+                  onChange={e => setSimSubject(e.target.value)}>
+                  {presetSubjects.map(subject => <option key={subject} value={subject}>{gradeSubjectLabel(subject)}</option>)}
                 </select>
               </div>
             )}
-          </div>
+          </header>
 
-          <div className="simulator-body-grid">
-            {/* Target Score Calculator */}
-            <div className="simulator-panel">
-              <div className="panel-kicker">Target Calculator</div>
-              <h4>What score do I need?</h4>
-              <p className="panel-subtext">Calculate the required score on an assessment to secure your desired final grade.</p>
-
-              <div className="sim-field-row">
-                <label className="sim-label" htmlFor="sim-target-category">Assessment Category</label>
-                <select
-                  id="sim-target-category"
-                  className="revit-select"
-                  value={simTargetCategory}
-                  onChange={(e) => setSimTargetCategory(e.target.value)}
-                >
-                  {activeSimCategories.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.name} ({c.weight}% weight)
-                    </option>
-                  ))}
+          <div className={simulatorStyles.body}>
+            <section className={simulatorStyles.panel} aria-labelledby="sim-target-heading">
+              <header>
+                <h4 id="sim-target-heading">Target Calculator</h4>
+                <p className={simulatorStyles.help}>Find the category score needed for your desired final grade.</p>
+              </header>
+              <div className={simulatorStyles.field}>
+                <label htmlFor="sim-target-category">Assessment category</label>
+                <select id="sim-target-category" className={assessmentStyles.control} value={simTargetCategory}
+                  onChange={e => setSimTargetCategory(e.target.value)} aria-describedby="sim-category-help">
+                  {activeSimCategories.map(category => <option key={category.id} value={category.id}>{category.name} ({category.weight}% weight)</option>)}
                 </select>
+                <p id="sim-category-help" className={simulatorStyles.help}>Used by both calculators. A scenario replaces the selected category score.</p>
               </div>
-
-              <div className="sim-field-row">
-                <label className="sim-label" htmlFor="sim-target-grade">Desired Final Grade (%)</label>
-                <input
-                  id="sim-target-grade"
-                  type="number"
-                  inputMode="decimal"
-                  min="1"
-                  max="100"
-                  step="0.5"
-                  className="grade-score-input"
-                  value={simTargetGrade}
-                  onChange={(e) => setSimTargetGrade(e.target.value)}
-                />
+              <div className={simulatorStyles.field}>
+                <label htmlFor="sim-target-grade">Desired final grade (%)</label>
+                <input id="sim-target-grade" type="number" inputMode="decimal" min="1" max="100" step="0.5"
+                  className={assessmentStyles.control} value={simTargetGrade} onChange={e => setSimTargetGrade(e.target.value)}
+                  aria-invalid={!targetGradeValid} aria-describedby={!targetGradeValid ? "sim-target-error" : undefined} />
+                {!targetGradeValid && <p id="sim-target-error" className={simulatorStyles.error} role="alert">Enter a final grade from 1% to 100%.</p>}
               </div>
-
               {targetSimResult && (
-                <div className={`sim-result-box ${targetSimResult.alreadySecured ? "secured" : !targetSimResult.achievable ? "impossible" : "reachable"}`}>
-                  <div className="sim-result-metric">
-                    <span>Required Score on {targetSimResult.targetCategoryName}</span>
-                    <strong>
-                      {targetSimResult.alreadySecured
-                        ? "Target Secured"
-                        : !targetSimResult.achievable
-                        ? "Unreachable"
-                        : `${targetSimResult.requiredPercentage.toFixed(1)}%`}
-                    </strong>
+                <div className={simulatorStyles.result} aria-live="polite">
+                  <div className={simulatorStyles.metric}>
+                    <span>Required score on {targetSimResult.targetCategoryName}</span>
+                    <output htmlFor="sim-target-category sim-target-grade" aria-label="Required category score">{targetSimResult.requiredPercentage.toFixed(1)}%</output>
                   </div>
-                  <p className="sim-result-desc">{targetSimResult.explanation}</p>
+                  {targetSimResult.requiredPercentage > 100 ? (
+                    <p className={simulatorStyles.notice}>Not achievable under these assumptions: the category score would exceed 100%.</p>
+                  ) : targetSimResult.requiredPercentage <= 0 ? (
+                    <p className={simulatorStyles.notice}>A score of 0% is enough under these assumptions. The calculated threshold is shown above.</p>
+                  ) : <p>To reach a {targetSimResult.targetGrade}% final grade.</p>}
+                  <p id="sim-assumptions">Assumes {targetSimResult.laterAverage}% on other unentered categories. Recorded categories keep their recorded scores.</p>
                 </div>
               )}
-            </div>
+              {targetGradeValid && !targetSimResult && <p className={simulatorStyles.help}>Choose a category with a weight above 0% to calculate a target.</p>}
+            </section>
 
-            {/* What-If Scenario Slider */}
-            <div className="simulator-panel">
-              <div className="panel-kicker">What-If Scenarios</div>
-              <h4>What happens if I score X?</h4>
-              <p className="panel-subtext">Adjust the slider to preview your projected standing without altering real grades.</p>
-
-              <div className="sim-slider-wrap">
-                <div className="slider-label-row">
-                  <span>Hypothetical score on {whatIfResult?.targetCategoryName}</span>
-                  <strong>{simHypotheticalScore}%</strong>
+            <section className={simulatorStyles.panel} aria-labelledby="sim-whatif-heading">
+              <header>
+                <h4 id="sim-whatif-heading">What-If Scenarios</h4>
+                <p className={simulatorStyles.help}>Try a percentage for {whatIfResult?.targetCategoryName ?? "the selected category"}. This does not save or change any grade.</p>
+              </header>
+              <div className={simulatorStyles.scoreControl}>
+                <div className={simulatorStyles.scoreLabel}>
+                  <label htmlFor="sim-hypothetical-score">Hypothetical category score (%)</label>
+                  <div className={simulatorStyles.scoreEntry}>
+                    <input id="sim-hypothetical-score" className={assessmentStyles.control} type="number" inputMode="numeric" min="0" max="100" step="1"
+                      value={simHypotheticalScore} onChange={e => setSimHypotheticalScore(Math.max(0, Math.min(100, Math.round(Number(e.target.value) || 0))))} />
+                  </div>
                 </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  step="1"
-                  aria-label="Hypothetical score slider"
-                  className="sim-slider"
-                  value={simHypotheticalScore}
-                  onChange={(e) => setSimHypotheticalScore(Number(e.target.value))}
-                />
+                <input type="range" id="sim-hypothetical-slider" min="0" max="100" step="1" className={simulatorStyles.slider}
+                  style={{ "--score-fill": `${simHypotheticalScore}%` } as CSSProperties}
+                  aria-label={`Hypothetical score for ${whatIfResult?.targetCategoryName ?? "selected category"}`}
+                  aria-valuetext={`${simHypotheticalScore}% category score`}
+                  value={simHypotheticalScore} onChange={e => setSimHypotheticalScore(Number(e.target.value))} />
+                <div className={simulatorStyles.ends} aria-hidden="true"><span>0%</span><span>100%</span></div>
               </div>
-
-              {whatIfResult && (
-                <div className="sim-whatif-output">
-                  <div className="whatif-score-badge">
-                    <span>Projected Final:</span>
-                    <strong>{whatIfResult.projectedEarnedPoints.toFixed(1)}%</strong>
-                    <span className={`status-pill ${whatIfResult.isPassing ? "success" : "warning"}`}>
-                      {whatIfResult.isPassing ? "Passing" : "Below Target"}
-                    </span>
+              {whatIfResult && <>
+                <div className={simulatorStyles.result} aria-live="polite">
+                  <div className={simulatorStyles.metric}>
+                    <span>Weighted Category Contribution</span>
+                    <output htmlFor="sim-hypothetical-score sim-hypothetical-slider sim-target-category" aria-label="Weighted category contribution">{whatIfResult.hypotheticalContribution.toFixed(1)} points</output>
                   </div>
-
-                  {/* Projection Ladder Table */}
-                  <div className="sim-ladder-table">
-                    <span className="ladder-title">Projection Ladder</span>
-                    <div className="ladder-pills-row">
-                      {whatIfResult.ladder.slice(1, 6).map((step) => (
-                        <div
-                          key={step.scorePercentage}
-                          className={`ladder-item ${step.isPassing ? "pass" : ""}`}
-                          onClick={() => setSimHypotheticalScore(step.scorePercentage)}
-                        >
-                          <span className="ladder-step-in">{step.scorePercentage}%</span>
-                          <span className="ladder-step-out">→ {step.projectedFinal.toFixed(1)}%</span>
-                        </div>
-                      ))}
-                    </div>
+                  <p>{simHypotheticalScore}% category score at {whatIfResult.targetCategoryWeight}% weight.</p>
+                  <p>{whatIfResult.recorded.completedWeight > 0
+                    ? `Recorded weighted points: ${whatIfResult.recorded.earnedPoints.toFixed(1)} / 100.`
+                    : "No recorded scores for this subject yet."}</p>
+                  <p>Scenario subtotal with other recorded work: <strong>{whatIfResult.projectedEarnedPoints.toFixed(1)} / 100 points.</strong></p>
+                  {whatIfResult.canProjectFinal ? <div className={simulatorStyles.metric}>
+                    <span>Projected overall grade</span>
+                    <output aria-label="Projected overall grade">{whatIfResult.projectedEarnedPoints.toFixed(1)}%</output>
+                    <p>{whatIfResult.isPassing ? "Meets" : "Below"} the {activeSimPassingGrade}% pass mark for this scenario.</p>
+                  </div> : <>
+                    <p className={simulatorStyles.notice}>Overall projection unavailable.</p>
+                    <p>{!whatIfResult.recorded.isWeightValid
+                      ? "Category weights must total 100%."
+                      : `Unentered work remains in: ${whatIfResult.missingCategories.join(", ")}. No score is assumed for that work.`}</p>
+                  </>}
+                </div>
+                <div className={simulatorStyles.ladder}>
+                  <h5>Projection Ladder</h5>
+                  <p className={simulatorStyles.help}>{whatIfResult.canProjectFinal ? "Compare overall grades using recorded work." : "Compare weighted-point subtotals. Unentered work is not forecast."} Select a score to try it.</p>
+                  <div className={simulatorStyles.scenarios}>
+                    {whatIfResult.ladder.map(step => <button type="button" key={step.scorePercentage} className={simulatorStyles.scenario}
+                      aria-pressed={step.scorePercentage === simHypotheticalScore} onClick={() => setSimHypotheticalScore(step.scorePercentage)}>
+                      <strong>{step.scorePercentage}%</strong>
+                      <span>{whatIfResult.canProjectFinal ? `${step.projectedFinal.toFixed(1)}% overall` : `${step.projectedFinal.toFixed(1)} weighted points`}</span>
+                    </button>)}
                   </div>
                 </div>
-              )}
-            </div>
+              </>}
+            </section>
           </div>
         </section>
       )}

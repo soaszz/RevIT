@@ -35,6 +35,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 ## No Icon Containers (No Backgrounds or Borders with Icons)
 - **Strict Prohibition**: Never use borders or background containers around icons. Icons must be clean, standalone icons only without any border or background box/circle. Ensure icons are properly sized and legible on their own.
 
+## Canonical RevIT Design System
+- Before UI changes, read [RevIT UI Design Rules](docs/UI_DESIGN_RULES.md), the canonical design-system document.
+- No purely decorative card/banner/selection edge bars, including bottom strips. Preserve functional indicators and visible keyboard focus. Existing scope and card-stability rules still apply.
+
 ## Strict Card Stability Policy
 - **Do Not Change Cards Anywhere**: Never modify card layouts, positions, structures, padding, heights, or styling anywhere across the application unless the user explicitly commands changes for those specific cards. Keep all cards exactly as they are.
 

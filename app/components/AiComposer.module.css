@@ -1,0 +1,21 @@
+.composer { margin: 8px 18px 14px; min-width: 0; padding: 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); box-shadow: none; display: flex; flex-direction: column; gap: 8px; }
+.composer:focus-within { outline: 2px solid var(--green-dark); outline-offset: 2px; }
+/* Existing global input skins must not create a second surface inside the composer. */
+.composer :global(#medtech-question) { display: block; width: 100%; min-height: 44px; max-height: 130px; padding: 6px 2px; border: 0; border-radius: 0; outline: 0; background: transparent; box-shadow: none; color: var(--ink); font: inherit; font-size: 16px; line-height: 1.5; resize: none; overflow-y: auto; overflow-wrap: anywhere; }
+.composer :global(#medtech-question)::placeholder { color: var(--muted); opacity: 1; }
+.footer { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.left { min-width: 0; }
+.right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.context { min-width: 0; min-height: 44px; display: inline-flex; align-items: center; gap: 7px; border: 0; padding: 0; border-radius: 8px; background: transparent; color: var(--muted); font: inherit; font-size: 11px; line-height: 1.4; text-align: left; cursor: pointer; }
+.context svg { flex: 0 0 16px; width: 16px; height: 16px; }
+.context span { min-width: 0; overflow-wrap: anywhere; }
+.context:hover { color: var(--green-dark); }
+.counter { color: var(--muted); font-size: 11px; line-height: 1.5; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.counter[data-warning="true"] { color: color-mix(in srgb, var(--amber) 80%, var(--ink)); font-weight: 650; }
+.send { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 44px; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 10px; background: var(--green); color: var(--accent-ink); box-shadow: none; cursor: pointer; }
+.send svg { width: 18px; height: 18px; }
+.send:disabled { background: var(--surface-soft); color: var(--muted); cursor: not-allowed; }
+.send:hover:not(:disabled) { background: var(--green-hover); }
+.send:focus-visible, .context:focus-visible { outline: 2px solid var(--green-dark); outline-offset: 2px; }
+.send[aria-busy="true"] { opacity: .75; }
+@media (max-width: 768px) { .composer { margin: 0; padding: 10px 12px; } .footer { gap: 8px; } .right { gap: 8px; } }

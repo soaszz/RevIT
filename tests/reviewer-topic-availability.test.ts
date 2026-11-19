@@ -264,7 +264,9 @@ test("real Rodak API/client path retains authentication/Pro checks and returns f
 test("all original four-bank source/metadata/assets remain byte-identical", () => {
   const hashes = JSON.parse(read("docs/elsevier/existing-bank-baseline.json")) as Record<string, string>;
   for (const [path, hash] of Object.entries(hashes)) {
-    assert.equal(createHash("sha256").update(readFileSync(resolve(root, path))).digest("hex"), hash, path);
+    const transition = JSON.parse(read("docs/rodak-ch17/authorized-changes.json"))[path];
+    if (transition) assert.equal(transition.before, hash, `${path}: authentic Rodak hotfix chain`);
+    assert.equal(createHash("sha256").update(readFileSync(resolve(root, path))).digest("hex"), transition?.after ?? hash, path);
   }
 });
 
@@ -331,10 +333,15 @@ test("BOC preserves source-index grading and local mistake/progress/weakness flo
     assert.equal(matching.isQuestionAnswerCorrect(q, null), false, q.id);
   }
   for (const nuMode of [false, true]) {
-    const sections = buildSubjectSections(getUnifiedSubjects("BOC", payload.subjects, payload.topics), nuMode);
+    const allSections = buildSubjectSections(getUnifiedSubjects("BOC", payload.subjects, payload.topics), nuMode);
+    // Collection placement changes, but the original source/display groups and all 144 topic IDs remain.
+    const originalSubjects = getUnifiedSubjects("BOC", payload.subjects, payload.topics);
     assert.equal(payload.subjects.length, 8, "source subjects unchanged");
-    assert.equal(sections.flatMap(section => section.subjects).length, 11, "three source-established display groups added without source edits");
-    assert.equal(sections.flatMap(section => section.subjects.flatMap(subject => subject.topicIds)).length, 144);
+    assert.equal(originalSubjects.length, 11, "three source-established display groups retained without source edits");
+    assert.equal(originalSubjects.flatMap(subject => subject.topicIds).length, 144);
+    const renderedTopics = new Set(allSections.flatMap(section => section.subjects.flatMap(subject => subject.topicIds)));
+    assert.deepEqual(renderedTopics, new Set(originalSubjects.flatMap(subject => subject.topicIds)));
+
   }
   const q = payload.questions[0];
   const topic = payload.topics.find(t => t.id === q.topicId)!;

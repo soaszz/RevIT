@@ -484,6 +484,9 @@ test("actual Skip defers question without recording or sending an attempt; compo
   const baseline = JSON.parse(readFileSync(resolve(root, "docs/phase3n/phase3n-j/disabled-study-baseline.json"), "utf8"));
   const transition = JSON.parse(readFileSync(resolve(root, "docs/reviewer-compatibility/component-jsx-transition.json"), "utf8"));
   assert.equal(transition.before, baseline.jsxHash, "Immutable original JSX pin is retained");
-  assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), transition.after);
-  assert.equal(createHash("sha256").update(readFileSync(resolve(root, "app/RevITApp.tsx"))).digest("hex"), transition.sourceAfter);
+  const student = JSON.parse(readFileSync(resolve(root, "docs/mtap2-banner/authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
+  assert.equal(student.renderer.before, transition.after, "Retain exact released renderer digest as the new transition's before pin");
+  assert.equal(student.before, transition.sourceAfter, "Student changes start from the exact released component");
+  assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), student.renderer.after);
+  assert.equal(createHash("sha256").update(readFileSync(resolve(root, "app/RevITApp.tsx"))).digest("hex"), student.after);
 });

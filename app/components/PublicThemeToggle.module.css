@@ -1,0 +1,4 @@
+.iconOnly:global(.theme-toggle.public-theme-toggle) { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 44px; width: 44px; height: 44px; min-height: 44px; padding: 0; border: 0; border-radius: 10px; background: transparent; box-shadow: none; color: var(--text, var(--ink)); cursor: pointer; }
+:global([data-theme="dark"]) .iconOnly:global(.theme-toggle.public-theme-toggle) { color: var(--mint, var(--green-dark)); }
+.iconOnly:global(.public-theme-toggle):hover { background: transparent; box-shadow: none; color: var(--green-dark); }
+.iconOnly:global(.public-theme-toggle):focus-visible { outline: 2px solid var(--green-dark); outline-offset: 3px; }

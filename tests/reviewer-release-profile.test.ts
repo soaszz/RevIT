@@ -123,12 +123,21 @@ test("production-enabled canonical registry preserves five-choice/matching gradi
 });
 
 test("combined entry matches the reviewed profile and preserves historical Updates bytes/footer", () => {
-  const r = fixture(), allUpdates = r.load("app/data/siteUpdates.ts").SITE_UPDATES;
+  const r = fixture(), currentUpdates = r.load("app/data/siteUpdates.ts").SITE_UPDATES;
+  const student = JSON.parse(readFileSync("docs/mtap2-banner/authorized-changes.json", "utf8"))["app/data/siteUpdates.ts"];
+  assert.equal(currentUpdates[0].version, student.version);
+  assert.equal(currentUpdates[0].date, student.releaseDate);
+  assert.equal(currentUpdates[0].type, "major");
+  const allUpdates = currentUpdates.slice(1);
   assert.equal(allUpdates[0].version, "v1.13.1"); assert.equal(allUpdates[0].date, "November 17, 2026");
   const updates = allUpdates.slice(1);
   assert.equal(updates[0].id, "update-v1-13-0"); assert.equal(updates[0].date, profile.releaseDate); assert.equal(updates[0].type, "major");
   for (const word of ["BOC", "Elsevier", "Harr", "two correct"]) assert.ok(JSON.stringify(updates[0]).includes(word));
-  const source = readFileSync("app/data/siteUpdates.ts", "utf8");
+  const currentSource = readFileSync("app/data/siteUpdates.ts", "utf8");
+  assert.equal(createHash("sha256").update(currentSource).digest("hex"), student.after);
+  const source = currentSource.replace(/  \{\r?\n    id: "update-v1-14-0",[\s\S]*?\r?\n  \},\r?\n/, "");
+  assert.notEqual(source, currentSource);
+  assert.equal(createHash("sha256").update(source).digest("hex"), student.before, "Student release reverses to exact released history");
   const hotfixReversed = source.replace(/  \{\r?\n    id: "update-v1-13-1",[\s\S]*?\r?\n  \},\r?\n/, "");
   const hotfixLedger = JSON.parse(readFileSync("docs/harr-hemostasis/authorized-changes.json", "utf8"));
   assert.equal(createHash("sha256").update(hotfixReversed).digest("hex"), hotfixLedger["app/data/siteUpdates.ts"].before);

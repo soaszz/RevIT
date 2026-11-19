@@ -1,0 +1,52 @@
+.simulator { margin-top: 24px; }
+.header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 14px; }
+.heading h3 { margin: 0; font-size: clamp(23px, 2.5vw, 28px); line-height: 1.25; letter-spacing: -.04em; }
+.indicator { color: var(--green-dark); font-size: 11px; font-weight: 650; }
+.copy { flex: 1; min-width: 0; }
+.copy p, .help { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.subject { display: grid; gap: 7px; width: min(100%, 290px); flex-shrink: 0; }
+.subject label, .field label { color: var(--ink); font-size: 12px; font-weight: 650; line-height: 1.5; }
+.body { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; padding-top: 24px; }
+.panel { min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.panel + .panel { padding-left: 26px; border-left: 1px solid var(--line); }
+.panel h4 { margin: 0; font-size: 18px; line-height: 1.4; letter-spacing: -.025em; }
+.panel header p { margin-top: 5px; }
+.field { display: grid; gap: 7px; min-width: 0; }
+.field p { margin: 0; }
+.field select, .subject select { padding-right: 30px; }
+.result { display: grid; gap: 10px; padding: 16px; border-radius: 12px; background: var(--surface-soft); min-width: 0; }
+.metric { display: grid; gap: 5px; }
+.metric > span { color: var(--muted); font-size: 12px; line-height: 1.5; }
+.metric strong, .metric output { color: var(--green-dark); font-size: 29px; font-weight: 750; letter-spacing: -.04em; font-variant-numeric: tabular-nums; line-height: 1.25; }
+.result p { margin: 0; font-size: 12px; line-height: 1.6; color: var(--muted); overflow-wrap: anywhere; }
+.result .notice, .error { color: var(--ink); font-size: 12px; font-weight: 650; line-height: 1.6; }
+.error { margin: 0; }
+.scoreControl { display: grid; gap: 4px; min-width: 0; }
+.scoreLabel { display: grid; grid-template-columns: minmax(0, 1fr) 76px; align-items: center; gap: 12px; }
+.scoreLabel label { min-width: 0; color: var(--ink); font-size: 12px; font-weight: 650; line-height: 1.5; }
+.scoreEntry { min-width: 0; }
+.scoreEntry input { width: 100%; }
+/* 44px native interaction area; only the 6px functional track is painted. */
+/* Override the global inset input surface only inside this score control. */
+.simulator .scoreControl .slider { appearance: none; -webkit-appearance: none; display: block; width: 100%; height: 44px; min-height: 44px; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; cursor: pointer; }
+.slider::-webkit-slider-runnable-track { height: 6px; border: 0; border-radius: 3px; background: linear-gradient(to right, var(--green) 0%, var(--green) var(--score-fill), var(--line) var(--score-fill), var(--line) 100%); }
+.slider::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; margin-top: -8px; border: 2px solid var(--paper); border-radius: 50%; background: var(--green); box-shadow: none; }
+.slider::-moz-range-track { height: 6px; border: 0; border-radius: 3px; background: var(--line); }
+.slider::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--green); }
+.slider::-moz-range-thumb { width: 18px; height: 18px; border: 2px solid var(--paper); border-radius: 50%; background: var(--green); box-shadow: none; }
+.slider:focus-visible, .scenario:focus-visible { outline: 2px solid var(--green-dark); outline-offset: 3px; }
+.ends { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; margin-top: -4px; }
+.ladder { display: grid; gap: 10px; }
+.ladder h5 { margin: 0; font-size: 13px; font-weight: 650; }
+.ladder p { margin: 0; }
+.scenarios { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.scenario { min-width: 0; min-height: 66px; display: flex; flex-direction: column; gap: 5px; align-items: flex-start; justify-content: center; padding: 10px; border: 0; border-radius: 8px; background: var(--surface-soft); color: var(--ink); text-align: left; cursor: pointer; font: inherit; }
+.scenario[aria-pressed="true"] { background: var(--green-soft); box-shadow: none; outline: 1px solid var(--green-dark); outline-offset: -1px; }
+.scenario:focus-visible { outline-width: 2px; outline-offset: 3px; }
+.scenario strong { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.scenario span { color: var(--muted); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+@media (max-width: 1000px) { .header { flex-direction: column; gap: 18px; } .subject { width: 100%; } }
+@media (max-width: 900px) { .body { grid-template-columns: minmax(0, 1fr); gap: 24px; } .panel + .panel { padding: 24px 0 0; border-left: 0; border-top: 1px solid var(--line); } }
+@media (max-width: 480px) { .scenarios { grid-template-columns: repeat(2, minmax(0, 1fr)); } .heading { align-items: center; } .metric strong, .metric output { font-size: 27px; } }
+.scenario[aria-pressed="true"] span { color: var(--ink); }

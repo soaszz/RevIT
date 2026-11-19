@@ -1,5 +1,7 @@
 "use client";
 
+import weaknessLabelStyles from "./WeaknessNavLabel.module.css";
+
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
@@ -230,9 +232,10 @@ export default function MobileNavDock({
                         <Image src={item.icon} alt="" width={512} height={512} unoptimized />
                       </span>
                       <div className="mobile-sheet-item-copy">
+                        {item.id === "weakness" && item.badge === "PRO" && <span className={`mobile-sheet-item-badge ${weaknessLabelStyles.above}`}>PRO</span>}
                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                           <strong>{item.label}</strong>
-                          {item.badge && <span className="mobile-sheet-item-badge">{item.badge}</span>}
+                          {item.badge && !(item.id === "weakness" && item.badge === "PRO") && <span className="mobile-sheet-item-badge">{item.badge}</span>}
                         </div>
                         <small>{item.desc}</small>
                       </div>
