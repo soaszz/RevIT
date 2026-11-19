@@ -3493,7 +3493,7 @@ useEffect(() => {
         )}
 
         {activeView === "library" && (
-          sessionQuestionIds.length === 0 ? (reviewerPending ? <ReviewerLoadingState error={premiumContentError} onRetry={() => setReviewerRetry((value) => value + 1)} /> :
+          sessionQuestionIds.length === 0 ? (reviewerPending ? <ReviewerLoadingState mtapEnabled={preferences.mtap_features_enabled} error={premiumContentError} onRetry={() => setReviewerRetry((value) => value + 1)} /> :
             <ReviewLibrary
               preferences={preferences}
               libraryMode={libraryMode}

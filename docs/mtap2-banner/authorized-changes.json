@@ -1,14 +1,21 @@
 {
   "app/RevITApp.tsx": {
     "before": "2e2e53edcd95770eff1342327297bddb7e330b7ded7ea318a0c64bc33b82d582",
-    "after": "870d4f744a0558dbea340ba502a870a7da4af8bb6373733ae4aa4dbeaa8c8426",
-    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved. Owner-approved available-question summary now uses consistent contributing topic/count/source scope; canonical mappings and access rules unchanged. Owner-approved unconditional FREE feature label in Question Bank header; no count/visibility/access change. Owner superseded available-only summary: restore public-safe published catalog for every account mode; FREE styling and content access unchanged. Owner-approved auth correction: server-verified bootstrap owner, revocation-only auth event binding and generation guard; no session.user identity reads in snapshot, no added requests.",
+    "after": "1821625cb472f06cc0877c573ca060dfc66f1770e7d110589ca68a51ef70f62b",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved. Owner-approved available-question summary now uses consistent contributing topic/count/source scope; canonical mappings and access rules unchanged. Owner-approved unconditional FREE feature label in Question Bank header; no count/visibility/access change. Owner superseded available-only summary: restore public-safe published catalog for every account mode; FREE styling and content access unchanged. Owner-approved auth correction: server-verified bootstrap owner, revocation-only auth event binding and generation guard; no session.user identity reads in snapshot, no added requests. Owner-approved loading presentation only: compact copy, static safe-preference skeleton; no readiness, network, content or access change.",
     "renderer": {
       "before": "8f1c71e72bcf33a3e99cb125fa920664c5ce07c1435724db0894938ac2673957",
-      "after": "74009afe500831b6f523d179cd8a668206b898711d116ac2e207c5734fc91318",
+      "after": "a87afdf9a8f911acf4cc3905116bdb492fa54898cd451b976778a069bbee5804",
       "sourceBefore": "2e2e53edcd95770eff1342327297bddb7e330b7ded7ea318a0c64bc33b82d582",
-      "sourceAfter": "870d4f744a0558dbea340ba502a870a7da4af8bb6373733ae4aa4dbeaa8c8426",
-      "reason": "Exact frozen owner-approved student UI from initial-inventory.json. Original released digest reproduced independently from HEAD, no baseline replacement. Auth-only startup correction leaves this renderer digest unchanged; raw source pin reconciled."
+      "sourceAfter": "1821625cb472f06cc0877c573ca060dfc66f1770e7d110589ca68a51ef70f62b",
+      "reason": "Exact frozen owner-approved student UI from initial-inventory.json. Original released digest reproduced independently from HEAD, no baseline replacement. Auth-only startup correction leaves this renderer digest unchanged; raw source pin reconciled.",
+      "presentationRefinement": {
+        "before": "74009afe500831b6f523d179cd8a668206b898711d116ac2e207c5734fc91318",
+        "after": "a87afdf9a8f911acf4cc3905116bdb492fa54898cd451b976778a069bbee5804",
+        "sourceBefore": "870d4f744a0558dbea340ba502a870a7da4af8bb6373733ae4aa4dbeaa8c8426",
+        "sourceAfter": "1821625cb472f06cc0877c573ca060dfc66f1770e7d110589ca68a51ef70f62b",
+        "reason": "Only mtapEnabled presentation prop; reversing it exactly reproduces pushed source."
+      }
     }
   },
   "app/components/CollectionHeader.module.css": {
@@ -162,5 +169,15 @@
     "before": "7127d94476907f94b2532283e6f316c9e83c96fa248f7fa0b7612e2ebec69542",
     "after": "ead7a4309f2fb2f8a074e22f0d58c5600dd52db3db15e76df08cbdd75603cd04",
     "reason": "Owner-authorized focused v1.14.0 assertion reconciliation. Keep original release/content/security pins and strengthen checks for approved display/readiness and append-only evidence."
+  },
+  "app/components/ReviewerLoadingState.tsx": {
+    "before": "880f4f2eb2c0ef897fd32f991594da1956c51920c870e507949a118fdabdf4e1",
+    "reason": " Owner-approved loading presentation only: compact copy, static safe-preference skeleton; no readiness, network, content or access change.",
+    "after": "f40f313c188c8067928a5e68107e53e4e7788674fc885aa90fb9d9823954117c"
+  },
+  "app/components/ReviewerLoadingState.module.css": {
+    "before": "a694c8a8eed70c65d8da82ca763ccaab1478dd734c560f524a489074912cea7d",
+    "reason": " Owner-approved loading presentation only: compact copy, static safe-preference skeleton; no readiness, network, content or access change.",
+    "after": "bbfb591dcf22155ae7bcf6792b1968d1873bd3a2cfd0267c65c6c8c89f5d29c4"
   }
 }
