@@ -1,13 +1,13 @@
 {
   "app/RevITApp.tsx": {
     "before": "2e2e53edcd95770eff1342327297bddb7e330b7ded7ea318a0c64bc33b82d582",
-    "after": "1821625cb472f06cc0877c573ca060dfc66f1770e7d110589ca68a51ef70f62b",
-    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved. Owner-approved available-question summary now uses consistent contributing topic/count/source scope; canonical mappings and access rules unchanged. Owner-approved unconditional FREE feature label in Question Bank header; no count/visibility/access change. Owner superseded available-only summary: restore public-safe published catalog for every account mode; FREE styling and content access unchanged. Owner-approved auth correction: server-verified bootstrap owner, revocation-only auth event binding and generation guard; no session.user identity reads in snapshot, no added requests. Owner-approved loading presentation only: compact copy, static safe-preference skeleton; no readiness, network, content or access change.",
+    "after": "fb07447d0ff341445ad8caed910c783c92efa5d3d324e03004991653e771d988",
+    "reason": "Approved collection-banner redesign and additive MTAP 2 references/isolated grades. Original source content, formulas and historical records preserved. Owner-approved available-question summary now uses consistent contributing topic/count/source scope; canonical mappings and access rules unchanged. Owner-approved unconditional FREE feature label in Question Bank header; no count/visibility/access change. Owner superseded available-only summary: restore public-safe published catalog for every account mode; FREE styling and content access unchanged. Owner-approved auth correction: server-verified bootstrap owner, revocation-only auth event binding and generation guard; no session.user identity reads in snapshot, no added requests. Owner-approved loading presentation only: compact copy, static safe-preference skeleton; no readiness, network, content or access change. Owner supersedes feature-label rule: badge alone reflects existing verified Pro/Free state and stays absent while access is unresolved; full catalog and all behavior unchanged.",
     "renderer": {
       "before": "8f1c71e72bcf33a3e99cb125fa920664c5ce07c1435724db0894938ac2673957",
-      "after": "a87afdf9a8f911acf4cc3905116bdb492fa54898cd451b976778a069bbee5804",
+      "after": "d02fec4b9c8d2f8aee09c8c83140770dd86c64c49d6ae87f3c8a3e14e6e91b73",
       "sourceBefore": "2e2e53edcd95770eff1342327297bddb7e330b7ded7ea318a0c64bc33b82d582",
-      "sourceAfter": "1821625cb472f06cc0877c573ca060dfc66f1770e7d110589ca68a51ef70f62b",
+      "sourceAfter": "fb07447d0ff341445ad8caed910c783c92efa5d3d324e03004991653e771d988",
       "reason": "Exact frozen owner-approved student UI from initial-inventory.json. Original released digest reproduced independently from HEAD, no baseline replacement. Auth-only startup correction leaves this renderer digest unchanged; raw source pin reconciled.",
       "presentationRefinement": {
         "before": "74009afe500831b6f523d179cd8a668206b898711d116ac2e207c5734fc91318",
@@ -15,6 +15,13 @@
         "sourceBefore": "870d4f744a0558dbea340ba502a870a7da4af8bb6373733ae4aa4dbeaa8c8426",
         "sourceAfter": "1821625cb472f06cc0877c573ca060dfc66f1770e7d110589ca68a51ef70f62b",
         "reason": "Only mtapEnabled presentation prop; reversing it exactly reproduces pushed source."
+      },
+      "subscriptionBadge": {
+        "before": "a87afdf9a8f911acf4cc3905116bdb492fa54898cd451b976778a069bbee5804",
+        "after": "d02fec4b9c8d2f8aee09c8c83140770dd86c64c49d6ae87f3c8a3e14e6e91b73",
+        "sourceBefore": "1821625cb472f06cc0877c573ca060dfc66f1770e7d110589ca68a51ef70f62b",
+        "sourceAfter": "fb07447d0ff341445ad8caed910c783c92efa5d3d324e03004991653e771d988",
+        "reason": "Exact single-span replacement; reversing it reproduces the dated approved application bytes."
       }
     }
   },

@@ -3446,7 +3446,7 @@ useEffect(() => {
                       </svg>
                     </span>
                     <h2 className="source-summary-title">Question Bank</h2>
-                    <span className={summaryHeaderStyles.free} aria-label="Free-tier Question Bank feature" title="Question Bank is a Free-tier feature for all users">FREE</span>
+                    {accessReady && <span className={summaryHeaderStyles.free} aria-label={`Current plan: ${proActive ? "Pro" : "Free"}`} title={`Current plan: ${proActive ? "Pro" : "Free"}`}>{proActive ? "PRO" : "FREE"}</span>}
                   </div>
                   <span className="source-summary-total" aria-label={`${questionBankSummary.total.toLocaleString()} published questions`} title="Total published catalog; Pro reviewer content still requires active Pro access">{questionBankSummary.total.toLocaleString()} QUESTIONS</span>
                 </div>
