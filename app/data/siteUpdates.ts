@@ -15,7 +15,7 @@ export const SITE_UPDATES: SiteUpdate[] = [
   {
     id: "update-v1-14-0",
     version: "v1.14.0",
-    date: "Pending",
+    date: "November 20, 2026",
     type: "major",
     title: "Added MTAP 2 and Improved Study Tools",
     summary: "Added MTAP 2 collections and grades, with clearer study screens and loading feedback.",

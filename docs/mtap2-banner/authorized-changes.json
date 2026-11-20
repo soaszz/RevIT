@@ -140,10 +140,10 @@
   },
   "app/data/siteUpdates.ts": {
     "before": "4a562db0de7afd9ce4f8c001d7ec4a57393e176497c75f4cb41b1b597b8f3e41",
-    "after": "18f2fd73183daa1da4574d526fba12002efcbb434080d9fa4a0f40aacb1f138e",
+    "after": "7a75dab50d182d59fa23b4b4de8c02275d2440563e9921e45dcdf5afc6c24d57",
     "reason": "Owner-approved student-only v1.14.0 release preparation. Date Pending; reversing only new entry reproduces live history exactly. Admin Dashboard excluded.",
     "version": "v1.14.0",
-    "releaseDate": "Pending"
+    "releaseDate": "November 20, 2026"
   },
   "tests/fixes-only-release.test.ts": {
     "before": "e509bddea27ea49fecae160065577d0cd72d14496c42b7a104f1b4df596d6d54",
