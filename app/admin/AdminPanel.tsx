@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useRef, type FormEvent } from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ProActivationModal, { type ActivationSource } from "../components/ProActivationModal";
 import styles from "./AdminPanel.module.css";
-import { PRO_PLANS } from "../lib/proPlans";
+import { parseAmountInput, presetAmountForMonths } from "../lib/admin/subscriptionBilling";
+import { recordedAmountText } from "../lib/admin/adminReportingCore";
 
 function openDialog(dialog: HTMLDialogElement | null) {
   if (dialog && !dialog.open) dialog.showModal();
@@ -41,10 +42,21 @@ export type HistoryItem = {
 export default function AdminPanel({
   adminUserId,
   adminEmail,
+  embedded = false,
+  showLookup = false,
+  selectedSubscriber,
+  request,
 }: {
   adminUserId: string;
   adminEmail: string;
+  embedded?: boolean;
+  showLookup?: boolean;
+  selectedSubscriber?: AdminUserItem | null;
+  request?: typeof globalThis.fetch;
 }) {
+  // Transport injection is used only by the development-only synthetic preview.
+  // Real administration retains its existing protected endpoints and payloads.
+  const fetch = request ?? globalThis.fetch;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState("");
@@ -62,6 +74,7 @@ export default function AdminPanel({
   const [customDays, setCustomDays] = useState(30);
   const [customDate, setCustomDate] = useState("");
   const [activationSource, setActivationSource] = useState<ActivationSource>("purchased");
+  const [customAmount, setCustomAmount] = useState("");
   const [customRecipientMessage, setCustomRecipientMessage] = useState("");
 
   // Modals state
@@ -80,6 +93,12 @@ export default function AdminPanel({
   const [noteContent, setNoteContent] = useState("");
   const [noteSaving, setNoteSaving] = useState(false);
   const [noteStatus, setNoteStatus] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  useEffect(() => {
+    if (selectedSubscriber) void handleSelectUser(selectedSubscriber);
+    // Refresh only on an explicit directory selection, never on each render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSubscriber]);
 
   // Search handler
   async function handleSearch(e: FormEvent) {
@@ -344,6 +363,15 @@ export default function AdminPanel({
           customMessage: customRecipientMessage.trim() || null,
           expectedExpiresAt: selectedUser.proExpiresAt,
           allowShorten: Boolean(isShorteningAccess && shortenConfirmed),
+          // Only grant/extend carries the selected preset; custom dates and
+          // revoke/modify stay null so the writer keeps its default.
+          planMonths:
+            (actionType === "activate" || actionType === "extend") && durationPreset !== "custom"
+              ? Number(durationPreset.replace("m", ""))
+              : null,
+          // Administrator attestation only. The writer records this as admin-confirmed, never
+          // as independently provider-verified payment.
+          amountPhp: recordedAmount,
           idempotencyKey: requestKeyRef.current ?? (requestKeyRef.current = crypto.randomUUID()),
         }),
       });
@@ -459,6 +487,29 @@ export default function AdminPanel({
     : actionType === "extend" ? "Extension"
     : actionType === "modify_expiration" ? "Expiration Change" : "Grant";
 
+  // Admin-confirmed billing: a purchased preset uses the authoritative plan price, a custom
+  // purchased duration uses the optional manual amount, and complimentary/non-grant actions
+  // never create a sale. Blank custom amounts stay unrecorded; an explicit 0 is a real zero.
+  const grantAction = actionType === "activate" || actionType === "extend";
+  const selectedPlanMonths = grantAction && durationPreset !== "custom"
+    ? Number(durationPreset.replace("m", ""))
+    : null;
+  const customAmountResult = parseAmountInput(customAmount);
+  const standardRecordedAmount = activationSource === "purchased" && selectedPlanMonths !== null
+    ? presetAmountForMonths(selectedPlanMonths)
+    : null;
+  const recordedAmount = !grantAction
+    ? null
+    : activationSource !== "purchased"
+    ? 0
+    : selectedPlanMonths !== null
+    ? standardRecordedAmount
+    : customAmountResult.ok
+    ? customAmountResult.value
+    : null;
+  const isAmountInvalid = grantAction && activationSource === "purchased" && durationPreset === "custom" && !customAmountResult.ok;
+  const amountError = customAmountResult.ok ? "" : customAmountResult.error;
+
   const periodStats = (() => {
     if (!selectedUser) {
       return { totalPeriods: 0, breakdownText: "" };
@@ -523,8 +574,9 @@ export default function AdminPanel({
     };
   })();
 
+  const Workspace = embedded ? "div" : "main";
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${embedded ? styles.embedded : ""} ${showLookup ? styles.lookupMode : ""}`}>
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.headerLeft}>
@@ -552,7 +604,7 @@ export default function AdminPanel({
       </header>
 
       {/* Main Workspace */}
-      <main className={styles.workspace}>
+      <Workspace className={styles.workspace}>
         <section className={styles.dashboardIntro} aria-labelledby="admin-overview-title">
           <div>
             <span className={styles.eyebrow}>Admin workspace</span>
@@ -838,7 +890,11 @@ export default function AdminPanel({
                       id="subscription-action"
                       className={styles.selectInput}
                       value={actionType}
-                      onChange={(e) => setActionType(e.target.value as any)}
+                      onChange={(e) => {
+                        const next = e.target.value as typeof actionType;
+                        setActionType(next);
+                        if (next === "revoke" || next === "modify_expiration") setCustomAmount("");
+                      }}
                     >
                       <option value="activate">Activate Pro</option>
                       <option value="extend">Extend Current Pro</option>
@@ -856,7 +912,11 @@ export default function AdminPanel({
                           id="subscription-source"
                           className={styles.selectInput}
                           value={activationSource}
-                          onChange={(e) => setActivationSource(e.target.value as ActivationSource)}
+                          onChange={(e) => {
+                            const next = e.target.value as ActivationSource;
+                            setActivationSource(next);
+                            if (next !== "purchased") setCustomAmount("");
+                          }}
                         >
                           <option value="purchased">Purchased (Standard Payment)</option>
                           <option value="gift">Gift (Complimentary Access)</option>
@@ -878,7 +938,10 @@ export default function AdminPanel({
                               key={d.id}
                               type="button"
                               className={`${styles.presetBtn} ${durationPreset === d.id ? styles.presetActive : ""}`}
-                              onClick={() => setDurationPreset(d.id)}
+                              onClick={() => {
+                                setDurationPreset(d.id);
+                                if (d.id !== "custom") setCustomAmount("");
+                              }}
                               aria-pressed={durationPreset === d.id}
                             >
                               {d.label}
@@ -897,6 +960,30 @@ export default function AdminPanel({
                             value={customDate}
                             onChange={(e) => setCustomDate(e.target.value)}
                           />
+                        </div>
+                      )}
+
+                      {grantAction && activationSource === "purchased" && durationPreset === "custom" && (
+                        <div className={styles.fieldGroup}>
+                          <label htmlFor="subscription-custom-amount" className={styles.fieldLabel}>
+                            Custom amount (optional)
+                          </label>
+                          <input
+                            id="subscription-custom-amount"
+                            type="text"
+                            inputMode="decimal"
+                            className={styles.textInput}
+                            placeholder="e.g. 150.00"
+                            value={customAmount}
+                            onChange={(e) => setCustomAmount(e.target.value)}
+                            aria-invalid={isAmountInvalid}
+                            aria-describedby="subscription-custom-amount-hint"
+                          />
+                          <small id="subscription-custom-amount-hint" className={styles.cardSubtitle}>
+                            {isAmountInvalid
+                              ? amountError
+                              : "Leave blank to keep the amount not recorded. Enter 0 for an explicit zero."}
+                          </small>
                         </div>
                       )}
 
@@ -923,7 +1010,7 @@ export default function AdminPanel({
                 {actionType !== "revoke" && (
                   <div className={styles.calcPreviewRow}>
                     <div><span className={styles.calcLabel}>Current expiration</span><strong>{selectedUser.proExpiresAt ? new Date(selectedUser.proExpiresAt).toLocaleDateString("en-US", { dateStyle: "long" }) : "No subscription"}</strong></div>
-                    <div><span className={styles.calcLabel}>Selected duration</span><strong>{selectedDuration}</strong><small>{durationPreset === "custom" ? "Custom arrangement" : `₱${PRO_PLANS.find(plan => plan.months === parseInt(durationPreset))?.price} prepaid`}</small></div>
+                    <div><span className={styles.calcLabel}>Selected duration</span><strong>{selectedDuration}</strong><small>{durationPreset === "custom" ? (activationSource === "purchased" && grantAction ? recordedAmountText(customAmountResult.ok ? customAmountResult.value : null) : "Complimentary") : activationSource === "purchased" ? `₱${presetAmountForMonths(selectedPlanMonths)} admin-confirmed` : "Complimentary ₱0"}</small></div>
                     <div><span className={styles.calcLabel}>New expiration</span><strong className={styles.calcValue}>{calculated.date.toLocaleDateString("en-US", { dateStyle: "long" })}</strong></div>
                     {actionType === "extend" && isActivePro && !(durationPreset === "custom" && customDate) && <p className={styles.previewNote}>Added after current expiration. Remaining Pro access is preserved.</p>}
                   </div>
@@ -945,7 +1032,7 @@ export default function AdminPanel({
                     type="button"
                     className={actionType === "revoke" ? styles.dangerBtn : styles.primaryBtn}
                     onClick={handleApplyClick}
-                    disabled={actionPending || isNoChange || isInvalidDate}
+                    disabled={actionPending || isNoChange || isInvalidDate || isAmountInvalid}
                   >
                     {actionPending
                       ? "Applying..."
@@ -1036,7 +1123,7 @@ export default function AdminPanel({
             </div>
           )}
         </section>
-      </main>
+      </Workspace>
 
       {/* Active Pro Conflict Warning Dialog */}
       {activeProWarningModalOpen && selectedUser && (
@@ -1190,6 +1277,7 @@ export default function AdminPanel({
               {actionType !== "revoke" && (
                 <>
                   <div><dt>{actionType === "modify_expiration" ? "Change" : "Selected duration"}</dt><dd>{selectedDuration}</dd></div>
+                  <div><dt>Recorded amount</dt><dd>{actionType === "modify_expiration" ? "No payment recorded" : `${recordedAmountText(recordedAmount)} · ${activationSource === "purchased" ? "Admin-confirmed" : "Complimentary"}`}</dd></div>
                   <div className={styles.confirmResult}><dt>New expiration</dt><dd>{calculated.date.toLocaleDateString("en-US", { dateStyle: "long" })}</dd></div>
                   {customRecipientMessage && <div><dt>Recipient message</dt><dd>{customRecipientMessage}</dd></div>}
                 </>
@@ -1212,7 +1300,7 @@ export default function AdminPanel({
                 type="button"
                 className={actionType === "revoke" ? styles.dangerBtn : styles.primaryBtn}
                 onClick={handleConfirmSubscriptionChange}
-                disabled={actionPending || (isShortening && !shortenConfirmed)}
+                disabled={actionPending || (isShortening && !shortenConfirmed) || isAmountInvalid}
               >
                 {actionPending
                   ? "Applying..."

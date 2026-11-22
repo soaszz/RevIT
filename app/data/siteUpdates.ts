@@ -13,6 +13,20 @@ export interface SiteUpdate {
 
 export const SITE_UPDATES: SiteUpdate[] = [
   {
+    id: "update-v1-15-0",
+    version: "v1.15.0",
+    date: "Pending",
+    type: "major",
+    title: "Improved RevIT Pro Experience",
+    summary: "A clearer Pro welcome and renewal experience, plus a smoother Google sign-in.",
+    tags: ["Pro", "Improvements"],
+    highlights: [
+      "The Pro welcome message now shows every available reviewer edition and what Pro includes.",
+      "Added a reminder when Pro ends, with clear options to subscribe again or keep using RevIT Free.",
+      "Signing in with Google now shows a smoother loading screen before your account opens.",
+    ],
+  },
+  {
     id: "update-v1-14-0",
     version: "v1.14.0",
     date: "November 20, 2026",

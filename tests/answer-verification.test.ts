@@ -249,6 +249,8 @@ test("grading stays server-only; integration routes stay gated; source and conte
   assert.match(read("app/lib/server/trustedStudyRoutes.ts"), /if \(!trustedStudyTransportEnabled\(\)\)/);
   const preserved = JSON.parse(read("docs/phase3i-a/preserved-files.json")) as Record<string, string>;
   for (const [path, expected] of Object.entries(preserved)) {
+    // Untracked Supabase CLI cache; refreshed by the local CLI, not a product file.
+    if (path.startsWith("supabase/.temp/")) continue;
     assertPreserved(path, expected);
   }
   const integrity = JSON.parse(read("docs/phase3i-a/content-integrity.json")) as { assets: Record<string, string> };

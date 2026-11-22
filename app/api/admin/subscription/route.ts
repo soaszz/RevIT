@@ -2,6 +2,9 @@ import "server-only";
 import { NextResponse } from "next/server";
 import { verifyAdminSession } from "../../../lib/admin/adminAuth";
 import { applySubscriptionChange } from "../../../lib/admin/adminService";
+import { resolveAdminRecordedAmount } from "../../../lib/admin/subscriptionBilling";
+import { revalidateTag } from "next/cache";
+import { SALES_CACHE_TAG } from "../../../lib/admin/adminReportingCore";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +48,8 @@ export async function POST(request: Request) {
       expectedExpiresAt,
       allowShorten,
       idempotencyKey,
+      planMonths,
+      amountPhp,
     } = body;
 
     if (!userId || typeof userId !== "string" || !action) {
@@ -62,6 +67,30 @@ export async function POST(request: Request) {
 
     if (source && !["purchased", "gift", "prize"].includes(source)) {
       return NextResponse.json({ error: "Invalid activation source." }, { status: 400 });
+    }
+
+    // Preset durations are 1, 3 or 6 whole months. Never coerce strings or accept
+    // fractions, negatives or other values, and only grant actions may carry one.
+    const hasPlanMonths = planMonths !== undefined && planMonths !== null;
+    if (hasPlanMonths) {
+      if (typeof planMonths !== "number" || !Number.isInteger(planMonths) || ![1, 3, 6].includes(planMonths)) {
+        return NextResponse.json({ error: "Invalid plan duration." }, { status: 400 });
+      }
+      if (action !== "activate" && action !== "extend") {
+        return NextResponse.json({ error: "A plan duration requires a grant or extend action." }, { status: 400 });
+      }
+    }
+
+    // Administrator attestation only. Presets use the authoritative plan price; a custom
+    // purchased duration may carry a manual amount (blank = not recorded, 0 = explicit zero).
+    const recordedAmount = resolveAdminRecordedAmount({
+      action,
+      source: source || "purchased",
+      planMonths: hasPlanMonths ? planMonths : null,
+      amountPhp,
+    });
+    if (!recordedAmount.ok) {
+      return NextResponse.json({ error: recordedAmount.error }, { status: 400 });
     }
 
     // Server-side check for invalid past date when action is not revoke
@@ -100,12 +129,16 @@ export async function POST(request: Request) {
       customMessage: typeof customMessage === "string" ? customMessage.slice(0, 500) : null,
       expectedExpiresAt: expectedExpiresAt || null,
       allowShorten: Boolean(allowShorten),
+      planMonths: hasPlanMonths ? planMonths : null,
+      amountPhp: recordedAmount.value,
     });
 
     inFlightChanges.set(effectiveKey, operation);
     try {
       const result = await operation;
       idempotencyCache.set(effectiveKey, { timestamp: Date.now(), result });
+      // Reporting failure must never change the outcome of a successful subscription write.
+      try { revalidateTag(SALES_CACHE_TAG, { expire: 0 }); } catch { /* Cache naturally expires in ten minutes. */ }
       return NextResponse.json({ success: true, result });
     } finally {
       inFlightChanges.delete(effectiveKey);

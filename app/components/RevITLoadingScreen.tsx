@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { MorphingInfinity } from "./loading-ui/morphing-infinity";
 
-export default function RevITLoadingScreen({ error = false, onRetry }: { error?: boolean; onRetry?: () => void }) {
+export default function RevITLoadingScreen({ error = false, onRetry, status }: { error?: boolean; onRetry?: () => void; status?: string }) {
   return (
     <main className="revit-loading-screen" aria-busy={!error} aria-label={error ? "RevIT access needs attention" : "RevIT is preparing your study space"}>
       <div className="revit-loading-content">
@@ -12,7 +12,7 @@ export default function RevITLoadingScreen({ error = false, onRetry }: { error?:
           {!error && <MorphingInfinity className="revit-loading-animation" aria-label="Initializing RevIT" />}
         </div>
 
-        <p role={error ? "alert" : undefined}><strong>Review It Thoroughly.</strong><span>{error ? "We could not verify your access. Reconnect and try again." : "Preparing your study space…"}</span></p>
+        <p role={error ? "alert" : undefined}><strong>Review It Thoroughly.</strong><span>{error ? "We could not verify your access. Reconnect and try again." : status ?? "Preparing your study space…"}</span></p>
         {error && onRetry && <button className="primary-button" type="button" onClick={onRetry}>Try again</button>}
       </div>
     </main>

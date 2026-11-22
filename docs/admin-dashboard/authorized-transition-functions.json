@@ -1,0 +1,23 @@
+{
+  "authorizedAt": "2026-11-22",
+  "reason": "Approved pre-release billing correction. Only handleConfirmSubscriptionChange changed, and only by adding the administrator-confirmed amountPhp field to the existing submit payload. The earlier planMonths transition remains part of the same function. No other function in the ten-function set changed, and no historical before-hash was altered.",
+  "transitions": {
+    "handleConfirmSubscriptionChange": {
+      "before": "05fbd0f91d34e43801cdd2e2ad7e7bd5b28d2d7f0f48962f82f1db3ff001db50",
+      "after": "b414f5f675055e0638948580fd32ae72387967c7a2cf2b20cb636460635b8a26",
+      "added": [
+        "planMonths: (actionType === \"activate\" || actionType === \"extend\") && durationPreset !== \"custom\" ? Number(durationPreset.replace(\"m\", \"\")) : null",
+        "amountPhp: recordedAmount"
+      ],
+      "unchanged": [
+        "expiration calculation",
+        "shortening acknowledgement",
+        "confirmation flow",
+        "duplicate-submit guard",
+        "idempotency key",
+        "expected-expiration locking",
+        "error/conflict handling"
+      ]
+    }
+  }
+}

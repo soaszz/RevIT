@@ -247,5 +247,9 @@ test("migration and rollback fail closed and preserve prior files (static checks
   assert.doesNotMatch(rollback26, /do update/i);
 
   const baseline = JSON.parse(read("docs/phase3i-b/baseline.json"));
-  for (const [path, hash] of Object.entries(baseline.files)) assertPreserved(path, hash);
+  for (const [path, hash] of Object.entries(baseline.files)) {
+    // Untracked Supabase CLI cache; refreshed by the local CLI, not a product file.
+    if (path.startsWith("supabase/.temp/")) continue;
+    assertPreserved(path, hash);
+  }
 });

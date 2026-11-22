@@ -38,6 +38,10 @@ export type ApplySubscriptionParams = {
   customMessage?: string | null;
   expectedExpiresAt?: string | null;
   allowShorten?: boolean;
+  // Selected preset duration. Stored only for grant actions; null keeps the writer's default.
+  planMonths?: number | null;
+  // Administrator-confirmed amount for a purchased grant. Null means the amount is not recorded.
+  amountPhp?: number | null;
 };
 
 export function isProActiveDate(expiresAt: string | null | undefined): boolean {
@@ -294,6 +298,11 @@ export async function applySubscriptionChange(params: ApplySubscriptionParams) {
     p_custom_message: params.customMessage || null,
     p_expected_expires_at: params.expectedExpiresAt || null,
     p_allow_shorten: Boolean(params.allowShorten),
+    p_plan_months: params.planMonths ?? null,
+    // The admin confirms payment was received; this is not independent provider verification.
+    p_payment_verified: false,
+    // Additive twelfth argument. Old callers that omit it keep their existing behavior.
+    p_amount_php: params.amountPhp ?? null,
   });
 
   if (error) {

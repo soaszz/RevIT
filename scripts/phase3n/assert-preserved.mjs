@@ -83,5 +83,15 @@ export function assertPreserved(path, expected) {
     assert.equal(mtap2[path].before, current, path + ": broken MTAP 2/banner preservation chain");
     current = mtap2[path].after;
   }
+  const adminDashboard = JSON.parse(readFileSync(new URL("docs/admin-dashboard/authorized-changes.json", root), "utf8"));
+  if (adminDashboard[path]) {
+    assert.equal(adminDashboard[path].before, current, path + ": broken Admin Dashboard preservation chain");
+    current = adminDashboard[path].after;
+  }
+  const releaseV1150 = JSON.parse(readFileSync(new URL("docs/release-v1.15.0/authorized-changes.json", root), "utf8"));
+  if (releaseV1150[path]) {
+    assert.equal(releaseV1150[path].before, current, path + ": broken v1.15.0 preservation chain");
+    current = releaseV1150[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

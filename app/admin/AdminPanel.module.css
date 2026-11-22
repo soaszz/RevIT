@@ -8,6 +8,14 @@
   flex-direction: column;
 }
 
+/* Same subscription workspace, embedded in the dashboard's Subscribers area. */
+.embedded { min-height: 0; background: transparent; }
+.embedded .header, .embedded .searchSection, .embedded .dashboardIntro { display: none; }
+.embedded .workspace { padding: 0; max-width: none; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.embedded .sectionCard { border-radius: 14px; }
+.embedded .registeredSummary { padding-left: 0; border-left: 0; }
+.embedded.lookupMode .searchSection { display: flex; position: static; }
+
 /* Header */
 .header {
   min-height: 72px;

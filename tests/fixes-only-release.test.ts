@@ -34,12 +34,15 @@ test("four published banks retain all 4,441 historical records; prepared edition
 
 test("Pending Harr hotfix preserves released history and platform footer", () => {
   const allUpdates = SITE_UPDATES;
-  const authorization = JSON.parse(read("docs/mtap2-banner/authorized-changes.json"))["app/data/siteUpdates.ts"];
-  assert.equal(allUpdates[0].version, authorization.version);
-  assert.equal(allUpdates[0].date, authorization.releaseDate);
+  const release = JSON.parse(read("docs/release-v1.15.0/authorized-changes.json"))["app/data/siteUpdates.ts"];
+  assert.equal(allUpdates[0].version, release.version);
+  assert.equal(allUpdates[0].date, release.releaseDate);
   assert.equal(allUpdates[0].type, "major");
+  const authorization = JSON.parse(read("docs/mtap2-banner/authorized-changes.json"))["app/data/siteUpdates.ts"];
+  assert.equal(allUpdates[1].version, authorization.version);
+  assert.equal(allUpdates[1].date, authorization.releaseDate);
   // Retain every historical hotfix assertion against the unchanged released tail.
-  const releasedUpdates = allUpdates.slice(1);
+  const releasedUpdates = allUpdates.slice(2);
   assert.equal(releasedUpdates[0].version, "v1.13.1");
   assert.equal(releasedUpdates[0].date, "November 17, 2026");
   assert.equal(releasedUpdates[0].type, "minor");

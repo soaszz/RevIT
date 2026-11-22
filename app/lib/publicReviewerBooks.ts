@@ -8,6 +8,7 @@ export function getPublicReviewerBooks(registry: Readonly<Record<string, PublicR
   const proBooks = books.filter(book => book.requiredPlan === "pro");
   return { books, freeBooks, proBooks, freeNames: freeBooks.map(book => book.label).join(", "), proNames: proBooks.map(book => book.label).join(", ") };
 }
+export type PublicReviewerBooks = ReturnType<typeof getPublicReviewerBooks>;
 export function getUpcomingReviewerNames(registry: Readonly<Record<string, PublicReviewer>> = QUESTION_BANKS) {
   const titles: Record<string, string> = { boc: "BOC Study Guide 7th Edition", elsevier: "Elsevier's MLS Examination Review" };
   return Object.values(registry).filter(book => book.published === false && titles[book.id]).map(book => titles[book.id]).join(" and ");

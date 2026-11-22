@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
+import { PUBLIC_REVIEWERS as PUBLISHED_REVIEWERS, type PublicReviewerBooks } from "../lib/publicReviewerBooks";
+import { AI_LIMITS } from "../lib/entitlements";
 import styles from "./ProActivationModal.module.css";
 
 export type ActivationSource = "purchased" | "gift" | "prize";
@@ -18,6 +19,8 @@ export interface ProActivationModalProps {
   onClose: () => void;
   onAcknowledge?: () => void;
   isPreview?: boolean;
+  /** Catalog override for the development-only synthetic preview; never used by the app. */
+  reviewers?: PublicReviewerBooks;
 }
 
 export default function ProActivationModal({
@@ -31,7 +34,9 @@ export default function ProActivationModal({
   onClose,
   onAcknowledge,
   isPreview = false,
+  reviewers,
 }: ProActivationModalProps) {
+  const PUBLIC_REVIEWERS = reviewers ?? PUBLISHED_REVIEWERS;
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleDismiss = () => {
@@ -167,7 +172,7 @@ export default function ProActivationModal({
             <ul className={styles.perksList}>
               <li className={styles.perkItem}>
                 <span className={styles.perkCheck} aria-hidden="true">✓</span>
-                <span>Full access to Pro reviewer books ({PUBLIC_REVIEWERS.proNames}). {PUBLIC_REVIEWERS.freeNames} remains Free.</span>
+                <span>Full access to all {PUBLIC_REVIEWERS.proBooks.length} Pro-only reviewer editions ({PUBLIC_REVIEWERS.proNames}). {PUBLIC_REVIEWERS.freeNames} remains Free.</span>
               </li>
               <li className={styles.perkItem}>
                 <span className={styles.perkCheck} aria-hidden="true">✓</span>
@@ -179,7 +184,7 @@ export default function ProActivationModal({
               </li>
               <li className={styles.perkItem}>
                 <span className={styles.perkCheck} aria-hidden="true">✓</span>
-                <span>15 RevIT AI tutoring requests every day</span>
+                <span>{AI_LIMITS.pro.dailyRequests} RevIT AI tutoring requests every day</span>
               </li>
             </ul>
           </div>

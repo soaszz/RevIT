@@ -2,9 +2,13 @@
 
 import type { UserIdentity } from "@supabase/supabase-js";
 import { useEffect } from "react";
+import RevITLoadingScreen from "../../components/RevITLoadingScreen";
 import { createClient } from "../../lib/supabase/client";
 
 const LAST_SIGN_IN_METHOD_KEY = "revit:lastSignInMethod";
+// Bounded so a stalled verification cannot leave the loading screen up forever.
+const SESSION_CHECK_TIMEOUT_MS = 15_000;
+const SESSION_ERROR_DESTINATION = "/auth?oauth_error=google_session";
 
 function safeNextPath(value: string | null) {
   return value?.startsWith("/") && !value.startsWith("//") ? value : "/overview";
@@ -12,24 +16,28 @@ function safeNextPath(value: string | null) {
 
 export default function OAuthCompleteClient() {
   useEffect(() => {
+    let finished = false;
+    const finish = (destination: string) => {
+      if (finished) return;
+      finished = true;
+      window.location.replace(destination);
+    };
+    const timer = window.setTimeout(() => finish(SESSION_ERROR_DESTINATION), SESSION_CHECK_TIMEOUT_MS);
     const next = safeNextPath(new URLSearchParams(window.location.search).get("next"));
     void createClient().auth.getUser().then((result: { data: { user: { identities?: UserIdentity[] } | null }; error: unknown }) => {
       if (result.error || !result.data.user?.identities?.some((identity) => identity.provider === "google")) {
-        window.location.replace("/auth?oauth_error=google_session");
+        finish(SESSION_ERROR_DESTINATION);
         return;
       }
-      localStorage.setItem(LAST_SIGN_IN_METHOD_KEY, "google");
-      window.location.replace(next);
-    });
+      try {
+        localStorage.setItem(LAST_SIGN_IN_METHOD_KEY, "google");
+      } catch {
+        // Blocked storage only skips the sign-in-method hint; it never blocks access.
+      }
+      finish(next);
+    }).catch(() => finish(SESSION_ERROR_DESTINATION));
+    return () => window.clearTimeout(timer);
   }, []);
 
-  return (
-    <main className="auth-shell">
-      <section className="auth-card oauth-complete-card" aria-live="polite">
-        <p className="eyebrow">RevIT</p>
-        <h1>Finishing Google sign-in...</h1>
-        <p className="security-copy">Your account is connected. Taking you to your review.</p>
-      </section>
-    </main>
-  );
+  return <RevITLoadingScreen status="Finishing Google sign-in..." />;
 }

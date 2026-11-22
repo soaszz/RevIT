@@ -58,6 +58,8 @@ import PlanAnnouncementModal, {
   GIFTED_PRO_USER_IDS,
 } from "./components/PlanAnnouncementModal";
 import ProActivationModal from "./components/ProActivationModal";
+import ProExpiredNotice from "./components/ProExpiredNotice";
+import { proExpiryEventId, proExpirySeenKey, verifiedProExpiration } from "./lib/proExpiryNotice";
 import SidebarTooltip from "./components/SidebarTooltip";
 
 export { GIFTED_PRO_USERS, GIFTED_PRO_USER_IDS };
@@ -749,6 +751,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const sessionOwnerRef = useRef(initialUser?.id ?? "local");
   const [planAnnouncementOpen, setPlanAnnouncementOpen] = useState(false);
   const [planAnnouncementVariant, setPlanAnnouncementVariant] = useState<PlanModalVariant>("general");
+  const [proExpiryNoticeOpen, setProExpiryNoticeOpen] = useState(false);
   const [pendingActivation, setPendingActivation] = useState<PendingActivationNotification | null>(null);
 
   function requestConfirm(title: string, message: string, confirmLabel: string, onConfirm: () => void) {
@@ -1410,6 +1413,38 @@ useEffect(() => {
 
   const accessReady = startupAccess.owner === accessOwner && startupAccess.status === "ready";
   const proActive = accessReady && isProActive(entitlement);
+  const proExpiredAt = initialUser && !offlineMode
+    ? verifiedProExpiration(entitlement, accessReady)
+    : null;
+
+  useEffect(() => {
+    if (!initialUser || !proExpiredAt || planAnnouncementOpen || pendingActivation) {
+      setProExpiryNoticeOpen(false);
+      return;
+    }
+    const key = proExpirySeenKey(initialUser.id);
+    const eventId = proExpiryEventId(proExpiredAt);
+    try {
+      if (localStorage.getItem(key) === eventId) return;
+    } catch {
+      // Without readable persistence the notice cannot be limited to once per event, so stay silent.
+      return;
+    }
+    setProExpiryNoticeOpen(true);
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === key && event.newValue === eventId) setProExpiryNoticeOpen(false);
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, [initialUser?.id, proExpiredAt, planAnnouncementOpen, pendingActivation]);
+
+  const dismissProExpiryNotice = () => {
+    setProExpiryNoticeOpen(false);
+    if (!initialUser || !proExpiredAt) return;
+    try {
+      localStorage.setItem(proExpirySeenKey(initialUser.id), proExpiryEventId(proExpiredAt));
+    } catch {}
+  };
 
   useEffect(() => {
     if (!proActive || !entitlement.proExpiresAt || !entitlement.serverNow) return;
@@ -4434,6 +4469,11 @@ useEffect(() => {
         proExpiresAt={initialUser?.id && GIFTED_PRO_USERS[initialUser.id] ? GIFTED_PRO_USERS[initialUser.id].expiresAt : (entitlement.proExpiresAt || "2028-12-31T23:59:59Z")}
         recipientGreeting={initialUser?.id ? GIFTED_PRO_USERS[initialUser.id]?.greeting : undefined}
         recipientUserId={initialUser?.id}
+      />
+      <ProExpiredNotice
+        isOpen={proExpiryNoticeOpen}
+        expiresAt={proExpiredAt || ""}
+        onDismiss={dismissProExpiryNotice}
       />
       {pendingActivation && (
         <ProActivationModal

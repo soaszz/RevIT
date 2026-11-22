@@ -1,0 +1,42 @@
+{
+  "app/api/admin/subscription/route.ts": {
+    "before": "d8fb162d213728b08ae2331b729818fcfc3036db3ae63d93dc4e968fae9e1af3",
+    "after": "21fd0060ca8ce821258b7fbf9a36ad04d7125b5432fa1867512f617326be1abe",
+    "reason": "Approved Admin Dashboard reporting integration: adds tagged cache revalidation after a successful write; write semantics, auth, validation and idempotency unchanged. Preset plan months 1, 3 or 6 are validated for grant actions only and forwarded unchanged."
+  },
+  "app/admin/page.tsx": {
+    "before": "64b0456f15c0ae70e414c6eec5427ed51f386d2989914fab9d36d0d106f4a418",
+    "after": "e6699cba7b5941d053356090f24e6ad699910977a326a2f5707d0504e6b15c04",
+    "reason": "Approved Admin Dashboard shell; four sections with original management controls and server session gate preserved."
+  },
+  "app/admin/AdminPanel.tsx": {
+    "before": "d9f28cccc65a7f109462a23f6f3facac765022146ac4494e0ae933b17a3276d5",
+    "after": "709ffc627dfb48f6eb84adb3895b77cd4e8fcab1c91def279dbc946ac09b63a0",
+    "reason": "Approved Admin Dashboard integration; all ten original management function bodies preserved, preview transport isolated, no writer change. Grant actions send the selected preset plan months; custom dates and revoke stay null."
+  },
+  "app/lib/admin/adminService.ts": {
+    "before": "d8ac977a4efdbdd159027e2ab9980bf42b84fe3f7d7867f0ebca5d6ad30c46c5",
+    "after": "a5a882a457af8a8894e098c64b7a88ba49e19ff9cbf435d6e7af5e3c188e85e8",
+    "reason": "Approved Admin Dashboard integration: forwards optional preset plan months and the unchanged payment-evidence flag to the existing eleven-argument writer; all other call semantics preserved."
+  },
+  "app/admin/AdminPanel.module.css": {
+    "before": "2c8477f6dda080c5e4671c72290c3510a3eb5616e8afe8c09aa772bcaa506b7f",
+    "after": "138859151b1bbf5318a92e2284237165ae21ca903b4af288de3b8db3aa5e574b",
+    "reason": "Approved Admin Dashboard embedding styles; existing subscription management layout otherwise unchanged."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "6cfdc1d2f26369c61ff0956a98202ea080ff9249aa9e412d688e4f0c7c7f9e51",
+    "after": "46136cf453c1ef9db950dc15b1027291453671b48b22274ea608a0bd18325be6",
+    "reason": "Append exact authorized Admin Dashboard transition after the existing preservation chain; historical assertions unchanged."
+  },
+  "app/components/PlanAnnouncementModal.tsx": {
+    "before": "37f02ef2cc29961afe1fdf9ab4b5c2a073d4b5ef56ccb93072ae055037193264",
+    "after": "617f3facf309670f2e8ea3c46ea5fe7bac2288f421c68d0ea6501bd90ff15018",
+    "reason": "Approved Pro catalog copy: benefit lines read the published reviewer catalog and the existing Pro AI daily limit; layout, pricing, actions and auth unchanged."
+  },
+  "app/RevITApp.tsx": {
+    "before": "fb07447d0ff341445ad8caed910c783c92efa5d3d324e03004991653e771d988",
+    "after": "f4a4f92dfa0a054ddd89bd77f13aef115de8b758d6760e6d9cede00e7891458b",
+    "reason": "Approved expired-Pro notice: one dismissible notice per verified expiration event, deferred while the plan announcement is open; no polling, no account write, no new request."
+  }
+}

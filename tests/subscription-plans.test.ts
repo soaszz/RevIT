@@ -6,6 +6,8 @@ import * as React from "react";
 import * as jsxRuntime from "react/jsx-runtime";
 import { renderToStaticMarkup } from "react-dom/server";
 import { PRO_PLANS, PRO_PLAN_SUMMARY, PRO_CONTACT_URL } from "../app/lib/proPlans";
+import { parseAmountInput, presetAmountForMonths, resolveAdminRecordedAmount } from "../app/lib/admin/subscriptionBilling";
+import { recordedAmountText } from "../app/lib/admin/adminReportingCore";
 const source = readFileSync("app/admin/AdminPanel.tsx", "utf8");
 const ast = ts.createSourceFile("admin.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
 function actual(name: string, context: Record<string, unknown>) {
@@ -47,13 +49,13 @@ test("actual admin confirmation synchronously prevents double submissions and us
   let calls=0;let payload: Record<string,unknown>={};let resolve!: (value: unknown)=>void;
   const pending=new Promise(r=>{resolve=r});const expected={date:new Date("2027-04-30T12:00:00Z"),dateStr:"2027-04-30T12:00:00Z",days:180};
   const submissionRef={current:false};const requestKeyRef={current:"same-confirmation"};
-  const context:Record<string,unknown>={selectedUser:{id:"11111111-1111-4111-8111-111111111111",isEffectivePro:true,proExpiresAt:"2026-10-30T12:00:00Z"},submissionRef,requestKeyRef,confirmationRef:{current:expected},getCalculatedExpiration:()=>{throw Error("Must use confirmed preview")},actionType:"extend",activationSource:"purchased",customRecipientMessage:"",shortenConfirmed:false,fetch:async (_url: string,init:RequestInit)=>{calls++;payload=JSON.parse(init.body as string);await pending;return Response.json({success:true})},handleSelectUser:async()=>{},setActionPending:()=>{},setActionMessage:()=>{},setConfirmModalOpen:()=>{},setActiveProWarningModalOpen:()=>{}};
-  const apply=actual("handleConfirmSubscriptionChange",context);const first=apply();const second=apply();assert.equal(calls,1);assert.equal(payload.customExpiresAt,expected.dateStr);assert.equal(payload.idempotencyKey,"same-confirmation");resolve(null);await Promise.all([first,second]);assert.equal(submissionRef.current,false);
+  const context:Record<string,unknown>={selectedUser:{id:"11111111-1111-4111-8111-111111111111",isEffectivePro:true,proExpiresAt:"2026-10-30T12:00:00Z"},submissionRef,requestKeyRef,confirmationRef:{current:expected},getCalculatedExpiration:()=>{throw Error("Must use confirmed preview")},actionType:"extend",activationSource:"purchased",customRecipientMessage:"",shortenConfirmed:false,durationPreset:"1m",recordedAmount:79,fetch:async (_url: string,init:RequestInit)=>{calls++;payload=JSON.parse(init.body as string);await pending;return Response.json({success:true})},handleSelectUser:async()=>{},setActionPending:()=>{},setActionMessage:()=>{},setConfirmModalOpen:()=>{},setActiveProWarningModalOpen:()=>{}};
+  const apply=actual("handleConfirmSubscriptionChange",context);const first=apply();const second=apply();assert.equal(calls,1);assert.equal(payload.customExpiresAt,expected.dateStr);assert.equal(payload.planMonths,1);assert.equal(payload.amountPhp,79);assert.equal(payload.idempotencyKey,"same-confirmation");resolve(null);await Promise.all([first,second]);assert.equal(submissionRef.current,false);
 });
 function routeRuntime(auth: {authenticated:boolean;authorized:boolean;user?:{id:string}}, change:(params:unknown)=>Promise<unknown>) {
   const code=ts.transpileModule(readFileSync("app/api/admin/subscription/route.ts","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
   const exports:{POST?:(request:Request)=>Promise<Response>}={};
-  new Function("require","exports",code)((name:string)=>{if(name==="server-only")return {};if(name==="next/server")return {NextResponse:Response};if(name.endsWith("adminAuth"))return {verifyAdminSession:async()=>auth};if(name.endsWith("adminService"))return {applySubscriptionChange:change};throw Error(name)},exports);return exports.POST!;
+  new Function("require","exports",code)((name:string)=>{if(name==="server-only")return {};if(name==="next/server")return {NextResponse:Response};if(name==="next/cache")return {revalidateTag:()=>{}};if(name.endsWith("adminReportingCore"))return {SALES_CACHE_TAG:"admin-subscription-summary-v1"};if(name.endsWith("adminAuth"))return {verifyAdminSession:async()=>auth};if(name.endsWith("adminService"))return {applySubscriptionChange:change};if(name.endsWith("subscriptionBilling"))return {resolveAdminRecordedAmount};throw Error(name)},exports);return exports.POST!;
 }
 const body={userId:"11111111-1111-4111-8111-111111111111",action:"extend",durationDays:90,customExpiresAt:"2099-04-30T12:00:00Z",expectedExpiresAt:"2099-01-31T12:00:00Z",idempotencyKey:"same-operation"};
 const request=(value=body)=>new Request("http://local/api/admin/subscription",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(value)});
@@ -78,7 +80,7 @@ test("refreshing learner details preserves success feedback when explicitly requ
 
 function renderAdmin(action: string, preset = "6m", customDate = "", conflict = false) {
   const user = {id:"synthetic",email:"learner@local.invalid",username:"Learner",plan:"pro",isEffectivePro:true,proExpiresAt:"2099-11-06T12:00:00Z",proNote:null};
-  const states = ["",false,"",[],false,user,false,[],"",action,preset,30,customDate,"purchased","",false,!conflict,conflict,false,false,null,null,"",false,null];
+  const states = ["",false,"",[],false,user,false,[],"",action,preset,30,customDate,"purchased","","",false,!conflict,conflict,false,false,null,null,"",false,null];
   let index = 0;
   const code = ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
   const exports: {default?: React.ComponentType<{adminUserId:string;adminEmail:string}>} = {};
@@ -86,6 +88,8 @@ function renderAdmin(action: string, preset = "6m", customDate = "", conflict = 
     if(name === "react") return {...React,useState:()=>[states[index++],()=>{}],useRef:()=>({current:null})};
     if(name === "react/jsx-runtime") return jsxRuntime;
     if(name === "../lib/proPlans") return {PRO_PLANS};
+    if(name.endsWith("subscriptionBilling")) return {parseAmountInput,presetAmountForMonths};
+    if(name.endsWith("adminReportingCore")) return {recordedAmountText};
     if(name.endsWith(".module.css")) return {default:new Proxy({},{get:(_target,key)=>String(key)})};
     if(name.startsWith("next/") || name.endsWith("ProActivationModal")) return {default:()=>null};
     throw Error(name);
@@ -105,7 +109,7 @@ test("admin confirmations show selected duration separately from all remaining a
 });
 
 test("grant, change-date, revoke and conflict dialogs retain precise actions and readable dates", () => {
-  for(const [action,label] of [["activate","Confirm Grant"],["modify_expiration","Confirm Expiration Change"],["revoke","Confirm Revocation"]]) {
+  for(const [action,label] of [["activate","Confirm Pro Activation"],["modify_expiration","Confirm Expiration Date Change"],["revoke","Confirm Subscription Revocation"]]) {
     const html=renderAdmin(action);
     assert.ok(html.includes(label));
     assert.match(html,/Current access<\/dt><dd>Active RevIT Pro/);

@@ -487,6 +487,9 @@ test("actual Skip defers question without recording or sending an attempt; compo
   const student = JSON.parse(readFileSync(resolve(root, "docs/mtap2-banner/authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
   assert.equal(student.renderer.before, transition.after, "Retain exact released renderer digest as the new transition's before pin");
   assert.equal(student.before, transition.sourceAfter, "Student changes start from the exact released component");
-  assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), student.renderer.after);
-  assert.equal(createHash("sha256").update(readFileSync(resolve(root, "app/RevITApp.tsx"))).digest("hex"), student.after);
+  const release = JSON.parse(readFileSync(resolve(root, "docs/release-v1.15.0/authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
+  const adminDashboard = JSON.parse(readFileSync(resolve(root, "docs/admin-dashboard/authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
+  assert.equal(release.before, adminDashboard.after, "Expired-Pro notice starts from the exact approved component");
+  assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), release.renderer.after);
+  assert.equal(createHash("sha256").update(readFileSync(resolve(root, "app/RevITApp.tsx"))).digest("hex"), release.after);
 });

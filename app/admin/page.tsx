@@ -2,7 +2,8 @@ import "server-only";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { verifyAdminSession } from "../lib/admin/adminAuth";
-import AdminPanel from "./AdminPanel";
+import { isSupabaseConfigured } from "../lib/supabase/config";
+import AdminDashboard from "./AdminDashboard";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminControlPage() {
+  if (!isSupabaseConfigured()) redirect(`/auth?next=${encodeURIComponent("/admin")}#account`);
   const auth = await verifyAdminSession();
 
   if (!auth.authenticated) {
@@ -65,7 +67,7 @@ export default async function AdminControlPage() {
   }
 
   return (
-    <AdminPanel
+    <AdminDashboard
       adminUserId={auth.user.id}
       adminEmail={auth.user.email || ""}
     />

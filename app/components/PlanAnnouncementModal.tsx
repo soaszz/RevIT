@@ -2,6 +2,7 @@
 
 import { PUBLIC_REVIEWERS } from "../lib/publicReviewerBooks";
 import { PRO_PLAN_SUMMARY } from "../lib/proPlans";
+import { AI_LIMITS } from "../lib/entitlements";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./PlanAnnouncementModal.module.css";
@@ -160,10 +161,13 @@ export default function PlanAnnouncementModal({
                     <span>✓</span> Access to newly added Pro reviewer books
                   </li>
                   <li>
-                    <span>✓</span> Deep Weakness Analytics &amp; personal mistake bank
+                    <span>✓</span> Flashcards across all {PUBLIC_REVIEWERS.books.length} published editions
                   </li>
                   <li>
-                    <span>✓</span> 15 RevIT AI tutoring requests every day
+                    <span>✓</span> Advanced Progress &amp; Deep Weakness Analytics
+                  </li>
+                  <li>
+                    <span>✓</span> {AI_LIMITS.pro.dailyRequests} RevIT AI tutoring requests every day
                   </li>
                 </ul>
               </div>
@@ -268,11 +272,15 @@ export default function PlanAnnouncementModal({
                     </li>
                     <li>
                       <span className={styles.miniCheck}>✓</span>
-                      <span>Deep <strong>Weakness Analytics</strong></span>
+                      <span>Pro flashcards across all {PUBLIC_REVIEWERS.books.length} published editions</span>
                     </li>
                     <li>
                       <span className={styles.miniCheck}>✓</span>
-                      <span><strong>15 daily</strong> RevIT AI tutoring requests</span>
+                      <span>Advanced Progress &amp; <strong>Weakness Analytics</strong></span>
+                    </li>
+                    <li>
+                      <span className={styles.miniCheck}>✓</span>
+                      <span><strong>{AI_LIMITS.pro.dailyRequests} daily</strong> RevIT AI tutoring requests</span>
                     </li>
                   </ul>
                 </div>

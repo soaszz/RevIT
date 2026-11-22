@@ -1,3 +1,191 @@
+# Pro messaging + Google sign-in polish — local only — 2026-11-22
+
+## Local modal preview harness — added 2026-11-22 (dev server running)
+
+- Dev server: `http://localhost:3000`, listener PID `19836`, npm wrapper `25132`, `next dev --webpack`, env injected in-process from the authorized config (nothing printed). Left RUNNING.
+- New dev-only, loopback-only route `app/offline/pro-modals-preview` (`?view=activation` default, `?view=expired`). 404 in production, `noindex`, synthetic catalog built in memory from `QUESTION_BANKS` with `boc`/`elsevier` marked published — metadata only, no question content, no entitlement call, no Supabase request, no cookies.
+- `ProActivationModal` and `ProExpiredNotice` gained an optional `reviewers?: PublicReviewerBooks` prop (defaults to `PUBLIC_REVIEWERS`; app never passes it). `publicReviewerBooks.ts` exports `PublicReviewerBooks`.
+- Expired notice heading now "Your RevIT Pro has expired" (copy only; same dialog, catalog, Instagram CTA and Continue Free dismissal). Revocation still silent by design.
+- Verified live: preview 200 and renders `5 Pro-only reviewer editions (Ciulla, Rodak, Strasinger, BOC, Elsevier)`, `Harr remains Free`, `15 RevIT AI tutoring requests every day`, `Active for 90 days`, expired title + `Subscribe Again` -> `https://www.instagram.com/revithoroughly/` + `Continue Free`. `/`, `/overview` 307 to `/auth?next=%2Foverview`; `/auth` 200 (dev catalog: 3 Pro); `/pricing` 200; `/admin` 307 unauth; `/offline/admin-preview` 200. `/auth/oauth-complete` without its success cookie emits `__next-page-redirect` to `/auth?oauth_error=invalid_completion`.
+- `tsc --noEmit` clean; focused suites 11/11. No commit, push, deploy, SQL or subscriber mutation.
+
+---
+
+## Earlier changes this session — Pro messaging + Google sign-in
+
+- Worktree `scratch/admin-dashboard-v1140`, branch `codex/admin-dashboard-v1140`, base `10f97ef`. No commit, push, deploy, production SQL, or subscriber mutation. All earlier uncommitted work preserved (no reset/stash/clean).
+- **Pro activation modal** (`app/components/ProActivationModal.tsx`): benefit line now derives count, names and free edition from `PUBLIC_REVIEWERS` (`proBooks.length`, `proNames`, `freeNames`); the daily AI line reads `AI_LIMITS.pro.dailyRequests` instead of the hardcoded `15`. No duplicate book list remains. Behaviour: local dev lists the three currently published Pro editions (flag OFF); the deployed build lists all five (BOC/Elsevier published). Same source as `/auth`, `/pricing`, `AccountSettings`, `Onboarding`.
+- **Expired-Pro notice**: already implemented (Stage 6 entry below) and re-verified — `verifiedProExpiration` requires `storedPlan='pro' && effectivePlan='free' && proExpiresAt <= serverNow` plus `accessReady`; once per expiry event, account-scoped key, `storage` listener, deferred behind plan/activation modals.
+- **Revocation**: intentionally produces no expiration notice. The writer sets `plan='free'` and `pro_expires_at=now()`, so `get_my_entitlement` returns `stored_plan='free'`; labelling that "expired" would be false. A separate revoked-Pro notice needs owner approval; documented recommendation only.
+- **Google completion** (`app/auth/oauth-complete/OAuthCompleteClient.tsx`): renders the shared `RevITLoadingScreen` with status "Finishing Google sign-in..." instead of the bare auth card (removes the visual jump between `/auth` and `/overview`), keeps the server-verified Google identity check, adds a 15 s bounded fallback to `/auth?oauth_error=google_session` (already handled by `AuthPanel`), and guards `localStorage`. No auth-architecture change, no extra request, no polling.
+- `RevITLoadingScreen` gained an optional `status` prop; the default copy is unchanged.
+- Checks: focused suites **18/18** (`pro-messaging-consistency`, `pro-expiry-notice`, `google-auth`, `public-landing-pricing`, `fixes-only-release`); `tsc --noEmit` clean; `next build --webpack` exit 0; `security:secrets` PASS (1,042 files + history).
+- Pre-existing, unrelated failures in the wider suite (12): `app/admin/AdminPanel.tsx` hash drift vs `docs/admin-dashboard/authorized-changes.json` (`e9a39a99...` vs recorded `709ffc62...`) which cascades into `trusted-study`, `trusted-integration`, `answer-verification`, `subscription-plans`; plus missing `.private-reviewers/runtime` (`reviewer-topic-availability`) and missing phase3n evidence (`atomic-staging-operator`). Not touched here.
+- Not verified at that time: activation modal rendering needed a Pro activation or authenticated admin preview; later solved by the local preview harness above. No browser automation run.
+
+---
+
+# Admin Dashboard — combined billing + History identity package — 2026-11-22
+
+## Combined SQL package — INSTALLED IN PRODUCTION 2026-11-22 04:06 UTC
+- `COMBINED-BILLING-IDENTITY.PROPOSAL.sql` (SHA-256 `87b36c9a...6660`) executed once on `lznsdxfvxeckflxsohig` via `supabase db query --file --yes`, exit 0, single transaction. Preflight PASS immediately before. No row mutations.
+- Installed state: writer 12-arg md5 `7b4b54f8a55d52578efd75a6aeeb0de0` with trailing `p_amount_php numeric DEFAULT NULL`; 11-arg function dropped; reporting md5 `7c48e4669969147e110ca4381025b129`; `amount_php numeric(12,2)`; new status/snapshot constraints; ACLs still service-role-only; RLS unchanged.
+- Preserved: history 54 rows (latest `2026-11-19T20:15:00Z`), profiles 1,048 (Pro 16), notifications 28, 0 non-null amounts, 0 `admin_confirmed`.
+- Verified: old 11 named args and new 12 named args both resolve (`EXPLAIN` in a read-only transaction, no execution); PostgREST cache advertises 12 args incl. `p_amount_php`; `transactions` rows carry `username`; summary/monthly stats correct.
+- Rollback still applicable (no `admin_confirmed`, no fractional amounts); forward repair only after the first new-schema billing write.
+- Record: `docs/admin-dashboard/COMBINED-BILLING-IDENTITY.EXECUTION-2026-11-22.md`; evidence `scratch/combined-safety/70-` to `77-`.
+- Not done: no app deploy/commit/push, no real subscription change. Next: deploy the new app build, then one authorized owner-admin Grant/Extend smoke test.
+
+## Incident diagnosed — local admin subscription 500 (no mutation, not retried)
+- Local `POST /api/admin/subscription` returned 500 with the generic UI text. Root cause: the new build always sends `p_amount_php`; production still has only the 11-arg writer `bcf56ed8...`. PostgREST cannot resolve the 12-key body, so the RPC fails before SQL runs and the route's last `catch` returns 500.
+- Failure is deterministic for every admin action (activate/extend/modify/revoke), not just Activate. The route does not log the raw error, so the exact PostgREST payload is unrecorded; root cause rests on the signature check plus the isolated `undefined_function` reproduction.
+- No partial success: history 54 rows unchanged, latest `2026-11-19T20:15:00Z`, 0 rows in 24h; profiles 1,048 unchanged, the only 24h update is ~21.5h old with no history; 0 `pro_started_at`/notifications in 12h; 0 `admin_confirmed`, 0 non-null amounts.
+- Fix proven, not installed: after the combined install the 11-arg call resolves via the default and the 12-arg call succeeds (writer tests A and G).
+- Recommended next action: database-first install after approval, then retry; or use `/offline/admin-preview` meanwhile. Optional sanitized error logging in the route needs separate approval.
+- Evidence: `scratch/combined-safety/INCIDENT-LOCAL-ADMIN-SUBSCRIPTION.md`, `40-`, `41-`, `43-incident-readonly*.json`.
+
+## Combined SQL package prepared and isolated-tested (PRODUCTION NOT EXECUTED)
+- Worktree `scratch/admin-dashboard-v1140`, branch `codex/admin-dashboard-v1140`, base `10f97ef`. No production SQL, subscriber mutation, commit, push, or deploy. All uncommitted Stage 1–6 and billing work preserved.
+- **Purpose**: one install artifact for the two earlier proposals that both edited `admin_read_subscriptions` and could not be installed back-to-back. Historical proposal/rollback files are unchanged as evidence.
+- **Artifacts** in `docs/admin-dashboard/`:
+  - `COMBINED-BILLING-IDENTITY.PROPOSAL.sql` — 29,748 B, SHA-256 `87b36c9afb70dacd4e688682a8036e08a3f5d3554ba5bc63873ef9623ade6660`; expected writer md5 `7b4b54f8a55d52578efd75a6aeeb0de0`, combined reporting md5 `7c48e4669969147e110ca4381025b129`.
+  - `COMBINED-BILLING-IDENTITY.ROLLBACK.sql` — 23,704 B, SHA-256 `e8a7b8127b8a0d69d43c2db7de41486c6c5824528ac33a517531a8c2034e4f98`; restores writer `bcf56ed8...` and reporting `db9d...`.
+  - `COMBINED-BILLING-IDENTITY.PREFLIGHT.sql` — 5,034 B, SHA-256 `9800fb2c25bee7017cca12a2d59fdd7f331a9284d6548aa234ecfa4d52dcfc3b`.
+  - `COMBINED-BILLING-IDENTITY.VERIFY.sql` — 5,670 B, SHA-256 `7ebab8079741f06560185d0eaf351c4221565676fb0e6cc6762d9f777dfe9d08`.
+  - `COMBINED-BILLING-IDENTITY.APPROVAL.md`, `.COMPATIBILITY.md`, `.TEST-RESULTS.md`.
+- **Production read-only preflight (2026-11-22)**: all guards true — one writer overload md5 `bcf56ed8...`, one reporting overload md5 `db9d...`, `amount_php` integer, 0 non-null/fractional/admin-confirmed amounts, 54 history rows, 1,048 profiles, no routine/view references the writer. Raw result `scratch/combined-safety/preflight-production.json`.
+- **Writer compatibility**: drops the 11-arg function and creates one 12-arg function with trailing `p_amount_php numeric default null`. Old 11-arg calls resolve through the default; new 12-arg calls work after install. New app against old SQL fails `42883`; install database first. No dependent routines/views.
+- **Reporting**: combined body keeps all billing predicates and additive fields (`recordedPurchases`, `renewalSales`) and adds `profiles.username` only in the bounded detail/transactions branch (`left join profiles p on p.id=h.user_id`, <=251 rows). No N+1, no `auth.admin.listUsers`.
+- **Isolated PostgreSQL 17 Docker tests (executed)**: exact live baseline bodies installed; preflight; install; post-verify; writer A–P; reporting totals/identity/monthly; identity fallback; revoke no-sale; anon denied; service_role allowed; rollback refused with `admin_confirmed`; cleared synthetic rows; rollback restored exact hashes; post-rollback old call works and new arg fails. Full log `scratch/combined-safety/integration-run.log`, runner `run-integration-tests.ps1`.
+- **Rollback/forward repair**: rollback only for a failed install with no new rows. After the first `admin_confirmed`/fractional row, forward repair only (keep `numeric(12,2)` and wider checks). Rollback never deletes history or changes profiles.
+- **Blocked**: production execution, authenticated owner-admin route walkthrough, deployment, commit/push. Live History still shows `Account unavailable` until install. Environment-blocked suites unchanged (`.private-reviewers/`, `phase3n-*` evidence).
+
+---
+
+# Admin Dashboard — pre-release billing recording — 2026-11-22
+
+## Owner-approved admin-confirmed billing (LOCAL ONLY, SQL NOT EXECUTED)
+- Worktree `scratch/admin-dashboard-v1140`, branch `codex/admin-dashboard-v1140`, base `10f97ef`. No commit, push, deploy, production SQL, or subscription mutation. All earlier Stage 2–6 work remains uncommitted and preserved.
+- **Behavior**: `source=purchased` + preset 1/3/6 months records the authoritative `PRO_PLANS` price (₱79/₱219/₱399) as `admin_confirmed`. A purchased custom duration accepts an optional amount (max 2 decimals, `0` allowed; blank stays `unknown`/`NULL`). Gift/Prize records `complimentary`/`0` and never becomes a paid sale. Modify Expiration/Revoke record no sale. Presets are authoritative in both the app resolver and the SQL writer.
+- **Classification**: `paid` keeps its provider-verified meaning; new `admin_confirmed` means the administrator attests payment was already received. Writes still send `p_payment_verified: false`. Historical `NULL` stays Unknown/Not recorded; no inferred revenue.
+- **Files**: `app/lib/admin/subscriptionBilling.ts` (new), `app/admin/AdminPanel.tsx`, `app/api/admin/subscription/route.ts`, `app/lib/admin/adminService.ts`, `app/lib/admin/adminReportingCore.ts`, `app/admin/sections/SalesBillingSection.tsx`, `app/admin/sections/OverviewSection.tsx`, `app/admin/salesPreviewData.ts`, `app/admin/salesPreviewTransport.ts`, `tests/admin-billing-recording.test.ts` (new), plus updated dashboard/management/API tests and `docs/admin-dashboard/authorized-transition-functions.json`.
+- **SQL package (PROPOSAL ONLY)**: `docs/admin-dashboard/BILLING-RECORDING.PROPOSAL.sql` (sha256 `857d4a01…7640`), rollback `BILLING-RECORDING.ROLLBACK.sql` (sha256 `d86613b7…92e8`), approvals `BILLING-RECORDING.APPROVAL.md`. Expected post-install `md5(prosrc)`: writer 12-arg `7b4b54f8a55d52578efd75a6aeeb0de0`; reporting `c3dbfb77a8348246103b437608e32aea`. Baselines guarded: writer `bcf56ed8de8564405649685f592fc70f`, reporting `db9d92384058ecd509b46214b80f403f`; rollback restores both exactly.
+- **Schema change**: `amount_php` integer → `numeric(12,2)` (all live values NULL), status check gains `admin_confirmed`, snapshot check gains admin-confirmed/zero/rule, one trailing writer arg `p_amount_php numeric default null`, and the 11-arg writer is dropped so no ambiguous overload exists. Expiration math, optimistic locking, idempotency, notifications, RLS/ACL and history behavior unchanged.
+- **Reporting**: counts `paid` + `admin_confirmed` purchased grant/renew events, adds `recordedPurchases` and `renewalSales`, monthly renewal sales, keeps unknown amounts separate, Asia/Manila months, same request budget and CSV limits.
+- **Sequencing**: `HISTORY-SUBSCRIBER-IDENTITY.PROPOSAL.sql` edits the same reporting function and guards the `db9d…` baseline; it must be rebased/re-approved after this package. Identity SQL was intentionally not modified or installed.
+- **Checks**: focused dashboard/management/API/billing suites 77/77; `tsc --noEmit` clean; `next build --webpack` exit 0; `security:secrets` PASS (1,033 files + history). Synthetic preview only; no production subscriptions were touched. Old 11-arg callers resolve to the new writer through the default argument once the proposal is installed; verified by contract, not executed.
+- **Blocked**: production SQL execution and owner-admin authenticated route walkthrough are not authorized. Environment-blocked suites remain `reviewer-compatibility` / `reviewer-release-profile` (`.private-reviewers/`) and `phase3n-*` evidence.
+- Local URLs: `http://localhost:3000/admin`, synthetic preview `http://localhost:3000/offline/admin-preview`.
+
+---
+
+# Admin Dashboard — Stage 6 pre-release — 2026-11-21
+
+## Stage 6 — History identity UI, catalog-accurate Pro modal, expired-Pro notice (local only)
+- Worktree `scratch/admin-dashboard-v1140`, branch `codex/admin-dashboard-v1140`, base `10f97ef`. No commit, push, deploy, production SQL execution or subscription mutation.
+- **History identity UI**: `HistorySection` uses `username` as the primary label with the existing neutral `Account unavailable` fallback and a truncated `Ref` secondary token; raw UUID is never the primary label. Explicit selection opens the existing management details path: `AdminDashboard.openHistorySubscriber` sets the existing selected/management state and switches to Subscribers, which triggers the existing `/api/admin/user` lookup once. No prefetch, no mutation, no extra endpoint.
+- **Production SQL approval package**: `docs/admin-dashboard/HISTORY-SUBSCRIBER-IDENTITY.APPROVAL.md`. Read-only verified live: baseline `md5(prosrc)` `db9d92384058ecd509b46214b80f403f`; owner `postgres`; `STABLE`; `SECURITY INVOKER`; config `search_path=pg_catalog, pg_temp;statement_timeout=5s;lock_timeout=1s`; ACL `{postgres=X/postgres,service_role=X/postgres}`; profiles RLS on (4 policies) and `service_role` `BYPASSRLS`; new join uses `profiles_pkey` via `Nested Loop Left Join + Memoize`; dimensions 1,048 profiles / 54 history rows. Proposal SHA-256 `8425d601...ebab` / body md5 `917e965a...895e`; rollback SHA-256 `94b3297b...0811` / body md5 `db9d9238...403f`. **NOT AUTHORIZED, NOT EXECUTED**: live History keeps `Account unavailable` until separate owner approval.
+- **Pro catalog modal**: `PlanAnnouncementModal` benefit lines derive from `PUBLIC_REVIEWERS.proBooks/proNames/books` and `AI_LIMITS.pro.dailyRequests`; removed unverified "personal mistake bank" and bare "15"; kept the existing test-mandated new-book line. Pricing, layout, actions, auth, gift variant and progress untouched.
+- **Expired-Pro notice**: new `ProExpiredNotice` + `proExpiryNotice.ts`; shown only when `accessReady && storedPlan==="pro" && effectivePlan==="free" && proExpiresAt <= serverNow` (server clock) for a signed-in non-offline user. Deferred while the plan announcement or activation notice is open. Dismissal is account-scoped (`revit_pro_expiry_notice_<userId>`) and event-scoped by a short non-reversible fingerprint of the verified expiry instant; a `storage` listener closes it in other tabs; the existing mid-session expiry timer re-verifies without polling. `Continue Free` only dismisses; `Subscribe Again` links the canonical `PRO_CONTACT_URL` (`https://www.instagram.com/revithoroughly/`) with `target="_blank" rel="noopener noreferrer"`. No Supabase reads/writes, no plan/expiry change, no deletion, no payment.
+- **Limitation**: there is no dedicated expiration-event ID in the verified entitlement; the event key is the expiry instant. A renewal that later expires at the exact same instant would not re-show the notice, and clearing browser storage allows a repeat. This is documented rather than solved by new RPCs or tables.
+- **Preservation ledger**: `docs/admin-dashboard/authorized-changes.json` extended with exact before→after hashes for `AdminPanel.tsx`, `adminService.ts`, `PlanAnnouncementModal.tsx`, `RevITApp.tsx` and the refreshed route hash; no historical hash changed and no assertion weakened.
+- **Checks**: focused suites **114/114**; admin preservation **32/32**; `tsc --noEmit` clean; `next build --webpack` exit 0; `security:secrets` PASS (1,028 files + history). Environment-blocked, unchanged and unrelated: `reviewer-compatibility` / `reviewer-release-profile` need generated `.private-reviewers/`; `phase3n-*` need `scratch/phase3n-n2-evidence/`. No browser automation was run; the notice reuses the already-verified modal CSS, and the responsive/light-dark rules are static-audited (bounded `calc(100svh - 32px)` height, mobile 100% actions, 40px targets, token colors).
+
+---
+
+
+
+## Owner-approved application-side correction (APPLIED, local only)
+- Purpose: record the admin-selected Pro preset duration in `subscription_history.plan_months` through the existing 11-arg writer. No writer/DB change, no production SQL, no subscriber mutation, no commit/push/deploy.
+- Writer unchanged and reverified read-only: md5 `bcf56ed8de8564405649685f592fc70f`. `plan_months` appears only in declaration, grant-action assignment and insert — it never affects expiration.
+- Billing safety confirmed: `p_payment_verified` stays `false`, so `purchased` keeps `billing_status='unknown'`/`amount_php=NULL`; `gift`/`prize` record `complimentary`/`0`. No paid claim or amount is inferred from plan or source.
+- Applied: `AdminPanel.tsx` sends `planMonths` for preset `activate`/`extend` only (custom/revoke/modify → null); `api/admin/subscription/route.ts` validates strict integer `1|3|6` and rejects plan on revoke/modify; `adminService.ts` passes `p_plan_months` + `p_payment_verified: false`; `salesPreviewTransport.ts` mirrors the same contract offline.
+- Preservation: `original-management-functions.json` untouched (historical hashes), new `authorized-transition-functions.json` records only `handleConfirmSubscriptionChange` (before/after). All ten function bodies accounted for; nine unchanged.
+- Docs: `PLAN-MONTHS-RECORDING-GAP.md` updated to APPLIED with the verified billing table.
+- Checks: focused suites **58/58**; `tsc --noEmit` clean; `next build --webpack` exit 0; client chunks 0 service-role / 0 server-only symbols; `security:secrets` PASS (1022 files); writer md5 unchanged; live `/admin`→307, `/api/admin/subscription` POST→401, `/offline/admin-preview`→200.
+- Local URL: **http://localhost:3000/admin** (dev server running, PID log `$env:TEMP\stage4d-dev.log`).
+- Limitation: no isolated database, so writer-contract verification is mocked/synthetic only; no real Grant/Extend/Modify/Revoke was executed. Authenticated owner-admin route walkthrough still requires an owner session.
+
+---
+
+# Admin Dashboard — Stage 4 subscriber presentation + grant-duration gap — 2026-11-21
+
+## Stage 4 continuation — Started Date, durations, missing-data labels
+- Presentation-only. No production SQL, no subscription mutation, no writer change, no push/deploy. Dev server: **http://localhost:3000/admin** (running).
+- Subscribers directory: added **Started date** column (uses `proStartedAt` already in the bounded directory RPC — no new request). Expiration/duration/source now use `subscriberStarted/subscriberDuration/subscriberExpiration/recordedSource`: never-Pro (`status="free"`) → **Not applicable**; Pro with value → stored value; Pro missing → **Not recorded**.
+- Management summary labels updated to the same helpers; billing evidence via `billingEvidence`.
+- Sales & Billing + Overview recorded amounts: null → **Not recorded** (`recordedAmountText`); Verified revenue / Total paid orders stay **Unknown**; ₱49 preserved.
+- History source null → **Not recorded** (`recordedSource`); other history labels unchanged.
+- Grant-duration finding: live 11-arg writer (md5 `bcf56ed8…`) accepts `p_plan_months` (validated 1/3/6) and `p_payment_verified`, but the app never sends them (`AdminPanel` → route → `adminService` 9 named args). Real rows: `plan_months` NULL, `amount_php` NULL, `billing_status` 'unknown'. Gap + exact minimal correction documented in `docs/admin-dashboard/PLAN-MONTHS-RECORDING-GAP.md` — **NOT APPLIED** (would change future recording; needs approval). Custom date has no stored marker → never claimed.
+- Verified directory shape: keys `proStartedAt`/`planMonths` present; page 1 = 25 free (0 start, 0 months); `status=review` = 4 Pro, all 4 have `proStartedAt`, 0 have `planMonths`.
+- Checks: dashboard/API/management **50/50**; `tsc --noEmit` clean; `next build --webpack` OK; client chunks 0 service-role / 0 server-only admin symbols; `security:secrets` PASS (1021 files); `/admin`→307, APIs→401 live.
+- History subscriber-identity SQL proposal remains **unapproved/uninstalled**.
+
+---
+
+# Admin Dashboard — Stage 4 UI/UX refinement — 2026-11-21
+
+## Stage 4 refinement — Overview / Access Consistency / History + missing-data labels
+- Local UI/CSS refinement only. No production SQL, no subscriber mutation, no writer change, no push/deploy. Dev preview: **http://localhost:3000/admin** (server left RUNNING; dev-only synthetic preview `/offline/admin-preview`).
+- Overview regrouped: **Subscription overview** (Total registered users, Active Pro, Expiring soon, Expired Pro, Former Pro — Expired/Former are now separate cards, Active Pro + Expiring soon highlighted), **Sales & billing summary** (Admin-recorded billing, Verified revenue, Total paid orders; monthly-breakdown action preserved), **Recent subscription activity** (Recorded renewals, Gift/prize events, Last successful refresh). One grid class, 3-up until 640px then 1-up; removed the 2-up rule that isolated a lone card.
+- Consistency panel restructured into 3 summary metrics + aligned issue rows. Confirmed issues show **Not verified** when `verified` is false; the four classifications stay dynamic; accuracy note keeps "metadata gap, not proof of unauthorized access"; Review accounts still routes to Subscribers `status=review`. Last-checked footer in Asia/Manila.
+- History gained a **Subscriber** column (preferred 7-column order). Response has only `userId`, so it shows **Account unavailable** + a short `Ref` token; no invented names, no per-row lookup, no `auth.admin.listUsers`. Filters, pagination, event filter, CSV and mobile data-labels preserved.
+- Missing-data labels: `recordedDuration`→Not recorded, `recordedAmountText`→Not recorded (₱49 preserved), `recordedExpiry`→No expiry recorded, `billingEvidence`→paid: "Recorded paid, not independently verified" / complimentary / unknown→Unverified / null→Not recorded. Shared `money(null)` stays "Unknown" for Verified revenue / Total paid orders.
+- History subscriber identity needs an RPC change: prepared `docs/admin-dashboard/HISTORY-SUBSCRIBER-IDENTITY.PROPOSAL.sql` (guarded `create or replace`, baseline md5 `db9d9238…`, adds `profiles.username` via PK join in the detail/transactions branch only). **NOT installed** — awaiting separate owner approval.
+- Checks: dashboard/API/management tests **46/46**; `tsc --noEmit` clean; `next build --webpack` OK (all `/admin` + `/api/admin/*`); client chunks 0 service-role strings / 0 server-only admin symbols; `security:secrets` PASS (1020 files); `/admin`→307, APIs→401 live.
+- Still BLOCKED: authenticated owner-admin app-route verification (real session, 403 non-admin, live app reporting/CSV/request counts) — no owner session; not manufactured.
+
+---
+
+# Admin Dashboard — Stage 4 verification complete — 2026-11-21
+
+## Stage 4 — authenticated performance, security & regression verification — 2026-11-21
+- Isolated dev server (worktree only; env injected in-process from the authorized config, no secret printed, root untouched): **http://localhost:3000** — left RUNNING for Stage 5 owner testing.
+- Unauthenticated gate verified live: `/admin` → 307 to `/auth?next=%2Fadmin`; `/api/admin/{sales,history,export,search,user}` → 401; POST `/api/admin/{note,subscription}` → 401; all `Cache-Control: private, no-store`. `X-Forwarded-For` spoof does not bypass. `/offline/admin-preview` is dev-only + loopback-only + synthetic; production 404 via `NODE_ENV` guard (spoofed `Host` did not block in dev — dev-only, no production impact).
+- **BLOCKED**: authenticated admin-route verification (real `/admin` session, 403 non-admin, live app reporting/CSV, HTTP request-count) — no owner admin session available; not manufactured. Covered instead by route tests + direct-RPC reads.
+- Tests: dashboard 40/40. Full `*.test.ts` suite: failures are environmental only — missing generated `.private-reviewers/` and `scratch/phase3n-n2-evidence/` (elsevier-presentation, reviewer-compatibility, reviewer-mastery-integration, reviewer-topic-availability, reviewer-release-profile); unrelated to admin. `tsc --noEmit` clean. `next build --webpack` OK (all `/admin` + `/api/admin/*` + `/offline*`). `security:secrets` PASS (1019 files). Client chunks: 0 service-role strings, 0 server-only admin symbols.
+- Live reporting (direct RPC): summary 1048 / activePro 16 / expiringSoon 3 / expired 16 / formerPro 5 / renewals 1 / manualGrants 1 / recordedBilling null. Payload sizes: summary 508 B, directory(25) 7,063 B, monthly 394 B, history(25) 8,990 B. Index used (idx_scan 3144, 16 kB; history 98 kB, profiles 352 kB).
+- Cache: `SUMMARY_SECONDS` 600, tag `admin-subscription-summary-v1`; `fresh=1` one-shot bypass; `singleFlight` dedupe; `revalidateTag` only after a successful write; failed writes never report success. `SEARCH_DELAY` 450 ms; `EXPORT_LIMIT` 1000.
+
+---
+
+# Admin Dashboard — Stage 3 reporting SQL INSTALLED — 2026-11-21
+
+Real-data integration for the four admin sections. Worktree `scratch/admin-dashboard-v1140` (branch `codex/admin-dashboard-v1140`, base `10f97ef`). Production reporting function and one index installed under owner authorization. No push, no deploy, no subscriber mutations, no writer change.
+
+Execution record (owner-authorized, project `lznsdxfvxeckflxsohig`, PG 17.6):
+- Phase 1 preflight: all 12 guards true (RPC absent, 11-arg writer present, 9-arg absent, writer md5 `bcf56ed8de8564405649685f592fc70f`, 3 billing cols, history RLS on, user index absent). 5 artifact SHA-256 all matched.
+- Phase 2: installed `public.admin_read_subscriptions(text,jsonb,integer)` from `READ-ONLY-RPCS.PROPOSAL.sql` (sha `846465d4…`), one guarded transaction, exit 0.
+- Phase 3: installed `subscription_history_user_created_idx` from new single-index file `INDEX-USER-HISTORY.SINGLE.sql` (sha `172e6e0fb7f4c7ad94d33fc4bcdd45d4ed9e009df37bdda561b8a878866bcaab`). Global `created_at` index NOT installed.
+- Phase 4 verify: function exists, `security_invoker`, `stable`, `search_path=pg_catalog, pg_temp`, ACL `{postgres, service_role}` only, anon/authenticated/PUBLIC denied, writer md5 + RLS + 0 policies unchanged, index valid+ready with exact def `(user_id, created_at DESC, id DESC)`, history 54 / profiles 1048 unchanged, `amount_php` non-null 0. RPC body md5 `db9d92384058ecd509b46214b80f403f`, 11,981 bytes.
+- Phase 5 real reads (as owner; app route not exercised): summary total 1048 / activePro 16 / expiringSoon 3 / expired 16 / formerPro 5 / renewals 1 / manualGrants 1 / revenue null / paidOrders null / recordedBilling null; consistency activeConsistent 12, freeConsistent 1032, activeNoRecord 4, reviewNeeded 4, confirmedMismatch 0, verified false. Directory page 25+hasMore, review filter = 4 rows all with `recordedExpiresAt`, monthly 2 months / renewals 1 / sources 2 / plans 0, transactions 25+hasMore, `event=revoked` filter all revoked, invalid filter → `22023`. Non-admin role denied `42501`.
+- Phase 6: no polling/Realtime/Redis/cron/new tables/persistent logs; `auth.admin.listUsers|getUserById` only in preserved legacy `adminService.ts`, not in the reporting path.
+
+Application-route closure NOT claimed: the dashboard was not running with an authorized admin session, so the authenticated `/api/admin/*` request path was not exercised live. Direct RPC (owner/service-role-granted) verification PASS; denial verification PASS.
+
+
+Read-only production re-audit (role `supabase_read_only_user`, `transaction_read_only=on`, PG 17.6, ref `lznsdxfvxeckflxsohig`): `admin_read_subscriptions` still ABSENT; 11-arg writer md5 `bcf56ed8de8564405649685f592fc70f`; both billing indexes ABSENT. Deployed `get_my_entitlement()` = `plan='pro' and pro_expires_at is not null and pro_expires_at > now()` (md5 `23b5d2d7a7c6460070ad6fe538e84cc3`) — the authoritative effective-access rule the dashboard mirrors without any per-user call. Real data: profiles 1048; activePro 16; expiringSoon(7d) 3; expired 16; formerPro 5; renewals 1; gift 1; **recordedBilling Unknown**; every `subscription_history.amount_php` NULL and `billing_status` NULL/'unknown'; `plan_months` NULL. Fixed a summary/directory mismatch: the old summary `formerPro` double-counted the 16 expired (21 vs directory 5); the summary now derives every bucket from the same CASE the directory uses, so they agree by construction. Read-only EXPLAIN (no ANALYZE) confirms seq scans on `subscription_history` (subscribers detail/global/monthly and the two lateral lookups) — both proposed indexes justified but not urgent at 54 rows/80 kB. Isolated local validation was NOT possible: local PG 17 install is incomplete (no `share/`) and the Docker daemon is down; instead the exact reporting SELECT bodies were executed read-only against production (summary + `status='review'` directory both return the expected shape).
+
+Pro Access Consistency feature (new, bounded — no extra scan, no per-user RPC, no polling): the summary RPC and directory now publish a per-account classification from the SAME `profiles` + last-grant data already read. `consistencyReason` mirrors the RPC CASE. Classification buckets: `activeConsistent` (effective Pro + recorded grant), `freeConsistent`, `staleProLabel` (expired label still Pro), `missingExpiryPro`, `potentialAccessIssue` (recorded grant active but effective Free), `activeNoRecord` (effective Pro without a matching recorded grant). Only Potential is claimed; `confirmedMismatch` stays 0 and `verified:false` because no authoritative per-account decision is run. Production counts: activeConsistent 12, freeConsistent 1032, activeNoRecord 4, everything else 0, reviewNeeded 4. Overview renders a compact consistency block with a "Review accounts needing attention" button that opens Subscribers filtered to `status=review`; the directory gained a Needs-review status option, an Access check column, and `recordedExpiresAt`. No fifth nav section.
+
+Application-side corrections (worktree only): (1) manual Refresh forces live data — `AdminDashboard` sets a one-shot `freshOnce`, `sales`/`history` routes read `fresh=1`, `readReporting(..., fresh)` bypasses the 10-minute summary cache for that one call while the cache + `SALES_CACHE_TAG` invalidation on write stay intact; (2) History gained an event-type filter (`EVENT_TYPES`) with RPC validation; (3) Sales & Billing shows recorded renewals and a recorded source breakdown; (4) `recordedBilling` and every recorded monthly/plan/source amount are now `null` (Unknown) unless a stored paid amount exists — never `₱0`; (5) proposal SQL extended: `v_event` filter, `transactions` honors `v_user`, `p_limit in (25,50,250)`, `status='review'`, monthly `renewals`+`sources`, consistency summary. Guarded execution plan updated in `docs/admin-dashboard/STAGE3-EXECUTION-PLAN.md`.
+
+Checks: `tsc --noEmit` clean; dashboard tests 40/40; preservation + baseline suites 42/42 green after restoring the git-ignored `supabase/.temp/cli-latest` baseline (`v2.117.0`) that the Stage 3 CLI reads re-drifted; `next build --webpack` success. INSTALLED: reporting RPC + user-history index are live in production; sections read real data via the service-role path. Remaining: authenticated application-route closure (dashboard must run with an authorized admin session) — not yet exercised. No push, no deploy, no subscriber/writer change.
+
+Final approval package (prep only, nothing executed): `docs/admin-dashboard/STAGE3-EXECUTION-PLAN.md` now carries the exact artifact SHA-256s — RPC `846465d4…`, rollback `f9842fd4…`, preflight `66fd115a…`, post-install verify `b8f7f767…`, indexes `21546ebd…`. Added `ROLLBACK-READ-ONLY-RPCS.sql`, `PREFLIGHT-PRE-INSTALL.sql`, `VERIFY-POST-INSTALL.sql`. Preflight ran read-only against prod: all guards true (function absent, writer md5 `bcf56ed8…`, 9-arg absent, 3 billing cols, RLS on, both indexes absent). Index recommendation: install `subscription_history_user_created_idx` together with the RPC (cheap, removes the O(profiles×history) lateral scans); defer the global `created_idx`. Verdict GO on owner authorization.
+
+---
+
+# Admin Dashboard — Stage 2 built locally — 2026-11-21
+
+Worktree `scratch/admin-dashboard-v1140` (branch `codex/admin-dashboard-v1140`, base `10f97ef`). Built the four-section admin dashboard (Overview / Subscribers / Sales & Billing / History) on application-side reporting. Added `app/admin/AdminDashboard.tsx` + `.module.css`, `app/admin/sections/{Overview,Subscribers,SalesBilling,History}Section.tsx`, `app/lib/admin/adminReportingCore.ts`, `app/lib/admin/adminReporting.ts` (server-only, `unstable_cache` 600s tagged, 8s abort, `REPORTING_UNAVAILABLE`, no fallback), `app/api/admin/{sales,history,export}/route.ts`, dev-only loopback-gated `app/offline/admin-preview/page.tsx`, and `app/admin/salesPreviewData.ts` + `salesPreviewTransport.ts`. Embedded the existing `AdminPanel` by adding only `embedded`/`showLookup`/`selectedSubscriber`/`request` props; all ten management function bodies stay byte-identical (`docs/admin-dashboard/original-management-functions.json`). Swapped `app/admin/page.tsx` to `AdminDashboard` keeping the `verifyAdminSession` gate. Added `revalidateTag(SALES_CACHE_TAG,{expire:0})` after a successful write in `app/api/admin/subscription/route.ts` (write semantics/auth/idempotency unchanged).
+
+Financial labels: verified revenue and paid orders stay `Unknown` (no payment provider); recorded billing only from stored metadata; historical ₱49 stays ₱49; presets ₱79/₱219/₱399 from `proPlans.ts`; gifts/prizes never auto-counted as paid. Reporting RPC `admin_read_subscriptions(text,jsonb,integer)` and the two indexes are PROPOSALS only (`docs/admin-dashboard/*.PROPOSAL.sql`) — not installed, no production SQL authorized, so Sales & Billing / monthly / recorded history render unavailable (503) and never infer totals. Preservation: added `docs/admin-dashboard/authorized-changes.json` plus the exact appended transition in `scripts/phase3n/assert-preserved.mjs`. Restored the git-ignored `supabase/.temp/cli-latest` baseline (`v2.117.0`) after Stage 1 CLI use.
+
+Checks (authorized this stage): `tsc --noEmit` clean; 36 new dashboard tests pass; preservation tests 32/32 pass; `next build --webpack` success (Turbopack rejects the out-of-root `node_modules` junction; junction points at byte-identical candidate deps). `npm run security:secrets` passed (999 files + history). Adapted `tests/subscription-plans.test.ts` route mock with two additive dependency stubs (`next/cache`, `adminReportingCore`) only — no assertion weakened. Known pre-existing, unrelated failures: `reviewer-release-profile.test.ts` (2) needs a generated `.private-reviewers/` runtime absent from every worktree. No production SQL, push, deploy, or subscriber mutations. Next: separate approval for the reporting RPC + indexes.
+
+---
+
 # Release verification — v1.12.0 — 2026-10-18
 
 User authorized reviewing the exact remaining release mismatches and proceeding to GitHub once release files passed, with the known local CLI cache isolated. Added only exact before/after metadata for `app/data/siteUpdates.ts` (v1.12.0 entry plus Rodak date October 11 to 18) and `app/globals.css` (dark selected-tab fill #233e36 to #090D0C) in `docs/phase3o/authorized-changes.json`. Reversing precisely those changes reproduces both original hashes. Earlier rename metadata repair remains intact. Preservation checks and CLI-cache expectations unchanged.
@@ -883,3 +1071,38 @@ The earlier reconstruction handoff above is preserved as history. Phase 3D sourc
 - No suitable local PostgreSQL runtime; all database execution/role/RLS/trigger/concurrency/rollback tests remain NOT TESTED. Phase 3E report is historical evidence, not a new production inspection. Live drift/owner/effective grants remain unverified.
 - Read `docs/phase3g/REPORT.md` and `ANTIGRAVITY_HANDOFF.md`; final exits/logs are beside them. Edited existing-file entry backups: `scratch/phase3g/backups/` with `.bak` extensions. Prior work/reports/backups preserved.
 - No production connection/write, credentials supplied to tests, environment/subscription/history changes, sync activation, deployment, commit, or push. Stop pending blocker resolution and explicit user approval.
+
+## Stage 4 (Admin Dashboard) - 2026-11-21
+
+**Status: Stage 4 PASS locally. SQL identity proposal remains UNAPPROVED and NOT installed in production.**
+
+- History subscriber identity: proposal rebuilt as an exact minimal diff over the installed RPC (`select h.*, p.username ... left join public.profiles p on p.id=h.user_id` plus the JSON key). Proposal SHA-256 `8425d60107079fab6c1c61eab5c789718bbcb9670d54cab9756c8b9ef796ebab`; rollback SHA-256 `94b3297b0596244b6bb552e567bb54cdfb5cb1c9c180cab62dffc5a8834c0811`. Installed baseline md5 `db9d92384058ecd509b46214b80f403f`; expected identity-build md5 `917e965ac4bd37436955a2b6fcc2895e`. Do not install without owner approval.
+- Isolated writer/identity verification used a disposable `--network none` Postgres container with synthetic accounts and the exact production writer body (md5 `bcf56ed8de8564405649685f592fc70f`). Writer contract suite, identity install suite, rollback suite and post-rollback suite all passed; identity install and rollback returned the expected fingerprints; anon/authenticated denied, service_role allowed. No production SQL or real subscriber was touched.
+- Status presentation is now text-only with `data-tone` semantic colours (positive/warning/negative/neutral/muted/subtlePositive/subtleBlue) across Subscribers, details, History, Overview consistency and billing labels. No pills, chips, backgrounds, borders, glows or dot indicators. History keeps the neutral `Account unavailable` fallback until identity is approved.
+- Verification: 62/62 focused tests, `npx tsc --noEmit` clean, `next build --webpack` succeeds, secret scan passes (1023 files). Browser CDP pass covered 1920x1080, 1440x900, 1024x768, 768x1024, 390x844 and 360x800 in light and dark across all four tabs: 48/48 with zero horizontal overflow and zero pill/tone-container failures. Opening subscriber details issued no POST.
+- Still unverified: authenticated owner-admin route (no owner session available). No commit, push, deploy or production mutation performed.
+
+### Warning colour refinement (2026-11-21)
+
+- Added scoped token `--warning-gold`: light `#856318`, dark `#d4b46b`; `.statusText[data-tone="warning"]` now uses it instead of orange `--amber`.
+- Applies to Expiring soon, expiration dates within seven days, Needs Review consistency states, and all existing `data-tone="warning"` dashboard labels.
+- Contrast (normal text AA >= 4.5): light 5.53 paper / 5.19 canvas / 5.09 soft; dark 9.04 paper / 9.81 canvas / 8.54 soft.
+- Active Pro stays `--green-dark`, Expired stays `--danger`, neutral/muted unchanged. No pills or containers added.
+- Verification: 63/63 focused tests, tsc clean, `next build --webpack` exit 0, browser matrix 48/48 (six viewports x four tabs x light/dark) with zero overflow and zero pill failures.
+- No backend, RPC, cache, refresh, management, SQL, commit, push or deployment changes.
+
+## Stage 5 (Owner Acceptance) - 2026-11-21
+
+**Status: machine verification PASS on the authenticated dashboard; owner visual/mobile sign-off still pending.**
+
+- Authenticated owner session confirmed in the in-app browser (`/admin`, real data, no synthetic banner). Unauthenticated `/admin` -> 307 `/auth?next=%2Fadmin`; `/api/admin/sales|history|export` -> 401 with `private, no-store`; offline browser -> network error, no dashboard.
+- Real Overview: 1048 registered, 16 Active Pro, 3 Expiring soon, 16 Expired, 5 Former Pro, recorded billing Not recorded, verified revenue Unknown, paid orders Unknown, 1 renewal, 1 gift/prize, consistency 12 consistent / 4 review / 0 confirmed / 4 without grant. Warning gold `#856318` light / `#d4b46b` dark; Active green; Expired red; Former neutral.
+- Real Subscribers: 25/page; search, review/expired/expiring/former filters, page 2, details and history verified. Never-Pro rows show Not applicable; missing grant data shows Not recorded; no recorded 1/3/6-month durations exist in production data (honest empty state). Details show real activated->expired history.
+- Real Sales & Billing: 2 monthly rows (2026-11, 2026-10), recorded PHP Not recorded, 0 tracked paid events, unknown amounts 9/19, renewals 1, source breakdown purchased 27 / gift 1, date range filter verified.
+- Real History: 25/page, 26 activated events (page 2 = 1), event filter, dates, duration, amount, billing evidence and expiration present; Subscriber column shows `Account unavailable` because the identity RPC is unapproved/uninstalled.
+- Manual Refresh: +1 request with `fresh=1`, active section only, no summary when refreshing Subscribers, no polling over 45s (28 -> 28). Exports exercised live for subscribers, recorded, monthly and selected history; 1000-row cap, formula-injection guard, no note columns, no CSV contents inspected.
+- Management controls inspected only (grant/extend/modify/revoke, 1/3/6/custom, purchased/gift/prize, note field, inline confirmation). No confirm submitted, no note saved, no POST to `/api/admin` in the dev log.
+- Security: secret scan PASS (1023 files), 0 service-role/server-only symbols in client chunks, no browser Supabase/Realtime traffic; all admin calls same-origin.
+- Pending owner: visual acceptance (layout, colours, light/dark) and phone-width layout in the Review pane. The in-app browser cannot be resized programmatically; no cookies/tokens inspected.
+- No production SQL, subscription mutation, commit, push or deployment.
+- Owner accepted the visuals (layout, minimalist status colours, light/dark, phone width). Stage 5 is PASS. Stage 6 not started.

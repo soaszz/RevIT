@@ -1,0 +1,57 @@
+{
+  "app/admin/AdminPanel.tsx": {
+    "before": "709ffc627dfb48f6eb84adb3895b77cd4e8fcab1c91def279dbc946ac09b63a0",
+    "after": "e9a39a99b4a0e49a9413422fdccb6f7e0e9f35ba0f412fa782ede524e3871031",
+    "reason": "Owner-approved combined billing identity: selected preset amount and optional custom amount are sent as the administrator-confirmed recorded amount for grant/extend only; custom dates and revoke stay null. Management function bodies and transport are unchanged."
+  },
+  "app/api/admin/subscription/route.ts": {
+    "before": "21fd0060ca8ce821258b7fbf9a36ad04d7125b5432fa1867512f617326be1abe",
+    "after": "9091063f3d716012bc75694bb2e49cdc907cc4c7b5c3b96be29283a812a8deb1",
+    "reason": "Approved combined billing identity: validates and forwards the optional recorded amount through the existing server authorization, idempotency and cache-revalidation flow; no other semantics change."
+  },
+  "app/lib/admin/adminService.ts": {
+    "before": "a5a882a457af8a8894e098c64b7a88ba49e19ff9cbf435d6e7af5e3c188e85e8",
+    "after": "342cfd337c961f688658c6d84f67a101948d9f06bb1955ae96cf3d007c1eece9",
+    "reason": "Approved combined billing identity: forwards the optional recorded amount to the installed twelve-argument writer; all other call semantics preserved."
+  },
+  "app/auth/oauth-complete/OAuthCompleteClient.tsx": {
+    "before": "77bef1094b2167eb81f336e94082902cbd13421535c74b73490f396f6898cee0",
+    "after": "258c150729c781402101e1be93be8700667ba5950da94ef4dcb69b6450d167f3",
+    "reason": "Approved Google sign-in loading experience: shows the shared RevIT loading screen while the server-verified session resolves, keeps the bounded failure redirect, and leaves auth architecture unchanged."
+  },
+  "app/components/ProActivationModal.tsx": {
+    "before": "ae89bca57197bdc5a7e7dcd89991b79c2275cdb5ca0a2f6156fd156aeea3d731",
+    "after": "507c64847125e0c90262675601872e484efec74e3df424fd8faa601450bca3b3",
+    "reason": "Approved Pro welcome copy: benefit lines read the canonical published reviewer catalog and Pro AI daily limit; optional reviewers fixture prop is preview-only and never passed by the app. Layout, pricing and actions unchanged."
+  },
+  "app/components/RevITLoadingScreen.tsx": {
+    "before": "a680f57ff45e644e29871642cf61cf50cab4f8447ea170b8a9b96ce71c83cfa0",
+    "after": "af1370b200a170ca6fd2f4b2a69284ce9f45e881d638800d989a6395eeb1969e",
+    "reason": "Approved Google sign-in loading experience: adds an optional status line to the existing loading screen; default rendering unchanged."
+  },
+  "app/data/siteUpdates.ts": {
+    "before": "7a75dab50d182d59fa23b4b4de8c02275d2440563e9921e45dcdf5afc6c24d57",
+    "after": "faf2938b126d5137f31df93a4a81e5fd838d4295c0658124768ab48f6a449864",
+    "reason": "Owner-approved student-only v1.15.0 release preparation. Public notes cover only the Pro welcome, renewal options and Google sign-in loading. Release date Pending until the Asia/Manila production deployment day. Admin Dashboard, billing and internal changes excluded. Reversing only the new entry reproduces live history exactly.",
+    "version": "v1.15.0",
+    "releaseDate": "Pending"
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "46136cf453c1ef9db950dc15b1027291453671b48b22274ea608a0bd18325be6",
+    "after": "fd8c0d565bff067ab6c6fa71eb174cab0762edbd84315db0f901e10cab2098d3",
+    "reason": "Append the exact authorized v1.15.0 transition after the existing preservation chain; all historical assertions unchanged."
+  },
+  "app/RevITApp.tsx": {
+    "before": "f4a4f92dfa0a054ddd89bd77f13aef115de8b758d6760e6d9cede00e7891458b",
+    "after": "f4a4f92dfa0a054ddd89bd77f13aef115de8b758d6760e6d9cede00e7891458b",
+    "reason": "Approved expired-Pro notice: one dismissible notice per verified expiration event, deferred while the plan announcement is open; no polling, no account write, no new request. Source bytes already recorded by the Admin Dashboard ledger; this entry pins the reviewed JSX renderer digest.",
+    "renderer": {
+      "after": "98a2ff4d4786c0af55a3f609fca4dbe0df45d331fbf71ef492701df6937f3c4b"
+    }
+  },
+  "tests/answer-verification.test.ts": {
+    "before": "fe7040f137de0ffe87d5f48104f5cf84456c339a3ed998d11561a07f8ae6e099",
+    "after": "38a030b5a6bc9886dc0ce945aa49ab8bcc78694ce9de8c3ad9d983d476891b59",
+    "reason": "Skip the untracked Supabase CLI cache when walking preserved files; every product-file assertion is unchanged."
+  }
+}
