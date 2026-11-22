@@ -15,7 +15,7 @@ export const SITE_UPDATES: SiteUpdate[] = [
   {
     id: "update-v1-15-0",
     version: "v1.15.0",
-    date: "Pending",
+    date: "November 22, 2026",
     type: "major",
     title: "Improved RevIT Pro Experience",
     summary: "A clearer Pro welcome and renewal experience, plus a smoother Google sign-in.",

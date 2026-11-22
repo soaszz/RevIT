@@ -31,10 +31,10 @@
   },
   "app/data/siteUpdates.ts": {
     "before": "7a75dab50d182d59fa23b4b4de8c02275d2440563e9921e45dcdf5afc6c24d57",
-    "after": "faf2938b126d5137f31df93a4a81e5fd838d4295c0658124768ab48f6a449864",
-    "reason": "Owner-approved student-only v1.15.0 release preparation. Public notes cover only the Pro welcome, renewal options and Google sign-in loading. Release date Pending until the Asia/Manila production deployment day. Admin Dashboard, billing and internal changes excluded. Reversing only the new entry reproduces live history exactly.",
+    "after": "91e176808557313c5068376f17a38033a8bd21810362c448c418b2ea55684a71",
+    "reason": "Owner-approved student-only v1.15.0 release preparation. Public notes cover only the Pro welcome, renewal options and Google sign-in loading. Release date bound to the Asia/Manila production promotion day, November 22, 2026. Admin Dashboard, billing and internal changes excluded. Reversing only the new entry reproduces live history exactly.",
     "version": "v1.15.0",
-    "releaseDate": "Pending"
+    "releaseDate": "November 22, 2026"
   },
   "scripts/phase3n/assert-preserved.mjs": {
     "before": "46136cf453c1ef9db950dc15b1027291453671b48b22274ea608a0bd18325be6",
