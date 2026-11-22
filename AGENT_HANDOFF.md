@@ -1,13 +1,22 @@
-# Pro messaging + Google sign-in polish — local only — 2026-11-22
+# RevIT v1.15.0 release — 2026-11-22
 
-## Local modal preview harness — added 2026-11-22 (dev server running)
+## Release status — 2026-11-22
+
+- Commit `8bcc82b` `feat: release v1.15.0 admin dashboard, billing and Pro polish` pushed to `origin/codex/admin-dashboard-v1140` (verified `git ls-remote` matches HEAD).
+- Vercel Git integration picked up the push: commit status `Vercel is deploying your app`, inspector `https://vercel.com/soaszzs-projects/rev-it/Cj9SAbCtV9A2TkH4pPCuoob7FF6k`. Not promoted to the production domain.
+- Verification on the exact commit: `security:secrets` PASS (1,045 files + full history), `tsc --noEmit` clean, `next build --webpack` OK, 548/548 TypeScript tests, 16/16 `reviewer-content.test.mjs`. `next build` under Turbopack cannot run in this worktree because `node_modules` is a symlink to the main checkout (pre-existing environment limit, not a code failure).
+- `docs/release-v1.15.0/authorized-changes.json` added and appended to the preservation chain. It pins the billing amount passthrough, the Pro notice JSX digest, the shared loading screen, the v1.15.0 Updates entry, the CLI-cache skip in two preservation tests, and the `assert-preserved` update.
+- Updates entry `update-v1-15-0` is `v1.15.0`, type `major`, date `Pending`. **Bind the actual Asia/Manila deployment date before promoting to production.** Public notes cover only: Pro welcome copy, expiration reminder with Subscribe Again / Continue Free, Google sign-in loading. Admin Dashboard, billing and history identity stay out of the public notes.
+- Test assets copied locally only (gitignored): `.private-reviewers/` from `scratch/mtap2-banner-candidate`, `scratch/phase3n-n2-evidence/` from the main checkout. `stage1-catalog/` and `stage3-catalog/` remain untracked local probes.
+
+## Local modal preview harness (dev server running)
 
 - Dev server: `http://localhost:3000`, listener PID `19836`, npm wrapper `25132`, `next dev --webpack`, env injected in-process from the authorized config (nothing printed). Left RUNNING.
 - New dev-only, loopback-only route `app/offline/pro-modals-preview` (`?view=activation` default, `?view=expired`). 404 in production, `noindex`, synthetic catalog built in memory from `QUESTION_BANKS` with `boc`/`elsevier` marked published — metadata only, no question content, no entitlement call, no Supabase request, no cookies.
 - `ProActivationModal` and `ProExpiredNotice` gained an optional `reviewers?: PublicReviewerBooks` prop (defaults to `PUBLIC_REVIEWERS`; app never passes it). `publicReviewerBooks.ts` exports `PublicReviewerBooks`.
 - Expired notice heading now "Your RevIT Pro has expired" (copy only; same dialog, catalog, Instagram CTA and Continue Free dismissal). Revocation still silent by design.
 - Verified live: preview 200 and renders `5 Pro-only reviewer editions (Ciulla, Rodak, Strasinger, BOC, Elsevier)`, `Harr remains Free`, `15 RevIT AI tutoring requests every day`, `Active for 90 days`, expired title + `Subscribe Again` -> `https://www.instagram.com/revithoroughly/` + `Continue Free`. `/`, `/overview` 307 to `/auth?next=%2Foverview`; `/auth` 200 (dev catalog: 3 Pro); `/pricing` 200; `/admin` 307 unauth; `/offline/admin-preview` 200. `/auth/oauth-complete` without its success cookie emits `__next-page-redirect` to `/auth?oauth_error=invalid_completion`.
-- `tsc --noEmit` clean; focused suites 11/11. No commit, push, deploy, SQL or subscriber mutation.
+- No production SQL, subscriber mutation, Grant/Extend/Modify/Revoke, or Supabase config change in this release. Combined billing identity SQL was installed earlier and is recorded in `docs/admin-dashboard/COMBINED-BILLING-IDENTITY.EXECUTION-2026-11-22.md`.
 
 ---
 
