@@ -905,12 +905,18 @@ useEffect(() => {
   // Existing users login modal (Free vs Pro update) & Gifted VIP modal (for Fia, Mich, Claire)
   useEffect(() => {
     if (cloudLoading) return;
+    const currentUserId = initialUser?.id ?? "local";
+    const isGifted = GIFTED_PRO_USER_IDS.includes(currentUserId);
+    // Never guess the plan: wait until this account's entitlement is verified.
+    if (startupAccess.owner !== accessOwner || startupAccess.status !== "ready") return;
+    // Verified Active Pro accounts are not offered the Free/Pro plan update.
+    if (!isGifted && isProActive(entitlement)) return;
+    // A naturally expired Pro account gets the expired-Pro notice instead.
+    if (!isGifted && verifiedProExpiration(entitlement, true)) return;
     // Strictly existing users only: skip if brand new user who hasn't finished onboarding
     if (cloudProfile && !cloudProfile.onboarding_complete) return;
     if (!preferences.mtap_onboarding_completed) return;
 
-    const currentUserId = initialUser?.id ?? "local";
-    const isGifted = GIFTED_PRO_USER_IDS.includes(currentUserId);
     const storageKey = isGifted
       ? `revit_pro_gift_modal_seen_${currentUserId}`
       : `revit_plan_announcement_seen_${currentUserId}`;
@@ -925,7 +931,7 @@ useEffect(() => {
     } catch {
       // Fallback
     }
-  }, [cloudLoading, initialUser?.id, cloudProfile?.onboarding_complete, preferences.mtap_onboarding_completed]);
+  }, [cloudLoading, initialUser?.id, cloudProfile?.onboarding_complete, preferences.mtap_onboarding_completed, startupAccess, accessOwner, entitlement]);
 
   const handleClosePlanAnnouncement = () => {
     setPlanAnnouncementOpen(false);

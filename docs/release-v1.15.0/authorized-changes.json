@@ -43,8 +43,8 @@
   },
   "app/RevITApp.tsx": {
     "before": "f4a4f92dfa0a054ddd89bd77f13aef115de8b758d6760e6d9cede00e7891458b",
-    "after": "f4a4f92dfa0a054ddd89bd77f13aef115de8b758d6760e6d9cede00e7891458b",
-    "reason": "Approved expired-Pro notice: one dismissible notice per verified expiration event, deferred while the plan announcement is open; no polling, no account write, no new request. Source bytes already recorded by the Admin Dashboard ledger; this entry pins the reviewed JSX renderer digest.",
+    "after": "caf75d50230d96daf7ff880f28accaba4e88d8aeb44aa03714c28c275dc6c98c",
+    "reason": "Approved expired-Pro notice: one dismissible notice per verified expiration event, deferred while the plan announcement is open; no polling, no account write, no new request. Also gates the startup plan announcement on verified entitlement so Active Pro and naturally expired Pro accounts never receive the Free/Pro update. Source bytes already recorded by the Admin Dashboard ledger; this entry pins the reviewed JSX renderer digest.",
     "renderer": {
       "after": "98a2ff4d4786c0af55a3f609fca4dbe0df45d331fbf71ef492701df6937f3c4b"
     }

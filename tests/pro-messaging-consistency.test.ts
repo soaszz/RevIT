@@ -66,6 +66,24 @@ test("Google completion keeps server-side identity verification and the shared l
   assert.doesNotMatch(complete, /signInWithOAuth|signOut|refreshSession/);
 });
 
+test("startup plan announcement waits for verified entitlement and never targets Active Pro or expired Pro", () => {
+  const app = read("app/RevITApp.tsx");
+  const start = app.indexOf("// Existing users login modal (Free vs Pro update)");
+  assert.ok(start > 0, "announcement effect is present");
+  const effect = app.slice(start, app.indexOf("const handleClosePlanAnnouncement"));
+  const ready = effect.indexOf('startupAccess.owner !== accessOwner || startupAccess.status !== "ready"');
+  const pro = effect.indexOf("if (!isGifted && isProActive(entitlement)) return;");
+  const expired = effect.indexOf("if (!isGifted && verifiedProExpiration(entitlement, true)) return;");
+  const open = effect.indexOf('setPlanAnnouncementVariant(isGifted ? "gift" : "general");');
+  assert.ok(ready > 0, "entitlement must be verified before the announcement can open");
+  assert.ok(pro > ready, "Active Pro is suppressed after readiness");
+  assert.ok(expired > pro, "expired Pro is suppressed after the Pro gate so the expiry notice wins");
+  assert.ok(open > expired, "only remaining eligible accounts reach the announcement");
+  assert.match(effect, /if \(cloudProfile && !cloudProfile\.onboarding_complete\) return;/);
+  assert.match(effect, /if \(!preferences\.mtap_onboarding_completed\) return;/);
+  assert.doesNotMatch(effect, /setPlanAnnouncementOpen\(false\)/, "opening logic never force-closes an owner-invoked Pro modal");
+});
+
 test("startup withholds the app until entitlement verification is ready", () => {
   const app = read("app/RevITApp.tsx");
   assert.match(app, /startupAccess\.status === "loading"\) return <RevITLoadingScreen/);

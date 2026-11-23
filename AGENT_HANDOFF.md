@@ -1,5 +1,14 @@
 # RevIT v1.15.0 release — 2026-11-22
 
+## Preview diagnosis — 2026-11-23 (uncommitted local fix)
+
+- **Admin Access Denied cause:** `verifyAdminSession()` authenticates, then `isUserAdminId()` reads `REVIT_ADMIN_USER_IDS`. Preview env has no such value in scope, so the allowlist is empty and every account is denied. Production keeps working because that value exists there. Code path verified: `app/admin/page.tsx` denies only on `authorized === false` (unauthenticated users are redirected instead), which matches the observed screen.
+- **Identity check (read-only, Admin Auth API, no values printed):** main account resolves to exactly the single existing allowlist UUID; second account exists, email confirmed, Google provider. Allowlist has 1 entry, so the second must be appended.
+- **Plan announcement cause:** the startup effect in `app/RevITApp.tsx` (~line 906) opened the Free/Pro modal for any onboarded account that had not seen the key, with no entitlement check. Locally fixed: now requires `startupAccess.status === "ready"` for the current owner, suppresses verified Active Pro and verified expired Pro (expired notice wins), and keeps the gifted variant. No Supabase call added; `accessReady`/`proExpiredAt` logic untouched.
+- **Reviewer catalog cause:** `NEXT_PUBLIC_REVIEWER_COMPATIBILITY_ENABLED` is frozen into the build (`app/lib/entitlements.ts:27`) and gates BOC + Elsevier. Preview lacks it, so the build shows 4 editions / 3 Pro. Production build has it, so 6 editions / 5 Pro. Not a code bug; changing it needs a Preview env entry plus redeploy.
+- Verification on the edited tree: `tsc --noEmit` clean, `next build --webpack` OK, secret scan PASS, 549/549 TS tests, 16/16 `reviewer-content.test.mjs`. Ledger `docs/release-v1.15.0/authorized-changes.json` RevITApp `after` re-pinned; JSX renderer digest unchanged.
+- Pending owner actions: add Preview-scoped `REVIT_ADMIN_USER_IDS` (existing UUID + second account UUID, comma separated), `SUPABASE_SERVICE_ROLE_KEY`, and `NEXT_PUBLIC_REVIEWER_COMPATIBILITY_ENABLED=true`; then redeploy the preview. Nothing committed, pushed, deployed, or changed in production.
+
 ## Release status — 2026-11-22
 
 - Commit `8bcc82b` `feat: release v1.15.0 admin dashboard, billing and Pro polish` pushed to `origin/codex/admin-dashboard-v1140` (verified `git ls-remote` matches HEAD).
