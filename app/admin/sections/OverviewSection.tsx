@@ -26,7 +26,7 @@ export default function OverviewSection({
     <section className={styles.tabPanel} aria-label="Overview">
       <div>
         <h2>Overview</h2>
-        <p className={styles.muted}>Administrator-recorded amounts are separate from independently verified payments.</p>
+        <p className={styles.muted}>Subscription access, administrator-recorded billing and access-consistency checks in one place. Recorded amounts are separate from independently verified payments.</p>
       </div>
 
       <section className={styles.group} aria-label="Subscription overview">
@@ -124,6 +124,7 @@ export default function OverviewSection({
 
       <section className={styles.group} aria-label="Recent subscription activity">
         <h3>Recent subscription activity</h3>
+        <p className={styles.muted}>Recorded grant events only. Complimentary grants are not sales, and renewals are separate recorded events.</p>
         <dl className={styles.secondary}>
           <div><dt>Recorded purchase events</dt><dd>{stats?.recordedPurchases ?? "—"}</dd></div>
           <div><dt>Renewal sales</dt><dd>{stats?.renewalSales ?? "—"}</dd></div>

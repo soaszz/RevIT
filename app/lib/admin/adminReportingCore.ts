@@ -47,11 +47,20 @@ export type HistoryRow = {
 export type MonthlyRow = { month: string; recordedAmount: number | null; recordedEvents: number; unknownAmounts: number };
 export type PlanRow = { months: number | null; recordedAmount: number | null; recordedEvents: number };
 export type SourceRow = { source: string; recordedAmount: number | null; events: number };
+// Active Pro grouped by the duration stored on the account's most recent recorded grant. The bucket
+// is read straight from stored plan_months; "custom" is a recorded purchase whose grant carried no
+// preset duration, and "unknown" is a grant with no recorded duration. Neither is derived.
+export type PlanBreakdownRow = { bucket: "1" | "3" | "6" | "custom" | "unknown"; activePro: number };
 export type ReportingResult = {
   summary?: ReportingSummary; subscribers?: SubscriberRow[]; history?: HistoryRow[];
   months?: MonthlyRow[]; plans?: PlanRow[]; sources?: SourceRow[]; renewals?: number;
   // Purchased renewal events with a recorded amount. All renewal events remain in `renewals`.
   renewalSales?: number;
+  // Additive bounded read fields. Absent until the guarded reporting proposal is installed; the UI
+  // degrades to an explicit pending state instead of guessing. Recent purchases reuse HistoryRow's
+  // response identity and carry only recorded values.
+  activePlanBreakdown?: PlanBreakdownRow[];
+  recentPurchases?: HistoryRow[];
   hasMore?: boolean; asOf: string;
 };
 export const EMPTY_FILTERS: ReportingFilters = {
@@ -157,6 +166,16 @@ export function manilaStamp(value: string | null | undefined): string {
 }
 export function duration(value: number | null | undefined): string {
   return value == null ? "Unknown" : `${value} month${value === 1 ? "" : "s"}`;
+}
+// Fixed presentation order for the current-Pro duration breakdown. Counts come from the bounded
+// reporting response; nothing is derived from dates or prices. Clean text labels only.
+export const PLAN_BUCKETS = ["1", "3", "6", "custom", "unknown"] as const;
+export function planBucketLabel(bucket: string): string {
+  if (bucket === "1") return "1 Month";
+  if (bucket === "3") return "3 Months";
+  if (bucket === "6") return "6 Months";
+  if (bucket === "custom") return "Custom";
+  return "Duration not recorded";
 }
 export function human(value: string | null | undefined): string {
   return value ? value.replaceAll("_", " ") : "Unknown";

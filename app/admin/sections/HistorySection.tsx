@@ -75,7 +75,7 @@ export default function HistorySection({
       <div className={styles.toolbar}>
         <div>
           <h2>Subscription History</h2>
-          <p className={styles.muted}>Actual recorded grants, purchases, renewals, extensions, revocations and expirations. Event IDs are not payment IDs. Subscriber names appear when the recorded event can be matched to the account; otherwise identity falls back to a neutral label with an account reference.</p>
+          <p className={styles.muted}>Every recorded grant, purchase, renewal, extension, revocation and expiration, newest first. Event IDs are not payment IDs. Subscriber names appear when the event is matched to an account; otherwise a neutral label and account reference are shown. Missing durations and amounts stay Not recorded and are never backfilled.</p>
         </div>
         <button type="button" disabled={exporting || !transactions} onClick={() => onDownload("recorded")}>Export recorded CSV</button>
       </div>

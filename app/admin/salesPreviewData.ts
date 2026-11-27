@@ -1,4 +1,4 @@
-import { consistencyReason, EXPORT_LIMIT, recordedAmount, subscriptionStatus, type ConsistencySummary, type HistoryRow, type ReportingFilters, type ReportingMode, type ReportingResult, type SubscriberRow } from "../lib/admin/adminReportingCore";
+import { consistencyReason, EXPORT_LIMIT, recordedAmount, subscriptionStatus, type ConsistencySummary, type HistoryRow, type PlanBreakdownRow, type ReportingFilters, type ReportingMode, type ReportingResult, type SubscriberRow } from "../lib/admin/adminReportingCore";
 
 // Invented fixtures only. No imported production records, identifiers, credentials or API calls.
 const id = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`;
@@ -88,8 +88,19 @@ export function readSynthetic(mode: ReportingMode, filters: ReportingFilters, no
       const bucket = sources.get(key) ?? { source: key, recordedAmount: null, events: 0 };
       bucket.events++; if (amount !== null) bucket.recordedAmount = (bucket.recordedAmount ?? 0) + amount; sources.set(key, bucket);
     }
+    const activeProBreakdown = new Map<PlanBreakdownRow["bucket"], number>();
+    for (const row of subscribers.filter(entry => entry.status === "active")) {
+      const bucket: PlanBreakdownRow["bucket"] = row.planMonths === 1 ? "1" : row.planMonths === 3 ? "3" : row.planMonths === 6 ? "6"
+        : row.billingStatus === "paid" || row.billingStatus === "admin_confirmed" ? "custom" : "unknown";
+      activeProBreakdown.set(bucket, (activeProBreakdown.get(bucket) ?? 0) + 1);
+    }
+    const activePlanBreakdown: PlanBreakdownRow[] = [...activeProBreakdown.entries()]
+      .map(([bucket, activePro]) => ({ bucket, activePro }));
+    const recentPurchases = history.filter(row => recordedAmount(row) !== null && inRange(row.createdAt))
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 25);
     return { asOf, months: [...monthly.values()].sort((a, b) => b.month.localeCompare(a.month)), plans: [...plans.values()],
-      sources: [...sources.values()].sort((a, b) => b.events - a.events), renewals, renewalSales };
+      sources: [...sources.values()].sort((a, b) => b.events - a.events), renewals, renewalSales,
+      activePlanBreakdown, recentPurchases };
   }
   const offset = (filters.page - 1) * limit;
   if (mode === "detail" || mode === "transactions") {
