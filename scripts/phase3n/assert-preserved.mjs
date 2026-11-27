@@ -93,10 +93,25 @@ export function assertPreserved(path, expected) {
     assert.equal(releaseV1150[path].before, current, path + ": broken v1.15.0 preservation chain");
     current = releaseV1150[path].after;
   }
-  const socialShare = JSON.parse(readFileSync(new URL("docs/social-share-og/authorized-changes.json", root), "utf8"));
-  if (socialShare[path]) {
-    assert.equal(socialShare[path].before, current, path + ": broken social-share preservation chain");
-    current = socialShare[path].after;
+  const colorThemes = JSON.parse(readFileSync(new URL("docs/color-themes/authorized-changes.json", root), "utf8"));
+  if (colorThemes[path]) {
+    assert.equal(colorThemes[path].before, current, path + ": broken color-theme preservation chain");
+    current = colorThemes[path].after;
+  }
+  const proThemes = JSON.parse(readFileSync(new URL("docs/color-themes/pro-access-authorized-changes.json", root), "utf8"));
+  if (proThemes[path]) {
+    assert.equal(proThemes[path].before, current, path + ": broken Pro theme-access preservation chain");
+    current = proThemes[path].after;
+  }
+  const offlineThemeTest = JSON.parse(readFileSync(new URL("docs/color-themes/offline-test-authorized-changes.json", root), "utf8"));
+  if (offlineThemeTest[path]) {
+    assert.equal(offlineThemeTest[path].before, current, path + ": broken offline theme-test preservation chain");
+    current = offlineThemeTest[path].after;
+  }
+  const combinedV1150 = JSON.parse(readFileSync(new URL("docs/release-v1.15.0-combined/authorized-changes.json", root), "utf8"));
+  if (combinedV1150[path]) {
+    assert.equal(combinedV1150[path].before, current, path + ": broken combined v1.15.0 preservation chain");
+    current = combinedV1150[path].after;
   }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

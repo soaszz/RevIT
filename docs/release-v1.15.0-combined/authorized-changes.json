@@ -1,0 +1,12 @@
+{
+  "app/layout.tsx": {
+    "before": "36a8e45a284204c10141727b14d66b9b475c736d2522b19f630c12708332cf55",
+    "after": "7b34d01da4a65da8c93160cc87423c3a72f8e4cbb4a1df3aad9d351d4761e217",
+    "reason": "Owner-approved combined v1.15.0 integration. Continues the color-theme chain endpoint with the approved social-sharing change: Open Graph/Twitter image switched to /social/revit-og-2026-11.png (1200x630) while the color-theme imports, pre-paint APPEARANCE_SCRIPT, nonce-scoped theme CSS and AppearanceSync mount are all retained. The standalone social-share ledger remains as provenance but its chain entry is superseded here so the historical color-theme transition is never rewritten."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "f7336b18f8ec46b619f0e94fbfbb463056976b4564403e6a13d7b338feedd771",
+    "after": "e44f73be14f878dd8c4cb3d8134a2721438406620d2c76906ff1c3c9c863e9ff",
+    "reason": "Owner-approved combined v1.15.0 integration. Extends the color-theme preservation chain endpoint (which already carries the three color-theme ledger lookups) with one combined-ledger lookup; the historical social-share lookup is not stacked verbatim because it conflicts on the same before-hash. All prior assertions and ledger ordering are unchanged."
+  }
+}

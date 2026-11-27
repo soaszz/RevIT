@@ -1,0 +1,42 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "5cdada2a83a7a2783ac1c29b2401042e8cbc9666d8366c2f490b7a0a3d3e398a",
+    "after": "0efea0677bf56d20b65687aca51b589834bd5c989c4ff53bbf81c929d4a7a356",
+    "reason": "Owner-approved development-only offline cosmetic preview; real authorization and requests unchanged.",
+    "renderer": {
+      "before": "b9e3bcdbbda38355791133e280f8f915485d9dd05d258cf32c54a8ae2c198114",
+      "after": "4c8167a37268f163dc535d90de619ed77b4a7b9cb78a780c79822874d95c45ed",
+      "reason": "Only owner-approved Themes sidebar/mobile presentation and reuse of the existing local account dialog for shared controls. Exact immutable renderer before retained."
+    }
+  },
+  "app/components/AppearanceSettings.tsx": {
+    "before": "e7ba1a4b036a3340c56533e6b55107d33e8ced9b4405ec022002a4b71819ce3d",
+    "after": "8eedf9416dfcbcfca8495a5265177eb4f385438486ebdc3f697556d375756b93",
+    "reason": "Owner-approved development-only offline cosmetic preview; real authorization and requests unchanged."
+  },
+  "app/lib/appearance.ts": {
+    "before": "b953d90e17477c83bbfd0c549524637d9193f66c9e2543e486235acd906d42da",
+    "after": "7dbc3be0568067f28cb90820225ce84be7ed8c66794e58db1b9f8c35f5f73fb4",
+    "reason": "Owner-approved development-only offline cosmetic preview; real authorization and requests unchanged."
+  },
+  "docs/UI_DESIGN_RULES.md": {
+    "before": "5b273d4803885f5ff2d78b23c0ed879bfc99d28057239aaf92bcd8e283b861d6",
+    "after": "a90795501fe9d52f3f9a7d1c01cf16e6feb50fe281572453611b1ebf9069be6b",
+    "reason": "Owner-approved development-only offline cosmetic preview; real authorization and requests unchanged."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "4d371803ab3bfcd63757ec0d1fb100e07fc9b77ffc172d720bd40801b54ee292",
+    "after": "f7336b18f8ec46b619f0e94fbfbb463056976b4564403e6a13d7b338feedd771",
+    "reason": "Owner-approved development-only offline cosmetic preview; real authorization and requests unchanged."
+  },
+  "tests/helpers/appearanceHarness.ts": {
+    "before": "67603b58f52495f914c67d968d42ada238e5d1438449c427d9fa817e2efc9a9f",
+    "after": "b9b46f407cb77471c65590cfc41db025cf180570c79603617c10018eff40bfe2",
+    "reason": "Owner-approved development-only offline cosmetic preview; real authorization and requests unchanged."
+  },
+  "tests/trusted-integration.test.ts": {
+    "before": "db80bee7684f0075ed7e53fcb9e728644134781dca138740bd9054116cac09c2",
+    "after": "929d30465a9938fdec33ae65517a1ddef8f83637ee8f7554e79c85e3ad0d42b1",
+    "reason": "Owner-approved development-only offline cosmetic preview; real authorization and requests unchanged."
+  }
+}

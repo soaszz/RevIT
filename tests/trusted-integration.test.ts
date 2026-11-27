@@ -490,6 +490,14 @@ test("actual Skip defers question without recording or sending an attempt; compo
   const release = JSON.parse(readFileSync(resolve(root, "docs/release-v1.15.0/authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
   const adminDashboard = JSON.parse(readFileSync(resolve(root, "docs/admin-dashboard/authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
   assert.equal(release.before, adminDashboard.after, "Expired-Pro notice starts from the exact approved component");
-  assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), release.renderer.after);
-  assert.equal(createHash("sha256").update(readFileSync(resolve(root, "app/RevITApp.tsx"))).digest("hex"), release.after);
+  const proThemes = JSON.parse(readFileSync(resolve(root, "docs/color-themes/pro-access-authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
+  assert.equal(proThemes.renderer.before, release.renderer.after, "Retain the immutable renderer before the approved Themes entry points");
+  const offlineThemeTest = JSON.parse(readFileSync(resolve(root, "docs/color-themes/offline-test-authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
+  assert.equal(offlineThemeTest.renderer.before, proThemes.renderer.after, "Keep the approved Pro theme renderer before the isolated developer control");
+  assert.equal(createHash("sha256").update(JSON.stringify(jsx)).digest("hex"), offlineThemeTest.renderer.after);
+  const themes = JSON.parse(readFileSync(resolve(root, "docs/color-themes/authorized-changes.json"), "utf8"))["app/RevITApp.tsx"];
+  assert.equal(themes.before, release.after, "Color-only preference transition retains the exact prior source pin");
+  assert.equal(proThemes.before, themes.after, "Pro themes start from the exact preserved eight-theme implementation");
+  assert.equal(offlineThemeTest.before, proThemes.after, "Offline test UI starts from the exact approved Pro-theme source");
+  assert.equal(createHash("sha256").update(readFileSync(resolve(root, "app/RevITApp.tsx"))).digest("hex"), offlineThemeTest.after);
 });

@@ -149,3 +149,19 @@ Use actual browser rendering for responsive/layout/contrast claims. Verify keybo
 Styling must preserve all six editions, questions/topics/IDs/answers/rationales/assets, collection mappings and Other Majors filtering, actual grades, category weights/maxima, storage/cloud records, subscription/entitlement behavior, progress, retry mastery, maintenance and service worker. Hypothetical scenarios must remain separate from actual grades. Functional progress indicators/focus/validation must not be removed under the decorative-bar prohibition.
 
 **Last updated**: 2026-11-18
+
+## Local color themes
+
+Original RevIT has no palette overrides: existing tokens and styles remain authoritative. Additional palettes live in the typed `app/lib/colorThemes.ts` registry and one scoped token sheet. Keep geometry, typography and behavior unchanged. Use existing semantic tokens for actions, surfaces, focus and controls. Semantic success remains green, warnings muted gold, errors red and neutral states neutral; never infer status from the decorative palette. Theme swatches are color samples, not status badges.
+
+Appearance (Light/Dark/System) and color theme are independent browser-local preferences. Keep the existing `revit-theme` key for compatibility; `revit-color-theme:v1:user:<account-id>` stores only the palette ID for the verified account. The old unscoped `revit-color-theme` value is retained but never treated as account ownership or access. Initialize before paint, follow live OS changes in System, sync tabs without network calls, and handle unavailable storage. Do not write theme preferences to Supabase. Native labeled radio groups provide keyboard selection. No new pills, icon containers, borders on buttons, gradients, glows or decorative bars.
+
+### Pro-exclusive palettes
+
+Original RevIT Light/Dark/System is always available. Additional palettes declare requiredPlan in the same registry and use only RevITApp's existing owner-bound accessReady/proActive result. Bootstrap/public/guest/offline/loading/error states show Original; never unlock from a stored palette or plan label. Keep mode independent. Preserve a denied/expired palette preference under its verified account key so verified renewal restores it; do not migrate unowned legacy palette choices to another account. No new entitlement calls, timers, polling, jobs, account sync or database changes. Existing server-time expiry handling drives the same effective-access transition as other Pro features.
+
+The Themes sidebar/mobile entry opens the same controls used in Account Settings. Locked palettes stay visible with small standalone lock icons, accessible denial text and an optional canonical Pro contact link. No duplicate theme picker or upsell modal. Keep Original tokens and all semantic status colors unchanged.
+
+### Development-only Test Account control
+
+Only an unconfigured local development Local/Offline context with no user identity may show Test Account above Themes (and its mobile counterpart). Default Free does not intercept normal appearance preferences. Selecting a synthetic tier activates a memory-only color-preview adapter; it never changes real Pro entitlement, reviewer authorization, AI limits or admin rights. No cached/offline user identity or configured Supabase backend is accepted, avoiding any extra Auth/session lookup. Hosted/production builds remove the control and compile its cosmetic adapter registration to inert behavior; no public enable flag exists. Reset Free on reload, retain the synthetic Pro palette only within that testing session, and never write it or its tier to cookies/storage/account preferences. Use the existing settings dialog/focus conventions and clearly label the state synthetic.

@@ -56,7 +56,7 @@ export default function ProExpiredNotice({ isOpen, expiresAt, onDismiss, reviewe
       <div className={styles.card} ref={cardRef} tabIndex={-1} style={{ maxHeight: "min(calc(100svh - 32px), 840px)" }}>
         <header className={styles.header}>
           <div className={styles.headerMain}>
-            <h2 id="pro-expired-title" className={styles.title}>Your RevIT Pro has expired</h2>
+            <h2 data-tone="negative" id="pro-expired-title" className={styles.title}>Your RevIT Pro has expired</h2>
           </div>
           <button type="button" className={styles.closeBtn} onClick={onDismiss} aria-label="Close Pro expiration notice">
             &times;

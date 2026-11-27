@@ -1,9 +1,10 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { ChangeEvent, FormEvent, useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import type { AuthChangeEvent, Session as AuthSession } from "@supabase/supabase-js";
 import AccountSettings from "./components/AccountSettings";
 import AchievementModal, { XpProgress } from "./components/AchievementModal";
@@ -12,7 +13,9 @@ import FeedbackModal from "./components/FeedbackModal";
 import Flashcards from "./components/Flashcards";
 import GradesPage from "./components/GradesPage";
 import composerStyles from "./components/AiComposer.module.css";
-import ThemeSymbols from "./components/ThemeSymbols";
+import { adoptLegacyAppearance, bindThemeAccess } from "./lib/appearance";
+import PaletteIcon from "./components/PaletteIcon";
+import AppearanceSettings from "./components/AppearanceSettings";
 import weaknessLabelStyles from "./components/WeaknessNavLabel.module.css";
 import { mergeMtap2Gradebooks } from "./lib/mtap2Grades";
 import LeaderboardPage from "./components/LeaderboardPage";
@@ -189,6 +192,10 @@ import {
   type AiAcademicPermissionState,
 } from "./lib/aiGradeAssistant";
 import AiAcademicSettingsModal from "./components/AiAcademicSettingsModal";
+
+const OfflineThemeTestControl = process.env.NODE_ENV === "development"
+  ? dynamic(() => import("./components/dev/OfflineThemeTestControl"), { ssr: false })
+  : null;
 
 type View = "overview" | "library" | "progress" | "leaderboards" | "weakness" | "planner" | "grades" | "assistant";
 type Attempt = QuestionAttempt;
@@ -703,7 +710,7 @@ export default function RevITApp({ initialUser = null, cloudEnabled = false, off
   const [profile, setProfile] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileDraft, setProfileDraft] = useState<LearnerProfile>(DEFAULT_PROFILE);
   const [profileOpen, setProfileOpen] = useState(false);
-  const [accountInitialTab, setAccountInitialTab] = useState<"profile" | "security">("profile");
+  const [accountInitialTab, setAccountInitialTab] = useState<"profile" | "personalization" | "security">("profile");
   const [accountInitialStatus, setAccountInitialStatus] = useState("");
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [updatesModalOpen, setUpdatesModalOpen] = useState(false);
@@ -981,20 +988,7 @@ useEffect(() => {
   }, [activeView, cloudEnabled, cloudLoading, preferences, storageReady]);
 
   useEffect(() => {
-    const root = document.documentElement;
-    let savedTheme: string | null = null;
-    try {
-      savedTheme = localStorage.getItem("revit-theme");
-    } catch {
-      // The head bootstrap already applied the system/default theme when storage is unavailable.
-    }
-    const resolvedTheme = savedTheme === "light" || savedTheme === "dark"
-      ? savedTheme
-      : root.dataset.theme === "dark" || root.dataset.theme === "light"
-        ? root.dataset.theme
-        : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    root.dataset.theme = resolvedTheme;
-    root.style.colorScheme = resolvedTheme;
+    // The shared pre-paint appearance initializer owns local preferences and System changes.
     setThemeReady(true);
   }, []);
 
@@ -1178,14 +1172,7 @@ useEffect(() => {
           ...Object.fromEntries(snapshot.reinforcement.map((item) => [item.question_id, item.reinforcement_level])),
         }));
         setProfile({ name: nextProfile.first_name?.trim() || DEFAULT_PROFILE.name, photoDataUrl: nextProfile.avatar_url ?? "" });
-        const savedTheme = localStorage.getItem("revit-theme");
-        const cloudTheme = nextPreferences.theme === "light" || nextPreferences.theme === "dark" ? nextPreferences.theme : null;
-        const resolvedTheme = savedTheme === "light" || savedTheme === "dark"
-          ? savedTheme
-          : cloudTheme ?? (document.documentElement.dataset.theme === "dark" ? "dark" : "light");
-        document.documentElement.dataset.theme = resolvedTheme;
-        document.documentElement.style.colorScheme = resolvedTheme;
-        if (savedTheme !== "light" && savedTheme !== "dark" && cloudTheme) localStorage.setItem("revit-theme", cloudTheme);
+        adoptLegacyAppearance(nextPreferences.theme);
         const queuedAttempts = getQueuedQuestionAttemptsCount(initialUser!.id);
         const queuedReinforcement = getQueuedQuestionReinforcementCount(initialUser!.id);
         const queuedProgress = getQueuedCloudProgressEventsCount(initialUser!.id);
@@ -1419,6 +1406,10 @@ useEffect(() => {
 
   const accessReady = startupAccess.owner === accessOwner && startupAccess.status === "ready";
   const proActive = accessReady && isProActive(entitlement);
+  useLayoutEffect(() => bindThemeAccess(
+    accessReady && accessOwner !== "local" ? accessOwner : null,
+    accessReady && accessOwner !== "local" && proActive,
+  ), [accessOwner, accessReady, proActive]);
   const proExpiredAt = initialUser && !offlineMode
     ? verifiedProExpiration(entitlement, accessReady)
     : null;
@@ -2492,17 +2483,10 @@ useEffect(() => {
     setProfileOpen(true);
   }
 
-  function toggleTheme() {
-    const root = document.documentElement;
-    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-    root.dataset.theme = nextTheme;
-    root.style.colorScheme = nextTheme;
-    localStorage.setItem("revit-theme", nextTheme);
-    setPreferences((current) => ({ ...current, theme: nextTheme }));
-    if (cloudAvailable && initialUser) {
-      void savePreferences(createClient(), initialUser.id, { ...preferences, theme: nextTheme })
-        .catch(() => setCloudError("Theme changed locally; cloud preference sync needs retry."));
-    }
+  function openThemeSettings() {
+    setAccountInitialTab("personalization");
+    setAccountInitialStatus("");
+    setProfileOpen(true);
   }
 
   async function updateMtapFeatures(enabled: boolean) {
@@ -2994,34 +2978,22 @@ useEffect(() => {
         </nav>
         <div className="sidebar-footer">
           <div className="sidebar-utility-list" role="toolbar" aria-label="Quick utilities">
-            {/* 1. Appearance */}
+            {OfflineThemeTestControl && <OfflineThemeTestControl offline={offlineMode || !cloudEnabled} noUser={!initialUser && !cloudEnabled} collapsed={sidebarCollapsed} />}
+            {/* 1. Themes */}
             <div className="sidebar-tooltip-wrapper">
-              <SidebarTooltip label="Appearance" disabled={!sidebarCollapsed}>
+              <SidebarTooltip label="Themes" disabled={!sidebarCollapsed}>
                 <button
                   className="sidebar-utility-item"
                   type="button"
-                  onClick={toggleTheme}
-                  aria-label="Toggle light and dark mode"
+                  onClick={openThemeSettings}
+                  aria-label="Choose Themes"
                 >
                   <span className="sidebar-utility-icon" aria-hidden="true">
-                    <svg className="light-symbol" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="5" />
-                      <line x1="12" y1="1" x2="12" y2="3" />
-                      <line x1="12" y1="21" x2="12" y2="23" />
-                      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                      <line x1="1" y1="12" x2="3" y2="12" />
-                      <line x1="21" y1="12" x2="23" y2="12" />
-                      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                    </svg>
-                    <svg className="dark-symbol" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                    </svg>
+                    <PaletteIcon />
                   </span>
                   <span className="sidebar-utility-text">
-                    <strong>Appearance</strong>
-                    <small>Light / dark</small>
+                    <strong>Themes</strong>
+                    <small>Choose Themes</small>
                   </span>
                 </button>
               </SidebarTooltip>
@@ -3096,8 +3068,9 @@ useEffect(() => {
             {activeView === "overview" && (
               <SiteNotificationTrigger className="mobile-header-notification" size="compact" unreadCount={unreadCount} onClick={() => setUpdatesModalOpen(true)} />
             )}
-            <button className="theme-toggle mobile-theme-toggle" type="button" onClick={toggleTheme} aria-label="Toggle light and dark mode">
-              <ThemeSymbols />
+            {process.env.NODE_ENV === "development" && <span id="offline-theme-test-mobile" />}
+            <button className="theme-toggle mobile-theme-toggle" type="button" onClick={openThemeSettings} aria-label="Choose Themes">
+              <PaletteIcon />
             </button>
             <button className={`avatar mobile-profile ${activeAvatarUrl ? "has-photo" : ""}`} style={avatarStyle} type="button" onClick={openProfileEditor} aria-label="Customize learner profile">
               {activeAvatarUrl ? "" : profileInitials}
@@ -4408,14 +4381,14 @@ useEffect(() => {
 
         {feedbackOpen && online && <FeedbackModal profile={accountProfile ?? { id: initialUser?.id ?? "local", first_name: profile.name, username: profile.name, avatar_url: profile.photoDataUrl, onboarding_complete: true } as Profile} email={initialUser?.email} turnstileSiteKey={turnstileSiteKey} onClose={() => setFeedbackOpen(false)} />}
 
-        {profileOpen && !cloudEnabled && (
+        {profileOpen && (!cloudEnabled || (accountInitialTab === "personalization" && !cloudAvailable)) && (
           <div className="profile-modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setProfileOpen(false); }}>
-            <section className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
+            <section className={`profile-modal ${accountInitialTab === "personalization" ? "account-modal" : ""}`} role="dialog" aria-modal="true" aria-labelledby="profile-title">
               <div className="profile-modal-heading">
-                <div><p className="eyebrow">Profile</p><h2 id="profile-title">Customize your profile</h2></div>
-                <button type="button" onClick={() => setProfileOpen(false)} aria-label="Close profile editor">×</button>
+                <div><p className="eyebrow">{accountInitialTab === "personalization" ? "Appearance" : "Profile"}</p><h2 id="profile-title">{accountInitialTab === "personalization" ? "Choose Themes" : "Customize your profile"}</h2>{accountInitialTab === "personalization" && <p>Personalize your RevIT experience.</p>}</div>
+                <button type="button" onClick={() => setProfileOpen(false)} aria-label={accountInitialTab === "personalization" ? "Close theme settings" : "Close profile editor"}>×</button>
               </div>
-              <form onSubmit={saveProfile}>
+              {accountInitialTab === "personalization" ? <AppearanceSettings showHeading={false} /> : <><form onSubmit={saveProfile}>
                 <div className="profile-photo-row">
                   <span className={`avatar profile-preview ${profileDraft.photoDataUrl ? "has-photo" : ""}`} style={profileDraft.photoDataUrl ? { backgroundImage: `url(${JSON.stringify(profileDraft.photoDataUrl)})` } : undefined}>
                     {profileDraft.photoDataUrl ? "" : (profileDraft.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "R")}
@@ -4431,7 +4404,7 @@ useEffect(() => {
                 <p className="profile-privacy">Your name and photo are saved only in this browser on this device.</p>
                 <div className="profile-modal-actions"><button className="text-button quiet" type="button" onClick={() => setProfileOpen(false)}>Cancel</button><button className="primary-button" type="submit">Save profile</button></div>
               </form>
-              <MtapPreferenceControl enabled={preferences.mtap_features_enabled} onChange={updateMtapFeatures} />
+              <MtapPreferenceControl enabled={preferences.mtap_features_enabled} onChange={updateMtapFeatures} /></>}
             </section>
           </div>
         )}

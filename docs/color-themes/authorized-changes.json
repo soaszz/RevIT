@@ -1,0 +1,52 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "caf75d50230d96daf7ff880f28accaba4e88d8aeb44aa03714c28c275dc6c98c",
+    "after": "f58a47097911a409ea0664db675da2e695e9147ccbf2001ac3642d2ce218d164",
+    "reason": "Owner-authorized isolated color themes and local-only appearance; all existing content and business logic preserved."
+  },
+  "app/components/AccountSettings.tsx": {
+    "before": "54916e5e188743cf2002492b06ea47c6bedea1d5f26dd4e3208f3cc837bd03b9",
+    "after": "be42af91000fb672a95e36b8b0404049ead51491d8a392a710d89cf98ad303ad",
+    "reason": "Owner-authorized isolated color themes and local-only appearance; all existing content and business logic preserved."
+  },
+  "app/components/ProActivationModal.tsx": {
+    "before": "507c64847125e0c90262675601872e484efec74e3df424fd8faa601450bca3b3",
+    "after": "d45741861c6217ac5ffb172718298f8f54b5568cb4676f4b9cbd315b7d202268",
+    "reason": "Owner-authorized isolated color themes and local-only appearance; all existing content and business logic preserved."
+  },
+  "app/components/ProExpiredNotice.tsx": {
+    "before": "847ac6e3aa794e638303dfcff69d0bda25af29a566955b204b91cd30dfe5a3fd",
+    "after": "40fdce2fc4d93e0ed0b758c04dc6c2de769c1d6af4b3f9ecd1694dcf72fdb569",
+    "reason": "Owner-authorized isolated color themes and local-only appearance; all existing content and business logic preserved."
+  },
+  "app/components/PublicThemeToggle.tsx": {
+    "before": "d1d1b05683dbb57849ece6c3767787b2ba3da425f83bd76930a2c3ebbde35b0b",
+    "after": "c9f11989d690ae86f7281bf21a249b06743a7a083348130abc79be941b01169c",
+    "reason": "Owner-authorized isolated color themes and local-only appearance; all existing content and business logic preserved."
+  },
+  "app/layout.tsx": {
+    "before": "10c3e569fed49285c0fcfed92ab9f628d418264016e52993ae236847754025c3",
+    "after": "36a8e45a284204c10141727b14d66b9b475c736d2522b19f630c12708332cf55",
+    "reason": "Owner-authorized isolated color themes and local-only appearance; all existing content and business logic preserved."
+  },
+  "docs/UI_DESIGN_RULES.md": {
+    "before": "978b24ca89dfea761fbba2630422fce8bcaa02629c9cc35abc6c4112244ec0f9",
+    "after": "5a188dfcfdb81318a561b53fea7563fd688b978b50c2498a8e67d9c85e179b09",
+    "reason": "Owner-authorized isolated color themes and local-only appearance; all existing content and business logic preserved."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "fd8c0d565bff067ab6c6fa71eb174cab0762edbd84315db0f901e10cab2098d3",
+    "after": "35d82b81597ee74f33384126ec0dedfdd99bc2469b506ece97552141e9cdea4c",
+    "reason": "Owner-authorized isolated color themes and local-only appearance; all existing content and business logic preserved."
+  },
+  "tests/reviewer-content.test.mjs": {
+    "before": "ead7a4309f2fb2f8a074e22f0d58c5600dd52db3db15e76df08cbdd75603cd04",
+    "after": "b0b213c6bc533f6cc9a24a89b1dd917fa80bd43056f758456ede8b86f19730b1",
+    "reason": "Follow extracted pre-paint bootstrap to its canonical module; retain the existing preference-key requirement."
+  },
+  "tests/trusted-integration.test.ts": {
+    "before": "a9900a1b3e48743a58641588b8cbb0b8482160e19d30e8c153342458d3ad2761",
+    "after": "c5eb115060d36e948cfe33bd9f68105fd4d5c2f44667dff85f1d6128ffb24b9b",
+    "reason": "Append exact source pin for theme preference changes; immutable renderer digest and all historical assertions retained."
+  }
+}

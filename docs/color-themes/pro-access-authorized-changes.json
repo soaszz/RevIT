@@ -1,0 +1,57 @@
+{
+  "app/RevITApp.tsx": {
+    "before": "f58a47097911a409ea0664db675da2e695e9147ccbf2001ac3642d2ce218d164",
+    "after": "5cdada2a83a7a2783ac1c29b2401042e8cbc9666d8366c2f490b7a0a3d3e398a",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes.",
+    "renderer": {
+      "before": "98a2ff4d4786c0af55a3f609fca4dbe0df45d331fbf71ef492701df6937f3c4b",
+      "after": "b9e3bcdbbda38355791133e280f8f915485d9dd05d258cf32c54a8ae2c198114",
+      "reason": "Only owner-approved Themes sidebar/mobile presentation and reuse of the existing local account dialog for shared controls. Exact immutable renderer before retained."
+    }
+  },
+  "app/components/AppearanceSettings.module.css": {
+    "before": "27792b488a34f32757e5abfe0c8057ccb755811d9a824649ade33b811bc0d19e",
+    "after": "ebacecdf1477678b22b1bf18bd7cae0034528ca7e5f60b14cf74e3f0666b729e",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  },
+  "app/components/AppearanceSettings.tsx": {
+    "before": "82c0ede794b2dc53ccb856d0ad659295987b778d2b0e4bd194c2d173c94eeca5",
+    "after": "e7ba1a4b036a3340c56533e6b55107d33e8ced9b4405ec022002a4b71819ce3d",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  },
+  "app/lib/appearance.ts": {
+    "before": "9e07589e207e4e4ede733250a5f461f64da70f60c626ce1ca2e17e957ca88389",
+    "after": "b953d90e17477c83bbfd0c549524637d9193f66c9e2543e486235acd906d42da",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  },
+  "app/lib/colorThemes.ts": {
+    "before": "30b0e04ce99746d359c574da3cfb3e064ab73940b3f3fe24322f1a91e6d8bea6",
+    "after": "3787fad279e0f0368ac7e0c31173198afbbc9696e2a10e366a59c55ba3a3a86a",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  },
+  "docs/UI_DESIGN_RULES.md": {
+    "before": "5a188dfcfdb81318a561b53fea7563fd688b978b50c2498a8e67d9c85e179b09",
+    "after": "5b273d4803885f5ff2d78b23c0ed879bfc99d28057239aaf92bcd8e283b861d6",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "35d82b81597ee74f33384126ec0dedfdd99bc2469b506ece97552141e9cdea4c",
+    "after": "4d371803ab3bfcd63757ec0d1fb100e07fc9b77ffc172d720bd40801b54ee292",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  },
+  "tests/color-themes.test.ts": {
+    "before": "969acdece697e21da733567595686330bb2be8f03b3fe4557708381dce9e5b74",
+    "after": "c0cd9954c03a2cdf9e7e6f5458633bd36f813abb284d929a5174c1b5384820cd",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  },
+  "tests/reviewer-content.test.mjs": {
+    "before": "b0b213c6bc533f6cc9a24a89b1dd917fa80bd43056f758456ede8b86f19730b1",
+    "after": "33ee136c5967c408890c2ff2cccc9b171acbae5eb799890599419ca9bbba1ef8",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  },
+  "tests/trusted-integration.test.ts": {
+    "before": "c5eb115060d36e948cfe33bd9f68105fd4d5c2f44667dff85f1d6128ffb24b9b",
+    "after": "db80bee7684f0075ed7e53fcb9e728644134781dca138740bd9054116cac09c2",
+    "reason": "Owner-approved Pro palette gating and shared Themes entry points, using only existing verified owner-bound entitlement; no new requests or business-logic changes."
+  }
+}

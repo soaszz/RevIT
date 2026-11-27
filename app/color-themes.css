@@ -1,0 +1,28 @@
+/* Additional palettes only. Original RevIT continues to use its exact existing styles. */
+:root[data-color-theme]:not([data-color-theme="original"]) .primary-button { color: var(--theme-primary-ink); }
+:root[data-color-theme]:not([data-color-theme="original"]) :is(button:disabled, [aria-disabled="true"]) { color: var(--theme-disabled-text) !important; opacity: 1; }
+/* Semantic status colors never inherit the decorative palette. Scope tokens, not layout. */
+:root[data-color-theme]:not([data-color-theme="original"]) {
+  --status-success: #105D46; --status-success-fill: #16765B; --status-success-soft: #D8E9DA;
+  --status-warning: #856318; --status-warning-soft: #FFF1DC;
+  --amber: var(--status-warning); --amber-soft: var(--status-warning-soft);
+}
+:root[data-color-theme]:not([data-color-theme="original"])[data-theme="dark"] {
+  --status-success: #85E5BB; --status-success-fill: #67DEB0; --status-success-soft: #1B3E30;
+  --status-warning: #D4B46B; --status-warning-soft: #362716;
+}
+:root[data-color-theme]:not([data-color-theme="original"]) :is(.form-status.success, .account-plan-status-pill.active, [aria-label="Current plan: Pro"], .account-plan-expiry, .profile-status-pill.available, .revit-status-feedback.available, [data-tone="positive"], [data-tone="subtlePositive"]) {
+  --green: var(--status-success-fill); --green-dark: var(--status-success); --green-soft: var(--status-success-soft); --badge-ink: var(--status-success);
+}
+:root[data-color-theme]:not([data-color-theme="original"]) :is([data-tone="warning"], .weakness-notice.warning) { --amber: var(--status-warning); --warning-gold: var(--status-warning); --amber-soft: var(--status-warning-soft); }
+
+:root[data-color-theme]:not([data-color-theme="original"]) [data-tone="positive"] { color: var(--status-success); }
+:root[data-color-theme]:not([data-color-theme="original"]) [data-tone="negative"] { color: var(--danger); }
+:root[data-color-theme]:not([data-color-theme="original"]) [data-tone="neutral"] { color: var(--muted); }
+:root[data-color-theme]:not([data-color-theme="original"]) [data-tone="warning"] { color: var(--status-warning); }
+:root[data-color-theme]:not([data-color-theme="original"]) :is(button:disabled, [aria-disabled="true"]) { background: var(--surface-soft) !important; }
+:root[data-color-theme]:not([data-color-theme="original"]) [aria-label="Current plan: Free"] { --green-dark: var(--muted); --green-soft: var(--surface-soft); }
+/* Legacy success selectors share decorative tokens. Keep their semantic colors without changing their components. */
+:root[data-color-theme]:not([data-color-theme="original"]) :is(.choice-button.correct, [role="group"][aria-label="Answer choices"] tr[class*="correct"]:not([class*="incorrect"]), [class*="successBanner"]) {
+  --green: var(--status-success-fill); --green-dark: var(--status-success); --green-soft: var(--status-success-soft); --surface-tint: var(--status-success-soft);
+}

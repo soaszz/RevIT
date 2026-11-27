@@ -131,7 +131,7 @@ export default function ProActivationModal({
           </div>
 
           <div className={styles.headerText}>
-            <span className={`${styles.kicker} ${contentConfig.accentClass}`}>
+            <span data-tone="positive" className={`${styles.kicker} ${contentConfig.accentClass}`}>
               {contentConfig.kicker}
             </span>
             <h2 id="pro-activation-title" className={styles.title}>

@@ -212,10 +212,12 @@ test("uses RevIT and Groq branding while keeping the MedTech AI tab", async () =
 
   assert.match(layout, /RevIT \| Review It Thoroughly/i);
   assert.match(layout, /data-theme="light"/i);
-  assert.match(layout, /revit-theme/i);
+  assert.match(layout, /APPEARANCE_SCRIPT/);
+  assert.match(await readFile(new URL("../app/lib/appearance.ts", import.meta.url), "utf8"), /revit-theme/i);
   assert.match(app, /Ask RevIT AI/i);
   assert.match(app, /label: "(RevIT AI|MedTech AI)"/i);
-  assert.match(app, /Toggle light and dark mode/i);
+  assert.match(app, /Choose Themes/);
+  assert.match(await readFile(new URL("../app/components/PublicThemeToggle.tsx", import.meta.url), "utf8"), /Toggle light and dark mode/i);
   assert.match(route, /from "groq-sdk"/i);
   assert.match(route, /GROQ_API_KEY/i);
   assert.match(route, /GROQ_MODEL/i);

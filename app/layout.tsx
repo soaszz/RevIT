@@ -9,6 +9,10 @@ import "katex/dist/katex.min.css";
 import "./globals.css";
 import "./neumorphism.css";
 import "./settings.css";
+import "./color-themes.css";
+import { APPEARANCE_SCRIPT } from "./lib/appearance";
+import { COLOR_THEME_CSS, COLOR_SWATCH_CSS } from "./lib/colorThemes";
+import AppearanceSync from "./components/AppearanceSync";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -80,11 +84,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem("revit-theme");if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.setAttribute("data-theme",t);document.documentElement.style.colorScheme=t}catch(e){}})()`,
+            __html: APPEARANCE_SCRIPT,
           }}
         />
+        <style nonce={nonce} dangerouslySetInnerHTML={{ __html: COLOR_THEME_CSS + COLOR_SWATCH_CSS }} />
       </head>
       <body>
+        <AppearanceSync />
         {children}
         <ConnectionStatusModal />
         <PwaRegistration />

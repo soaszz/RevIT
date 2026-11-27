@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { toggleAppearance } from "../lib/appearance";
 import ThemeSymbols from "./ThemeSymbols";
 import styles from "./PublicThemeToggle.module.css";
 
@@ -19,13 +20,7 @@ export default function PublicThemeToggle({ className = "", iconOnly = false }: 
     observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
     return () => observer.disconnect();
   }, [iconOnly]);
-  function toggleTheme() {
-    const root = document.documentElement;
-    const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
-    root.dataset.theme = nextTheme;
-    root.style.colorScheme = nextTheme;
-    localStorage.setItem("revit-theme", nextTheme);
-  }
+  const toggleTheme = toggleAppearance;
 
   return (
     <button

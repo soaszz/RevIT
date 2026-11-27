@@ -1,5 +1,6 @@
 "use client";
 
+import AppearanceSettings from "./AppearanceSettings";
 import type { UserIdentity } from "@supabase/supabase-js";
 import { type FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -127,23 +128,6 @@ export default function AccountSettings({ profile, preferences, entitlement, ema
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Profile could not be saved. Please try again.");
     } finally { setPending(false); }
-  }
-
-  async function changeTheme(nextTheme: "light" | "dark" | "system") {
-    const root = document.documentElement;
-    const resolved = nextTheme === "system"
-      ? (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-      : nextTheme;
-    root.dataset.theme = resolved;
-    root.style.colorScheme = resolved;
-    localStorage.setItem("revit-theme", nextTheme);
-    const nextPrefs: UserPreferences = { ...preferences, theme: nextTheme };
-    onPreferences(nextPrefs);
-    try {
-      await savePreferences(createClient(), profile.id, nextPrefs);
-    } catch {
-      // Local preference applied
-    }
   }
 
   async function changePassword(event: FormEvent<HTMLFormElement>) {
@@ -444,45 +428,7 @@ export default function AccountSettings({ profile, preferences, entitlement, ema
               <p className="settings-section-desc">Customize theme and study tools for your review routine.</p>
             </div>
 
-            <div className="settings-surface">
-              <div className="settings-row">
-                <div className="settings-row-info">
-                  <span className="settings-row-title">Color Theme</span>
-                  <span className="settings-row-desc">Select a dark, light, or system-matched appearance.</span>
-                </div>
-                <div className="settings-row-control">
-                  <div className="theme-segmented-control" role="radiogroup" aria-label="Theme selection">
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={preferences.theme === "dark"}
-                      className={`theme-segment-btn ${preferences.theme === "dark" ? "active" : ""}`}
-                      onClick={() => void changeTheme("dark")}
-                    >
-                      Dark
-                    </button>
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={preferences.theme === "light"}
-                      className={`theme-segment-btn ${preferences.theme === "light" ? "active" : ""}`}
-                      onClick={() => void changeTheme("light")}
-                    >
-                      Light
-                    </button>
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={preferences.theme === "system"}
-                      className={`theme-segment-btn ${preferences.theme === "system" ? "active" : ""}`}
-                      onClick={() => void changeTheme("system")}
-                    >
-                      System
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className="settings-surface"><AppearanceSettings /></div>
 
             <div style={{ marginTop: "14px" }}>
               <MtapPreferenceControl enabled={preferences.mtap_features_enabled} onChange={onMtapFeaturesChange} />
