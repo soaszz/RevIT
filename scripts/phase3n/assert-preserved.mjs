@@ -93,5 +93,10 @@ export function assertPreserved(path, expected) {
     assert.equal(releaseV1150[path].before, current, path + ": broken v1.15.0 preservation chain");
     current = releaseV1150[path].after;
   }
+  const socialShare = JSON.parse(readFileSync(new URL("docs/social-share-og/authorized-changes.json", root), "utf8"));
+  if (socialShare[path]) {
+    assert.equal(socialShare[path].before, current, path + ": broken social-share preservation chain");
+    current = socialShare[path].after;
+  }
   assert.equal(hash, current, `${path}: differs from reviewed phase hashes in ${fileURLToPath(root)}`);
 }

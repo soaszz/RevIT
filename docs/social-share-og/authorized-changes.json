@@ -1,0 +1,12 @@
+{
+  "app/layout.tsx": {
+    "before": "10c3e569fed49285c0fcfed92ab9f628d418264016e52993ae236847754025c3",
+    "after": "37176abf831af5d115ec98c12e30d1cc14e68ab07b19ae3c6ab8c1dad99cf64f",
+    "reason": "Social sharing (Open Graph/Twitter) image switched to the approved 1200x630 MedTech banner at /social/revit-og-2026-11.png; only the image URL and declared Open Graph dimensions changed."
+  },
+  "scripts/phase3n/assert-preserved.mjs": {
+    "before": "fd8c0d565bff067ab6c6fa71eb174cab0762edbd84315db0f901e10cab2098d3",
+    "after": "55028150a48962bc7dcdc82c5a4fcaf1858e1aa8f92013b7932edc07de3539ad",
+    "reason": "Append the exact authorized social-share transition after the existing preservation chain; all historical assertions unchanged."
+  }
+}
